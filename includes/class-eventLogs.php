@@ -230,7 +230,7 @@ if (!class_exists('eventLogs')) {
         }
 
 
-        public function insert_event($event) {
+        public function insertEvent($event) {
 
             global $wpdb;
             $table = $wpdb->prefix.'eventLogs';
