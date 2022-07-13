@@ -35,7 +35,7 @@ foreach ($client->parseEvents() as $event) {
     $data = array(
         'event_type' => $event['type'],
         'event_timestamp' => $event['timestamp'],
-        'event_source' => $event['source'],
+        'event_source' => json_encode($event['source']),
         'event_replyToken' => $event['replyToken'],
         'event_mode' => $event['mode'],
         'webhookEventId' => $event['webhookEventId'],

@@ -159,7 +159,7 @@ if (!class_exists('eventLogs')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs", OBJECT );
             $output  = '<h2>Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Events</td><td>Begin</td><td>End</td></tr>';
+            $output .= '<tr><td>Type</td><td>Timestamp</td><td>Source</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_type.'</a></td>';
