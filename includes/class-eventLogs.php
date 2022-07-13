@@ -238,7 +238,7 @@ if (!class_exists('eventLogs')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
                 event_id int NOT NULL AUTO_INCREMENT,
                 event_type varchar(255),
-                event_timestamp int,
+                event_timestamp int(10),
                 event_source varchar(255),
                 event_replyToken varchar(255),
                 event_mode varchar(255),
