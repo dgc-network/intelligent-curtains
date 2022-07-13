@@ -25,26 +25,12 @@ $channelAccessToken = 'ongg0SgvMZjDQlO3qHvSvGBU/JyMlz2GBiRi9t7iUBHXqZIZAioD9Im7g
 $channelSecret = '1bd1c2ac3b3a36399de32f5a83f135c0';
 
 $client = new LINEBotTiny($channelAccessToken, $channelSecret);
+$eventLog = new eventLogs();
 
 foreach ($client->parseEvents() as $event) {
+    $eventLog->insertEvent($event);
     $getsource = $event['source'];
     $usr_id = $getsource['userId'];
-
-    global $wpdb;
-    $table = $wpdb->prefix.'eventLogs';
-    $data = array(
-        'event_type' => $event['type'],
-        'event_timestamp' => $event['timestamp'],
-        'event_source' => json_encode($event['source']),
-        'event_replyToken' => $event['replyToken'],
-        'event_mode' => $event['mode'],
-        'webhookEventId' => $event['webhookEventId'],
-        'isRedelivery' => $event['deliveryContext']['isRedelivery'],
-        //'event_object' => $event['message'],
-    );
-    //$format = array('%s', '%d', '%s', '%s');
-    //$insert_id = $wpdb->insert($table, $data, $format);
-    $insert_id = $wpdb->insert($table, $data);
 
     switch ($event['type']) {
         case 'message':

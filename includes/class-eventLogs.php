@@ -229,6 +229,26 @@ if (!class_exists('eventLogs')) {
             return $output;    
         }
 
+
+        public function insert_event($event) {
+
+            global $wpdb;
+            $table = $wpdb->prefix.'eventLogs';
+            $data = array(
+                'event_type' => $event['type'],
+                'event_timestamp' => $event['timestamp'],
+                'event_source' => json_encode($event['source']),
+                'event_replyToken' => $event['replyToken'],
+                'event_mode' => $event['mode'],
+                'webhookEventId' => $event['webhookEventId'],
+                'isRedelivery' => $event['deliveryContext']['isRedelivery'],
+                //'event_object' => $event['message'],
+            );
+            //$format = array('%s', '%d', '%s', '%s');
+            //$insert_id = $wpdb->insert($table, $data, $format);
+            $insert_id = $wpdb->insert($table, $data);        
+        }
+    
         function create_tables() {
         
             global $wpdb;
@@ -247,11 +267,8 @@ if (!class_exists('eventLogs')) {
                 event_object varchar(255),
                 PRIMARY KEY  (event_id)
             ) $charset_collate;";        
-            dbDelta($sql);
-        
-        }
-        
+            dbDelta($sql);        
+        }        
     }
-    new eventLogs();
 }
 ?>
