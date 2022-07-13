@@ -2,15 +2,15 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
-if (!class_exists('calendars')) {
+if (!class_exists('eventLogs')) {
 
-    class calendars {
+    class eventLogs {
 
         /**
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('calendar-list', __CLASS__ . '::list_mode');
+            add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
 
@@ -149,31 +149,22 @@ if (!class_exists('calendars')) {
         }
 
         function list_mode() {
-/*
-            if( isset($_GET['view_mode']) ) {
-                //if ($_GET['view_mode']=='course_learnings') return self::course_learnings($_GET['_id']);
-                return self::view_mode($_GET['_id']);
-            }
-*/
-            if( isset($_GET['edit_mode']) ) {
-                if ($_GET['edit_mode']=='Create') return self::edit_mode();
-                if ($_GET['edit_mode']=='Edit') return self::edit_mode( $_GET['_id'] );
-            }            
 
             /**
              * List Mode
              */
             global $wpdb;
             $user_id = get_current_user_id();
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}events WHERE event_host = {$user_id}", OBJECT );
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs", OBJECT );
             $output  = '<h2>Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Events</td><td>Begin</td><td>End</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_title.'</a></td>';
-                $output .= '<td>'.$result->event_begin.'</td>';
-                $output .= '<td>'.$result->event_end.'</td>';
+                $output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_type.'</a></td>';
+                $output .= '<td>'.$result->event_timestamp.'</td>';
+                $output .= '<td>'.$result->event_source.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -243,23 +234,24 @@ if (!class_exists('calendars')) {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
-            $sql = "CREATE TABLE `{$wpdb->prefix}events` (
+        
+            $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
                 event_id int NOT NULL AUTO_INCREMENT,
-                event_begin int NOT NULL,
-                event_end int,
-                event_title varchar(255),
-                event_auther int,
-                event_host int,
-                txid varchar(255),
-                is_deleted boolean,
+                event_type varchar(255),
+                event_timestamp int,
+                event_source varchar(255),
+                event_replyToken varchar(255),
+                event_mode varchar(255),
+                webhookEventId varchar(255),
+                isRedelivery boolean,
+                event_object varchar(255),
                 PRIMARY KEY  (event_id)
             ) $charset_collate;";        
             dbDelta($sql);
-
+        
         }
         
     }
-    new calendars();
+    new eventLogs();
 }
 ?>

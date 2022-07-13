@@ -19,11 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
+include_once dirname( __FILE__ ) . '/includes/class-eventLogs.php';
 
 $channelAccessToken = 'ongg0SgvMZjDQlO3qHvSvGBU/JyMlz2GBiRi9t7iUBHXqZIZAioD9Im7gJ6MYLBA/Aq5BupS6HEd6U/cxDKvstGnUWPfHcQ9OEpQ3QGK44BUzAkp7s3CXP0G4h2C0/o1UO7xpmiI3RelAJhTWK8khQdB04t89/1O/w1cDnyilFU=';
 $channelSecret = '1bd1c2ac3b3a36399de32f5a83f135c0';
-
-create_tables();
 
 $client = new LINEBotTiny($channelAccessToken, $channelSecret);
 
@@ -75,27 +74,6 @@ foreach ($client->parseEvents() as $event) {
     }    
 };
 
-function create_tables() {
-        
-    global $wpdb;
-    $charset_collate = $wpdb->get_charset_collate();
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
-    $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
-        event_id int NOT NULL AUTO_INCREMENT,
-        event_type varchar(255),
-        event_timestamp int,
-        event_source varchar(255),
-        event_replyToken varchar(255),
-        event_mode varchar(255),
-        webhookEventId varchar(255),
-        isRedelivery boolean,
-        event_object varchar(255),
-        PRIMARY KEY  (event_id)
-    ) $charset_collate;";        
-    dbDelta($sql);
-
-}
 /*
 {
     "destination": "xxxxxxxxxx",
