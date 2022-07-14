@@ -339,7 +339,7 @@ if (!class_exists('eventLogs')) {
                 event_mode varchar(50),
                 webhookEventId varchar(50),
                 isRedelivery boolean,
-                event_object varchar(255),
+                event_object varchar(1000),
                 PRIMARY KEY  (event_id)
             ) $charset_collate;";
             dbDelta($sql);
