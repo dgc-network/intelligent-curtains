@@ -140,8 +140,8 @@ class LINEBotTiny
     }
 
     /**
-     * @param array<string, mixed> $message
-     * @return void
+     * @param string $userId
+     * @return object
      */
     public function getProfile($userId)
     {
@@ -165,6 +165,39 @@ class LINEBotTiny
             error_log('Request failed: ' . $response);
         }
 
+        $response = stripslashes($response);
+        $response = json_decode($response, true);
+        
+        return $response;
+    }
+
+    /**
+     * @param string $groupId
+     * @return object
+     */
+    public function getGroupSummary($groupId)
+    {
+        $header = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'GET',
+                'header' => implode("\r\n", $header),
+            ],
+        ]);
+
+        $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/summary', false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
+
+        $response = stripslashes($response);
+        $response = json_decode($response, true);
+        
         return $response;
     }
 
