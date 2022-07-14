@@ -232,17 +232,66 @@ if (!class_exists('eventLogs')) {
 
         public function insertEvent($event) {
 
+            switch ($event['type']) {
+                case 'message':
+                    $event_object = $event['message'];
+                    break;
+                case 'unsend':
+                    $event_object = $event['unsend'];
+                    break;
+                case 'memberJoined':
+                    $event_object = $event['joined'];
+                    break;
+                case 'memberLeft':
+                    $event_object = $event['left'];
+                    break;
+                case 'postback':
+                    $event_object = $event['postback'];
+                    break;
+                case 'videoPlayComplete':
+                    $event_object = $event['videoPlayComplete'];
+                    break;
+                case 'beacon':
+                    $event_object = $event['beacon'];
+                    break;
+                case 'accountLink':
+                    $event_object = $event['link'];
+                    break;
+                case 'things':
+                    $event_object = $event['things'];
+                    break;
+            }
+
+            switch ($event['source']['type']) {
+                case 'user':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_room_id = $event['source']['groupId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_room_id = $event['source']['roomId'];
+                    break;
+            }
+
             global $wpdb;
             $table = $wpdb->prefix.'eventLogs';
             $data = array(
                 'event_type' => $event['type'],
-                'event_timestamp' => $event['timestamp'],
-                'event_source' => json_encode($event['source']),
+                'event_timestamp' => time(),
+                'source_type' => $source_type,
+                'source_user_id' => $user_id,
+                'source_group_room_id' => $group_room_id,
                 'event_replyToken' => $event['replyToken'],
                 'event_mode' => $event['mode'],
                 'webhookEventId' => $event['webhookEventId'],
                 'isRedelivery' => $event['deliveryContext']['isRedelivery'],
-                //'event_object' => $event['message'],
+                'event_object' => json_encode($event_object),
             );
             //$format = array('%s', '%d', '%s', '%s');
             //$insert_id = $wpdb->insert($table, $data, $format);
@@ -257,12 +306,14 @@ if (!class_exists('eventLogs')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
                 event_id int NOT NULL AUTO_INCREMENT,
-                event_type varchar(255),
+                event_type varchar(20),
                 event_timestamp int(10),
-                event_source varchar(255),
-                event_replyToken varchar(255),
-                event_mode varchar(255),
-                webhookEventId varchar(255),
+                source_type varchar(10),
+                source_user_id varchar(50),
+                source_group_room_id varchar(50),
+                event_replyToken varchar(50),
+                event_mode varchar(50),
+                webhookEventId varchar(50),
                 isRedelivery boolean,
                 event_object varchar(255),
                 PRIMARY KEY  (event_id)
