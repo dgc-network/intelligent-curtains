@@ -156,15 +156,17 @@ if (!class_exists('eventLogs')) {
             global $wpdb;
             $user_id = get_current_user_id();
             //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs", OBJECT );
-            $output  = '<h2>Events</h2>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message'", OBJECT );
+            $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Type</td><td>Timestamp</td><td>Source</td></tr>';
+            $output .= '<tr><td>Timestamp</td><td>Source</td><td>UserId</td><td>EventObject</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_type.'</a></td>';
+                //$output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_type.'</a></td>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
-                $output .= '<td>'.$result->event_source.'</td>';
+                $output .= '<td>'.$result->source_type.'</td>';
+                $output .= '<td>'.$result->source_user_id.'</td>';
+                $output .= '<td>'.$result->event_object.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
