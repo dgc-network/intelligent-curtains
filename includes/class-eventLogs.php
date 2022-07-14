@@ -196,8 +196,8 @@ if (!class_exists('eventLogs')) {
              */
             $channelAccessToken = '';
             $channelSecret = '';
-            if (file_exists(__DIR__ . '/line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file(__DIR__ . "/line-bot-sdk-tiny/config.ini", true);
+            if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file(dirname( __FILE__ ) . "/line-bot-sdk-tiny/config.ini", true);
                 if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
                     error_log("config.ini 配置檔未設定完全！", 0);
                 } else {
