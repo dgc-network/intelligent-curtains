@@ -38,13 +38,15 @@ foreach ($client->parseEvents() as $event) {
             switch ($message['type']) {
                 case 'text':
                     // start my codes from here
+                    $eventLog->insertTextMessage($event, $message);
 
                     $client->replyMessage([
                         'replyToken' => $event['replyToken'],
                         'messages' => [
                             [
                                 'type' => 'text',
-                                'text' => $usr_id.':'.$message['text']
+                                //'text' => $usr_id.':'.$message['text'],
+                                'text' => $message['text']
                             ]
                         ]
                     ]);

@@ -11,6 +11,7 @@ if (!class_exists('eventLogs')) {
          */
         public function __construct() {
             add_shortcode('event-list', __CLASS__ . '::list_mode');
+            add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
         }
 
@@ -185,52 +186,41 @@ if (!class_exists('eventLogs')) {
 
             return $output;
         }
-        
-        function select_available_time($host=0, $date=0) {
-            if ($host==0) return '$host is required';
-            if ($date==0) return '$date is required';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}calendars WHERE event_host = {$host}", OBJECT );
+
+        function list_text_message() {
+
+            /**
+             * List Mode
+             */
+            global $wpdb;
+            $user_id = get_current_user_id();
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}textMessages", OBJECT );
+            $output  = '<h2>Message Events</h2>';
+            $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr><td>webhookEventId</td><td>textMessage_text</td></tr>';
             foreach ( $results as $index=>$result ) {
-                $output .= $result->event_start . ' - ' . $result->event_end;
+                $output .= '<tr>';
+                $output .= '<td>'.$result->webhookEventId.'</td>';
+                $output .= '<td>'.$result->textMessage_text.'</td>';
+                $output .= '</tr>';
             }
-            return $output;
+            $output .= '</tbody></table></figure>';
 
-            date(get_option('date_format'));
-            $output  = '<option value="no_select">-- Select a time --</option>';
-            $output .= '<option value="08000900">08:00-09:00</option>';
-            $output .= '<option value="09001000">09:00-10:00</option>';
-            $output .= '<option value="10001100">10:00-11:00</option>';
-            $output .= '<option value="11001200">11:00-12:00</option>';
-            return $output;
-        }
-        
-        function select_time() {
-            date(get_option('date_format'));
-            $output  = '<option value="no_select">-- Select a time --</option>';
-            $output .= '<option value="08000900">08:00-09:00</option>';
-            $output .= '<option value="09001000">09:00-10:00</option>';
-            $output .= '<option value="10001100">10:00-11:00</option>';
-            $output .= '<option value="11001200">11:00-12:00</option>';
+            $output .= '<form method="get">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="edit_mode">';
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel" name="edit_mode">';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
+
             return $output;
         }
-        
-        function select_options( $default_id=null ) {
-
-            $results = get_orders();
-            $output = '<option value="no_select">-- Select an option --</option>';
-            foreach ($results as $index => $result) {
-                if ( $results[$index]->ID == $default_id ) {
-                    $output .= '<option value="'.$results[$index]->ID.'" selected>';
-                } else {
-                    $output .= '<option value="'.$results[$index]->ID.'">';
-                }
-                $output .= $results[$index]->display_name;
-                $output .= '</option>';
-            }
-            $output .= '<option value="delete_select">-- Remove this --</option>';
-            return $output;    
-        }
-
 
         public function insertEvent($event) {
 
@@ -295,11 +285,20 @@ if (!class_exists('eventLogs')) {
                 'isRedelivery' => $event['deliveryContext']['isRedelivery'],
                 'event_object' => json_encode($event_object),
             );
-            //$format = array('%s', '%d', '%s', '%s');
-            //$insert_id = $wpdb->insert($table, $data, $format);
             $insert_id = $wpdb->insert($table, $data);        
         }
     
+        public function insertTextMessage($event, $message) {
+
+            global $wpdb;
+            $table = $wpdb->prefix.'textMessages';
+            $data = array(
+                'webhookEventId' => $event['webhookEventId'],
+                'textMessage_text' => $message['text'],
+            );
+            $insert_id = $wpdb->insert($table, $data);        
+        }
+
         function create_tables() {
         
             global $wpdb;
@@ -319,8 +318,16 @@ if (!class_exists('eventLogs')) {
                 isRedelivery boolean,
                 event_object varchar(255),
                 PRIMARY KEY  (event_id)
-            ) $charset_collate;";        
-            dbDelta($sql);        
+            ) $charset_collate;";
+            dbDelta($sql);
+            
+            $sql = "CREATE TABLE `{$wpdb->prefix}textMessages` (
+                textMessage_id int NOT NULL AUTO_INCREMENT,
+                webhookEventId varchar(50),
+                textMessage_text varchar(255),
+                PRIMARY KEY  (textMessage_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         }        
     }
 }
