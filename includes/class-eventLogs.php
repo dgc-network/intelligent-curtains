@@ -6,6 +6,8 @@ if (!class_exists('eventLogs')) {
 
     class eventLogs {
 
+        private $client;
+
         /**
          * Class constructor
          */
@@ -13,6 +15,19 @@ if (!class_exists('eventLogs')) {
             add_shortcode('event-list', __CLASS__ . '::list_mode');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
+
+            $channelAccessToken = '';
+            $channelSecret = '';
+            if (file_exists(__DIR__ . '/line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file(__DIR__ . "/line-bot-sdk-tiny/config.ini", true);
+                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                    error_log("config.ini 配置檔未設定完全！", 0);
+                } else {
+                    $channelAccessToken = $config['Channel']['Token'];
+                    $channelSecret = $config['Channel']['Secret'];
+                }
+            }
+            $this->client = new LINEBotTiny($channelAccessToken, $channelSecret);
         }
 
         function edit_mode( $_id=0, $_mode='' ) {
@@ -200,11 +215,13 @@ if (!class_exists('eventLogs')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
             foreach ( $results as $index=>$result ) {
+                $response = $this->client->getProfile($result->source_user_id);
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '<td>'.$result->source_type.'</td>';
-                $output .= '<td>'.$result->webhookEventId.'</td>';
+                //$output .= '<td>'.$result->webhookEventId.'</td>';
+                $output .= '<td>'.$response['displayName'].'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
