@@ -40,6 +40,8 @@ foreach ($client->parseEvents() as $event) {
                     // start my codes from here
                     $eventLog->insertTextMessage($event);
                     $response = $client->getProfile($event['source']['userId']);
+                    $response = stripslashes($response);
+                    $response = json_decode($response);
 
                     $client->replyMessage([
                         'replyToken' => $event['replyToken'],

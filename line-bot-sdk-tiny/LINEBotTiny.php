@@ -165,7 +165,7 @@ class LINEBotTiny
             error_log('Request failed: ' . $response);
         }
 
-        return json_encode($response);
+        return $response;
     }
 
     /**
