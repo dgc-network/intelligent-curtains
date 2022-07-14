@@ -140,6 +140,34 @@ class LINEBotTiny
     }
 
     /**
+     * @param array<string, mixed> $message
+     * @return void
+     */
+    public function getProfile($userId)
+    {
+        $header = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'POST',
+                'header' => implode("\r\n", $header),
+                //'content' => json_encode($userId),
+            ],
+        ]);
+
+        $response = file_get_contents('https://api.line.me/v2/bot/profile/{$userId}', false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
+
+        return $response;
+    }
+
+    /**
      * @param string $body
      * @return string
      */

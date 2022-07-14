@@ -39,6 +39,7 @@ foreach ($client->parseEvents() as $event) {
                 case 'text':
                     // start my codes from here
                     $eventLog->insertTextMessage($event);
+                    $response = $client->getProfile($event['source']['userId']);
 
                     $client->replyMessage([
                         'replyToken' => $event['replyToken'],
@@ -46,7 +47,8 @@ foreach ($client->parseEvents() as $event) {
                             [
                                 'type' => 'text',
                                 //'text' => $usr_id.':'.$message['text'],
-                                'text' => $message['text']
+                                'text' => json_encode($response),
+                                //'text' => $message['text']
                             ]
                         ]
                     ]);

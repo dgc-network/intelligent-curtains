@@ -198,13 +198,13 @@ if (!class_exists('eventLogs')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}textMessages", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Timestamp</td><td>Source</td><td>webhookEventId</td><td>Message</td></tr>';
+            $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
+                $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '<td>'.$result->source_type.'</td>';
                 $output .= '<td>'.$result->webhookEventId.'</td>';
-                $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
