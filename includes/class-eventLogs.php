@@ -221,8 +221,8 @@ if (!class_exists('eventLogs')) {
                 $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '<td>'.$result->source_type.'</td>';
                 //$output .= '<td>'.$result->webhookEventId.'</td>';
-                $output .= '<td>'.$result->source_user_id.'</td>';
-                //$output .= '<td>'.$response['displayName'].'</td>';
+                //$output .= '<td>'.$result->source_user_id.'</td>';
+                $output .= '<td>'.$response['displayName'].'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
