@@ -47,7 +47,7 @@ foreach ($client->parseEvents() as $event) {
                             [
                                 'type' => 'text',
                                 //'text' => $usr_id.':'.$message['text'],
-                                'text' => json_encode($response),
+                                'text' => $response['displayName'],
                                 //'text' => $message['text']
                             ]
                         ]
