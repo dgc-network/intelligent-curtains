@@ -198,9 +198,11 @@ if (!class_exists('eventLogs')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}textMessages", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>webhookEventId</td><td>textMessage_text</td></tr>';
+            $output .= '<tr><td>Timestamp</td><td>Source</td><td>webhookEventId</td><td>Message</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td>'.$result->event_timestamp.'</td>';
+                $output .= '<td>'.$result->source_type.'</td>';
                 $output .= '<td>'.$result->webhookEventId.'</td>';
                 $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '</tr>';
@@ -288,13 +290,34 @@ if (!class_exists('eventLogs')) {
             $insert_id = $wpdb->insert($table, $data);        
         }
     
-        public function insertTextMessage($event, $message) {
+        public function insertTextMessage($event) {
+
+            switch ($event['source']['type']) {
+                case 'user':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_room_id = $event['source']['groupId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_room_id = $event['source']['roomId'];
+                    break;
+            }
 
             global $wpdb;
             $table = $wpdb->prefix.'textMessages';
             $data = array(
                 'webhookEventId' => $event['webhookEventId'],
-                'textMessage_text' => $message['text'],
+                'event_timestamp' => time(),
+                'source_type' => $source_type,
+                'source_user_id' => $user_id,
+                'source_group_room_id' => $group_room_id,
+                'textMessage_text' => $event['message']['text'],
             );
             $insert_id = $wpdb->insert($table, $data);        
         }
@@ -324,6 +347,11 @@ if (!class_exists('eventLogs')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}textMessages` (
                 textMessage_id int NOT NULL AUTO_INCREMENT,
                 webhookEventId varchar(50),
+                event_timestamp int(10),
+                source_type varchar(10),
+                source_user_id varchar(50),
+                source_group_room_id varchar(50),
+                event_replyToken varchar(50),
                 textMessage_text varchar(255),
                 PRIMARY KEY  (textMessage_id)
             ) $charset_collate;";
