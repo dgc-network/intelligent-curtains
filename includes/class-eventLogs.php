@@ -215,13 +215,13 @@ if (!class_exists('eventLogs')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
             foreach ( $results as $index=>$result ) {
-                $response = $this->client->getProfile($result->source_user_id);
+                $response = self::$client->getProfile($result->source_user_id);
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$result->textMessage_text.'</td>';
                 $output .= '<td>'.$result->source_type.'</td>';
-                $output .= '<td>'.$result->webhookEventId.'</td>';
-                //$output .= '<td>'.$response['displayName'].'</td>';
+                //$output .= '<td>'.$result->webhookEventId.'</td>';
+                $output .= '<td>'.$response['displayName'].'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
