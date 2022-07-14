@@ -211,11 +211,11 @@ if (!class_exists('eventLogs')) {
             $user_id = get_current_user_id();
             //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}textMessages", OBJECT );
-            $output  = '<h2>Message Events</h2>';
+            $output  = '<h2>Text Messages</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
             foreach ( $results as $index=>$result ) {
-                //$response = $this->client->getProfile($result->source_user_id);
+                $response = $this->client->getProfile($result->source_user_id);
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$result->textMessage_text.'</td>';
