@@ -215,8 +215,8 @@ if (!class_exists('event_bot')) {
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
                 //$output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.$result->source_type.'('.$group_name.')'.'<img src="'.$group_picture_url.'" width="50" height="50"'.'</td>';
-                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.'<img src="'.$user_picture_url.'" width="50" height="50"'.'</td>';
+                $output .= '<td>'.'<img src="'.$group_picture_url.'" width="50" height="50" style="border-radius: 50%"'.$group_name.'('.$result->source_type.')'.'</td>';
+                $output .= '<td>'.'<img src="'.$user_picture_url.'" width="50" height="50" style="border-radius: 50%"'.$display_name.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';

@@ -220,11 +220,7 @@ class LINEBotTiny
             ],
         ]);
 
-        //if ($groupId == $userId) {
-            //$response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
-        //} else {
-            $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/member'.'/'.$userId, false, $context);
-        //}
+        $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/member'.'/'.$userId, false, $context);
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
