@@ -202,7 +202,7 @@ class LINEBotTiny
     }
 
     /**
-     * @param string $groupId
+     * @param string $messageId
      * @return object
      */
     public function getContent($messageId)
@@ -219,7 +219,7 @@ class LINEBotTiny
                 'header' => implode("\r\n", $header),
             ],
         ]);
-        $response = file_get_contents('https://api.line.me/v2/bot/message/'.$messageId.'/content', false, $context);
+        $response = file_get_contents('https://api-data.line.me/v2/bot/message/'.$messageId.'/content', false, $context);
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
