@@ -219,7 +219,7 @@ if (!class_exists('eventLogs')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
             foreach ( $results as $index=>$result ) {
-                $response = $this->line_bot_sdk()->getProfile($result->source_user_id);
+                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$result->textMessage_text.'</td>';
