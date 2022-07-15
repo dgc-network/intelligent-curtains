@@ -204,8 +204,8 @@ if (!class_exists('event_bot')) {
                         break;
                     case 'image':
                         $response = self::line_bot_sdk()->getContent($message['id']);
-                        //$display_message = json_encode($response);
-                        $display_message = $message['id'];
+                        $display_message = json_encode($response);
+                        //$display_message = $message['id'];
                         break;
                     default:
                         $display_message = json_encode($message);

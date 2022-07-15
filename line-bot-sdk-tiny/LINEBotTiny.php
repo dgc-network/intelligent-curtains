@@ -238,7 +238,7 @@ class LINEBotTiny
     public function getContent($messageId)
     {
         $header = array(
-            'Content-Type: application/json',
+            'Content-Type: application/octet-stream',
             'Authorization: Bearer ' . $this->channelAccessToken,
         );
 
