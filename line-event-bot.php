@@ -19,25 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
-include_once dirname( __FILE__ ) . '/includes/class-eventLogs.php';
-/*
-$channelAccessToken = '';
-$channelSecret = '';
-if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
-    $config = parse_ini_file(dirname( __FILE__ ) . "/line-bot-sdk-tiny/config.ini", true);
-//if (file_exists(__DIR__ . '/line-bot-sdk-tiny/config.ini')) {
-    //$config = parse_ini_file(__DIR__ . "/line-bot-sdk-tiny/config.ini", true);
-    if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-        error_log("config.ini 配置檔未設定完全！", 0);
-    } else {
-        $channelAccessToken = $config['Channel']['Token'];
-        $channelSecret = $config['Channel']['Secret'];
-    }
-}
-//$client = new LINEBotTiny($channelAccessToken, $channelSecret);
-*/
-$eventLog = new eventLogs();
-$client = $eventLog->line_bot_sdk();
+include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
+
+$event_bot = new event_bot();
+$client = $event_bot->line_bot_sdk();
 
 foreach ($client->parseEvents() as $event) {
     $eventLog->insertEvent($event);

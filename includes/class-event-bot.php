@@ -2,9 +2,9 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
-if (!class_exists('eventLogs')) {
+if (!class_exists('event_bot')) {
 
-    class eventLogs {
+    class event_bot {
 
         private $client;
 
@@ -217,7 +217,7 @@ if (!class_exists('eventLogs')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}textMessages", OBJECT );
             $output  = '<h2>Text Messages</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>webhookEventId</td></tr>';
+            $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>Name</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $output .= '<tr>';

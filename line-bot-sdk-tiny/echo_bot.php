@@ -16,33 +16,14 @@
  * under the License.
  */
 
-//require_once('./LINEBotTiny.php');
-//include_once dirname( __FILE__ ) . '/LINEBotTiny.php';
+require_once('./LINEBotTiny.php');
 
-$channelAccessToken = 'ongg0SgvMZjDQlO3qHvSvGBU/JyMlz2GBiRi9t7iUBHXqZIZAioD9Im7gJ6MYLBA/Aq5BupS6HEd6U/cxDKvstGnUWPfHcQ9OEpQ3QGK44BUzAkp7s3CXP0G4h2C0/o1UO7xpmiI3RelAJhTWK8khQdB04t89/1O/w1cDnyilFU=';
-$channelSecret = '1bd1c2ac3b3a36399de32f5a83f135c0';
+$channelAccessToken = '';
+$channelSecret = '';
 
 $client = new LINEBotTiny($channelAccessToken, $channelSecret);
 
 foreach ($client->parseEvents() as $event) {
-    $getsource = $event['source'];
-    $usr_id = $getsource['userId'];
-/*
-    $response = $bot->getProfile('<userId>');
-    if ($response->isSucceeded()) {
-        $profile = $response->getJSONDecodedBody();
-        echo $profile['displayName'];
-        echo $profile['pictureUrl'];
-        echo $profile['statusMessage'];
-    }
-*/
-/*    
-    $response = wp_remote_get( 'https://api.line.me/v2/bot/profile/'.$usr_id, array(
-        'header'    => array(
-            'Authentication'    => 'Bearer '.$channelAccessToken
-        )
-    ));
-*/
     switch ($event['type']) {
         case 'message':
             $message = $event['message'];
