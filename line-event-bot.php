@@ -34,9 +34,10 @@ if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
         $channelSecret = $config['Channel']['Secret'];
     }
 }
-$client = new LINEBotTiny($channelAccessToken, $channelSecret);
+//$client = new LINEBotTiny($channelAccessToken, $channelSecret);
 
 $eventLog = new eventLogs();
+$client = $eventLog->init_line_bot_sdk(); 
 
 foreach ($client->parseEvents() as $event) {
     $eventLog->insertEvent($event);

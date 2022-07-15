@@ -17,6 +17,22 @@ if (!class_exists('eventLogs')) {
             self::create_tables();
         }
 
+        public function init_line_bot_sdk() {
+            $channelAccessToken = '';
+            $channelSecret = '';
+            if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file(dirname( __FILE__ ) . "/line-bot-sdk-tiny/config.ini", true);
+                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                    error_log("config.ini 配置檔未設定完全！", 0);
+                } else {
+                    $channelAccessToken = $config['Channel']['Token'];
+                    $channelSecret = $config['Channel']['Secret'];
+                }
+            }
+            $client = new LINEBotTiny($channelAccessToken, $channelSecret);
+            return $client;
+        }
+
         function edit_mode( $_id=0, $_mode='' ) {
 
             if ($_id==0){
@@ -194,19 +210,6 @@ if (!class_exists('eventLogs')) {
             /**
              * List Mode
              */
-            $channelAccessToken = '';
-            $channelSecret = '';
-            if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file(dirname( __FILE__ ) . "/line-bot-sdk-tiny/config.ini", true);
-                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-                    error_log("config.ini 配置檔未設定完全！", 0);
-                } else {
-                    $channelAccessToken = $config['Channel']['Token'];
-                    $channelSecret = $config['Channel']['Secret'];
-                }
-            }
-            $client = new LINEBotTiny($channelAccessToken, $channelSecret);
-
             global $wpdb;
             $user_id = get_current_user_id();
             //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
