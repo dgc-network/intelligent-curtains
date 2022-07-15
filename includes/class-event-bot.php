@@ -224,10 +224,10 @@ if (!class_exists('event_bot')) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$result->message_event.'</td>';
-                $output .= '<td>'.$result->source_type.'</td>';
+                $output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
                 //$output .= '<td>'.$result->webhookEventId.'</td>';
                 //$output .= '<td>'.$result->source_user_id.'</td>';
-                $output .= '<td>'.$response['displayName'].'</td>';
+                $output .= '<td>'.$response['displayName'].'('.$result->source_user_id.')'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -383,7 +383,7 @@ if (!class_exists('event_bot')) {
                 'source_user_id' => $user_id,
                 'source_group_id' => $group_id,
                 'webhookEventId' => $event['webhookEventId'],
-                'event_message' => $event['message'],
+                'event_message' => json_encode($event['message']),
             );
             $insert_id = $wpdb->insert($table, $data);        
         }
