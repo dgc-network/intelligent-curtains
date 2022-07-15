@@ -25,17 +25,18 @@ $event_bot = new event_bot();
 $client = $event_bot->line_bot_sdk();
 
 foreach ($client->parseEvents() as $event) {
-    $eventLog->insertEvent($event);
+    $event_bot->insertEvent($event);
     $getsource = $event['source'];
     $usr_id = $getsource['userId'];
 
     switch ($event['type']) {
         case 'message':
+            $event_bot->insertMessageEvent($event);
             $message = $event['message'];
             switch ($message['type']) {
                 case 'text':
                     // start my codes from here
-                    $eventLog->insertTextMessage($event);
+                    $event_bot->insertTextMessage($event);
                     $response = $client->getProfile($event['source']['userId']);
 
                     $client->replyMessage([

@@ -282,16 +282,17 @@ if (!class_exists('event_bot')) {
                 case 'user':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['userId'];
                     break;
                 case 'group':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
-                    $group_room_id = $event['source']['groupId'];
+                    $group_id = $event['source']['groupId'];
                     break;
-                case 'group':
+                case 'room':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
-                    $group_room_id = $event['source']['roomId'];
+                    $group_id = $event['source']['roomId'];
                     break;
             }
 
@@ -302,7 +303,7 @@ if (!class_exists('event_bot')) {
                 'event_timestamp' => time(),
                 'source_type' => $source_type,
                 'source_user_id' => $user_id,
-                'source_group_room_id' => $group_room_id,
+                'source_group_id' => $group_id,
                 'event_replyToken' => $event['replyToken'],
                 'event_mode' => $event['mode'],
                 'webhookEventId' => $event['webhookEventId'],
@@ -312,33 +313,68 @@ if (!class_exists('event_bot')) {
             $insert_id = $wpdb->insert($table, $data);        
         }
     
+        public function insertMessageEvent($event) {
+
+            switch ($event['source']['type']) {
+                case 'user':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['userId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['groupId'];
+                    break;
+                case 'room':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['roomId'];
+                    break;
+            }
+
+            global $wpdb;
+            $table = $wpdb->prefix.'messageEvents';
+            $data = array(
+                'event_timestamp' => time(),
+                'message_type' => $event['message']['type'],
+                'source_type' => $source_type,
+                'source_user_id' => $user_id,
+                'source_group_id' => $group_id,
+                'webhookEventId' => $event['webhookEventId'],
+                'event_message' => $event['message'],
+            );
+            $insert_id = $wpdb->insert($table, $data);        
+        }
+
         public function insertTextMessage($event) {
 
             switch ($event['source']['type']) {
                 case 'user':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['userId'];
                     break;
                 case 'group':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
-                    $group_room_id = $event['source']['groupId'];
+                    $group_id = $event['source']['groupId'];
                     break;
-                case 'group':
+                case 'room':
                     $source_type = $event['source']['type'];
                     $user_id = $event['source']['userId'];
-                    $group_room_id = $event['source']['roomId'];
+                    $group_id = $event['source']['roomId'];
                     break;
             }
 
             global $wpdb;
             $table = $wpdb->prefix.'textMessages';
             $data = array(
-                'webhookEventId' => $event['webhookEventId'],
                 'event_timestamp' => time(),
                 'source_type' => $source_type,
                 'source_user_id' => $user_id,
-                'source_group_room_id' => $group_room_id,
+                'source_group_id' => $group_id,
+                'webhookEventId' => $event['webhookEventId'],
                 'textMessage_text' => $event['message']['text'],
             );
             $insert_id = $wpdb->insert($table, $data);        
@@ -356,7 +392,7 @@ if (!class_exists('event_bot')) {
                 event_timestamp int(10),
                 source_type varchar(10),
                 source_user_id varchar(50),
-                source_group_room_id varchar(50),
+                source_group_id varchar(50),
                 event_replyToken varchar(50),
                 event_mode varchar(50),
                 webhookEventId varchar(50),
@@ -366,13 +402,27 @@ if (!class_exists('event_bot')) {
             ) $charset_collate;";
             dbDelta($sql);
             
+            $sql = "CREATE TABLE `{$wpdb->prefix}messageEvents` (
+                message_event_id int NOT NULL AUTO_INCREMENT,
+                event_timestamp int(10),
+                message_type varchar(10),
+                webhookEventId varchar(50),
+                source_type varchar(10),
+                source_user_id varchar(50),
+                source_group_id varchar(50),
+                event_replyToken varchar(50),
+                event_message varchar(500),
+                PRIMARY KEY  (message_event_id)
+            ) $charset_collate;";
+            dbDelta($sql);
+            
             $sql = "CREATE TABLE `{$wpdb->prefix}textMessages` (
                 textMessage_id int NOT NULL AUTO_INCREMENT,
                 webhookEventId varchar(50),
                 event_timestamp int(10),
                 source_type varchar(10),
                 source_user_id varchar(50),
-                source_group_room_id varchar(50),
+                source_group_id varchar(50),
                 event_replyToken varchar(50),
                 textMessage_text varchar(255),
                 PRIMARY KEY  (textMessage_id)
