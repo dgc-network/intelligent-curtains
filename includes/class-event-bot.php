@@ -184,7 +184,7 @@ if (!class_exists('event_bot')) {
                 $event = json_decode($result->event_object, true);
                 $display_message = '';
                 $message = $event['message'];
-                /*
+                
                 switch ($message['type']) {
                     case 'text':
                         $display_message = $message['text'];
@@ -193,13 +193,12 @@ if (!class_exists('event_bot')) {
                         $display_message = json_encode($message);
                         break;
                 }
-                */
+                
                 $response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $display_name = $response['displayName'];
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
                 $output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.$result->source_user_id.'</td>';
                 $output .= '<td>'.$displayName.'('.$result->source_user_id.')'.'</td>';
                 $output .= '</tr>';
             }
