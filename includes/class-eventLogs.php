@@ -20,8 +20,9 @@ if (!class_exists('eventLogs')) {
         public function init_line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
-            if (file_exists(dirname( __FILE__ ) . './line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file(dirname( __FILE__ ) . "./line-bot-sdk-tiny/config.ini", true);
+            $plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
+            if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
                 if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
                     error_log("config.ini 配置檔未設定完全！", 0);
                 } else {
