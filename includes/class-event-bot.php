@@ -13,6 +13,7 @@ if (!class_exists('event_bot')) {
          */
         public function __construct() {
             add_shortcode('event-list', __CLASS__ . '::list_mode');
+            add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
         }
@@ -187,6 +188,46 @@ if (!class_exists('event_bot')) {
                 $output .= '<td>'.$result->source_type.'</td>';
                 $output .= '<td>'.$result->source_user_id.'</td>';
                 $output .= '<td>'.$result->event_object.'</td>';
+                $output .= '</tr>';
+            }
+            $output .= '</tbody></table></figure>';
+
+            $output .= '<form method="get">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="edit_mode">';
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel" name="edit_mode">';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
+
+            return $output;
+        }
+
+        function list_message_event() {
+
+            /**
+             * List Mode
+             */
+            global $wpdb;
+            $user_id = get_current_user_id();
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}messageEvents", OBJECT );
+            $output  = '<h2>Message Events</h2>';
+            $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr><td>Timestamp</td><td>Message</td><td>Source</td><td>Name</td></tr>';
+            foreach ( $results as $index=>$result ) {
+                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                $output .= '<tr>';
+                $output .= '<td>'.$result->event_timestamp.'</td>';
+                $output .= '<td>'.$result->message_event.'</td>';
+                $output .= '<td>'.$result->source_type.'</td>';
+                //$output .= '<td>'.$result->webhookEventId.'</td>';
+                //$output .= '<td>'.$result->source_user_id.'</td>';
+                $output .= '<td>'.$response['displayName'].'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
