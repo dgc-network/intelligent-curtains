@@ -356,6 +356,8 @@ if (!class_exists('event_bot')) {
     
         public function insertMessageEvent($event) {
 
+            $message = $event['message'];
+
             switch ($event['source']['type']) {
                 case 'user':
                     $source_type = $event['source']['type'];
@@ -383,7 +385,7 @@ if (!class_exists('event_bot')) {
                 'source_user_id' => $user_id,
                 'source_group_id' => $group_id,
                 'webhookEventId' => $event['webhookEventId'],
-                'event_message' => json_encode($event['message']),
+                'event_message' => json_encode($message),
             );
             $insert_id = $wpdb->insert($table, $data);        
         }
