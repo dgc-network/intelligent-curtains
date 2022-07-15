@@ -181,9 +181,10 @@ if (!class_exists('event_bot')) {
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $event = json_decode($result->event_object, true);
+                //$event = json_decode($result->event_object, true);
                 $display_message = '';
-                $message = $event['message'];
+                //$message = $event['message'];
+                $message = json_decode($result->event_object, true);
                 
                 switch ($message['type']) {
                     case 'text':
