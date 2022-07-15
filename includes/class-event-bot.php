@@ -181,26 +181,28 @@ if (!class_exists('event_bot')) {
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                //$event = json_decode($result->event_object, true);
+                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                $display_name = $response['displayName'];
                 $display_message = '';
-                //$message = $event['message'];
                 $message = json_decode($result->event_object, true);
                 
                 switch ($message['type']) {
                     case 'text':
                         $display_message = $message['text'];
                         break;
+                    case 'image':
+                        $response = self::line_bot_sdk()->getContent($message['id']);
+                        $display_message = json_encode($response);
+                        break;
                     default:
                         $display_message = json_encode($message);
                         break;
                 }
                 
-                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
-                $display_name = $response['displayName'];
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
                 $output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.$displayName.'('.$result->source_user_id.')'.'</td>';
+                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
