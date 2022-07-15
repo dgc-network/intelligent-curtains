@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-eventLogs.php';
-
+/*
 $channelAccessToken = '';
 $channelSecret = '';
 if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
@@ -35,9 +35,9 @@ if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
     }
 }
 //$client = new LINEBotTiny($channelAccessToken, $channelSecret);
-
+*/
 $eventLog = new eventLogs();
-$client = $eventLog->init_line_bot_sdk(); 
+$client = $eventLog->line_bot_sdk();
 
 foreach ($client->parseEvents() as $event) {
     $eventLog->insertEvent($event);
