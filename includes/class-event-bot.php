@@ -223,7 +223,7 @@ if (!class_exists('event_bot')) {
                 $response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
-                $output .= '<td>'.$result->message_event.'</td>';
+                $output .= '<td>'.$result->message_event.'('.$result->message_type.')'.'</td>';
                 $output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
                 //$output .= '<td>'.$result->webhookEventId.'</td>';
                 //$output .= '<td>'.$result->source_user_id.'</td>';
@@ -452,7 +452,7 @@ if (!class_exists('event_bot')) {
                 source_user_id varchar(50),
                 source_group_id varchar(50),
                 event_replyToken varchar(50),
-                event_message varchar(500),
+                event_message varchar(1000),
                 PRIMARY KEY  (message_event_id)
             ) $charset_collate;";
             dbDelta($sql);
