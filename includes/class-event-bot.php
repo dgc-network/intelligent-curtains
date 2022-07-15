@@ -16,7 +16,7 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
-            self::delete_records();
+            //self::delete_records();
         }
 
         public function line_bot_sdk() {
@@ -171,23 +171,29 @@ if (!class_exists('event_bot')) {
         }
 
         function list_mode() {
-
             /**
              * List Mode
              */
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 10", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 20", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
-                //$response = self::line_bot_sdk()->getProfile($result->source_user_id);
-                $response = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
-                $group_name = $response['groupName'];
-                $group_picture_url = $response['pictureUrl'];
-                $response = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
-                $display_name = $response['displayName'];
-                $user_picture_url = $response['pictureUrl'];
+                if ($result->source_type=='user'){
+                    $response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                    $group_name = $response['displayName'];
+                    $group_picture_url = $response['pictureUrl'];
+                    $display_name = $response['displayName'];
+                    $user_picture_url = $response['pictureUrl'];
+                } else {
+                    $response = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
+                    $group_name = $response['groupName'];
+                    $group_picture_url = $response['pictureUrl'];
+                    $response = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
+                    $display_name = $response['displayName'];
+                    $user_picture_url = $response['pictureUrl'];
+                }
                 $display_message = '';
                 $message = json_decode($result->event_object, true);
                 
