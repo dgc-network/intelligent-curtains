@@ -180,14 +180,27 @@ if (!class_exists('event_bot')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message'", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Timestamp</td><td>Source</td><td>UserId</td><td>EventObject</td></tr>';
+            $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                //$output .= '<td><a href="?edit_mode=Edit&_id='.$result->event_id.'">'.$result->event_type.'</a></td>';
+                $event = json_decode($result->event_object);
+                $display_message = '';
+                $message = $event['message'];
+                switch ($message['type']) {
+                    case 'text':
+                        $display_message = $message['text'];
+                        break;
+                    default:
+                        $display_message = json_encode($message);
+                        break;
+                }
+                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                $display_name = $response['displayName'];
                 $output .= '<td>'.$result->event_timestamp.'</td>';
-                $output .= '<td>'.$result->source_type.'</td>';
+                $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
+                $output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
                 $output .= '<td>'.$result->source_user_id.'</td>';
-                $output .= '<td>'.$result->event_object.'</td>';
+                $output .= '<td>'.$displayName.'('.$result->source_user_id.')'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
