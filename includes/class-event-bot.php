@@ -178,7 +178,8 @@ if (!class_exists('event_bot')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 10", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
+            //$output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
+            $output .= '<tr><td>User</td><td>EventObject</td><td>Source</td></tr>';
             foreach ( $results as $index=>$result ) {
                 if ($result->source_type=='user'){
                     $response = self::line_bot_sdk()->getProfile($result->source_user_id);
@@ -212,11 +213,10 @@ if (!class_exists('event_bot')) {
                 }
                 
                 $output .= '<tr>';
-                $output .= '<td>'.$result->event_timestamp.'</td>';
+                //$output .= '<td>'.$result->event_timestamp.'</td>';
+                $output .= '<td>'.'<img src="'.$user_picture_url.'" width="50" height="50" style="border-radius: 50%">'.$display_name.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
-                //$output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.'<img src="'.$group_picture_url.'" width="50" height="50" style="border-radius: 50%"'.$group_name.'('.$result->source_type.')'.'</td>';
-                $output .= '<td>'.'<img src="'.$user_picture_url.'" width="50" height="50" style="border-radius: 50%"'.$display_name.'</td>';
+                $output .= '<td>'.'<img src="'.$group_picture_url.'" width="50" height="50" style="border-radius: 50%">'.$group_name.'('.$result->source_type.')'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
