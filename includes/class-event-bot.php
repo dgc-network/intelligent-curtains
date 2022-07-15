@@ -175,7 +175,7 @@ if (!class_exists('event_bot')) {
              * List Mode
              */
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 20", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 10", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
