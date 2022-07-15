@@ -175,12 +175,11 @@ if (!class_exists('event_bot')) {
              * List Mode
              */
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message'", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message' ORDER BY event_timestamp DESC LIMIT 10", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
-                $output .= '<tr>';
                 //$response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $response = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
                 $group_name = $response['groupName'];
@@ -197,19 +196,20 @@ if (!class_exists('event_bot')) {
                         break;
                     case 'image':
                         $response = self::line_bot_sdk()->getContent($message['id']);
-                        $display_message = json_encode($response);
-                        //$display_message = $message['id'];
+                        //$display_message = json_encode($response);
+                        $display_message = $message['id'];
                         break;
                     default:
                         $display_message = json_encode($message);
                         break;
                 }
                 
+                $output .= '<tr>';
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
                 //$output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.$result->source_type.'('.$group_name.')'.$group_picture_url.'</td>';
-                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.$user_picture_url.'</td>';
+                $output .= '<td>'.$result->source_type.'('.$group_name.')'.'<img src="'.$group_picture_url.'" width="50" height="50"'.'</td>';
+                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.'<img src="'.$user_picture_url.'" width="50" height="50"'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
