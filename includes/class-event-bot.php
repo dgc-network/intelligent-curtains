@@ -184,8 +184,10 @@ if (!class_exists('event_bot')) {
                 //$response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $response = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
                 $group_name = $response['groupName'];
+                $group_picture_url = $response['pictureUrl'];
                 $response = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
                 $display_name = $response['displayName'];
+                $user_picture_url = $response['pictureUrl'];
                 $display_message = '';
                 $message = json_decode($result->event_object, true);
                 
@@ -206,8 +208,8 @@ if (!class_exists('event_bot')) {
                 $output .= '<td>'.$result->event_timestamp.'</td>';
                 $output .= '<td>'.$display_message.'('.$message['type'].')'.'</td>';
                 //$output .= '<td>'.$result->source_type.'('.$result->source_group_id.')'.'</td>';
-                $output .= '<td>'.$result->source_type.'('.$group_name.')'.'</td>';
-                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.'</td>';
+                $output .= '<td>'.$result->source_type.'('.$group_name.')'.$group_picture_url.'</td>';
+                $output .= '<td>'.$display_name.'('.$result->source_user_id.')'.$user_picture_url.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
