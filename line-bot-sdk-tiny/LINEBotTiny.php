@@ -202,6 +202,36 @@ class LINEBotTiny
     }
 
     /**
+     * @param string $groupId, $userId
+     * @return object
+     */
+    public function getGroupMemberProfile($groupId, $userId)
+    {
+        $header = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'GET',
+                'header' => implode("\r\n", $header),
+            ],
+        ]);
+
+        $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/member'.'/'.$userId, false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
+
+        $response = stripslashes($response);
+        $response = json_decode($response, true);
+        
+        return $response;
+    }
+
+    /**
      * @param string $messageId
      * @return object
      */

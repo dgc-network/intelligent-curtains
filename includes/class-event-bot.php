@@ -181,7 +181,8 @@ if (!class_exists('event_bot')) {
             $output .= '<tr><td>Timestamp</td><td>EventObject</td><td>Source</td><td>UserId</td></tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                //$response = self::line_bot_sdk()->getProfile($result->source_user_id);
+                $response = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
                 $display_name = $response['displayName'];
                 $display_message = '';
                 $message = json_decode($result->event_object, true);
