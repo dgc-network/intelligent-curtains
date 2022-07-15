@@ -16,6 +16,7 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
+            self::delete_records();
         }
 
         public function line_bot_sdk() {
@@ -445,8 +446,16 @@ if (!class_exists('event_bot')) {
             $insert_id = $wpdb->insert($table, $data);        
         }
 
+        function delete_records() {
+
+            global $wpdb;
+            $table = $wpdb->prefix.'eventLogs';
+            $where = array('event_timestamp' => 2147483647);
+            $deleted = $wpdb->delete( $table, $where );
+        }
+
         function create_tables() {
-        
+
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
