@@ -175,8 +175,6 @@ if (!class_exists('event_bot')) {
              * List Mode
              */
             global $wpdb;
-            $user_id = get_current_user_id();
-            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_host = {$user_id}", OBJECT );
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}eventLogs WHERE event_type = 'message'", OBJECT );
             $output  = '<h2>Message Events</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
@@ -186,6 +184,7 @@ if (!class_exists('event_bot')) {
                 $event = json_decode($result->event_object);
                 $display_message = '';
                 $message = $event['message'];
+                /*
                 switch ($message['type']) {
                     case 'text':
                         $display_message = $message['text'];
@@ -194,6 +193,7 @@ if (!class_exists('event_bot')) {
                         $display_message = json_encode($message);
                         break;
                 }
+                */
                 $response = self::line_bot_sdk()->getProfile($result->source_user_id);
                 $display_name = $response['displayName'];
                 $output .= '<td>'.$result->event_timestamp.'</td>';
