@@ -204,13 +204,6 @@ if (!class_exists('event_bot')) {
                         break;
                     case 'image':
                         $response = self::line_bot_sdk()->getContent($message['id']);
-                        if ($response->isSucceeded()) {
-                            // I can get the binary body with $response->getRawBody()
-                            // but I can't get the mime type, nor the extension.
-                            $filePath = tmpfile() . '<extension?>';
-                            file_put_contents($filePath, $response->getRawBody());
-                        }
-                        
                         //$display_message = json_encode($response);
                         $display_message = $response;
                         //$display_message = $message['id'];

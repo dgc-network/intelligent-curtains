@@ -252,11 +252,19 @@ class LINEBotTiny
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
+        if ($response->isSucceeded()) {
+            // I can get the binary body with $response->getRawBody()
+            // but I can't get the mime type, nor the extension.
+            $filePath = tmpfile() . '<extension?>';
+            file_put_contents($filePath, $response->getRawBody());
+        }
+        return $filePath;
+        
 
         //$response = stripslashes($response);
         //$response = json_decode($response, true);
         
-        return $response;
+        //return $response;
     }
 
     /**
