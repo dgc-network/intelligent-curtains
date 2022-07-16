@@ -160,7 +160,6 @@ class LINEBotTiny
         ]);
 
         $response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
-        //$response = file_get_contents('https://api.line.me/v2/bot/info', false, $context);
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
@@ -238,7 +237,7 @@ class LINEBotTiny
     public function getContent($messageId)
     {
         $header = array(
-            'Content-Type: application/octet-stream',
+            //'Content-Type: application/octet-stream',
             'Authorization: Bearer ' . $this->channelAccessToken,
         );
 
@@ -254,8 +253,8 @@ class LINEBotTiny
             error_log('Request failed: ' . $response);
         }
 
-        $response = stripslashes($response);
-        $response = json_decode($response, true);
+        //$response = stripslashes($response);
+        //$response = json_decode($response, true);
         
         return $response;
     }
