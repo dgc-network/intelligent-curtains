@@ -255,7 +255,8 @@ class LINEBotTiny
         if ($response->isSucceeded()) {
             // I can get the binary body with $response->getRawBody()
             // but I can't get the mime type, nor the extension.
-            $filePath = tmpfile() . '<extension?>';
+            //$filePath = tmpfile() . '<extension?//>';
+            $filePath = tmpfile() . '<jpeg>';
             file_put_contents($filePath, $response->getRawBody());
         }
         return $filePath;
