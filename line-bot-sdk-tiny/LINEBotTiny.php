@@ -252,22 +252,53 @@ class LINEBotTiny
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
-        if ($response->isSucceeded()) {
-            // I can get the binary body with $response->getRawBody()
-            // but I can't get the mime type, nor the extension.
-            //$filePath = tmpfile() . '<extension?//>';
-            $filePath = tmpfile() . '<jpeg>';
-            file_put_contents($filePath, $response->getRawBody());
-        }
-        return $filePath;
-        
+        //return $this->save_temp_image($response);
+        return var_dump($response);
 
-        //$response = stripslashes($response);
-        //$response = json_decode($response, true);
-        
-        //return $response;
     }
 
+ /**
+  * Save the submitted image as a temporary file.
+  *
+  * @todo Revisit file handling.
+  *
+  * @param string $img Base64 encoded image.
+  * @return false|string File name on success, false on failure.
+  */
+  protected function save_temp_image($img)
+  {
+      // Strip the "data:image/png;base64," part and decode the image.
+      $img = explode(',', $img);
+      $img = isset($img[1]) ? base64_decode($img[1]) : base64_decode($img[0]);
+      if (!$img) {
+          return false;
+      }
+      // Upload to tmp folder.
+      $filename = 'user-feedback-' . date('Y-m-d-H-i');
+      $tempfile = wp_tempnam($filename);
+      if (!$tempfile) {
+          return false;
+      }
+      // WordPress adds a .tmp file extension, but we want .png.
+      if (rename($tempfile, $filename . '.png')) {
+          $tempfile = $filename . '.png';
+      }
+      if (!WP_Filesystem(request_filesystem_credentials(''))) {
+          return false;
+      }
+      /**
+       * WordPress Filesystem API.
+       *
+       * @var \WP_Filesystem_Base $wp_filesystem
+       */
+      global $wp_filesystem;
+      $success = $wp_filesystem->put_contents($tempfile, $img);
+      if (!$success) {
+          return false;
+      }
+      return $tempfile;
+  }
+  
     /**
      * @param string $body
      * @return string

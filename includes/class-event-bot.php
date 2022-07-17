@@ -182,18 +182,18 @@ if (!class_exists('event_bot')) {
             $output .= '<tr><td>User</td><td>EventObject</td><td>Source</td></tr>';
             foreach ( $results as $index=>$result ) {
                 if ($result->source_type=='user'){
-                    $response = self::line_bot_sdk()->getProfile($result->source_user_id);
-                    $group_name = $response['displayName'];
-                    $group_picture_url = $response['pictureUrl'];
-                    $display_name = $response['displayName'];
-                    $user_picture_url = $response['pictureUrl'];
+                    $profile = self::line_bot_sdk()->getProfile($result->source_user_id);
+                    $group_name = $profile['displayName'];
+                    $group_picture_url = $profile['pictureUrl'];
+                    $display_name = $profile['displayName'];
+                    $user_picture_url = $profile['pictureUrl'];
                 } else {
-                    $response = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
-                    $group_name = $response['groupName'];
-                    $group_picture_url = $response['pictureUrl'];
-                    $response = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
-                    $display_name = $response['displayName'];
-                    $user_picture_url = $response['pictureUrl'];
+                    $summary = self::line_bot_sdk()->getGroupSummary($result->source_group_id);
+                    $group_name = $summary['groupName'];
+                    $group_picture_url = $summary['pictureUrl'];
+                    $profile = self::line_bot_sdk()->getGroupMemberProfile($result->source_group_id, $result->source_user_id);
+                    $display_name = $profile['displayName'];
+                    $user_picture_url = $profile['pictureUrl'];
                 }
                 $display_message = '';
                 $message = json_decode($result->event_object, true);
@@ -203,10 +203,9 @@ if (!class_exists('event_bot')) {
                         $display_message = $message['text'];
                         break;
                     case 'image':
-                        $response = self::line_bot_sdk()->getContent($message['id']);
-                        //$display_message = json_encode($response);
-                        //$display_message = $response;
-                        $display_message = $message['id'];
+                        $content = self::line_bot_sdk()->getContent($message['id']);
+                        $display_message = $content;
+                        //$display_message = $message['id'];
                         //$display_message = $message['contentProvider']['type'];
                         break;
                     default:
