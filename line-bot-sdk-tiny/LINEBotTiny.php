@@ -297,7 +297,9 @@ class LINEBotTiny
       if (!$success) {
           return false;
       }
-      return get_template_directory_uri().'/';
+      $upload = wp_get_upload_dir();
+      $url = $upload['url'].'/'.$filename;
+      return $url;
       //return $tempfile;
   }
   
