@@ -298,7 +298,7 @@ class LINEBotTiny
           return false;
       }
       $upload = wp_get_upload_dir();
-      $url = $upload['url'].'/'.$filename;
+      $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
       return $url;
       //return $tempfile;
   }
