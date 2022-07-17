@@ -297,8 +297,8 @@ class LINEBotTiny
       if (!$success) {
           return false;
       }
-      return get_template_directory_uri().'/'.$filename;
-      return $tempfile;
+      return get_template_directory_uri().'/';
+      //return $tempfile;
   }
   
     /**
