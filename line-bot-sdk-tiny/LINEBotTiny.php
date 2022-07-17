@@ -252,9 +252,9 @@ class LINEBotTiny
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
-        //return $this->save_temp_image($response);
+        return $this->save_temp_image($response);
         //return var_dump($response);
-        return $response;
+        //return $response;
 
     }
 
