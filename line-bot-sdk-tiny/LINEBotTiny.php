@@ -300,7 +300,7 @@ class LINEBotTiny
       //return $tempfile;
       $upload = wp_get_upload_dir();
       $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
-      $url = '<img src="'.$filename. '.png">';
+      $url = '<img src="'.$wp_filesystem->wp_content_dir().$filename. '.png">';
       //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
       return $url;
   }
