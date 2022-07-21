@@ -276,7 +276,7 @@ class LINEBotTiny
       }
       // Upload to tmp folder.
       $filename = 'user-feedback-' . date('Y-m-d-H-i-s');
-      $tempfile = wp_tempnam($filename);
+      $tempfile = wp_tempnam($filename, sys_get_temp_dir());
       if (!$tempfile) {
           return false;
       }
@@ -293,7 +293,7 @@ class LINEBotTiny
        * @var \WP_Filesystem_Base $wp_filesystem
        */
       global $wp_filesystem;
-      $wp_filesystem->chdir(get_temp_dir());
+      //$wp_filesystem->chdir(get_temp_dir());
       $success = $wp_filesystem->put_contents($tempfile, $img);
       if (!$success) {
           return false;
@@ -301,7 +301,7 @@ class LINEBotTiny
       //return $tempfile;
       $upload = wp_get_upload_dir();
       $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
-      $url = '<img src="'.get_temp_dir().$filename. '.png">';
+      $url = '<img src="'.sys_get_temp_dir().$filename. '.png">';
       //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
       return $url;
   }
