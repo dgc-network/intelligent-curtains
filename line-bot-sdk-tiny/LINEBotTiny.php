@@ -275,7 +275,7 @@ class LINEBotTiny
           return false;
       }
       // Upload to tmp folder.
-      $filename = 'user-feedback-' . date('Y-m-d-H-i');
+      $filename = 'user-feedback-' . date('Y-m-d-H-i-s');
       $tempfile = wp_tempnam($filename);
       if (!$tempfile) {
           return false;
@@ -300,7 +300,8 @@ class LINEBotTiny
       //return $tempfile;
       $upload = wp_get_upload_dir();
       $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
-      $url = $wp_filesystem->wp_content_dir().'/'.$filename;
+      $url = '<img src="'.$filename. '.png">';
+      //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
       return $url;
   }
   
