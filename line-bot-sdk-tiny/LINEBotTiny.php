@@ -293,7 +293,7 @@ class LINEBotTiny
        * @var \WP_Filesystem_Base $wp_filesystem
        */
       global $wp_filesystem;
-      $wp_filesystem->chdir(WP_TEMP_DIR);
+      $wp_filesystem->chdir(get_temp_dir());
       $success = $wp_filesystem->put_contents($tempfile, $img);
       if (!$success) {
           return false;
@@ -301,7 +301,7 @@ class LINEBotTiny
       //return $tempfile;
       $upload = wp_get_upload_dir();
       $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
-      $url = '<img src="'.WP_TEMP_DIR.$filename. '.png">';
+      $url = '<img src="'.get_temp_dir().$filename. '.png">';
       //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
       return $url;
   }
