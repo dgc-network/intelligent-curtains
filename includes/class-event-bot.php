@@ -6,8 +6,6 @@ if (!class_exists('event_bot')) {
 
     class event_bot {
 
-        private $client;
-
         /**
          * Class constructor
          */
@@ -16,6 +14,7 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
+            self::init();
             //self::delete_records();
         }
 
@@ -34,6 +33,92 @@ if (!class_exists('event_bot')) {
             }
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
+        }
+
+        function init() {
+            $client = self::line_bot_sdk();
+            foreach ($client->parseEvents() as $event) {
+                $event_bot->insertEvent($event);
+                $getsource = $event['source'];
+                $usr_id = $getsource['userId'];
+            
+                switch ($event['type']) {
+                    case 'message':
+                        $event_bot->insertMessageEvent($event);
+                        $message = $event['message'];
+                        switch ($message['type']) {
+                            case 'text':
+                                // start my codes from here
+                                $event_bot->insertTextMessage($event);
+                                $response = $client->getProfile($event['source']['userId']);
+            
+                                $client->replyMessage([
+                                    'replyToken' => $event['replyToken'],
+                                    'messages' => [
+                                        [
+                                            'type' => 'text',
+                                            //'text' => $usr_id.':'.$message['text'],
+                                            'text' => $response['displayName'].':'.$message['text'],
+                                            //'text' => $message['text']
+                                        ]
+                                    ]
+                                ]);
+                                break;
+                            default:
+                                error_log('Unsupported message type: ' . $message['type']);
+                                break;
+                        }
+                        break;
+                    default:
+                        error_log('Unsupported event type: ' . $event['type']);
+                        break;
+                }    
+            };
+            
+/*
+$event_bot = new event_bot();
+$client = $event_bot->line_bot_sdk();
+
+foreach ($client->parseEvents() as $event) {
+    $event_bot->insertEvent($event);
+    $getsource = $event['source'];
+    $usr_id = $getsource['userId'];
+
+    switch ($event['type']) {
+        case 'message':
+            $event_bot->insertMessageEvent($event);
+            $message = $event['message'];
+            switch ($message['type']) {
+                case 'text':
+                    // start my codes from here
+                    $event_bot->insertTextMessage($event);
+                    $response = $client->getProfile($event['source']['userId']);
+
+                    $client->replyMessage([
+                        'replyToken' => $event['replyToken'],
+                        'messages' => [
+                            [
+                                'type' => 'text',
+                                //'text' => $usr_id.':'.$message['text'],
+                                'text' => $response['displayName'].':'.$message['text'],
+                                //'text' => $message['text']
+                            ]
+                        ]
+                    ]);
+                    break;
+                default:
+                    error_log('Unsupported message type: ' . $message['type']);
+                    break;
+            }
+            break;
+        default:
+            error_log('Unsupported event type: ' . $event['type']);
+            break;
+    }    
+};
+*/
+
+
         }
 
         function edit_mode( $_id=0, $_mode='' ) {
