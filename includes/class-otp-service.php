@@ -40,7 +40,8 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Issue OTP' ) {
-                    $client = $this->line_bot_sdk();
+                    //$client = $this->line_bot_sdk();
+                    $client = self::line_bot_sdk();
                     $client->replyMessage([
                         //'replyToken' => $event['replyToken'],
                         //'replyToken' => '846b89f204ae45b8a67ac733f4efef6a',
