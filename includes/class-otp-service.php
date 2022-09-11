@@ -531,5 +531,8 @@ if (!class_exists('otp_service')) {
             dbDelta($sql);
         }        
     }
+
+    new otp_service();
+
 }
 ?>
