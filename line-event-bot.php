@@ -29,7 +29,7 @@ $client = $event_bot->line_bot_sdk();
 foreach ($client->parseEvents() as $event) {
     $event_bot->insertEvent($event);
     $getsource = $event['source'];
-    $usr_id = $getsource['userId'];
+    $user_id = $getsource['userId'];
 
     switch ($event['type']) {
         case 'message':
@@ -48,7 +48,7 @@ foreach ($client->parseEvents() as $event) {
                                 'type' => 'text',
                                 'text' => $user_id,
                                 //'text' => $event['replyToken'],
-                                //'text' => $usr_id.':'.$message['text'],
+                                //'text' => $user_id.':'.$message['text'],
                                 //'text' => $response['displayName'].':'.$message['text'],
                                 //'text' => $message['text']
                             ]

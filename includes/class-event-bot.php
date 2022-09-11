@@ -42,7 +42,7 @@ if (!class_exists('event_bot')) {
             foreach ($client->parseEvents() as $event) {
                 $event_bot->insertEvent($event);
                 $getsource = $event['source'];
-                $usr_id = $getsource['userId'];
+                $user_id = $getsource['userId'];
             
                 switch ($event['type']) {
                     case 'message':
@@ -59,7 +59,7 @@ if (!class_exists('event_bot')) {
                                     'messages' => [
                                         [
                                             'type' => 'text',
-                                            //'text' => $usr_id.':'.$message['text'],
+                                            //'text' => $user_id.':'.$message['text'],
                                             'text' => $response['displayName'].':'.$message['text'],
                                             //'text' => $message['text']
                                         ]
