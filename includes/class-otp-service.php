@@ -43,7 +43,7 @@ if (!class_exists('otp_service')) {
                     $client = $this->line_bot_sdk();
                     $client->replyMessage([
                         //'replyToken' => $event['replyToken'],
-                        'replyToken' => '846b89f204ae45b8a67ac733f4efef6a',
+                        //'replyToken' => '846b89f204ae45b8a67ac733f4efef6a',
                         'messages' => [
                             [
                                 'type' => 'text',
@@ -52,6 +52,7 @@ if (!class_exists('otp_service')) {
                         ]
                     ]);                
                 }
+                unset($_POST['submit_action']);
             }
 
             $output  = '<form method="post">';
