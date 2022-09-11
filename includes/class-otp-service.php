@@ -48,7 +48,15 @@ if (!class_exists('otp_service')) {
             } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
-                echo('https://line.me/ti/p/@490tjxdt');
+                $output  = '<form method="post">';
+                $output .= '請加入我們的Line@帳號成為您的好友, 並在Line聊天室中重新刷入產品的QR-code';
+                $output .= '<a href="https://line.me/ti/p/@490tjxdt">加LINE好友</a>';
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="加LINE好友" name="submit_action">';
+                $output .= '</div>';
+                $output .= '</form>';
+                return $output;
+    
             }
         }
 
