@@ -25,7 +25,7 @@ if (!class_exists('event_bot')) {
             if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
                 $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
                 if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-                    error_log("config.ini 配置檔未設定完全！", 0);
+                    error_log("config.ini uncompleted!", 0);
                 } else {
                     $channelAccessToken = $config['Channel']['Token'];
                     $channelSecret = $config['Channel']['Secret'];
@@ -36,6 +36,8 @@ if (!class_exists('event_bot')) {
         }
 
         function init() {
+            //$event_bot = new event_bot();
+            //$client = $event_bot->line_bot_sdk();
             $client = self::line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 $event_bot->insertEvent($event);

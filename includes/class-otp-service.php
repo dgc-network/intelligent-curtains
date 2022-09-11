@@ -35,16 +35,15 @@ if (!class_exists('otp_service')) {
             return $client;
         }
 
-        function issue_otp( $_id=0, $_mode='' ) {
+        function issue_otp( $user_id='U1b08294900a36077765643d8ae14a402' ) {
 
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Issue OTP' ) {
                     //$client = $this->line_bot_sdk();
                     $client = self::line_bot_sdk();
-                    $client->replyMessage([
-                        //'replyToken' => $event['replyToken'],
-                        //'replyToken' => '846b89f204ae45b8a67ac733f4efef6a',
+                    $client->pushMessage([
+                        'to' => $user_id,
                         'messages' => [
                             [
                                 'type' => 'text',
