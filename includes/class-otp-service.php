@@ -64,6 +64,7 @@ if (!class_exists('otp_service')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
+            return $output;
 
         }
 
