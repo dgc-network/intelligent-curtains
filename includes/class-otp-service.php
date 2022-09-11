@@ -10,6 +10,7 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
+            add_shortcode('product-info', __CLASS__ . '::product_info');
             add_shortcode('issue-otp', __CLASS__ . '::issue_otp');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_product');
@@ -33,6 +34,22 @@ if (!class_exists('otp_service')) {
             }
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
+        }
+
+        function product_info( $curtain_qr_code='001' ) {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_qr_code}", OBJECT );
+            if (count($results) > 0) {
+                // find the product information
+                foreach ( $results as $index=>$result ) {
+            
+                }
+    
+            } else {
+                // send invitation link by URL for the Line@ account
+                // https://line.me/ti/p/@490tjxdt
+                echo('https://line.me/ti/p/@490tjxdt');
+            }
         }
 
         function issue_otp( $user_id='U1b08294900a36077765643d8ae14a402' ) {
@@ -503,7 +520,7 @@ if (!class_exists('otp_service')) {
                 update_timestamp int(10),
                 curtain_product_id int(10),
                 curtain_user_id int(10),
-                qr_code varchar(50),
+                curtain_qr_code varchar(50),
                 PRIMARY KEY (serial_id)
             ) $charset_collate;";
             dbDelta($sql);
@@ -522,7 +539,7 @@ if (!class_exists('otp_service')) {
                 curtain_user_id int NOT NULL AUTO_INCREMENT,
                 create_timestamp int(10),
                 update_timestamp int(10),
-                login_id varchar(50),
+                line_user_id varchar(50),
                 display_name varchar(50),
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
