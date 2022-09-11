@@ -43,7 +43,8 @@ if (!class_exists('otp_service')) {
                     //$client = $this->line_bot_sdk();
                     $client = self::line_bot_sdk();
                     $client->pushMessage([
-                        'to' => $user_id,
+                        //'to' => $user_id,
+                        'to' => 'U1b08294900a36077765643d8ae14a402',
                         'messages' => [
                             [
                                 'type' => 'text',
