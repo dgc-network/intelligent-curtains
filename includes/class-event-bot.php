@@ -596,5 +596,7 @@ foreach ($client->parseEvents() as $event) {
             dbDelta($sql);
         }        
     }
+
+    new event_bot();
 }
 ?>
