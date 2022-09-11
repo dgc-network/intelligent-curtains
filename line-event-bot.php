@@ -22,7 +22,7 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
 
-/*
+
 $event_bot = new event_bot();
 $client = $event_bot->line_bot_sdk();
 
@@ -63,5 +63,5 @@ foreach ($client->parseEvents() as $event) {
             break;
     }    
 };
-*/
+
 ?>
