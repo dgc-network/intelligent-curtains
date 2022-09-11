@@ -6,8 +6,6 @@ if (!class_exists('otp_service')) {
 
     class otp_service {
 
-        private $client;
-
         /**
          * Class constructor
          */
@@ -42,8 +40,9 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Issue OTP' ) {
-                    $this->client->replyMessage([
-                        'replyToken' => $this->event['replyToken'],
+                    $client = $this->line_bot_sdk();
+                    $client->replyMessage([
+                        'replyToken' => $event['replyToken'],
                         'messages' => [
                             [
                                 'type' => 'text',
@@ -58,10 +57,6 @@ if (!class_exists('otp_service')) {
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Issue OTP" name="submit_action">';
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel" name="submit_action">';
-            $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
             return $output;
