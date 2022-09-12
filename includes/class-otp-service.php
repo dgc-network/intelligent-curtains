@@ -151,7 +151,9 @@ if (!class_exists('otp_service')) {
                     'id' => '001',
                 ), $atts
             );
+            $wporg_atts = shortcode_atts($atts);
             $qr_code_id=$wporg_atts['id'];
+            $qr_code_action=$wporg_atts['action'];
 
             $output = '<div>';
             global $wpdb;
@@ -178,8 +180,9 @@ if (!class_exists('otp_service')) {
                 // <a href="https://lin.ee/LPnyoeD">
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= '加入我們的官方 Line @帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
+                $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
                 $output .= '$qr_code_id='.$qr_code_id;
+                $output .= '$qr_code_action='.$qr_code_action;
             }
 /*
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
