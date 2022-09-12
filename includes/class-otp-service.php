@@ -10,6 +10,7 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
+            add_shortcode('wporg-shortcode', __CLASS__ . '::wporg_shortcode');
             add_shortcode('product-info', __CLASS__ . '::product_info');
             add_shortcode('issue-otp', __CLASS__ . '::issue_otp');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
@@ -36,32 +37,84 @@ if (!class_exists('otp_service')) {
             return $client;
         }
 
-        function product_info( $curtain_qr_code='001' ) {
+        /**
+         * /**
+         * The [wporg] shortcode.
+         *
+         * Accepts a title and will display a box.
+         *
+         * @param array  $atts    Shortcode attributes. Default empty.
+         * @param string $content Shortcode content. Default null.
+         * @param string $tag     Shortcode tag (name). Default empty.
+         * @return string Shortcode output.
+         */
+        function wporg_shortcode( $atts = [], $content = null, $tag = '' ) {
+            // normalize attribute keys, lowercase
+            $atts = array_change_key_case( (array) $atts, CASE_LOWER );
+        
+            // override default attributes with user attributes
+            $wporg_atts = shortcode_atts(
+                array(
+                    'title' => 'WordPress.org',
+                ), $atts, $tag
+            );
+        
+            // start box
+            $o = '<div class="wporg-box">';
+        
+            // title
+            $o .= '<h2>' . esc_html__( $wporg_atts['title'], 'wporg' ) . '</h2>';
+        
+            // enclosing tags
+            if ( ! is_null( $content ) ) {
+                // $content here holds everything in between the opening and the closing tags of your shortcode. eg.g [my-shortcode]content[/my-shortcode].
+                // Depending on what your shortcode supports, you will parse and append the content to your output in different ways.
+                // In this example, we just secure output by executing the_content filter hook on $content.
+                $o .= apply_filters( 'the_content', $content );
+            }
+        
+            // end box
+            $o .= '</div>';
+        
+            // return output
+            return $o;
+        }
+        
 
+
+         function product_info( $atts = [] ) {
+
+            $curtain_user_id='';
             //if( isset($_POST['submit_action']) && isset($_POST['otp_input']) ) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
 
-                    // check the $_POST['opt_input'] to match the last_otp field in curtain_users table
-                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
+                    // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
+                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
+                    $line_user_id = $row->line_user_id;
+                    $last_otp = $row->last_otp;
+                    if ( $last_otp==$_POST['otp_input'] ) {
 
-                    //$client = self::line_bot_sdk();
-                    $client = line_bot_sdk();
-                    $client->pushMessage([
-                        //'to' => $user_id,
-                        'to' => 'U1b08294900a36077765643d8ae14a402',
-                        'messages' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'OTP code : '.$_POST['otp_input']
+                    } else {
+                        $client = line_bot_sdk();
+                        $client->pushMessage([
+                            //'to' => $line_user_id,
+                            'to' => 'U1b08294900a36077765643d8ae14a402',
+                            'messages' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => 'The '.$_POST['otp_input'].' is a wrong OTP code.'
+                                ]
                             ]
-                        ]
-                    ]);                
+                        ]);                    
+                    }
                 }
 
                 if( $_POST['submit_action']=='Resend' ) {
+
                     $six_digit_random_number = random_int(100000, 999999);
+
                     $client = line_bot_sdk();
                     $client->pushMessage([
                         //'to' => $user_id,
@@ -72,21 +125,46 @@ if (!class_exists('otp_service')) {
                                 'text' => 'OTP code : '.$six_digit_random_number
                             ]
                         ]
-                    ]);                
+                    ]);
+
+                    $table = $wpdb->prefix.'curtain_users';
+                    $data = array(
+                        'last_otp' => $six_digit_random_number,
+                    );
+                    $where = array(
+                        'curtain_user_id' => $curtain_user_id,
+                    );
+                    $wpdb->update( $table, $data, $where );                
                 }
 
                 unset($_POST['submit_action']);
             }
 
+            // normalize attribute keys, lowercase
+            $atts = array_change_key_case( (array) $atts, CASE_LOWER );
+        
+            // override default attributes with user attributes
+            $wporg_atts = shortcode_atts(
+                array(
+                    'id' => '001',
+                ), $atts
+            );
+
+            //$curtain_qr_code=$wporg_atts['id'];
+            $curtain_serial_number=$wporg_atts['id'];
+
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_qr_code}", OBJECT );
+            //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_serial_number}", OBJECT );
             $output = '<div>';
 //            if (count($results) > 0) {
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 
                 foreach ( $results as $index=>$result ) {
-                    // find the product information
-                    $products = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
+                    // find the user and product information
+                    $curtain_user_id=$result->curtain_user_id;
+                    $curtain_product_id=$result->curtain_product_id;
+                    $products = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
                     foreach ( $products as $index=>$product ) {
                         $output .= '型號:'.$product->product_name.'<br>';
                     }
@@ -94,12 +172,12 @@ if (!class_exists('otp_service')) {
                 $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                 $output .= '<form method="post">';
                 $output .= '<input type="text" name="otp_input">';
-                //$output .= '<div class="wp-block-button">';
+                $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
                 //$output .= '</div>';
                 //$output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
-                //$output .= '</div>';
+                $output .= '</div>';
                 $output .= '</form>';
 /*
             } else {
