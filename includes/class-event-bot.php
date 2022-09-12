@@ -555,6 +555,6 @@ if (!class_exists('event_bot')) {
         }        
     }
 
-    new event_bot();
+    //new event_bot();
 }
 ?>

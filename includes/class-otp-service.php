@@ -45,8 +45,8 @@ if (!class_exists('otp_service')) {
                     // check the $_POST['opt_input'] to match the last_otp field in curtain_users table
                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
 
-                    //$client = self::line_bot_sdk();
-                    $client = line_bot_sdk();
+                    $client = self::line_bot_sdk();
+                    //$client = line_bot_sdk();
                     $client->pushMessage([
                         //'to' => $user_id,
                         'to' => 'U1b08294900a36077765643d8ae14a402',
