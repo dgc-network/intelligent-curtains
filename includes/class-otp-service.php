@@ -110,17 +110,62 @@ if (!class_exists('otp_service')) {
                 }
 
                 if( isset($_GET['action']) ) {
-                    if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) && (isset($_GET['curtain_user_id']))) {
+
+                    if( ($_GET['action']=='insert_curtain_products') && (isset($_GET['product_name'])) ) {
                         $data=array();
-                        $data['curtain_product_id']=$_GET['curtain_product_id']
-                        $data['curtain_user_id']=$_GET['curtain_user_id']
-                        self::insert_serial_number($data)
+                        $data['product_name']=$_GET['product_name'];
+                        self::insert_curtain_products($data);
+                        $output .= 'Successed to insert a record in table curtain_products<br>';
+                    }
+
+                    //if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) && (isset($_GET['curtain_user_id']))) {
+                    if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) ) {
+                        $data=array();
+                        $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        //$data['curtain_user_id']=$_GET['curtain_user_id'];
+                        self::insert_serial_number($data);
                         $output .= 'Successed to insert a record in table serial_number<br>';
                     }
                 }
             }
             $output .= '</div>';
             return $output;
+        }
+
+        function list_curtain_products() {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
+            $output  = '<h2>Curtain Products</h2>';
+            $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr>';
+            $output .= '<td>id</td>';
+            $output .= '<td>product_code</td>';
+            $output .= '<td>product_name</td>';
+            $output .= '<td>update_time</td>';
+            $output .= '</tr>';
+            foreach ( $results as $index=>$result ) {
+                $output .= '<tr>';
+                $output .= '<td>'.$result->curtain_product_id.'</td>';
+                $output .= '<td>'.$result->product_code.'</td>';
+                $output .= '<td>'.$result->product_name.'</td>';
+                $output .= '<td>'.$result->update_timestamp.'</td>';
+                $output .= '</tr>';
+            }
+            $output .= '</tbody></table></figure>';
+            return $output;
+        }
+
+        function insert_curtain_products($data=[]) {
+
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_products';
+            $data = array(
+                'product_code' => intval(time()),
+                'product_name' => $data['product_name'],
+                'create_timestamp' => time(),
+                'update_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);        
         }
 
         function list_serial_number() {
@@ -164,7 +209,7 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $table = $wpdb->prefix.'serial_number';
             $data = array(
-                'qr_code_id' => time(),
+                'qr_code_id' => intval(time()),
                 'curtain_product_id' => $data['curtain_product_id'],
                 'curtain_user_id' => $data['curtain_user_id'],
                 'create_timestamp' => time(),
