@@ -71,9 +71,12 @@ foreach ($client->parseEvents() as $event) {
 function line_bot_sdk() {
     $channelAccessToken = '';
     $channelSecret = '';
-    $plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
-    if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
-        $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
+    //include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
+    //$plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
+    //if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
+    //    $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
+    if (file_exists(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini')) {
+        $config = parse_ini_file(dirname( __FILE__ ) . '/line-bot-sdk-tiny/config.ini', true);
         if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
             error_log("config.ini uncompleted!", 0);
         } else {
