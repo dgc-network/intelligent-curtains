@@ -40,7 +40,7 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_qr_code}", OBJECT );
             $output = '<div>';
-            if (count($results) > 0) {
+            if (count($results) < 0) {
                 // find the product information
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 
