@@ -38,8 +38,8 @@ if (!class_exists('event_bot')) {
         function init() {
             //$event_bot = new event_bot();
             //$client = $event_bot->line_bot_sdk();
-            //$client = self::line_bot_sdk();
-            $client = line_bot_sdk();
+            $client = self::line_bot_sdk();
+            //$client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 $event_bot->insertEvent($event);
                 $getsource = $event['source'];
