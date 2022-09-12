@@ -156,7 +156,7 @@ if (!class_exists('otp_service')) {
             $output = '<div>';
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
-            if (count($row) > 0) {
+//            if (count($row) > 0) {
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $curtain_user_id=$row->curtain_user_id;
                 $curtain_product_id=$row->curtain_product_id;
@@ -172,13 +172,13 @@ if (!class_exists('otp_service')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                 $output .= '</div>';
                 $output .= '</form>';
-            } else {
+//            } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
-                $output .= '請加入Line@帳號 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.' 讓我們成為您的好友,<br>';
-                $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';    
-            }
+                $output .= '請利用手機加入@Line帳號 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.'<br>';
+                $output .= '讓我們成為您的好友, 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序';    
+//            }
 /*
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
             if (count($results) > 0) {
