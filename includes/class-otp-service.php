@@ -40,7 +40,7 @@ if (!class_exists('otp_service')) {
 
             if( isset($_POST['submit_action']) && isset($_POST['opt_input']) ) {
 
-                if( $_POST['submit_action']=='確認' ) {
+                if( $_POST['submit_action']=='Confirm' ) {
 
                     // check the $_POST['opt_input'] to match the last_otp field in curtain_users table
                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
@@ -78,10 +78,10 @@ if (!class_exists('otp_service')) {
                 $output .= '<form method="post">';
                 $output .= '<input type="text" name="otp_input">';
                 $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="確認" name="submit_action">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
                 $output .= '</div>';
                 $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="再傳一次" name="submit_action">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                 $output .= '</div>';
                 $output .= '</form>';
 /*
