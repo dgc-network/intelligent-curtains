@@ -39,9 +39,10 @@ if (!class_exists('otp_service')) {
         function product_info( $curtain_qr_code='001' ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_qr_code}", OBJECT );
+            $output = '<div>';
             if (count($results) > 0) {
                 // find the product information
-                $output  = '感謝您選購我們的電動窗簾<br>';
+                $output .= '感謝您選購我們的電動窗簾<br>';
                 
                 foreach ( $results as $index=>$result ) {
                     $products = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
@@ -50,16 +51,22 @@ if (!class_exists('otp_service')) {
                     }
                 }
                 $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
-    
+                $output .= '<form method="post">';
+                $output .= '<input type="text" name="otp_input">';
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Issue OTP" name="submit_action">';
+                $output .= '</div>';
+                $output .= '</form>';
+
             } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
-                $output  = '請加入我們的Line@帳號'.'<a href="https://line.me/ti/p/@490tjxdt">';
-                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.'成為您的好友,<br>';
-                $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';
-                return $output;
-    
+                $output .= '請加入Line@帳號 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.' 讓我們成為您的好友,<br>';
+                $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';    
             }
+            $output .= '</div>';
+            return $output;
         }
 
         function issue_otp( $user_id='U1b08294900a36077765643d8ae14a402' ) {
@@ -84,7 +91,6 @@ if (!class_exists('otp_service')) {
             }
 
             $output  = '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Issue OTP" name="submit_action">';
             $output .= '</div>';
