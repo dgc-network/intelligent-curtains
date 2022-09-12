@@ -38,7 +38,8 @@ if (!class_exists('otp_service')) {
 
         function product_info( $curtain_qr_code='001' ) {
 
-            if( isset($_POST['submit_action']) && isset($_POST['opt_input']) ) {
+            //if( isset($_POST['submit_action']) && isset($_POST['opt_input']) ) {
+            if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
 
