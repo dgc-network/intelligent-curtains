@@ -40,7 +40,7 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_qr_code}", OBJECT );
             $output = '<div>';
-            if (count($results) = 0) {
+            //if (count($results) > 0) {
                 // find the product information
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 
@@ -57,7 +57,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Issue OTP" name="submit_action">';
                 $output .= '</div>';
                 $output .= '</form>';
-
+/*
             } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
@@ -65,6 +65,7 @@ if (!class_exists('otp_service')) {
                 $output .= 'https://line.me/ti/p/@490tjxdt</a>'.' 讓我們成為您的好友,<br>';
                 $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';    
             }
+*/
             $output .= '</div>';
             return $output;
         }
