@@ -67,7 +67,7 @@ foreach ($client->parseEvents() as $event) {
 };
 */
 
-public function line_bot_sdk() {
+function line_bot_sdk() {
     $channelAccessToken = '';
     $channelSecret = '';
     $plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
