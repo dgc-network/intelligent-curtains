@@ -35,7 +35,7 @@ if (!class_exists('event_bot')) {
             return $client;
         }
 
-        function init() {
+        public function init() {
             //$event_bot = new event_bot();
             //$client = $event_bot->line_bot_sdk();
             $client = self::line_bot_sdk();
