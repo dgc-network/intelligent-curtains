@@ -38,23 +38,23 @@ if (!class_exists('otp_service')) {
 
         function product_info( $curtain_qr_code='001' ) {
 
-            //if( isset($_POST['submit_action']) && isset($_POST['opt_input']) ) {
-            if( isset($_POST['submit_action']) ) {
+            if( isset($_POST['submit_action']) && isset($_POST['otp_input']) ) {
+            //if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
 
                     // check the $_POST['opt_input'] to match the last_otp field in curtain_users table
                     //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
 
-                    $client = self::line_bot_sdk();
-                    //$client = line_bot_sdk();
+                    //$client = self::line_bot_sdk();
+                    $client = line_bot_sdk();
                     $client->pushMessage([
                         //'to' => $user_id,
                         'to' => 'U1b08294900a36077765643d8ae14a402',
                         'messages' => [
                             [
                                 'type' => 'text',
-                                'text' => 'OTP code : '.$_POST['opt_input']
+                                'text' => 'OTP code : '.$_POST['otp_input']
                             ]
                         ]
                     ]);                
