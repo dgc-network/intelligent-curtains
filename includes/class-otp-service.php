@@ -148,10 +148,10 @@ if (!class_exists('otp_service')) {
             // override default attributes with user attributes
             $wporg_atts = shortcode_atts(
                 array(
-                    'id' => '001',
+                    'title' => 'Curtains',
                 ), $atts
             );
-            $wporg_atts = shortcode_atts($atts);
+            //$wporg_atts = shortcode_atts($atts);
             $qr_code_id=$wporg_atts['id'];
             $qr_code_action=$wporg_atts['action'];
 
