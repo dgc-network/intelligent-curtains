@@ -10,7 +10,7 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('wporg-shortcode', __CLASS__ . '::wporg_shortcode');
+            //add_shortcode('wporg-shortcode', __CLASS__ . '::wporg_shortcode');
             add_shortcode('product-info', __CLASS__ . '::product_info');
             add_shortcode('issue-otp', __CLASS__ . '::issue_otp');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
@@ -19,7 +19,7 @@ if (!class_exists('otp_service')) {
             self::create_tables();
             //self::delete_records();
         }
-
+/*
         public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
@@ -36,7 +36,7 @@ if (!class_exists('otp_service')) {
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
         }
-
+*/
         /**
          * /**
          * The [wporg] shortcode.
@@ -85,7 +85,7 @@ if (!class_exists('otp_service')) {
          function product_info( $atts = [] ) {
 
             $curtain_user_id='';
-            //if( isset($_POST['submit_action']) && isset($_POST['otp_input']) ) {
+
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
@@ -141,7 +141,7 @@ if (!class_exists('otp_service')) {
 
                 unset($_POST['submit_action']);
             }
-
+/*
             // normalize attribute keys, lowercase
             $atts = array_change_key_case( (array) $atts, CASE_LOWER );
         
@@ -154,7 +154,7 @@ if (!class_exists('otp_service')) {
             //$wporg_atts = shortcode_atts($atts);
             $qr_code_id=$wporg_atts['id'];
             $qr_code_action=$wporg_atts['action'];
-
+*/
             $output = '<div>';
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
@@ -181,42 +181,10 @@ if (!class_exists('otp_service')) {
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
                 $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
-                $output .= '$qr_code_id='.$qr_code_id;
-                $output .= '$qr_code_action='.$qr_code_action;
-            }
-/*
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
-            if (count($results) > 0) {
-                $output .= '感謝您選購我們的電動窗簾<br>';
-                
-                foreach ( $results as $index=>$result ) {
-                    // find the user and product information
-                    $curtain_user_id=$result->curtain_user_id;
-                    $curtain_product_id=$result->curtain_product_id;
-                    $products = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
-                    foreach ( $products as $index=>$product ) {
-                        $output .= '型號:'.$product->product_name.'<br>';
-                    }
+                if( isset($_GET['id']) ) {
+                    $output .= 'qr_code_id='.$_GET['id'].'<br>';
                 }
-                $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
-                $output .= '<form method="post">';
-                $output .= '<input type="text" name="otp_input">';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
-                //$output .= '</div>';
-                //$output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
-                $output .= '</div>';
-                $output .= '</form>';
-
-            } else {
-                // send invitation link by URL for the Line@ account
-                // https://line.me/ti/p/@490tjxdt
-                $output .= '請加入Line@帳號 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.' 讓我們成為您的好友,<br>';
-                $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';    
             }
-*/
             $output .= '</div>';
             return $output;
         }
@@ -228,9 +196,8 @@ if (!class_exists('otp_service')) {
                 if( $_POST['submit_action']=='Issue OTP' ) {
                     $six_digit_random_number = random_int(100000, 999999);
                     $client = line_bot_sdk();
-                    //$client = self::line_bot_sdk();
                     $client->pushMessage([
-                        //'to' => $user_id,
+                        //'to' => $line_user_id,
                         'to' => 'U1b08294900a36077765643d8ae14a402',
                         'messages' => [
                             [
