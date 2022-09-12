@@ -14,7 +14,7 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
-            //self::init();
+            self::init();
             //self::delete_records();
         }
 
@@ -38,7 +38,8 @@ if (!class_exists('event_bot')) {
         function init() {
             //$event_bot = new event_bot();
             //$client = $event_bot->line_bot_sdk();
-            $client = self::line_bot_sdk();
+            //$client = self::line_bot_sdk();
+            $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 $event_bot->insertEvent($event);
                 $getsource = $event['source'];

@@ -22,7 +22,7 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
 
-
+/*
 $event_bot = new event_bot();
 $client = $event_bot->line_bot_sdk();
 
@@ -65,5 +65,24 @@ foreach ($client->parseEvents() as $event) {
             break;
     }    
 };
+*/
+
+public function line_bot_sdk() {
+    $channelAccessToken = '';
+    $channelSecret = '';
+    $plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
+    if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
+        $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
+        if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+            error_log("config.ini uncompleted!", 0);
+        } else {
+            $channelAccessToken = $config['Channel']['Token'];
+            $channelSecret = $config['Channel']['Secret'];
+        }
+    }
+    $client = new LINEBotTiny($channelAccessToken, $channelSecret);
+    return $client;
+}
+
 
 ?>
