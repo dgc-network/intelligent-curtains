@@ -91,6 +91,7 @@ if (!class_exists('otp_service')) {
                 if( $_POST['submit_action']=='Confirm' ) {
 
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
+                    global $wpdb;
                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     $line_user_id = $row->line_user_id;
                     $last_otp = $row->last_otp;
@@ -127,6 +128,7 @@ if (!class_exists('otp_service')) {
                         ]
                     ]);
 
+                    global $wpdb;
                     $table = $wpdb->prefix.'curtain_users';
                     $data = array(
                         'last_otp' => $six_digit_random_number,
