@@ -94,12 +94,12 @@ if (!class_exists('otp_service')) {
                 $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                 $output .= '<form method="post">';
                 $output .= '<input type="text" name="otp_input">';
-                $output .= '<div class="wp-block-button">';
+                //$output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
-                $output .= '</div>';
-                $output .= '<div class="wp-block-button">';
+                //$output .= '</div>';
+                //$output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
-                $output .= '</div>';
+                //$output .= '</div>';
                 $output .= '</form>';
 /*
             } else {
