@@ -14,7 +14,7 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
-            self::init();
+            //self::init();
             //self::delete_records();
         }
 
