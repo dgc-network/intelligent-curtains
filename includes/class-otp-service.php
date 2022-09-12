@@ -103,6 +103,7 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Issue OTP' ) {
+                    $six_digit_random_number = random_int(100000, 999999);
                     $client = line_bot_sdk();
                     //$client = self::line_bot_sdk();
                     $client->pushMessage([
@@ -111,7 +112,7 @@ if (!class_exists('otp_service')) {
                         'messages' => [
                             [
                                 'type' => 'text',
-                                'text' => 'OTP code : 123456'
+                                'text' => 'OTP code : '.$six_digit_random_number
                             ]
                         ]
                     ]);                
