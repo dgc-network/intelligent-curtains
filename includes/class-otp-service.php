@@ -102,8 +102,8 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Issue OTP' ) {
-                    //$client = $this->line_bot_sdk();
-                    $client = self::line_bot_sdk();
+                    $client = line_bot_sdk();
+                    //$client = self::line_bot_sdk();
                     $client->pushMessage([
                         //'to' => $user_id,
                         'to' => 'U1b08294900a36077765643d8ae14a402',
