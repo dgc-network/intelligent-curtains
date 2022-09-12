@@ -151,15 +151,37 @@ if (!class_exists('otp_service')) {
                     'id' => '001',
                 ), $atts
             );
+            $qr_code_id=$wporg_atts['id'];
 
-            //$curtain_qr_code=$wporg_atts['id'];
-            $curtain_serial_number=$wporg_atts['id'];
-
-            global $wpdb;
-            //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_qr_code}", OBJECT );
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_qr_code = {$curtain_serial_number}", OBJECT );
             $output = '<div>';
-//            if (count($results) > 0) {
+            global $wpdb;
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
+            if (count($row) > 0) {
+                $output .= '感謝您選購我們的電動窗簾<br>';
+                $curtain_user_id=$row->curtain_user_id;
+                $curtain_product_id=$row->curtain_product_id;
+                $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
+                if (count($product) > 0) {
+                    $output .= '型號:'.$product->product_name.'<br>';
+                }
+                $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
+                $output .= '<form method="post">';
+                $output .= '<input type="text" name="otp_input">';
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
+                $output .= '</div>';
+                $output .= '</form>';
+            } else {
+                // send invitation link by URL for the Line@ account
+                // https://line.me/ti/p/@490tjxdt
+                $output .= '請加入Line@帳號 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                $output .= 'https://line.me/ti/p/@490tjxdt</a>'.' 讓我們成為您的好友,<br>';
+                $output .= '並在Line聊天室中重新上傳QR-code圖檔, 完成註冊程序';    
+            }
+/*
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
+            if (count($results) > 0) {
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 
                 foreach ( $results as $index=>$result ) {
@@ -181,7 +203,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                 $output .= '</div>';
                 $output .= '</form>';
-/*
+
             } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
@@ -194,7 +216,7 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function issue_otp( $user_id='U1b08294900a36077765643d8ae14a402' ) {
+        function issue_otp() {
 
             if( isset($_POST['submit_action']) ) {
 
@@ -446,7 +468,7 @@ if (!class_exists('otp_service')) {
                 serial_id int NOT NULL AUTO_INCREMENT,
                 curtain_product_id int(10),
                 curtain_user_id int(10),
-                curtain_qr_code varchar(50),
+                qr_code_id varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (serial_id)
