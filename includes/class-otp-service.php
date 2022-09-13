@@ -111,6 +111,14 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
+                    if( ($_GET['action']=='list_curtain_products') ) {
+                        self::list_curtain_products();
+                    }
+
+                    if( ($_GET['action']=='list_serial_number') ) {
+                        self::list_serial_number();
+                    }
+
                     if( ($_GET['action']=='insert_curtain_products') && (isset($_GET['product_name'])) ) {
                         $data=array();
                         $data['product_name']=$_GET['product_name'];
