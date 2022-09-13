@@ -142,10 +142,10 @@ if (!class_exists('otp_service')) {
                     global $wpdb;
                     $table = $wpdb->prefix.'serial_number';
                     $data = array(
-                        'curtain_user_id' => $six_digit_random_number,
+                        'curtain_user_id' => strval($six_digit_random_number),
                     );
                     $where = array(
-                        'serial_number_id' => $row->serial_number_id,
+                        'serial_number_id' => strval($row->serial_number_id),
                     );
                     $wpdb->update( $table, $data, $where );                
                 }
