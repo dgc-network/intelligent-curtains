@@ -135,9 +135,19 @@ if (!class_exists('otp_service')) {
                     $output .= '</form>';
                 } else {
                     // send invitation link by URL for the Line@ account
+                    $six_digit_random_number = random_int(100000, 999999);
                     $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                     $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                    $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
+                    $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.' </p>完成註冊程序<br>';
+                    global $wpdb;
+                    $table = $wpdb->prefix.'serial_number';
+                    $data = array(
+                        'curtain_user_id' => $six_digit_random_number,
+                    );
+                    $where = array(
+                        'serial_number_id' => $row->serial_number_id,
+                    );
+                    $wpdb->update( $table, $data, $where );                
                 }
 
             } else {
@@ -146,7 +156,7 @@ if (!class_exists('otp_service')) {
                 // <a href="https://lin.ee/LPnyoeD">
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
+                $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
 
                 if( isset($_GET['id']) ) {
                     $output .= 'qr_code_id='.$_GET['id'].'<br>';
@@ -315,13 +325,13 @@ if (!class_exists('otp_service')) {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
             $sql = "CREATE TABLE `{$wpdb->prefix}serial_number` (
-                serial_id int NOT NULL AUTO_INCREMENT,
+                serial_number_id int NOT NULL AUTO_INCREMENT,
                 curtain_product_id int(10),
                 curtain_user_id int(10),
                 qr_code_id varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                PRIMARY KEY (serial_id)
+                PRIMARY KEY (serial_number_id)
             ) $charset_collate;";
             dbDelta($sql);
             
