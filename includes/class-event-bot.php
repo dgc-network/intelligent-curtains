@@ -50,23 +50,33 @@ if (!class_exists('event_bot')) {
                         switch ($message['type']) {
                             case 'text':
                                 // start my codes from here
-                                if( strlen( $message['text'] ) == 6 ) {
-                                    $client->replyMessage([
-                                        'replyToken' => $event['replyToken'],
-                                        'messages' => [
-                                            [
-                                                'type' => 'text',
-                                                'text' => 'Hi, '.$profile['displayName'],
-                                            ],
-                                            [
-                                                'type' => 'text',
-                                                'text' => '恭喜您完成註冊手續',
+                                $six_digit_random_number = $message['text'];
+                                if( strlen( $six_digit_random_number ) == 6 ) {
+                                    global $wpdb;
+                                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
+                                    if (count($row) > 0) {
+                                        $otp_service = new otp_service();
+                                        $data=array();
+                                        $data['line_user_id']=$profile['userId'];
+                                        $data['display_name']=$profile['displayName'];                
+                                        $return = $otp_service->insert_curtain_users($data);
+
+                                        $client->replyMessage([
+                                            'replyToken' => $event['replyToken'],
+                                            'messages' => [
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => 'Hi, '.$profile['displayName'],
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => '恭喜您完成註冊手續'.var_dump($return),
+                                                ]
                                             ]
-                                        ]
-                                    ]);
+                                        ]);
+                                    }
                                 }
                                 //$event_bot->insertTextMessage($event);
-                                $otp_service = new otp_service();
 
                                 $client->replyMessage([
                                     'replyToken' => $event['replyToken'],

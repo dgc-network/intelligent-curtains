@@ -297,17 +297,18 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function insert_curtain_users($data=[]) {
+        public function insert_curtain_users($data=[]) {
 
             global $wpdb;
-            $table = $wpdb->prefix.'curtain_products';
+            $table = $wpdb->prefix.'curtain_users';
             $data = array(
                 'line_user_id' => $data['line_user_id'],
                 'display_name' => $data['display_name'],
+                'last_otp' => $data['last_otp'],
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
-            $wpdb->insert($table, $data);        
+            return $wpdb->insert($table, $data);        
         }
 
         function delete_records() {
