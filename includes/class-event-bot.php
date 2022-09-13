@@ -41,7 +41,7 @@ if (!class_exists('event_bot')) {
             //$client = self::line_bot_sdk();
             $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
-                $event_bot->insertEvent($event);
+                //$event_bot->insertEvent($event);
                 $getsource = $event['source'];
                 $user_id = $getsource['userId'];
             
@@ -61,8 +61,8 @@ if (!class_exists('event_bot')) {
                                         [
                                             'type' => 'text',
                                             //'text' => $user_id.':'.$message['text'],
-                                            'text' => $response['displayName'].':'.$message['text'],
-                                            //'text' => $message['text']
+                                            //'text' => $response['displayName'].':'.$message['text'],
+                                            'text' => $message['text']
                                         ]
                                     ]
                                 ]);

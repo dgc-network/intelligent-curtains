@@ -22,10 +22,9 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
 
-//$otp_service = new otp_service();
+$otp_service = new otp_service();
 $event_bot = new event_bot();
-//$client = $event_bot->line_bot_sdk();
-
+$client = $event_bot->line_bot_sdk();
 $init = $event_bot->init();
 /*
 //$client = line_bot_sdk();
@@ -41,7 +40,7 @@ foreach ($client->parseEvents() as $event) {
             switch ($message['type']) {
                 case 'text':
                     // start my codes from here
-                    $event_bot->insertTextMessage($event);
+                    //$event_bot->insertTextMessage($event);
                     $response = $client->getProfile($event['source']['userId']);
 
                     $client->replyMessage([
