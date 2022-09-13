@@ -18,22 +18,46 @@ if (!class_exists('otp_service')) {
             //self::delete_records();
         }
 
-        function product_info() {
+        function push_text_message($text_message='', $line_user_id='') {
+            $client = line_bot_sdk();
+            $client->pushMessage([
+                'to' => $line_user_id,
+                'messages' => [
+                    [
+                        'type' => 'text',
+                        'text' => $text_message
+                    ]
+                ]
+            ]);
+        }
 
-            $curtain_user_id='';
+        function push_OTP_to($line_user_id='') {
+            $six_digit_random_number = random_int(100000, 999999);
+            $text_message = 'OTP code : '.$six_digit_random_number;
+            self::push_text_message($text_message, $line_user_id)
+        }
+
+        function product_info() {
 
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
 
-                    // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
+/*
                     global $wpdb;
                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     $line_user_id = $row->line_user_id;
                     $last_otp = $row->last_otp;
+*/
+                    // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
                     if ( $last_otp==$_POST['otp_input'] ) {
 
                     } else {
+
+                        $line_user_id = 'U1b08294900a36077765643d8ae14a402';
+                        $text_message = 'The '.$_POST['otp_input'].' is a wrong OTP code.';
+                        self::push_text_message($text_message, $line_user_id);
+/*
                         $client = line_bot_sdk();
                         $client->pushMessage([
                             //'to' => $line_user_id,
@@ -45,11 +69,15 @@ if (!class_exists('otp_service')) {
                                 ]
                             ]
                         ]);                    
+*/                        
                     }
                 }
 
                 if( $_POST['submit_action']=='Resend' ) {
 
+                    $line_user_id = 'U1b08294900a36077765643d8ae14a402';
+                    self::push_OTP_to($line_user_id);
+/*                    
                     $six_digit_random_number = random_int(100000, 999999);
 
                     $client = line_bot_sdk();
@@ -63,7 +91,7 @@ if (!class_exists('otp_service')) {
                             ]
                         ]
                     ]);
-
+*/
                     global $wpdb;
                     $table = $wpdb->prefix.'curtain_users';
                     $data = array(
@@ -74,30 +102,44 @@ if (!class_exists('otp_service')) {
                     );
                     $wpdb->update( $table, $data, $where );                
                 }
-
                 unset($_POST['submit_action']);
             }
 
+            $last_otp = '';
+            $line_user_id = '';
             $qr_code_id = $_GET['id'];
-            $output = '<div>';
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
+            $output = '<div>';
             if (count($row) > 0) {
+
                 $output .= '感謝您選購我們的電動窗簾<br>';
-                $curtain_user_id=$row->curtain_user_id;
                 $curtain_product_id=$row->curtain_product_id;
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
                 if (count($product) > 0) {
-                    $output .= '型號:'.$product->product_name.'<br>';
+                    $output .= '型號:'.$product->product_code.' '.$product->product_name.'<br>';
                 }
-                $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
-                $output .= '<form method="post">';
-                $output .= '<input type="text" name="otp_input">';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
-                $output .= '</div>';
-                $output .= '</form>';
+
+                $curtain_user_id=$row->curtain_user_id;
+                $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
+                if (count($user) > 0) {
+                    $last_otp = $user->last_otp;
+                    $line_user_id = $user->line_user_id;
+                    $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
+                    $output .= '<form method="post">';
+                    $output .= '<input type="text" name="otp_input">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+                } else {
+                    // send invitation link by URL for the Line@ account
+                    $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+                    $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中重傳QR-code圖檔, 完成註冊程序<br>';
+                }
+
             } else {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
@@ -127,13 +169,19 @@ if (!class_exists('otp_service')) {
                         $output .= 'Successed to insert a record in table curtain_products<br>';
                     }
 
-                    //if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) && (isset($_GET['curtain_user_id']))) {
                     if( ($_GET['action']=='serial-number-insert') && (isset($_GET['curtain_product_id'])) ) {
                         $data=array();
                         $data['curtain_product_id']=$_GET['curtain_product_id'];
-                        //$data['curtain_user_id']=$_GET['curtain_user_id'];
                         self::insert_serial_number($data);
                         $output .= 'Successed to insert a record in table serial_number<br>';
+                    }
+
+                    if( ($_GET['action']=='curtain-user-insert') && (isset($_GET['line_user_id'])) && (isset($_GET['display_name'])) ) {
+                        $data=array();
+                        $data['line_user_id']=$_GET['line_user_id'];
+                        $data['display_name']=$_GET['display_name'];
+                        self::insert_curtain_users($data);
+                        $output .= 'Successed to insert a record in table curtain_users<br>';
                     }
                 }
             }
@@ -199,19 +247,6 @@ if (!class_exists('otp_service')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
-/*
-            $output .= '<form method="get">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="edit_mode">';
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel" name="edit_mode">';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-*/
             return $output;
         }
 
@@ -223,6 +258,42 @@ if (!class_exists('otp_service')) {
                 'qr_code_id' => intval(time()),
                 'curtain_product_id' => $data['curtain_product_id'],
                 'curtain_user_id' => $data['curtain_user_id'],
+                'create_timestamp' => time(),
+                'update_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);        
+        }
+
+        function list_curtain_users() {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
+            $output  = '<h2>Curtain Users</h2>';
+            $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr>';
+            $output .= '<td>id</td>';
+            $output .= '<td>line_user_id</td>';
+            $output .= '<td>display_name</td>';
+            $output .= '<td>update_time</td>';
+            $output .= '</tr>';
+            foreach ( $results as $index=>$result ) {
+                $output .= '<tr>';
+                $output .= '<td>'.$result->curtain_user_id.'</td>';
+                $output .= '<td>'.$result->line_user_id.'</td>';
+                $output .= '<td>'.$result->display_name.'</td>';
+                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
+                $output .= '</tr>';
+            }
+            $output .= '</tbody></table></figure>';
+            return $output;
+        }
+
+        function insert_curtain_users($data=[]) {
+
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_products';
+            $data = array(
+                'line_user_id' => $data['line_user_id'],
+                'display_name' => $data['display_name'],
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
