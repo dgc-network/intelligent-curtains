@@ -17,7 +17,7 @@ if (!class_exists('event_bot')) {
             //self::init();
             //self::delete_records();
         }
-
+/*
         public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
@@ -34,16 +34,14 @@ if (!class_exists('event_bot')) {
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
         }
-
+*/
         public function init() {
-            //$event_bot = new event_bot();
-            //$client = $event_bot->line_bot_sdk();
-            //$client = self::line_bot_sdk();
             $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 //$event_bot->insertEvent($event);
-                $getsource = $event['source'];
-                $user_id = $getsource['userId'];
+                //$getsource = $event['source'];
+                //$user_id = $getsource['userId'];
+                $profile = $client->getProfile($event['source']['userId']);
             
                 switch ($event['type']) {
                     case 'message':
@@ -52,16 +50,31 @@ if (!class_exists('event_bot')) {
                         switch ($message['type']) {
                             case 'text':
                                 // start my codes from here
+                                if( strlen( $message['text'] ) == 6 ) {
+                                    $client->replyMessage([
+                                        'replyToken' => $event['replyToken'],
+                                        'messages' => [
+                                            [
+                                                'type' => 'text',
+                                                'text' => 'Hi, '.$profile['displayName'],
+                                            ],
+                                            [
+                                                'type' => 'text',
+                                                'text' => '恭喜您完成註冊手續',
+                                            ]
+                                        ]
+                                    ]);
+                                }
                                 //$event_bot->insertTextMessage($event);
-                                $response = $client->getProfile($event['source']['userId']);
-            
+                                $otp_service = new otp_service();
+
                                 $client->replyMessage([
                                     'replyToken' => $event['replyToken'],
                                     'messages' => [
                                         [
                                             'type' => 'text',
                                             //'text' => $user_id.':'.$message['text'],
-                                            'text' => $response['displayName'].':'.$message['text'],
+                                            'text' => 'Hi, '.$profile['displayName'].':'.$message['text'],
                                             //'text' => $message['text']
                                         ]
                                     ]
