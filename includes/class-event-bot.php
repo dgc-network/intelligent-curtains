@@ -47,7 +47,7 @@ if (!class_exists('event_bot')) {
             
                 switch ($event['type']) {
                     case 'message':
-                        $event_bot->insertMessageEvent($event);
+                        //$event_bot->insertMessageEvent($event);
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
@@ -61,8 +61,8 @@ if (!class_exists('event_bot')) {
                                         [
                                             'type' => 'text',
                                             //'text' => $user_id.':'.$message['text'],
-                                            //'text' => $response['displayName'].':'.$message['text'],
-                                            'text' => $message['text']
+                                            'text' => $response['displayName'].':'.$message['text'],
+                                            //'text' => $message['text']
                                         ]
                                     ]
                                 ]);
