@@ -12,8 +12,8 @@ if (!class_exists('otp_service')) {
         public function __construct() {
             add_shortcode('product-info', __CLASS__ . '::product_info');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
-            add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_product');
-            add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_user');
+            add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
+            add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             self::create_tables();
             //self::delete_records();
         }
@@ -111,15 +111,15 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='list_curtain_products') ) {
+                    if( ($_GET['action']=='curtain-product-list') ) {
                         self::list_curtain_products();
                     }
 
-                    if( ($_GET['action']=='list_serial_number') ) {
+                    if( ($_GET['action']=='serial-number-list') ) {
                         self::list_serial_number();
                     }
 
-                    if( ($_GET['action']=='insert_curtain_products') && (isset($_GET['product_name'])) ) {
+                    if( ($_GET['action']=='curtain-product-insert') && (isset($_GET['product_name'])) ) {
                         $data=array();
                         $data['product_name']=$_GET['product_name'];
                         self::insert_curtain_products($data);
@@ -127,7 +127,7 @@ if (!class_exists('otp_service')) {
                     }
 
                     //if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) && (isset($_GET['curtain_user_id']))) {
-                    if( ($_GET['action']=='insert_serial_number') && (isset($_GET['curtain_product_id'])) ) {
+                    if( ($_GET['action']=='serial-number-insert') && (isset($_GET['curtain_product_id'])) ) {
                         $data=array();
                         $data['curtain_product_id']=$_GET['curtain_product_id'];
                         //$data['curtain_user_id']=$_GET['curtain_user_id'];
