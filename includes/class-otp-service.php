@@ -78,6 +78,7 @@ if (!class_exists('otp_service')) {
                 unset($_POST['submit_action']);
             }
 
+            $qr_code_id = $_GET['id'];
             $output = '<div>';
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
