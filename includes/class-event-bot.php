@@ -59,6 +59,7 @@ if (!class_exists('event_bot')) {
                                         $data=array();
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
+                                        $data['last_otp']=$six_digit_random_number;                
                                         $return = $otp_service->insert_curtain_users($data);
 
                                         $client->replyMessage([
