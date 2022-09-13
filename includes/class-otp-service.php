@@ -190,7 +190,9 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->qr_code_id.'</td>';
-                $output .= '<td>'.$result->curtain_product_id.'</td>';
+                //$output .= '<td>'.$result->curtain_product_id.'</td>';
+                $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
+                $output .= '<td>'.$product->product_name.'</td>';
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
