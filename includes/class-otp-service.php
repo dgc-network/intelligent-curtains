@@ -34,7 +34,7 @@ if (!class_exists('otp_service')) {
         function push_OTP_to($line_user_id='') {
             $six_digit_random_number = random_int(100000, 999999);
             $text_message = 'OTP code : '.$six_digit_random_number;
-            self::push_text_message($text_message, $line_user_id)
+            self::push_text_message($text_message, $line_user_id);
         }
 
         function product_info() {
