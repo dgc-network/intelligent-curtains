@@ -52,7 +52,7 @@ if (!class_exists('event_bot')) {
                         switch ($message['type']) {
                             case 'text':
                                 // start my codes from here
-                                $event_bot->insertTextMessage($event);
+                                //$event_bot->insertTextMessage($event);
                                 $response = $client->getProfile($event['source']['userId']);
             
                                 $client->replyMessage([

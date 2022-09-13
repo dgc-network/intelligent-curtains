@@ -22,10 +22,12 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
 
+//$otp_service = new otp_service();
 $event_bot = new event_bot();
-$client = $event_bot->line_bot_sdk();
+//$client = $event_bot->line_bot_sdk();
 
-//$init = $event_bot->init();
+$init = $event_bot->init();
+/*
 //$client = line_bot_sdk();
 foreach ($client->parseEvents() as $event) {
     $event_bot->insertEvent($event);
@@ -66,7 +68,7 @@ foreach ($client->parseEvents() as $event) {
             break;
     }    
 };
-
+*/
 
 function line_bot_sdk() {
     $channelAccessToken = '';
