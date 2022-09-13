@@ -156,7 +156,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$result->curtain_product_id.'</td>';
                 $output .= '<td>'.$result->product_code.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
-                $output .= '<td>'.$result->update_timestamp.'</td>';
+                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -192,7 +192,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$result->qr_code_id.'</td>';
                 $output .= '<td>'.$result->curtain_product_id.'</td>';
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
-                $output .= '<td>'.$result->update_timestamp.'</td>';
+                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
