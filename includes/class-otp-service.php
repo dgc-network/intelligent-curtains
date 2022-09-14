@@ -15,6 +15,7 @@ if (!class_exists('otp_service')) {
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             self::create_tables();
+            self::drop_tables();
             //self::delete_records();
         }
 
@@ -313,7 +314,7 @@ if (!class_exists('otp_service')) {
                 $data = array(
                     'qr_code_serial_no' => $qr_code_serial_no,
                     'curtain_product_id' => $data['curtain_product_id'],
-                    'curtain_user_id' => $data['curtain_user_id'],
+                    //'curtain_user_id' => $data['curtain_user_id'],
                     'update_timestamp' => time(),
                 );
                 $wpdb->update($table, $data, $where);
@@ -399,7 +400,15 @@ if (!class_exists('otp_service')) {
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
             dbDelta($sql);
-        }        
+        }
+
+        function drop_tables() {
+            if( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
+            global $wpdb;
+            $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}serial_number" );
+            $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}curtain_users" );
+            delete_option("my_plugin_db_version");
+        }
     }
 
     new otp_service();
