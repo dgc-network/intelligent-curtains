@@ -164,14 +164,6 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='curtain-product-list') ) {
-                        self::list_curtain_products();
-                    }
-
-                    if( ($_GET['action']=='serial-number-list') ) {
-                        self::list_serial_number();
-                    }
-
                     if( ($_GET['action']=='curtain-product-insert') && (isset($_GET['product_name'])) ) {
                         $data=array();
                         $data['product_name']=$_GET['product_name'];
@@ -204,7 +196,7 @@ if (!class_exists('otp_service')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
             $output  = '<h2>Curtain Products</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr>';
+            $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
             $output .= '<td>product_code</td>';
             $output .= '<td>product_name</td>';
@@ -240,7 +232,7 @@ if (!class_exists('otp_service')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number", OBJECT );
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr>';
+            $output .= '<tr style="background-color:yellow">';
             $output .= '<td>qr_code_id</td>';
             $output .= '<td>curtain_product</td>';
             $output .= '<td>curtain_user</td>';
@@ -279,7 +271,7 @@ if (!class_exists('otp_service')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
             $output  = '<h2>Curtain Users</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr>';
+            $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
             $output .= '<td>line_user_id</td>';
             $output .= '<td>display_name</td>';
@@ -350,7 +342,7 @@ if (!class_exists('otp_service')) {
                 curtain_user_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50),
                 display_name varchar(50),
-                last_opt varchar(50),
+                last_otp varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)
