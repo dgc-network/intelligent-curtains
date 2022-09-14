@@ -161,6 +161,15 @@ if (!class_exists('otp_service')) {
                         $output .= $result.'<br>';
                     }
 
+                    if( ($_GET['action']=='update-serial-number') && (isset($_GET['curtain_product_id'])) ) {
+                        $data=array();
+                        $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        $where=array();
+                        $where['serial_number_id']=$_GET['serial_number_id'];
+                        $result = self::update_serial_number($data, $where);
+                        $output .= $result.'<br>';
+                    }
+
                     if( ($_GET['action']=='insert-curtain-user') && (isset($_GET['line_user_id'])) && (isset($_GET['display_name'])) ) {
                         $data=array();
                         $data['line_user_id']=$_GET['line_user_id'];
@@ -275,7 +284,7 @@ if (!class_exists('otp_service')) {
         }
 
         function insert_serial_number($data=[]) {
-            $qr_code_serial_no = '';
+            //$qr_code_serial_no = '';
             $curtain_product_id = intval($data['curtain_product_id']);
             global $wpdb;
             $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
@@ -290,6 +299,24 @@ if (!class_exists('otp_service')) {
                     'update_timestamp' => time(),
                 );
                 $wpdb->insert($table, $data);
+            }
+        }
+
+        function update_serial_number($data=[], $where=[]) {
+            //$qr_code_serial_no = '';
+            $curtain_product_id = intval($data['curtain_product_id']);
+            global $wpdb;
+            $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
+            if (count($product) > 0) {
+                $qr_code_serial_no = $product->model_number . $product->specification . time();
+                $table = $wpdb->prefix.'serial_number';
+                $data = array(
+                    'qr_code_serial_no' => $qr_code_serial_no,
+                    'curtain_product_id' => $data['curtain_product_id'],
+                    'curtain_user_id' => $data['curtain_user_id'],
+                    'update_timestamp' => time(),
+                );
+                $wpdb->update($table, $data, $where);
             }
         }
 
