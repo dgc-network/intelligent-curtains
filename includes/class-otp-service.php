@@ -134,12 +134,23 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='insert-curtain-product') && (isset($_GET['model_number'])) && (isset($_GET['specification'])) && (isset($_GET['product_name'])) ) {
+                    if( ($_GET['action']=='insert-curtain-product') && (isset($_GET['model_number'])) && (isset($_GET['specification'])) ) {
                         $data=array();
                         $data['model_number']=$_GET['model_number'];
                         $data['specification']=$_GET['specification'];
                         $data['product_name']=$_GET['product_name'];
                         $result = self::insert_curtain_products($data);
+                        $output .= $result.'<br>';
+                    }
+
+                    if( ($_GET['action']=='update-curtain-product') && (isset($_GET['model_number'])) && (isset($_GET['specification'])) ) {
+                        $data=array();
+                        $data['model_number']=$_GET['model_number'];
+                        $data['specification']=$_GET['specification'];
+                        $data['product_name']=$_GET['product_name'];
+                        $where=array();
+                        $where['curtain_product_id']=$_GET['curtain_product_id'];
+                        $result = self::update_curtain_products($data, $where);
                         $output .= $result.'<br>';
                     }
 
@@ -170,8 +181,9 @@ if (!class_exists('otp_service')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
-            $output .= '<td>model_number</td>';
-            $output .= '<td>specification</td>';
+            $output .= '<td>model</td>';
+            $output .= '<td>spec</td>';
+            $output .= '<td>product_name</td>';
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
@@ -179,7 +191,8 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$result->curtain_product_id.'</td>';
                 $output .= '<td>'.$result->model_number.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
-                $output .= '<td>'.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td>'.$result->product_name.'</td>';
+                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -201,12 +214,11 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                //$output .= '<td>'.$result->curtain_product_id.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
                 $output .= '<td>'.$product->model_number.'</td>';
                 $output .= '<td>'.$product->specification.'</td>';
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
-                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
+                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -229,7 +241,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
@@ -248,6 +260,18 @@ if (!class_exists('otp_service')) {
                 'update_timestamp' => time(),
             );
             $wpdb->insert($table, $data);        
+        }
+
+        function update_curtain_products($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_products';
+            $data = array(
+                'model_number' => $data['model_number'],
+                'specification' => $data['specification'],
+                'product_name' => $data['product_name'],
+                'update_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data, $where);
         }
 
         function insert_serial_number($data=[]) {
