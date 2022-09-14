@@ -300,7 +300,8 @@ if (!class_exists('otp_service')) {
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
-            return $wpdb->insert($table, $data);        
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
         }
 
         function delete_records() {
