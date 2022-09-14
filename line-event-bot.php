@@ -19,11 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
-include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
+//include_once dirname( __FILE__ ) . '/includes/class-event-bot.php';
+include_once dirname( __FILE__ ) . '/includes/class-line-webhook.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
 
-$event_bot = new event_bot();
-$event_bot->init();
+//$event_bot = new event_bot();
+//$event_bot->init();
+$line_webhook = new line_webhook();
+$line_webhook->init();
 /*
 //$client = line_bot_sdk();
 foreach ($client->parseEvents() as $event) {
