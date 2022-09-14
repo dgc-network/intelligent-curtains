@@ -292,21 +292,28 @@ if (!class_exists('otp_service')) {
         public function insert_curtain_users($data=[]) {
 
             $line_user_id = $data['line_user_id'];
-            $table = $wpdb->prefix.'curtain_users';
-            $data = array(
-                'line_user_id' => $data['line_user_id'],
-                'display_name' => $data['display_name'],
-                'last_otp' => $data['last_otp'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
             if (count($row) > 0) {
+                $table = $wpdb->prefix.'curtain_users';
+                $data = array(
+                    'line_user_id' => $data['line_user_id'],
+                    'display_name' => $data['display_name'],
+                    'last_otp' => $data['last_otp'],
+                    'update_timestamp' => time(),
+                );
                 $where = array('line_user_id' => $line_user_id);
                 $wpdb->update($table, $data, $where);
                 return $row->curtain_user_id;
             } else {
+                $table = $wpdb->prefix.'curtain_users';
+                $data = array(
+                    'line_user_id' => $data['line_user_id'],
+                    'display_name' => $data['display_name'],
+                    'last_otp' => $data['last_otp'],
+                    'create_timestamp' => time(),
+                    'update_timestamp' => time(),
+                );
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }

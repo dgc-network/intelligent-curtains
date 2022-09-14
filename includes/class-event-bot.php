@@ -71,7 +71,8 @@ if (!class_exists('event_bot')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => '恭喜您完成註冊手續'.var_dump($return),
+                                                    //'text' => '恭喜您完成註冊手續'.var_dump($return),
+                                                    'text' => '恭喜您完成註冊手續'.$return,
                                                 ]
                                             ]
                                         ]);
@@ -84,9 +85,7 @@ if (!class_exists('event_bot')) {
                                     'messages' => [
                                         [
                                             'type' => 'text',
-                                            //'text' => $user_id.':'.$message['text'],
-                                            'text' => 'Hi, '.$profile['displayName'].':'.$message['text'],
-                                            //'text' => $message['text']
+                                            'text' => 'Hi, '.$profile['displayName'].':'.$message['text'].' is wrong.',
                                         ]
                                     ]
                                 ]);
