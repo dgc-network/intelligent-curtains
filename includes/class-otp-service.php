@@ -271,7 +271,7 @@ if (!class_exists('otp_service')) {
                 'product_name' => $data['product_name'],
                 'update_timestamp' => time(),
             );
-            $wpdb->insert($table, $data, $where);
+            $wpdb->update($table, $data, $where);
         }
 
         function insert_serial_number($data=[]) {
