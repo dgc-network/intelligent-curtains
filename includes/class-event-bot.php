@@ -42,7 +42,7 @@ if (!class_exists('event_bot')) {
                                         $data['display_name']=$profile['displayName'];                
                                         $data['last_otp']=$six_digit_random_number;                
                                         $return_id = $otp_service->insert_curtain_users($data);
-                                        
+/*                                        
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
                                         $data = array(
@@ -51,7 +51,7 @@ if (!class_exists('event_bot')) {
                                         );
                                         $where = array('curtain_user_id' => $six_digit_random_number);
                                         $wpdb->update($table, $data, $where);
-                        
+*/                        
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
