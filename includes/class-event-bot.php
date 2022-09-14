@@ -60,8 +60,16 @@ if (!class_exists('event_bot')) {
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
                                         $data['last_otp']=$six_digit_random_number;                
-                                        $return = $otp_service->insert_curtain_users($data);
-
+                                        $return_id = $otp_service->insert_curtain_users($data);
+                                        
+                                        $table = $wpdb->prefix.'serial_number';
+                                        $data = array(
+                                            'curtain_user_id' => $return_id,
+                                            'update_timestamp' => time(),
+                                        );
+                                        $where = array('curtain_user_id' => $six_digit_random_number);
+                                        $wpdb->update($table, $data, $where);
+                        
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
@@ -71,24 +79,28 @@ if (!class_exists('event_bot')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    //'text' => '恭喜您完成註冊手續'.var_dump($return),
-                                                    'text' => '恭喜您完成註冊手續'.$return,
+                                                    'text' => '恭喜您完成註冊手續'.$return_id,
                                                 ]
                                             ]
                                         ]);
                                     }
+                                } else {
+                                    $client->replyMessage([
+                                        'replyToken' => $event['replyToken'],
+                                        'messages' => [
+                                            [
+                                                'type' => 'text',
+                                                'text' => 'Hi, '.$profile['displayName'],
+                                            ],
+                                            [
+                                                'type' => 'text',
+                                                'text' => 'Number '.$message['text'].' is wrong.',
+                                            ]
+                                        ]
+                                    ]);
                                 }
                                 //$event_bot->insertTextMessage($event);
 
-                                $client->replyMessage([
-                                    'replyToken' => $event['replyToken'],
-                                    'messages' => [
-                                        [
-                                            'type' => 'text',
-                                            'text' => 'Hi, '.$profile['displayName'].':'.$message['text'].' is wrong.',
-                                        ]
-                                    ]
-                                ]);
                                 break;
                             default:
                                 error_log('Unsupported message type: ' . $message['type']);
