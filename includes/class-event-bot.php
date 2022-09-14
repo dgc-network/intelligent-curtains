@@ -31,6 +31,7 @@ if (!class_exists('event_bot')) {
                             case 'text':
                                 //$event_bot->insertTextMessage($event);
                                 // start my codes from here
+/*                                
                                 //$six_digit_random_number = strval($message['text']);
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
@@ -42,8 +43,8 @@ if (!class_exists('event_bot')) {
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
                                         $data['last_otp']=$six_digit_random_number;                
-                                        //$return_id = $otp_service->insert_curtain_users($data);
-/*                                        
+                                        $return_id = $otp_service->insert_curtain_users($data);
+                                        
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
                                         $data = array(
@@ -52,7 +53,7 @@ if (!class_exists('event_bot')) {
                                         );
                                         $where = array('curtain_user_id' => $six_digit_random_number);
                                         $wpdb->update($table, $data, $where);
-*/                        
+                        
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
@@ -83,7 +84,7 @@ if (!class_exists('event_bot')) {
                                         ]
                                     ]);
                                 }
-                                
+*/
                                 $client->replyMessage([
                                     'replyToken' => $event['replyToken'],
                                     'messages' => [
