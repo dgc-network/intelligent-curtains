@@ -31,7 +31,7 @@ if (!class_exists('event_bot')) {
                             case 'text':
                                 //$event_bot->insertTextMessage($event);
                                 // start my codes from here
-                                $six_digit_random_number = $message['text'];
+                                $six_digit_random_number = strval($message['text']);
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
@@ -49,7 +49,7 @@ if (!class_exists('event_bot')) {
                                             'curtain_user_id' => strval($return_id),
                                             'update_timestamp' => time(),
                                         );
-                                        $where = array('curtain_user_id' => strval($six_digit_random_number));
+                                        $where = array('curtain_user_id' => $six_digit_random_number);
                                         $wpdb->update($table, $data, $where);
                         
                                         $client->replyMessage([
