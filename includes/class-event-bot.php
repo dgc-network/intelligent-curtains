@@ -14,33 +14,13 @@ if (!class_exists('event_bot')) {
             add_shortcode('message-list', __CLASS__ . '::list_message_event');
             add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
             self::create_tables();
-            //self::init();
             //self::delete_records();
         }
-/*
-        public function line_bot_sdk() {
-            $channelAccessToken = '';
-            $channelSecret = '';
-            $plugin_dir = WP_PLUGIN_DIR . '/line-event-bot';
-            if (file_exists($plugin_dir . '/line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file($plugin_dir . "/line-bot-sdk-tiny/config.ini", true);
-                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-                    error_log("config.ini uncompleted!", 0);
-                } else {
-                    $channelAccessToken = $config['Channel']['Token'];
-                    $channelSecret = $config['Channel']['Secret'];
-                }
-            }
-            $client = new LINEBotTiny($channelAccessToken, $channelSecret);
-            return $client;
-        }
-*/
+
         public function init() {
             $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
-                //$event_bot->insertEvent($event);
-                //$getsource = $event['source'];
-                //$user_id = $getsource['userId'];
+
                 $profile = $client->getProfile($event['source']['userId']);
             
                 switch ($event['type']) {
@@ -49,6 +29,7 @@ if (!class_exists('event_bot')) {
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
+                                //$event_bot->insertTextMessage($event);
                                 // start my codes from here
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
@@ -65,10 +46,10 @@ if (!class_exists('event_bot')) {
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
                                         $data = array(
-                                            'curtain_user_id' => $return_id,
+                                            'curtain_user_id' => strval($return_id),
                                             'update_timestamp' => time(),
                                         );
-                                        $where = array('curtain_user_id' => $six_digit_random_number);
+                                        $where = array('curtain_user_id' => strval($six_digit_random_number));
                                         $wpdb->update($table, $data, $where);
                         
                                         $client->replyMessage([
@@ -100,7 +81,6 @@ if (!class_exists('event_bot')) {
                                         ]
                                     ]);
                                 }
-                                //$event_bot->insertTextMessage($event);
 
                                 break;
                             default:
