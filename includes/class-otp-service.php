@@ -39,59 +39,29 @@ if (!class_exists('otp_service')) {
 
         function product_info() {
 
+            $last_otp = '';
+            $line_user_id = '';
+            $curtain_user_id = 0;
+            $qr_code_serial_no = $_GET['id'];
+
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Confirm' ) {
-
-/*
-                    global $wpdb;
-                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
-                    $line_user_id = $row->line_user_id;
-                    $last_otp = $row->last_otp;
-*/
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
                     if ( $last_otp==$_POST['otp_input'] ) {
 
                     } else {
-
-                        $line_user_id = 'U1b08294900a36077765643d8ae14a402';
+                        //$line_user_id = 'U1b08294900a36077765643d8ae14a402';
                         $text_message = 'The '.$_POST['otp_input'].' is a wrong OTP code.';
                         self::push_text_message($text_message, $line_user_id);
-/*
-                        $client = line_bot_sdk();
-                        $client->pushMessage([
-                            //'to' => $line_user_id,
-                            'to' => 'U1b08294900a36077765643d8ae14a402',
-                            'messages' => [
-                                [
-                                    'type' => 'text',
-                                    'text' => 'The '.$_POST['otp_input'].' is a wrong OTP code.'
-                                ]
-                            ]
-                        ]);                    
-*/                        
                     }
                 }
 
                 if( $_POST['submit_action']=='Resend' ) {
 
-                    $line_user_id = 'U1b08294900a36077765643d8ae14a402';
+                    //$line_user_id = 'U1b08294900a36077765643d8ae14a402';
                     self::push_OTP_to($line_user_id);
-/*                    
-                    $six_digit_random_number = random_int(100000, 999999);
 
-                    $client = line_bot_sdk();
-                    $client->pushMessage([
-                        //'to' => $user_id,
-                        'to' => 'U1b08294900a36077765643d8ae14a402',
-                        'messages' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'OTP code : '.$six_digit_random_number
-                            ]
-                        ]
-                    ]);
-*/
                     global $wpdb;
                     $table = $wpdb->prefix.'curtain_users';
                     $data = array(
@@ -105,23 +75,23 @@ if (!class_exists('otp_service')) {
                 unset($_POST['submit_action']);
             }
 
-            $last_otp = '';
-            $line_user_id = '';
-            $qr_code_id = $_GET['id'];
             global $wpdb;
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_id = {$qr_code_id}", OBJECT );
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = {$qr_code_serial_no}", OBJECT );
             $output = '<div>';
             if (count($row) > 0) {
 
+                $curtain_user_id=$row->curtain_user_id;
+                $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
+                if (count($user) > 0) {
+                    $output .= 'Hi, '.$user->display_name.'<br>';
+                }
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $curtain_product_id=$row->curtain_product_id;
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
                 if (count($product) > 0) {
-                    $output .= '型號:'.$product->product_code.' '.$product->product_name.'<br>';
+                    $output .= '型號:'.$product->model_number.' 規格: '.$product->specification.' '.$product->product_name.'<br>';
                 }
 
-                $curtain_user_id=$row->curtain_user_id;
-                $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                 if (count($user) > 0) {
                     $last_otp = $user->last_otp;
                     $line_user_id = $user->line_user_id;
@@ -142,10 +112,10 @@ if (!class_exists('otp_service')) {
                     global $wpdb;
                     $table = $wpdb->prefix.'serial_number';
                     $data = array(
-                        'curtain_user_id' => strval($six_digit_random_number),
+                        'curtain_user_id' => intval($six_digit_random_number),
                     );
                     $where = array(
-                        'qr_code_id' => $qr_code_id,
+                        'qr_code_serial_no' => $qr_code_serial_no,
                     );
                     $wpdb->update( $table, $data, $where );                
                 }
@@ -159,31 +129,33 @@ if (!class_exists('otp_service')) {
                 $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
 
                 if( isset($_GET['id']) ) {
-                    $output .= 'qr_code_id='.$_GET['id'].'<br>';
+                    $output .= 'qr_code_serial_no='.$_GET['id'].'<br>';
                 }
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='curtain-product-insert') && (isset($_GET['product_name'])) ) {
+                    if( ($_GET['action']=='insert-curtain-product') && (isset($_GET['model_number'])) && (isset($_GET['specification'])) && (isset($_GET['product_name'])) ) {
                         $data=array();
+                        $data['model_number']=$_GET['model_number'];
+                        $data['specification']=$_GET['specification'];
                         $data['product_name']=$_GET['product_name'];
-                        self::insert_curtain_products($data);
-                        $output .= 'Successed to insert a record in table curtain_products<br>';
+                        $result = self::insert_curtain_products($data);
+                        $output .= $result.'<br>';
                     }
 
-                    if( ($_GET['action']=='serial-number-insert') && (isset($_GET['curtain_product_id'])) ) {
+                    if( ($_GET['action']=='insert-serial-number') && (isset($_GET['curtain_product_id'])) ) {
                         $data=array();
                         $data['curtain_product_id']=$_GET['curtain_product_id'];
-                        self::insert_serial_number($data);
-                        $output .= 'Successed to insert a record in table serial_number<br>';
+                        $result = self::insert_serial_number($data);
+                        $output .= $result.'<br>';
                     }
 
-                    if( ($_GET['action']=='curtain-user-insert') && (isset($_GET['line_user_id'])) && (isset($_GET['display_name'])) ) {
+                    if( ($_GET['action']=='insert-curtain-user') && (isset($_GET['line_user_id'])) && (isset($_GET['display_name'])) ) {
                         $data=array();
                         $data['line_user_id']=$_GET['line_user_id'];
                         $data['display_name']=$_GET['display_name'];
-                        self::insert_curtain_users($data);
-                        $output .= 'Successed to insert a record in table curtain_users<br>';
+                        $result = self::insert_curtain_users($data);
+                        $output .= $result.'<br>';
                     }
                 }
             }
@@ -198,33 +170,20 @@ if (!class_exists('otp_service')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
-            $output .= '<td>product_code</td>';
-            $output .= '<td>product_name</td>';
+            $output .= '<td>model_number</td>';
+            $output .= '<td>specification</td>';
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_product_id.'</td>';
-                $output .= '<td>'.$result->product_code.'</td>';
-                $output .= '<td>'.$result->product_name.'</td>';
-                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
+                $output .= '<td>'.$result->model_number.'</td>';
+                $output .= '<td>'.$result->specification.'</td>';
+                $output .= '<td>'.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
             return $output;
-        }
-
-        function insert_curtain_products($data=[]) {
-
-            global $wpdb;
-            $table = $wpdb->prefix.'curtain_products';
-            $data = array(
-                'product_code' => intval(time()),
-                'product_name' => $data['product_name'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-            $wpdb->insert($table, $data);        
         }
 
         function list_serial_number() {
@@ -233,37 +192,25 @@ if (!class_exists('otp_service')) {
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>qr_code_id</td>';
-            $output .= '<td>curtain_product</td>';
-            $output .= '<td>curtain_user</td>';
+            $output .= '<td>qr_code_serial_no</td>';
+            $output .= '<td>model</td>';
+            $output .= '<td>spec</td>';
+            $output .= '<td>user</td>';
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td>'.$result->qr_code_id.'</td>';
+                $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 //$output .= '<td>'.$result->curtain_product_id.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
-                $output .= '<td>'.$product->product_name.'</td>';
+                $output .= '<td>'.$product->model_number.'</td>';
+                $output .= '<td>'.$product->specification.'</td>';
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
             return $output;
-        }
-
-        function insert_serial_number($data=[]) {
-
-            global $wpdb;
-            $table = $wpdb->prefix.'serial_number';
-            $data = array(
-                'qr_code_id' => intval(time()),
-                'curtain_product_id' => $data['curtain_product_id'],
-                'curtain_user_id' => $data['curtain_user_id'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-            $wpdb->insert($table, $data);        
         }
 
         function list_curtain_users() {
@@ -282,19 +229,53 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
-                $output .= '<td>'.wp_date( 'Y/m/d', $result->update_timestamp ).'</td>';
+                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
             return $output;
         }
 
-        public function insert_curtain_users($data=[]) {
+        function insert_curtain_products($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_products';
+            $data = array(
+                'product_code' => time(),
+                'model_number' => $data['model_number'],
+                'specification' => $data['specification'],
+                'product_name' => $data['product_name'],
+                'create_timestamp' => time(),
+                'update_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);        
+        }
 
+        function insert_serial_number($data=[]) {
+            $qr_code_serial_no = '';
+            $curtain_product_id = intval($data['curtain_product_id']);
+            global $wpdb;
+            $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
+            if (count($product) > 0) {
+                $qr_code_serial_no = $product->model_number . $product->specification . time();
+                $table = $wpdb->prefix.'serial_number';
+                $data = array(
+                    'qr_code_serial_no' => $qr_code_serial_no,
+                    'curtain_product_id' => $data['curtain_product_id'],
+                    'curtain_user_id' => $data['curtain_user_id'],
+                    'create_timestamp' => time(),
+                    'update_timestamp' => time(),
+                );
+                $wpdb->insert($table, $data);
+            }
+        }
+
+        public function insert_curtain_users($data=[]) {
             $line_user_id = $data['line_user_id'];
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
             if (count($row) > 0) {
+            //if (count($results) > 0) {
                 $table = $wpdb->prefix.'curtain_users';
                 $data = array(
                     'line_user_id' => $data['line_user_id'],
@@ -305,6 +286,7 @@ if (!class_exists('otp_service')) {
                 $where = array('line_user_id' => $line_user_id);
                 $wpdb->update($table, $data, $where);
                 return $row->curtain_user_id;
+                //return $results[0]->curtain_user_id;
             } else {
                 $table = $wpdb->prefix.'curtain_users';
                 $data = array(
@@ -337,7 +319,7 @@ if (!class_exists('otp_service')) {
                 serial_number_id int NOT NULL AUTO_INCREMENT,
                 curtain_product_id int(10),
                 curtain_user_id int(10),
-                qr_code_id varchar(50),
+                qr_code_serial_no varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (serial_number_id)
@@ -347,6 +329,8 @@ if (!class_exists('otp_service')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_products` (
                 curtain_product_id int NOT NULL AUTO_INCREMENT,
                 product_code varchar(50),
+                model_number varchar(5),
+                specification varchar(4),
                 product_name varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),

@@ -32,7 +32,7 @@ if (!class_exists('event_bot')) {
                                 //$event_bot->insertTextMessage($event);
                                 // start my codes from here
 /*                                
-                                //$six_digit_random_number = strval($message['text']);
+                                //$six_digit_random_number = intval($message['text']);
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
@@ -48,7 +48,7 @@ if (!class_exists('event_bot')) {
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
                                         $data = array(
-                                            'curtain_user_id' => strval($return_id),
+                                            'curtain_user_id' => intval($return_id),
                                             'update_timestamp' => time(),
                                         );
                                         $where = array('curtain_user_id' => $six_digit_random_number);
