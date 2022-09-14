@@ -42,7 +42,7 @@ if (!class_exists('event_bot')) {
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
                                         $data['last_otp']=$six_digit_random_number;                
-                                        $return_id = $otp_service->insert_curtain_users($data);
+                                        //$return_id = $otp_service->insert_curtain_users($data);
 /*                                        
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
@@ -62,7 +62,8 @@ if (!class_exists('event_bot')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => '恭喜您完成註冊手續'.$return_id,
+                                                    //'text' => '恭喜您完成註冊手續'.$return_id,
+                                                    'text' => '恭喜您完成註冊手續',
                                                 ]
                                             ]
                                         ]);
