@@ -83,6 +83,16 @@ if (!class_exists('event_bot')) {
                                         ]
                                     ]);
                                 }
+                                
+                                $client->replyMessage([
+                                    'replyToken' => $event['replyToken'],
+                                    'messages' => [
+                                        [
+                                            'type' => 'text',
+                                            'text' => 'Hi, '.$profile['displayName'],
+                                        ],
+                                    ]
+                                ]);                                
 
                                 break;
                             default:
