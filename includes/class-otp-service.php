@@ -37,13 +37,17 @@ if (!class_exists('otp_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        function registration() {
+        function registration( $last_otp='', $line_user_id='', $curtain_user_id = 0 ) {
+
+            //$last_otp = $_GET['last_otp'];
+            //$line_user_id = $_GET['line_user_id'];
+            //$curtain_user_id = 0;
 
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Code' ) {
                     //do_shortcode( '[dqr_code '.']' );
-                    do_shortcode( '[dqr_code]' );
+                    echo do_shortcode( '[dqr_code]' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
@@ -75,9 +79,6 @@ if (!class_exists('otp_service')) {
                 unset($_POST['submit_action']);
             }
 
-            $last_otp = $_GET['last_otp'];
-            $line_user_id = $_GET['line_user_id'];
-            $curtain_user_id = 0;
             $qr_code_serial_no = $_GET['serial_no'];
             
             $output = '<div>';
