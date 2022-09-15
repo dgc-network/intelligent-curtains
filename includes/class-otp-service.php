@@ -53,7 +53,7 @@ if (!class_exists('otp_service')) {
                     global $wp;
                     //echo home_url( $wp->request );
                     
-                    return do_shortcode( '[dqr_code '.home_url( $wp->request ).'?serial_no='.$serial_no.']' );
+                    return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
