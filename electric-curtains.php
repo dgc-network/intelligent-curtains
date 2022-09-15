@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Plugin Name: line-event-bot
- * Plugin URI: https://wordpress.org/plugins/line-event-bot/
+ * Plugin Name: electric-curtains
+ * Plugin URI: https://wordpress.org/plugins/electric-curtains/
  * Description: The leading web api plugin for pig system by shortcode
  * Author: dgc.network
  * Author URI: https://dgc.network/
  * Version: 1.0.0
- * Requires at least: 4.4
- * Tested up to: 5.2
+ * Requires at least: 6.0
+ * Tested up to: 6.0.2
  * 
- * Text Domain: line-event-bot
+ * Text Domain: electric-curtains
  * Domain Path: /languages/
  */
 
