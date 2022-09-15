@@ -42,7 +42,8 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 if( $_POST['submit_action']=='Code' ) {
-                    do_shortcode( '[dqr_code '.']' );
+                    //do_shortcode( '[dqr_code '.']' );
+                    do_shortcode( '[dqr_code]' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
