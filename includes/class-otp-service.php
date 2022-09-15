@@ -41,6 +41,10 @@ if (!class_exists('otp_service')) {
 
             if( isset($_POST['submit_action']) ) {
 
+                if( $_POST['submit_action']=='Code' ) {
+                    do_shortcode( '[dqr_code '.']' );
+                }
+
                 if( $_POST['submit_action']=='Confirm' ) {
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
                     if ( $last_otp==$_POST['otp_input'] ) {
@@ -226,6 +230,7 @@ if (!class_exists('otp_service')) {
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
+            $output .= '<td>QR</td>';
             $output .= '<td>serial_no</td>';
             $output .= '<td>model</td>';
             $output .= '<td>spec</td>';
@@ -234,6 +239,10 @@ if (!class_exists('otp_service')) {
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td><form method="post">';
+                $output .= '<input type="submit" value="Code" name="submit_action">';
+                $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
                 $output .= '<td>'.$product->model_number.'</td>';
