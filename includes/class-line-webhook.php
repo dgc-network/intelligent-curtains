@@ -25,14 +25,10 @@ if (!class_exists('line_webhook')) {
             
                 switch ($event['type']) {
                     case 'message':
-                        //$event_bot->insertMessageEvent($event);
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
-                                //$event_bot->insertTextMessage($event);
                                 // start my codes from here
-                                
-                                //$six_digit_random_number = intval($message['text']);
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
@@ -63,8 +59,7 @@ if (!class_exists('line_webhook')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => '恭喜您完成註冊手續'.$return_id,
-                                                    //'text' => '恭喜您完成註冊手續',
+                                                    'text' => '恭喜您完成註冊手續',
                                                 ]
                                             ]
                                         ]);
@@ -84,17 +79,6 @@ if (!class_exists('line_webhook')) {
                                         ]
                                     ]);
                                 }
-/*
-                                $client->replyMessage([
-                                    'replyToken' => $event['replyToken'],
-                                    'messages' => [
-                                        [
-                                            'type' => 'text',
-                                            'text' => 'Hi, '.$profile['displayName'],
-                                        ],
-                                    ]
-                                ]);                                
-*/
                                 break;
                             default:
                                 error_log('Unsupported message type: ' . $message['type']);

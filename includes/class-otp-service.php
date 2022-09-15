@@ -270,6 +270,7 @@ if (!class_exists('otp_service')) {
                 'update_timestamp' => time(),
             );
             $wpdb->insert($table, $data);        
+            return $wpdb->insert_id;
         }
 
         function update_curtain_products($data=[], $where=[]) {
@@ -303,6 +304,7 @@ if (!class_exists('otp_service')) {
                     'update_timestamp' => time(),
                 );
                 $wpdb->insert($table, $data);
+                return $wpdb->insert_id;
             }
         }
 
@@ -329,7 +331,6 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
-            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
             if (count($row) > 0) {
                 return $row->curtain_user_id;
             } else {
