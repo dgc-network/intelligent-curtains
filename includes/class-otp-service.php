@@ -10,12 +10,11 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('product-info', __CLASS__ . '::product_info');
+            add_shortcode('product-info', __CLASS__ . '::registration');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             self::create_tables();
-            //self::drop_tables();
             //self::delete_records();
         }
 
@@ -38,12 +37,7 @@ if (!class_exists('otp_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        function product_info() {
-
-            $last_otp = '';
-            $line_user_id = '';
-            $curtain_user_id = 0;
-            $qr_code_serial_no = $_GET['id'];
+        function registration() {
 
             if( isset($_POST['submit_action']) ) {
 
@@ -76,11 +70,15 @@ if (!class_exists('otp_service')) {
                 unset($_POST['submit_action']);
             }
 
+            $last_otp = $_GET['last_otp'];
+            $line_user_id = $_GET['line_user_id'];
+            $curtain_user_id = 0;
+            $qr_code_serial_no = $_GET['serial_no'];
+            
+            $output = '<div>';
             global $wpdb;
             //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = {$qr_code_serial_no}", OBJECT );
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            
-            $output = '<div>';
             if (count($row) > 0) {
 
                 $curtain_user_id=$row->curtain_user_id;
@@ -131,8 +129,8 @@ if (!class_exists('otp_service')) {
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
                 $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
 
-                if( isset($_GET['id']) ) {
-                    $output .= 'qr_code_serial_no='.$_GET['id'].'<br>';
+                if( isset($_GET['serial_no']) ) {
+                    $output .= 'qr_code_serial_no='.$_GET['serial_no'].'<br>';
                 }
 
                 if( isset($_GET['action']) ) {
@@ -217,7 +215,7 @@ if (!class_exists('otp_service')) {
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>qr_code_serial_no</td>';
+            $output .= '<td>serial_no</td>';
             $output .= '<td>model</td>';
             $output .= '<td>spec</td>';
             $output .= '<td>user</td>';
@@ -229,7 +227,8 @@ if (!class_exists('otp_service')) {
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
                 $output .= '<td>'.$product->model_number.'</td>';
                 $output .= '<td>'.$product->specification.'</td>';
-                $output .= '<td>'.$result->curtain_user_id.'</td>';
+                $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
+                $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
