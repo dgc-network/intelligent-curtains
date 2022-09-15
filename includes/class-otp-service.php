@@ -45,9 +45,11 @@ if (!class_exists('otp_service')) {
 
             if( isset($_POST['submit_action']) ) {
 
+                $line_user_id = $_POST['line_user_id'];
+
                 if( $_POST['submit_action']=='Code' ) {
                     //do_shortcode( '[dqr_code '.']' );
-                    echo do_shortcode( '[dqr_code]' );
+                    return do_shortcode( '[dqr_code]' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
@@ -100,12 +102,13 @@ if (!class_exists('otp_service')) {
                 }
 
                 if (count($user) > 0) {
-                    $last_otp = $user->last_otp;
-                    $line_user_id = $user->line_user_id;
+                    //$last_otp = $user->last_otp;
+                    //$line_user_id = $user->line_user_id;
                     $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                     $output .= '<form method="post">';
                     $output .= '<input type="text" name="otp_input">';
                     $output .= '<div class="wp-block-button">';
+                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                     $output .= '</div>';
