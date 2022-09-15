@@ -48,8 +48,12 @@ if (!class_exists('otp_service')) {
                 $line_user_id = $_POST['line_user_id'];
 
                 if( $_POST['submit_action']=='Code' ) {
-                    //do_shortcode( '[dqr_code '.']' );
-                    return do_shortcode( '[dqr_code]' );
+                    //return do_shortcode( '[dqr_code]' );
+                    $serial_no = $_POST['serial_no'];
+                    global $wp;
+                    //echo home_url( $wp->request );
+                    
+                    return do_shortcode( '[dqr_code '.home_url( $wp->request ).'?serial_no='.$serial_no.']' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
