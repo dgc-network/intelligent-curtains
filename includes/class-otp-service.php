@@ -146,9 +146,15 @@ if (!class_exists('otp_service')) {
 
                     if( ($_GET['action']=='update-curtain-product') && (isset($_GET['curtain_product_id'])) ) {
                         $data=array();
-                        $data['model_number']=$_GET['model_number'];
-                        $data['specification']=$_GET['specification'];
-                        $data['product_name']=$_GET['product_name'];
+                        if( isset($_GET['model_number']) ) {
+                            $data['model_number']=$_GET['model_number'];
+                        }
+                        if( isset($_GET['specification']) ) {
+                            $data['specification']=$_GET['specification'];
+                        }
+                        if( isset($_GET['product_name']) ) {
+                            $data['product_name']=$_GET['product_name'];
+                        }
                         $where=array();
                         $where['curtain_product_id']=$_GET['curtain_product_id'];
                         $result = self::update_curtain_products($data, $where);
@@ -162,9 +168,14 @@ if (!class_exists('otp_service')) {
                         $output .= $result.'<br>';
                     }
 
-                    if( ($_GET['action']=='update-serial-number') && (isset($_GET['curtain_product_id'])) ) {
+                    if( ($_GET['action']=='update-serial-number') && (isset($_GET['serial_number_id'])) ) {
                         $data=array();
-                        $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        if( isset($_GET['curtain_product_id']) ) {
+                            $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        }
+                        if( isset($_GET['curtain_user_id']) ) {
+                            $data['curtain_user_id']=$_GET['curtain_user_id'];
+                        }
                         $where=array();
                         $where['serial_number_id']=$_GET['serial_number_id'];
                         $result = self::update_serial_number($data, $where);
@@ -276,16 +287,7 @@ if (!class_exists('otp_service')) {
         function update_curtain_products($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_products';
-            if( isset($data['model_number']) ) {
-                $data = array('model_number' => $data['model_number'],);
-            }
-            if( isset($data['specification']) ) {
-                $data = array('specification' => $data['specification'],);
-            }
-            if( isset($data['product_name']) ) {
-                $data = array('product_name' => $data['product_name'],);
-            }
-            $data = array('update_timestamp' => time(),);
+            $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
@@ -314,15 +316,9 @@ if (!class_exists('otp_service')) {
             $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
             if (count($product) > 0) {
                 $qr_code_serial_no = $product->model_number . $product->specification . time();
-                $data = array(
-                    'qr_code_serial_no' => $qr_code_serial_no,
-                    'curtain_product_id' => $data['curtain_product_id'],
-                );
+                $data['qr_code_serial_no'] = $qr_code_serial_no;
             }
-            if( isset($data['curtain_user_id']) ) {
-                $data = array('curtain_user_id' => $data['curtain_user_id'],);
-            }
-            $data = array('update_timestamp' => time(),);
+            $data['update_timestamp'] = time();
             $table = $wpdb->prefix.'serial_number';
             $wpdb->update($table, $data, $where);
         }
