@@ -268,7 +268,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="Code" name="submit_action">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
-                $output .= '<a href="#" rel="INSERT_POST_ID" class="popup">here</a>';
+                //$output .= '<a href="#" rel="INSERT_POST_ID" class="popup">here</a>';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
