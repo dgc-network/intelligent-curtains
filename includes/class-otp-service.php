@@ -52,6 +52,21 @@ if (!class_exists('otp_service')) {
                     $serial_no = $_POST['serial_no'];
                     global $wp;
                     //echo home_url( $wp->request );
+?>
+<script>
+    $(document).ready(function() {
+        $( "#dialog" ).dialog();
+    });
+/*    
+    jQuery(function() {
+        $( "#dialog" ).dialog();
+    });
+*/    
+</script>
+
+
+<?php
+
                     $output = '<div id="dialog" title="Basic dialog">';
                     $output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the icon.</p></div>';
                     return $output;
@@ -419,9 +434,4 @@ if (!class_exists('otp_service')) {
 }
 ?>
 
-<script>
-    jQuery(function() {
-        $( "#dialog" ).dialog();
-    });
-</script>
 
