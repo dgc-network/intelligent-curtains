@@ -416,6 +416,16 @@ if (!class_exists('otp_service')) {
 ?>
 
 <script>
+    jQuery(function() {
+        $( "#dialog" ).dialog();
+    });
+</script>
+<div id="dialog" title="Basic dialog">
+    <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>
+
+<script>
+/*    
 // We are using Wordpress' jQuery (in no-conflict mode)
 // 	and the reveal plugin (http://zurb.com/playground/reveal-modal-plugin)
 
@@ -448,6 +458,7 @@ jQuery(document).on('ready', function () {
         
         });
 });
+*/
 </script>
 
 <?php
