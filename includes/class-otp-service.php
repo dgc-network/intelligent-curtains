@@ -52,29 +52,6 @@ if (!class_exists('otp_service')) {
                     $serial_no = $_POST['serial_no'];
                     global $wp;
                     //echo home_url( $wp->request );
-?>
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php                    
                     return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
 
@@ -273,6 +250,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="Code" name="submit_action">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                $output .= '<a href="#" rel="INSERT_POST_ID" class="popup">here</a>';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
@@ -437,3 +415,60 @@ if (!class_exists('otp_service')) {
 }
 ?>
 
+<script>
+// We are using Wordpress' jQuery (in no-conflict mode)
+// 	and the reveal plugin (http://zurb.com/playground/reveal-modal-plugin)
+
+jQuery(document).on('ready', function () {
+    
+    // Click on element with 'popup' class 
+    jQuery('.popup').on('click', function () {
+
+        // Save ID in simple var
+        var id = jQuery(this)
+            .attr('rel');
+        
+        // Hide entire div and load in it the Post ID
+	jQuery('<div id="wp-popup"></div>')
+            .hide()
+            .appendTo('body')
+            // Substitute 'ajax' with your wordpress template name,
+            //      and 'EXAMPLE.com' with your real URL
+            .load('http://www.EXAMPLE.com/ajax/?id=' + id)
+            // Modal Window
+            .reveal({
+                // Optional parameters
+                animation: 'fadeAndPop',                   // fade, fadeAndPop, none
+                animationspeed: 300,                       // how fast animations are
+                closeonbackgroundclick: true,              // if you click background will modal close?
+                dismissmodalclass: 'close-reveal-modal'    // the class of a button or element that will close an open modal
+            });
+            
+        return false;
+        
+        });
+});
+</script>
+
+<?php
+/**
+ *   Template Name: ajax
+ */
+?>
+<?php
+    $post = get_post($_GET['id']);
+?>
+<?php if ($post) : ?>
+	<?php setup_postdata($post); ?>
+	<div class="something">
+		<h2 class="title"><?php the_title(); ?></h2>
+		<div class="content">
+			<?php the_content(); ?>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php
+
+
+?>
