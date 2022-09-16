@@ -54,10 +54,11 @@ if (!class_exists('otp_service')) {
                     //echo home_url( $wp->request );
 ?>
 <script>
+/*
     $(document).ready(function() {
         $( "#dialog" ).dialog();
     });
-/*    
+    
     jQuery(function() {
         $( "#dialog" ).dialog();
     });
