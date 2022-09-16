@@ -41,7 +41,7 @@ function line_bot_sdk() {
     $client = new LINEBotTiny($channelAccessToken, $channelSecret);
     return $client;
 }
-/*
+
 add_action( 'init', 'frontporch_enqueue_scripts' );
 function frontporch_enqueue_scripts() {
     if (!is_admin() ) {
@@ -56,5 +56,5 @@ function frontporch_enqueue_scripts() {
         wp_enqueue_script( 'jquery-template' );
     }       
 }
-*/
+
 ?>
