@@ -200,9 +200,6 @@ if (!class_exists('event_bot')) {
 
                 $_GET['edit_mode']='';
                 return self::list_mode();
-/*
-                ?><script>window.location=window.location.path</script><?php
-*/                
             }
 
             /** 
