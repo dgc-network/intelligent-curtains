@@ -206,6 +206,7 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
             $output  = '<h2>Curtain Products</h2>';
+            $output .= '<input type="text" placeholder="Search...">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';

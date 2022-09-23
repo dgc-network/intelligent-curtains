@@ -1,5 +1,30 @@
 jQuery(document).ready(function($) {
 
+    $('input').jSearch({ 
+        selector  : 'ul',
+        child : 'li'
+    });
+
+    $('input').jSearch({ 
+        selector  : 'table',
+        child : 'tr > td',
+        minValLength: 0,
+        Before: function(){
+            $('table tr').data('find','');
+        },
+        Found : function(elem){
+            $(elem).parent().data('find','true');
+            $(elem).parent().show();
+        },
+        NotFound : function(elem){
+            if (!$(elem).parent().data('find'));
+            $(elem).parent().hide();
+        },
+        After : function(t){
+            if (!t.val().length) $('table tr').show();
+        }
+    });
+    
     // open
     $('#basic-demo').PopupWindow("open")
 
