@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
    
  
         // height / width
-        height              : 300,
+        height              : 320,
         width               : 300,
         maxHeight           : undefined,
         maxWidth            : undefined,
@@ -77,15 +77,15 @@ jQuery(document).ready(function($) {
         mouseMoveEvents     : true
     
     });   
-/*
+
     $('#qrcode').qrcode({
-        text: "https://www.htmleaf.com"
+        text: "https://curtains-2beaa9.ingress-earth.ewp.live/service/?serial_no=AAA01A1501663211865"
     });
-*/
+/*
     $('#qrcode').qrcode({
         text: $("#qrcode_content").val()
     });
-
+*/
     /*
      * AJAX for Woocommerce Add To Cart button
      */
