@@ -363,7 +363,7 @@ if (!class_exists('otp_service')) {
             $where = array('event_timestamp' => 2147483647);
             $deleted = $wpdb->delete( $table, $where );
         }
-
+*/
         function create_tables() {
 
             global $wpdb;
@@ -403,7 +403,7 @@ if (!class_exists('otp_service')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
-*/
+
     }
 
     new otp_service();
