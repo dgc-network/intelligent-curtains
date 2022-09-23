@@ -51,7 +51,7 @@ if (!class_exists('otp_service')) {
                     $output = '<div id="qrcode"></div>';
                     $output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the icon.</p>';
                     //return $output;
-?><?php
+echo 'What is up';
                     //return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
 
