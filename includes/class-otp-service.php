@@ -37,13 +37,8 @@ if (!class_exists('otp_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        //function registration( $last_otp='', $line_user_id='', $curtain_user_id = 0 ) {
         function registration() {
 
-            //$last_otp = $_GET['last_otp'];
-            //$line_user_id = $_GET['line_user_id'];
-            //$curtain_user_id = 0;
-            
             if( isset($_POST['submit_action']) ) {
 
                 $line_user_id = $_POST['line_user_id'];
@@ -55,7 +50,7 @@ if (!class_exists('otp_service')) {
                     //echo home_url( $wp->request );
                     $output = '<div id="qrcode"></div>';
                     $output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the icon.</p>';
-                    return $output;
+                    //return $output;
 
                     //return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
@@ -65,7 +60,6 @@ if (!class_exists('otp_service')) {
                     if ( $last_otp==$_POST['otp_input'] ) {
 
                     } else {
-                        //$line_user_id = 'U1b08294900a36077765643d8ae14a402';
                         $text_message = 'The '.$_POST['otp_input'].' is a wrong OTP code.';
                         self::push_text_message($text_message, $line_user_id);
                     }
@@ -73,7 +67,6 @@ if (!class_exists('otp_service')) {
 
                 if( $_POST['submit_action']=='Resend' ) {
 
-                    //$line_user_id = 'U1b08294900a36077765643d8ae14a402';
                     self::push_OTP_to($line_user_id);
 
                     global $wpdb;
@@ -110,8 +103,6 @@ if (!class_exists('otp_service')) {
                 }
 
                 if (count($user) > 0) {
-                    //$last_otp = $user->last_otp;
-                    //$line_user_id = $user->line_user_id;
                     $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                     $output .= '<form method="post">';
                     $output .= '<input type="text" name="otp_input">';
