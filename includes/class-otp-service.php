@@ -37,7 +37,8 @@ if (!class_exists('otp_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        function registration( $last_otp='', $line_user_id='', $curtain_user_id = 0 ) {
+        //function registration( $last_otp='', $line_user_id='', $curtain_user_id = 0 ) {
+        function registration() {
 
             //$last_otp = $_GET['last_otp'];
             //$line_user_id = $_GET['line_user_id'];
