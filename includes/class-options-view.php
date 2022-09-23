@@ -34,7 +34,7 @@ class Options_View {
 	}
 
 	function run() {
-
+		echo 'I am here';
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 /*
 		add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'custom_product_tab' ) );
@@ -59,7 +59,7 @@ class Options_View {
 	}
 
 	function enqueue_scripts() {
-		echo 'I am here';
+		
 		wp_enqueue_script( 'jquery-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 
