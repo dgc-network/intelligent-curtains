@@ -6,7 +6,7 @@ $('#basic-demo').PopupWindow("open")
     $("#basic-demo").PopupWindow({
         // options here
       // popup title
-  title               : "Popup Window",
+  title               : "QR Code",
  
   // modal mode
   modal               : true,
@@ -23,13 +23,13 @@ $('#basic-demo').PopupWindow("open")
   // custom action buttons
   buttons             : {
       close               : true,
-      maximize            : true,
-      collapse            : true,
-      minimize            : true
+      maximize            : false,
+      collapse            : false,
+      minimize            : false
   },
  
   // button's position
-  buttonsPosition     : "right",
+  buttonsPosition     : "center",
  
   // custom button text
   buttonsTexts        : {
@@ -62,8 +62,8 @@ $('#basic-demo').PopupWindow("open")
    
  
   // height / width
-  height              : 200,
-  width               : 400,
+  height              : 300,
+  width               : 300,
   maxHeight           : undefined,
   maxWidth            : undefined,
   minHeight           : 100,
@@ -77,9 +77,13 @@ $('#basic-demo').PopupWindow("open")
   mouseMoveEvents     : true
     
     });   
-
+/*
     $('#qrcode').qrcode({
         text: "https://www.htmleaf.com"
+    });
+*/
+    $('#qrcode').qrcode({
+        text: $("#qrcode").val()
     });
 
     /*
