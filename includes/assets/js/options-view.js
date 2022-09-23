@@ -5,85 +5,89 @@ $('#basic-demo').PopupWindow("open")
 
     $("#basic-demo").PopupWindow({
         // options here
-      // popup title
-  title               : "QR Code",
+        // popup title
+        title               : "QR Code",
  
-  // modal mode
-  modal               : true,
+        // modal mode
+        modal               : true,
  
-  // auto open on page load
-  autoOpen            : true,
+        // auto open on page load
+        autoOpen            : true,
  
-  // anmation speed
-  animationTime       : 300,
+        // anmation speed
+        animationTime       : 300,
  
-  // custom css classes
-  customClass         : "",
+        // custom css classes
+        customClass         : "",
    
-  // custom action buttons
-  buttons             : {
-      close               : true,
-      maximize            : false,
-      collapse            : false,
-      minimize            : false
-  },
+        // custom action buttons
+        buttons             : {
+            close               : true,
+            maximize            : false,
+            collapse            : false,
+            minimize            : false
+        },
  
-  // button's position
-  buttonsPosition     : "center",
+        // button's position
+        buttonsPosition     : "center",
  
-  // custom button text
-  buttonsTexts        : {
-    close               : "Close",
-    maximize            : "Maximize",
-    unmaximize          : "Restore",
-    minimize            : "Minimize",
-    unminimize          : "Show",
-    collapse            : "Collapse",
-    uncollapse          : "Expand"
-  }, 
+        // custom button text
+        buttonsTexts        : {
+            close               : "Close",
+            maximize            : "Maximize",
+            unmaximize          : "Restore",
+            minimize            : "Minimize",
+            unminimize          : "Show",
+            collapse            : "Collapse",
+            uncollapse          : "Expand"
+        }, 
    
-  // draggable options
-  draggable           : true,
-  nativeDrag          : true,
-  dragOpacity         : 0.6,
+        // draggable options
+        draggable           : true,
+        nativeDrag          : true,
+        dragOpacity         : 0.6,
    
-  // resizable options
-  resizable           : true,
-  resizeOpacity       : 0.6,
+        // resizable options
+        resizable           : false,
+        resizeOpacity       : 0.6,
    
-  // enable status bar
-  statusBar           : true,
+        // enable status bar
+        statusBar           : true,
    
-  // top position
-  top                 : "auto",
+        // top position
+        top                 : "auto",
  
-  // left position
-  left                : "auto",
+        // left position
+        left                : "auto",
    
  
-  // height / width
-  height              : 300,
-  width               : 300,
-  maxHeight           : undefined,
-  maxWidth            : undefined,
-  minHeight           : 100,
-  minWidth            : 200,
-  collapsedWidth      : undefined,
+        // height / width
+        height              : 300,
+        width               : 300,
+        maxHeight           : undefined,
+        maxWidth            : undefined,
+        minHeight           : 100,
+        minWidth            : 200,
+        collapsedWidth      : undefined,
    
-  // always keep in viewport
-  keepInViewport      : true,
+        // always keep in viewport
+        keepInViewport      : true,
  
-  // enable mouseh move events
-  mouseMoveEvents     : true
+        // enable mouseh move events
+        mouseMoveEvents     : true
     
     });   
 /*
     $('#qrcode').qrcode({
         text: "https://www.htmleaf.com"
     });
-*/
+
     $('#qrcode').qrcode({
         text: $("#qrcode").val()
+    });
+*/
+    $('#qrcode').qrcode({
+        text: $("div[title]")
     });
 
     /*
