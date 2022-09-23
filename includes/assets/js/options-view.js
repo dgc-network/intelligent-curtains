@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
-// open
-$('#basic-demo').PopupWindow("open")
+    // open
+    $('#basic-demo').PopupWindow("open")
 
     $("#basic-demo").PopupWindow({
         // options here
@@ -83,7 +83,7 @@ $('#basic-demo').PopupWindow("open")
     });
 */
     $('#qrcode').qrcode({
-        text: $("#qrcode").val()
+        text: $("#qrcode_content").val()
     });
 
     /*

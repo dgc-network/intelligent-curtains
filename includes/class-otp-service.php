@@ -48,8 +48,8 @@ if (!class_exists('otp_service')) {
                     $serial_no = $_POST['serial_no'];
                     global $wp;
                     //echo home_url( $wp->request );
-                    $output = '<div id="basic-demo" class="example_content"><div id="qrcode">';
-                    $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div>';
+                    $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+                    $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                     return $output;
                     //return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
