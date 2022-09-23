@@ -38,7 +38,7 @@ if (!class_exists('otp_service')) {
         }
 
         function registration() {
-
+/*
             if( isset($_POST['submit_action']) ) {
 
                 $line_user_id = $_POST['line_user_id'];
@@ -80,7 +80,7 @@ if (!class_exists('otp_service')) {
                 }
                 unset($_POST['submit_action']);
             }
-
+*/
             $qr_code_serial_no = $_GET['serial_no'];
             
             $output = '<div>';
