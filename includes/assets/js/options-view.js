@@ -77,15 +77,15 @@ jQuery(document).ready(function($) {
         mouseMoveEvents     : true
     
     });   
-
+/*
     $('#qrcode').qrcode({
         text: "https://curtains-2beaa9.ingress-earth.ewp.live/service/?serial_no=AAA01A1501663211865"
     });
-/*
-    $('#qrcode').qrcode({
-        text: $("#qrcode_content").val()
-    });
 */
+    $('#qrcode').qrcode({
+        text: $("#qrcode_content").text()
+    });
+
     /*
      * AJAX for Woocommerce Add To Cart button
      */
