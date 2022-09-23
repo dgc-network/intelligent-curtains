@@ -51,6 +51,7 @@ if (!class_exists('otp_service')) {
                     $output = '<div id="basic-demo" class="example_content">这是一个模态窗口</div>';
                     $output .= '<div id="qrcode"></div>';
                     $output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the icon.</p>';
+                    $output = '<div id="basic-demo" class="example_content"><div id="qrcode"></div></div>';
                     return $output;
                     //return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
