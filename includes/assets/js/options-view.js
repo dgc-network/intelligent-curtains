@@ -1,5 +1,83 @@
 jQuery(document).ready(function($) {
 
+// open
+$('#basic-demo').PopupWindow("open")
+
+    $("#basic-demo").PopupWindow({
+        // options here
+      // popup title
+  title               : "Popup Window",
+ 
+  // modal mode
+  modal               : true,
+ 
+  // auto open on page load
+  autoOpen            : true,
+ 
+  // anmation speed
+  animationTime       : 300,
+ 
+  // custom css classes
+  customClass         : "",
+   
+  // custom action buttons
+  buttons             : {
+      close               : true,
+      maximize            : true,
+      collapse            : true,
+      minimize            : true
+  },
+ 
+  // button's position
+  buttonsPosition     : "right",
+ 
+  // custom button text
+  buttonsTexts        : {
+    close               : "Close",
+    maximize            : "Maximize",
+    unmaximize          : "Restore",
+    minimize            : "Minimize",
+    unminimize          : "Show",
+    collapse            : "Collapse",
+    uncollapse          : "Expand"
+  }, 
+   
+  // draggable options
+  draggable           : true,
+  nativeDrag          : true,
+  dragOpacity         : 0.6,
+   
+  // resizable options
+  resizable           : true,
+  resizeOpacity       : 0.6,
+   
+  // enable status bar
+  statusBar           : true,
+   
+  // top position
+  top                 : "auto",
+ 
+  // left position
+  left                : "auto",
+   
+ 
+  // height / width
+  height              : 200,
+  width               : 400,
+  maxHeight           : undefined,
+  maxWidth            : undefined,
+  minHeight           : 100,
+  minWidth            : 200,
+  collapsedWidth      : undefined,
+   
+  // always keep in viewport
+  keepInViewport      : true,
+ 
+  // enable mouseh move events
+  mouseMoveEvents     : true
+    
+    });   
+
     $('#qrcode').qrcode({
         text: "https://www.htmleaf.com"
     });
