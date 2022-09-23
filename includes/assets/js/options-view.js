@@ -29,7 +29,7 @@ $('#basic-demo').PopupWindow("open")
         },
  
         // button's position
-        buttonsPosition     : "center",
+        buttonsPosition     : "left",
  
         // custom button text
         buttonsTexts        : {
@@ -52,7 +52,7 @@ $('#basic-demo').PopupWindow("open")
         resizeOpacity       : 0.6,
    
         // enable status bar
-        statusBar           : true,
+        statusBar           : false,
    
         // top position
         top                 : "auto",
@@ -81,13 +81,9 @@ $('#basic-demo').PopupWindow("open")
     $('#qrcode').qrcode({
         text: "https://www.htmleaf.com"
     });
-
-    $('#qrcode').qrcode({
-        text: $("#qrcode").val()
-    });
 */
     $('#qrcode').qrcode({
-        text: $("div[title]")
+        text: $("#qrcode").val()
     });
 
     /*
