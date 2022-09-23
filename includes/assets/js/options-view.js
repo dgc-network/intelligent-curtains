@@ -1,5 +1,9 @@
 jQuery(document).ready(function($) {
 
+    $('#qrcode').qrcode({
+        text: "https://www.htmleaf.com"
+    });
+
     /*
      * AJAX for Woocommerce Add To Cart button
      */
