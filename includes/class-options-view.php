@@ -34,7 +34,7 @@ class Options_View {
 	}
 
 	function run() {
-		echo 'I am here';
+		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 /*
 		add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'custom_product_tab' ) );

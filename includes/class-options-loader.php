@@ -297,4 +297,5 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 		}
 
 	}
+	new Option_Loader();
 }
