@@ -63,20 +63,4 @@ function pre_output1($action){
         }
     }
 }
-/*
-add_action( 'init', 'frontporch_enqueue_scripts' );
-function frontporch_enqueue_scripts() {
-    if (!is_admin() ) {
-        wp_enqueue_script( 'jquery' );
-        wp_register_script( 'google-jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js', array( 'jquery' ) );
-        wp_register_script( 'jquery-template', get_bloginfo('template_directory').'/js/jquery.template.js',array('jquery'),version_cache(), true);
-        wp_register_style( 'jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css', true);
-        wp_register_style( 'template-style', 'http://www.frontporchdeals.com/wordpress/wp-includes/js/jqueryui/css/ui-lightness/jquery-ui-1.8.12.custom.css', true); 
-        wp_enqueue_style( 'jquery-style' );
-        wp_enqueue_style( ' jquery-template' );
-        wp_enqueue_script( 'google-jquery-ui' );
-        wp_enqueue_script( 'jquery-template' );
-    }       
-}
-*/
 ?>
