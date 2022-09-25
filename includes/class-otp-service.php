@@ -43,15 +43,22 @@ if (!class_exists('otp_service')) {
 
                 $line_user_id = $_POST['line_user_id'];
 
+                if( $_POST['submit_action']=='Search' ) {
+                    global $wpdb;
+                    if( isset($_POST['where_products']) ) {
+                        $where='%'.$_POST['where_products'].'%';
+                        $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
+                        unset($_POST['where_products']);
+                    }
+                    return $results;
+                }
+
                 if( $_POST['submit_action']=='Code' ) {
-                    //return do_shortcode( '[dqr_code]' );
                     $serial_no = $_POST['serial_no'];
                     global $wp;
-                    //echo home_url( $wp->request );
                     $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                     $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                     return $output;
-                    //return do_shortcode( '[dqr_code url="'.home_url( $wp->request ).'?serial_no='.$serial_no.'"]' );
                 }
 
                 if( $_POST['submit_action']=='Confirm' ) {
@@ -202,12 +209,19 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function list_curtain_products() {
-            global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
+        function list_curtain_products($result=null) {
+            if ( $result==null ){
+                global $wpdb;
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
+            }
             $output  = '<h2>Curtain Products</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=4 aligh="right"><input type="text" placeholder="Search..."></td></tr>';
+            $output .= '<tr><td colspan=4 style="text-align:right">';
+            $output .= '<form method="post">';
+            $output .= '<input type="text" name="where_products" placeholder="Search...">';
+            $output .= '<input type="submit" value="Search" name="submit_action">';
+            $output .= '</form>';
+            $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
             $output .= '<td>model</td>';
@@ -246,7 +260,6 @@ if (!class_exists('otp_service')) {
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="Code" name="submit_action">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
-                //$output .= '<a href="#" rel="INSERT_POST_ID" class="popup">here</a>';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
