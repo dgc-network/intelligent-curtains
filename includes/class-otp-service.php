@@ -11,6 +11,7 @@ if (!class_exists('otp_service')) {
          */
         public function __construct() {
             add_shortcode('product-info', __CLASS__ . '::registration');
+            add_shortcode('registration', __CLASS__ . '::registration');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
@@ -50,7 +51,7 @@ if (!class_exists('otp_service')) {
                         $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
                         unset($_POST['where_products']);
                     }
-                    return $results;
+                    return self::list_curtain_products($results);
                 }
 
                 if( $_POST['submit_action']=='Code' ) {
