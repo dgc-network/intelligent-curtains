@@ -218,9 +218,9 @@ if (!class_exists('otp_service')) {
         
             if( isset($_POST['update_product']) ) {
                 $data=array();
-                $data['model_number']=$_GET['_model_number'];
-                $data['specification']=$_GET['_specification'];
-                $data['product_name']=$_GET['_product_name'];
+                $data['model_number']=$_POST['_model_number'];
+                $data['specification']=$_POST['_specification'];
+                $data['product_name']=$_POST['_product_name'];
                 $where=array();
                 $where['curtain_product_id']=$_GET['_id'];
                 $result = self::update_curtain_products($data, $where);
