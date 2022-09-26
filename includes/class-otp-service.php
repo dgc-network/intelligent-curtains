@@ -249,9 +249,21 @@ if (!class_exists('otp_service')) {
 
         function list_serial_number() {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number", OBJECT );
+            if( isset($_POST['where_serial_number']) ) {
+                $where='"%'.$_POST['where_serial_number'].'%"';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no LIKE {$where}", OBJECT );
+                unset($_POST['where_serial_number']);
+            } else {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number", OBJECT );
+            }
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr><td colspan=6 style="text-align:right">';
+            $output .= '<form method="post">';
+            $output .= '<input type="text" name="where_serial_number" placeholder="Search...">';
+            $output .= '<input type="submit" value="Search" name="submit_action">';
+            $output .= '</form>';
+            $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>QR</td>';
             $output .= '<td>serial_no</td>';
@@ -281,9 +293,23 @@ if (!class_exists('otp_service')) {
 
         function list_curtain_users() {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
+            if( isset($_POST['where_users']) ) {
+                $where='"%'.$_POST['where_users'].'%"';
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
+                unset($_POST['where_users']);
+            } else {
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
+            }
             $output  = '<h2>Curtain Users</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output .= '<tr><td colspan=4 style="text-align:right">';
+            $output .= '<form method="post">';
+            $output .= '<input type="text" name="where_users" placeholder="Search...">';
+            $output .= '<input type="submit" value="Search" name="submit_action">';
+            $output .= '</form>';
+            $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
             $output .= '<td>line_user_id</td>';
