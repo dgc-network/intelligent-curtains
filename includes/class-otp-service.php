@@ -213,7 +213,7 @@ if (!class_exists('otp_service')) {
         function list_curtain_products() {
             global $wpdb;
             if( isset($_POST['where_products']) ) {
-                $where='%'.$_POST['where_products'].'%';
+                $where='"%'.$_POST['where_products'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
                 unset($_POST['where_products']);
             } else {
