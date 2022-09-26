@@ -290,8 +290,8 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
             } else {
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->model_number.'"></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->model_number.'"></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
+                $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
             }
 /*            
             } else if( $_mode=='Delete' ) {
