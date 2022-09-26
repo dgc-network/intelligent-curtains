@@ -10,7 +10,7 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('product-info', __CLASS__ . '::registration');
+            //add_shortcode('product-info', __CLASS__ . '::registration');
             add_shortcode('registration', __CLASS__ . '::registration');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
@@ -43,17 +43,7 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 $line_user_id = $_POST['line_user_id'];
-/*
-                if( $_POST['submit_action']=='Search' ) {
-                    global $wpdb;
-                    if( isset($_POST['where_products']) ) {
-                        $where='%'.$_POST['where_products'].'%';
-                        $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
-                        unset($_POST['where_products']);
-                    }
-                    return self::list_curtain_products($results);
-                }
-*/
+
                 if( $_POST['submit_action']=='Code' ) {
                     $serial_no = $_POST['serial_no'];
                     global $wp;
@@ -211,6 +201,11 @@ if (!class_exists('otp_service')) {
         }
 
         function list_curtain_products() {
+
+            if( isset($_POST['edit_mode']) ) {
+                return self::edit_curtain_product($_POST['_id'], $_POST['edit_mode']);
+            }            
+
             global $wpdb;
             if( isset($_POST['where_products']) ) {
                 $where='"%'.$_POST['where_products'].'%"';
@@ -244,8 +239,72 @@ if (!class_exists('otp_service')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
+            $output .= '<form method="post">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="edit_mode">';
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
             return $output;
         }
+
+        function edit_curtain_product( $_id=null, $_mode ) {
+
+            if ($_id==null){
+                $_id=get_current_user_id();
+                $_mode='Update';
+            }
+
+            if( isset($_POST['create_action']) ) {
+        
+            }
+        
+            if( isset($_POST['update_action']) ) {
+        
+            }
+        
+            if( isset($_POST['delete_action']) ) {
+
+            }
+
+            $output  = '<form method="post">';
+            $output .= '<figure class="wp-block-table"><table><tbody>';
+            if( $_mode=='Update' ) {
+                $output .= '<tr><td>'.'Name:'.'</td><td><input style="width: 100%" type="text" name="_display_name" value="'.get_userdata($_id)->display_name.'"></td></tr>';
+                $output .= '<tr><td>'.'Email:'.'</td><td><input style="width: 100%" type="text" name="_user_email" value="'.get_userdata($_id)->user_email.'"></td></tr>';
+            } else if( $_mode=='Delete' ) {
+                $output .= '<tr><td>'.'Name:'.'</td><td><input style="width: 100%" type="text" name="_display_name" value="'.get_userdata($_id)->display_name.'" disabled></td></tr>';
+                $output .= '<tr><td>'.'Email:'.'</td><td><input style="width: 100%" type="text" name="_user_email" value="'.get_userdata($_id)->user_email.'" disabled></td></tr>';
+            } else {
+                $output .= '<tr><td>'.'Name:'.'</td><td><input style="width: 100%" type="text" name="_display_name" value=""></td></tr>';
+                $output .= '<tr><td>'.'Email:'.'</td><td><input style="width: 100%" type="text" name="_user_email" value=""></td></tr>';
+            }
+            $output .= '</tbody></table></figure>';
+    
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            if( $_mode=='Update' ) {
+                //$output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_action">';
+            } else if( $_mode=='Delete' ) {
+                //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_action">';
+            } else {
+                //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_action">';
+            }
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
+        
+            return $output;
+        }
+
+
 
         function list_serial_number() {
             global $wpdb;
