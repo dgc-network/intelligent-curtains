@@ -253,17 +253,19 @@ if (!class_exists('otp_service')) {
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
                 global $wp;
-                $output .= '<tr><a href="'.home_url( $wp->request );
+                $output .= '<tr>';
+                $output .= '<td>'.$result->curtain_product_id.'</td>';
+                $output .= '<td><a href="'.home_url( $wp->request );
                 $output .= '?_id='.$result->curtain_product_id;
                 $output .= '&_model_number='.$result->model_number;
                 $output .= '&_specification='.$result->specification;
                 $output .= '&_product_name='.$result->product_name;
-                $output .= '"><td>'.$result->curtain_product_id.'</td>';
-                $output .= '<td>'.$result->model_number.'</td>';
+                $output .= '">';
+                $output .= ''.$result->model_number.'</a></td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '</a></tr>';
+                $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
             $output .= '<form method="post">';
