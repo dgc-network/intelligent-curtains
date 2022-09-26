@@ -218,9 +218,9 @@ if (!class_exists('otp_service')) {
         
             if( isset($_POST['update_product']) ) {
                 $data=array();
-                $data['model_number']=$_POST['_model_number'];
-                $data['specification']=$_POST['_specification'];
-                $data['product_name']=$_POST['_product_name'];
+                $data['model_number']=$_GET['_model_number'];
+                $data['specification']=$_GET['_specification'];
+                $data['product_name']=$_GET['_product_name'];
                 $where=array();
                 $where['curtain_product_id']=$_GET['_id'];
                 $result = self::update_curtain_products($data, $where);
@@ -299,21 +299,23 @@ if (!class_exists('otp_service')) {
     
             $output .= '</tbody></table></figure>';
             $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
             if( $_mode=='Create' ) {
-                $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
-                $output .= '</div>';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-                $output .= '</div>';
             } else {
-                $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
+/*
+                $output .= '<div class="wp-block-button">';
                 $output .= '</div>';
                 $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_product">';
                 $output .= '</div>';
+*/
             }
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+            $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
         
