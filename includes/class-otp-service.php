@@ -252,9 +252,9 @@ if (!class_exists('otp_service')) {
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
-                $output .= '<tr>';
                 global $wp;
-                $output .= '<a href="'.home_url( $wp->request ).'?_id='.$result->curtain_product_id;
+                $output .= '<tr><a href="'.home_url( $wp->request );
+                $output .= '?_id='.$result->curtain_product_id;
                 $output .= '&_model_number='.$result->model_number;
                 $output .= '&_specification='.$result->specification;
                 $output .= '&_product_name='.$result->product_name;
