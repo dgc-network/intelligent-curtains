@@ -266,7 +266,7 @@ if (!class_exists('otp_service')) {
 
             $_mode = $_POST['edit_mode'];
             unset($_POST['edit_mode']);
- 
+ /*
             if ($_id==null){
                 $_id=get_current_user_id();
                 $_mode='Update';
@@ -283,7 +283,7 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['delete_action']) ) {
 
             }
-
+*/
             $output  = '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Update' ) {
