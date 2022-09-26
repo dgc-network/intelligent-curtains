@@ -254,12 +254,16 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 global $wp;
-                $output .= '<td><a href="'.home_url( $wp->request ).'?_id='.$result->curtain_product_id.'">'.$result->curtain_product_id.'</a></td>';
+                $output .= '<a href="'.home_url( $wp->request ).'?_id='.$result->curtain_product_id;
+                $output .= '&_model_number='.$result->model_number;
+                $output .= '&_specification='.$result->specification;
+                $output .= '&_product_name='.$result->product_name;
+                $output .= '"><td>'.$result->curtain_product_id.'</td>';
                 $output .= '<td>'.$result->model_number.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '</tr>';
+                $output .= '</a></tr>';
             }
             $output .= '</tbody></table></figure>';
             $output .= '<form method="post">';
@@ -277,9 +281,6 @@ if (!class_exists('otp_service')) {
 
         function edit_curtain_product( $_id=null, $_mode=null ) {
 
-            //$_mode = $_POST['edit_mode'];
-            //unset($_POST['edit_mode']);
-
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$_id}", OBJECT );
             $output  = '<form method="post">';
@@ -293,12 +294,6 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
             }
-/*            
-            } else if( $_mode=='Delete' ) {
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'" disabled></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->model_number.'" disabled></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->model_number.'" disabled></td></tr>';
-*/
     
             $output .= '</tbody></table></figure>';
             $output .= '<div class="wp-block-buttons">';
@@ -309,10 +304,6 @@ if (!class_exists('otp_service')) {
                 $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                 $output .= '</div>';
-/*
-            } else if( $_mode=='Delete' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_product">';
-*/            
             } else {
                 $output .= '<div class="wp-block-button">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
