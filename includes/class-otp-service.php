@@ -43,7 +43,7 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['submit_action']) ) {
 
                 $line_user_id = $_POST['line_user_id'];
-
+/*
                 if( $_POST['submit_action']=='Search' ) {
                     global $wpdb;
                     if( isset($_POST['where_products']) ) {
@@ -53,7 +53,7 @@ if (!class_exists('otp_service')) {
                     }
                     return self::list_curtain_products($results);
                 }
-
+*/
                 if( $_POST['submit_action']=='Code' ) {
                     $serial_no = $_POST['serial_no'];
                     global $wp;
@@ -210,14 +210,18 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function list_curtain_products($result=null) {
-            if ( $result==null ){
-                global $wpdb;
+        function list_curtain_products() {
+            global $wpdb;
+            if( isset($_POST['where_products']) ) {
+                $where='%'.$_POST['where_products'].'%';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
+                unset($_POST['where_products']);
+            } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
             }
             $output  = '<h2>Curtain Products</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=4 style="text-align:right">';
+            $output .= '<tr><td colspan=5 style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="where_products" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
