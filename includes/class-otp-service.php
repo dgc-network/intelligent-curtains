@@ -44,14 +44,6 @@ if (!class_exists('otp_service')) {
 
                 $line_user_id = $_POST['line_user_id'];
 
-                if( $_POST['submit_action']=='Code' ) {
-                    $serial_no = $_POST['serial_no'];
-                    global $wp;
-                    $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                    $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
-                    return $output;
-                }
-
                 if( $_POST['submit_action']=='Confirm' ) {
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
                     if ( $last_otp==$_POST['otp_input'] ) {
@@ -286,14 +278,20 @@ if (!class_exists('otp_service')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value=""></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value=""></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
+                //$output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value=""></td></tr>';
+                //$output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value=""></td></tr>';
+                //$output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
+                $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number"></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
+                $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
+                //$output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
+                //$output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
+                //$output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
+                $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
+                $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
             $output .= '<div class="wp-block-buttons">';
@@ -314,6 +312,25 @@ if (!class_exists('otp_service')) {
         }
 
         function list_serial_number() {
+
+            if( isset($_POST['create_serial_no']) ) {
+                $data=array();
+                $data['model_number']=$_POST['_model_number'];
+                $data['specification']=$_POST['_specification'];
+                $data['product_name']=$_POST['_product_name'];
+                $result = self::insert_curtain_products($data);
+                unset($_POST['create_product']);
+            }
+        
+            if( isset($_POST['update_serial_no']) ) {
+            //if( $_POST['submit_action']=='Code' ) {
+                $serial_no = $_POST['serial_no'];
+                global $wp;
+                $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+                $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
+                return $output;
+            }
+
             global $wpdb;
             if( isset($_POST['where_serial_number']) ) {
                 $where='"%'.$_POST['where_serial_number'].'%"';
@@ -341,7 +358,8 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td><form method="post">';
-                $output .= '<input type="submit" value="Code" name="submit_action">';
+                //$output .= '<input type="submit" value="Code" name="submit_action">';
+                $output .= '<input type="submit" value="Code" name="update_serial_no">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
@@ -354,6 +372,16 @@ if (!class_exists('otp_service')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
+            $output .= '<form method="post">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_serial_no">';
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
             return $output;
         }
 
