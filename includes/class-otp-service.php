@@ -278,6 +278,7 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['display_qr_code']) ) {
                 $serial_no = $_POST['serial_no'];
                 self::display_qr_code( $serial_no );
+                unset($_POST['display_qr_code']);
             }
             
             global $wpdb;
@@ -363,6 +364,8 @@ if (!class_exists('otp_service')) {
             if( isset($_POST['display_qr_code']) ) {
                 $serial_no = $_POST['serial_no'];
                 self::display_qr_code( $serial_no );
+                unset($_POST['display_qr_code']);
+
 /*         
                 $serial_no = $_POST['serial_no'];
                 global $wp;
