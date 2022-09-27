@@ -11,10 +11,6 @@ if (!class_exists('line_webhook')) {
          */
         public function __construct() {
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
-            //add_shortcode('message-list', __CLASS__ . '::list_message_event');
-            //add_shortcode('text-message-list', __CLASS__ . '::list_text_message');
-            //self::create_tables();
-            //self::delete_records();
         }
 
         public function init() {
