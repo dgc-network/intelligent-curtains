@@ -199,17 +199,11 @@ if (!class_exists('otp_service')) {
             }
 
             if( isset($_POST['display_qr_code']) ) {
-                /*                
-                                $serial_no = $_POST['serial_no'];
-                                self::display_qr_code( $serial_no );
-                                unset($_POST['display_qr_code']);
-                */                
                 $serial_no = $_POST['serial_no'];
-                global $wp;
-                $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+                //global $wp;
+                $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 //$output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                 $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
-                
                 return $output;
             }
                             
@@ -378,9 +372,10 @@ if (!class_exists('otp_service')) {
 */
          
                 $serial_no = $_POST['serial_no'];
-                global $wp;
-                $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
+                //global $wp;
+                $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
+                //$output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                 return $output;
    
             }
