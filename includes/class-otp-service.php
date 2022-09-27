@@ -715,6 +715,27 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
+        function insert_model_number($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'model_number';
+            $data = array(
+                'model_number' => $data['model_number'],
+                'model_description' => $data['model_description'],
+                'vendor_name' => $data['vendor_name'],
+                'create_timestamp' => time(),
+                'update_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);        
+            return $wpdb->insert_id;
+        }
+
+        function update_model_number($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'model_number';
+            $data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
+        }
+
         function insert_curtain_products($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_products';
