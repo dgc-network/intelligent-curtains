@@ -49,16 +49,7 @@ if (!class_exists('line_webhook')) {
                                         $where=array();
                                         $where['curtain_user_id']=$six_digit_random_number;
                                         $result = $otp_service->update_serial_number($data, $where);
-/*
-                                        global $wpdb;
-                                        $table = $wpdb->prefix.'serial_number';
-                                        $data = array(
-                                            'curtain_user_id' => intval($return_id),
-                                            'update_timestamp' => time(),
-                                        );
-                                        $where = array('curtain_user_id' => $six_digit_random_number);
-                                        $wpdb->update($table, $data, $where);
-*/                        
+
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
