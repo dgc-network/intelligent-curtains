@@ -222,7 +222,7 @@ if (!class_exists('otp_service')) {
                 $data['specification']=$_POST['_specification'];
                 $data['product_name']=$_POST['_product_name'];
                 $where=array();
-                $where['curtain_product_id']=$_POST['_id'];
+                $where['curtain_product_id']=intval($_POST['_id']);
                 $result = self::update_curtain_products($data, $where);
                 unset($_POST['update_product']);
                 unset($_POST['_id']);
@@ -252,21 +252,10 @@ if (!class_exists('otp_service')) {
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
-                global $wp;
                 $output .= '<tr>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="'.$result->curtain_product_id.'" name="_id">';
-                //$output .= '<input type="hidden" value="'.$result->curtain_product_id.'" name="_no">';
                 $output .= '</form></td>';
-/*
-                $output .= '<td>'.$result->curtain_product_id.'</td>';
-                $output .= '<td><a href="'.home_url( $wp->request );
-                $output .= '?_id='.$result->curtain_product_id;
-                $output .= '&_model_number='.$result->model_number;
-                $output .= '&_specification='.$result->specification;
-                $output .= '&_product_name='.$result->product_name;
-                $output .= '">';
-*/
                 $output .= '<td>'.$result->model_number.'</a></td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
@@ -291,7 +280,12 @@ if (!class_exists('otp_service')) {
 
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$_id}", OBJECT );
-            $output  = '<form method="post">';
+            if( $_mode=='Create' ) {
+                $output  = '<h2>New Product</h2>';
+            } else {
+                $output  = '<h2>Update Product</h2>';
+            }
+            $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value=""></td></tr>';
