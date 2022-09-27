@@ -2,7 +2,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
-if (!class_exists('otp_service')) {
+if (!class_exists('curtain_agents')) {
 
     class curtain_agents {
 
