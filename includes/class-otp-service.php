@@ -268,8 +268,16 @@ if (!class_exists('otp_service')) {
 
         function edit_curtain_product( $_id=null, $_mode=null ) {
 
+            if( isset($_POST['generate_serial_no']) ) {
+                $data=array();
+                $data['curtain_product_id']=$_POST['_product_id'];
+                $result = self::insert_serial_number($data);
+                unset($_POST['generate_serial_no']);
+            }
+            
             if( isset($_POST['display_qr_code']) ) {
-                self::display_qr_code();
+                $serial_no = $_POST['serial_no'];
+                self::display_qr_code( $serial_no );
             }
             
             global $wpdb;
@@ -301,7 +309,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
                 $output .= '</div>';
                 $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="New Serial No" name="generate_code">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
             }
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
@@ -343,9 +351,7 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function display_qr_code() {
-
-            $serial_no = $_POST['serial_no'];
+        function display_qr_code( $serial_no ) {
             global $wp;
             $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
             $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
@@ -355,14 +361,15 @@ if (!class_exists('otp_service')) {
         function list_serial_number() {
 
             if( isset($_POST['display_qr_code']) ) {
-                //self::display_qr_code();
-         
+                $serial_no = $_POST['serial_no'];
+                self::display_qr_code( $serial_no );
+/*         
                 $serial_no = $_POST['serial_no'];
                 global $wp;
                 $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                 return $output;
-   
+*/   
             }
 
             global $wpdb;
