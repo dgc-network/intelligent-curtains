@@ -357,6 +357,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<form method="post">';
                 $output .= '<div class="wp-block-buttons">';
                 $output .= '<div class="wp-block-button">';
+                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
                 $output .= '</div>';
                 $output .= '</div>';
