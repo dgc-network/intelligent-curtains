@@ -300,7 +300,7 @@ if (!class_exists('otp_service')) {
                 $data=array();
                 $data['model_number']=$_POST['_model_number'];
                 $data['model_description']=$_POST['_model_description'];
-                $data['vendor_id']=$_POST['_vendor_id'];
+                $data['vendor_name']=$_POST['_vendor_name'];
                 $result = self::insert_model_number($data);
             }
         
@@ -308,7 +308,7 @@ if (!class_exists('otp_service')) {
                 $data=array();
                 $data['model_number']=$_POST['_model_number'];
                 $data['model_description']=$_POST['_model_description'];
-                $data['vendor_id']=$_POST['_vendor_id'];
+                $data['vendor_name']=$_POST['_vendor_name'];
                 $where=array();
                 $where['model_number_id']=$_POST['_model_number_id'];
                 $result = self::update_model_number($data, $where);
@@ -343,11 +343,9 @@ if (!class_exists('otp_service')) {
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->model_number_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->model_number.'" name="_mode">';
-                //$output .= '<input type="submit" value="'.$result->specification.'" name="_mode">';
                 $output .= '</form></td>';
-                //$output .= '<td>'.$result->model_number.'</a></td>';
                 $output .= '<td>'.$result->model_description.'</td>';
-                $output .= '<td>'.$result->vendor_id.'</td>';
+                $output .= '<td>'.$result->vendor_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
@@ -387,12 +385,12 @@ if (!class_exists('otp_service')) {
             if( $_mode=='Create' ) {
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_model_description"></td></tr>';
-                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_id"></td></tr>';            
+                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_name"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->model_number_id.'" name="_model_number_id">';
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_model_description" value="'.$row->model_description.'"></td></tr>';
-                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_id" value="'.$row->vendor_id.'"></td></tr>';
+                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_name" value="'.$row->vendor_name.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
@@ -429,13 +427,10 @@ if (!class_exists('otp_service')) {
                     $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
                     //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                     $output .= '</form></td>';
-                    //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                     $output .= '<td>'.$model->model_number.'</td>';
-                    //$output .= '<td>'.$model->model_description.'</td>';
                     $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specification WHERE specification_id = {$result->specification_id}", OBJECT );
                     $output .= '<td>'.$spec->specification.'</td>';
-                    //$output .= '<td>'.$spec->spec_description.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -829,7 +824,7 @@ if (!class_exists('otp_service')) {
                 model_number_id int NOT NULL AUTO_INCREMENT,
                 model_number varchar(5),
                 model_description varchar(50),
-                vendor_id int(10),
+                vendor_name varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 UNIQUE (model_number),
