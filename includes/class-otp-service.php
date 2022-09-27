@@ -221,7 +221,7 @@ if (!class_exists('otp_service')) {
                 $data['specification']=$_POST['_specification'];
                 $data['product_name']=$_POST['_product_name'];
                 $where=array();
-                $where['curtain_product_id']=intval($_POST['_id']);
+                $where['curtain_product_id']=$_POST['_product_id'];
                 $result = self::update_curtain_products($data, $where);
                 unset($_POST['update_product']);
             }
@@ -290,7 +290,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value=""></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
             } else {
-                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_id">';
+                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
