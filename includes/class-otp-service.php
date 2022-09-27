@@ -268,6 +268,10 @@ if (!class_exists('otp_service')) {
 
         function edit_curtain_product( $_id=null, $_mode=null ) {
 
+            if( isset($_POST['display_qr_code']) ) {
+                self::display_qr_code();
+            }
+            
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$_id}", OBJECT );
             if( $_mode=='Create' ) {
@@ -289,6 +293,23 @@ if (!class_exists('otp_service')) {
             }   
             $output .= '</tbody></table></figure>';
 
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            if( $_mode=='Create' ) {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
+            } else {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
+                $output .= '</div>';
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="New Serial No" name="generate_code">';
+            }
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
+        
             if( !($_mode=='Create') ) {
                 $where='curtain_product_id='.$row->curtain_product_id;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
@@ -319,34 +340,29 @@ if (!class_exists('otp_service')) {
                 $output .= '</tbody></table></figure>';
             }
 
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
-            } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
-                $output .= '</div>';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Generate QR Code" name="generate_code">';
-            }
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-        
+            return $output;
+        }
+
+        function display_qr_code() {
+
+            $serial_no = $_POST['serial_no'];
+            global $wp;
+            $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+            $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
             return $output;
         }
 
         function list_serial_number() {
 
             if( isset($_POST['display_qr_code']) ) {
+                self::display_qr_code();
+/*                
                 $serial_no = $_POST['serial_no'];
                 global $wp;
                 $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
                 return $output;
+*/                
             }
 
             global $wpdb;
