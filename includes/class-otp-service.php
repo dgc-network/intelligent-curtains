@@ -207,7 +207,9 @@ if (!class_exists('otp_service')) {
                 $serial_no = $_POST['serial_no'];
                 global $wp;
                 $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
+                //$output .= home_url( $wp->request ).'?serial_no='.$serial_no.'</div></div></div>';
+                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
+                
                 return $output;
             }
                             
