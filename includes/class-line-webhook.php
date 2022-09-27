@@ -48,7 +48,7 @@ if (!class_exists('line_webhook')) {
                                         $data['curtain_user_id']=$return_id;
                                         $where=array();
                                         $where['curtain_user_id']=$six_digit_random_number;
-                                        $result = self::update_serial_number($data, $where);
+                                        $result = $otp_service->update_serial_number($data, $where);
 /*
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
