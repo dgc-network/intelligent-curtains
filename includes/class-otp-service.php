@@ -415,6 +415,11 @@ if (!class_exists('otp_service')) {
         }
 
         function list_curtain_users() {
+            
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+                return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
+            }
+
             global $wpdb;
             if( isset($_POST['where_users']) ) {
                 $where='"%'.$_POST['where_users'].'%"';
