@@ -561,6 +561,7 @@ if (!class_exists('otp_service')) {
                 last_otp varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
+                UNIQUE (line_user_id),
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
             dbDelta($sql);

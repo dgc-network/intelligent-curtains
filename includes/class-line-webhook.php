@@ -18,7 +18,7 @@ if (!class_exists('line_webhook')) {
             foreach ($client->parseEvents() as $event) {
 
                 $profile = $client->getProfile($event['source']['userId']);
-                $line_user_id = trim($profile['userId']);
+                $line_user_id = $profile['userId'];
             
                 switch ($event['type']) {
                     case 'message':
