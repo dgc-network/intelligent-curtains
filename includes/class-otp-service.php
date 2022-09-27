@@ -403,8 +403,8 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$product->model_number.'</td>';
                 $output .= '<td>'.$product->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
-                //$output .= '<td>'.$result->curtain_user_id.'</td>';
-                $output .= '<td>'.$user->display_name.'</td>';
+                $output .= '<td>'.$result->curtain_user_id.'</td>';
+                //$output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
