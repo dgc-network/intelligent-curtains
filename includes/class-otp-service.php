@@ -475,25 +475,13 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_user_id">';
-                $output .= '<tr><td>'.'Line User ID:'.'</td><td><input size="50" type="text" name="_line_user_id" value="'.$row->line_user_id.'"></td></tr>';
-                $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
+                //$output .= '<tr><td>'.'Line User ID:'.'</td><td><input size="50" type="text" name="_line_user_id" value="'.$row->line_user_id.'"></td></tr>';
+                //$output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
+                $output .= '<tr><td>'.'Line User ID:'.'</td><td>'.$row->line_user_id.'</td></tr>';
+                $output .= '<tr><td>'.'Display Name:'.'</td><td>'.$row->display_name.'</td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_user">';
-            } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_user">';
-            }
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-        
             if( !($_mode=='Create') ) {
                 $where='curtain_user_id='.$row->curtain_user_id;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
@@ -523,6 +511,25 @@ if (!class_exists('otp_service')) {
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></figure>';
+
+                $output .= '<form method="post">';
+                $output .= '<div class="wp-block-buttons">';
+/*
+                $output .= '<div class="wp-block-button">';
+                if( $_mode=='Create' ) {
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_user">';
+                } else {
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_user">';
+                }
+                $output .= '</div>';
+*/                
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '</form>';
+            
+    
 /*
                 $output .= '<form method="post">';
                 $output .= '<div class="wp-block-buttons">';
