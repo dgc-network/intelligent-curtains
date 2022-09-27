@@ -202,8 +202,8 @@ if (!class_exists('otp_service')) {
 
         function list_curtain_products() {
 
-            if( isset($_POST['_mode']) || isset($_GET['_id']) ) {
-                return self::edit_curtain_product($_GET['_id'], $_POST['_mode']);
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+                return self::edit_curtain_product($_POST['_id'], $_POST['_mode']);
             }
 
             if( isset($_POST['create_product']) ) {
@@ -222,10 +222,10 @@ if (!class_exists('otp_service')) {
                 $data['specification']=$_POST['_specification'];
                 $data['product_name']=$_POST['_product_name'];
                 $where=array();
-                $where['curtain_product_id']=$_GET['_id'];
+                $where['curtain_product_id']=$_POST['_id'];
                 $result = self::update_curtain_products($data, $where);
                 unset($_POST['update_product']);
-                unset($_GET['_id']);
+                unset($_POST['_id']);
             }
         
             global $wpdb;
@@ -254,6 +254,11 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 global $wp;
                 $output .= '<tr>';
+                $output .= '<td><form method="post">';
+                $output .= '<input type="submit" value="'.$result->curtain_product_id.'" name="_id">';
+                //$output .= '<input type="hidden" value="'.$result->curtain_product_id.'" name="_no">';
+                $output .= '</form></td>';
+/*
                 $output .= '<td>'.$result->curtain_product_id.'</td>';
                 $output .= '<td><a href="'.home_url( $wp->request );
                 $output .= '?_id='.$result->curtain_product_id;
@@ -261,7 +266,8 @@ if (!class_exists('otp_service')) {
                 $output .= '&_specification='.$result->specification;
                 $output .= '&_product_name='.$result->product_name;
                 $output .= '">';
-                $output .= ''.$result->model_number.'</a></td>';
+*/
+                $output .= '<td>'.$result->model_number.'</a></td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
