@@ -33,7 +33,8 @@ if (!class_exists('line_webhook')) {
                                     if (count($row) > 0) {
                                         $otp_service = new otp_service();
                                         $return_id = 0;
-                                        $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
+                                        //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
+                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
                                             $return_id = $user->curtain_user_id;
                                         } else {

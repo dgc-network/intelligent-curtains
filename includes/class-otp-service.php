@@ -113,17 +113,6 @@ if (!class_exists('otp_service')) {
                     $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                     $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
                     $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.' </p>完成註冊程序<br>';
-/*                    
-                    global $wpdb;
-                    $table = $wpdb->prefix.'serial_number';
-                    $data = array(
-                        'curtain_user_id' => intval($six_digit_random_number),
-                    );
-                    $where = array(
-                        'qr_code_serial_no' => $qr_code_serial_no,
-                    );
-                    $wpdb->update( $table, $data, $where );              
-*/                      
                 }
 
             } else {
@@ -539,6 +528,7 @@ if (!class_exists('otp_service')) {
                 qr_code_serial_no varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
+                UNIQUE (qr_code_serial_no),
                 PRIMARY KEY (serial_number_id)
             ) $charset_collate;";
             dbDelta($sql);
@@ -550,6 +540,7 @@ if (!class_exists('otp_service')) {
                 product_name varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
+                UNIQUE (model_number),
                 PRIMARY KEY (curtain_product_id)
             ) $charset_collate;";
             dbDelta($sql);
