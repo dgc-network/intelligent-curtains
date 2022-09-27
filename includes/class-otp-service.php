@@ -445,7 +445,11 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_user_id.'</td>';
-                $output .= '<td>'.$result->line_user_id.'</td>';
+                $output .= '<td><form method="post">';
+                $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
+                $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_mode">';
+                $output .= '</form></td>';
+                //$output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
