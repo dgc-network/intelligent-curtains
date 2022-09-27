@@ -271,7 +271,8 @@ if (!class_exists('otp_service')) {
             $output .= '</form>';
 
             if( isset($_POST['display_qr_code']) ) {
-                $serial_no = $_POST['serial_no'];
+                //$serial_no = $_POST['serial_no'];
+                $serial_no = $_POST['display_qr_code'];
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
             }
@@ -321,7 +322,7 @@ if (!class_exists('otp_service')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
                 $output .= '<figure class="wp-block-table"><table><tbody>';
                 $output .= '<tr style="background-color:yellow">';
-                $output .= '<td>QR</td>';
+                //$output .= '<td>QR</td>';
                 $output .= '<td>serial_no</td>';
                 $output .= '<td>model</td>';
                 $output .= '<td>spec</td>';
@@ -331,10 +332,10 @@ if (!class_exists('otp_service')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td><form method="post">';
-                    $output .= '<input type="submit" value="Code" name="display_qr_code">';
+                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
                     $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                     $output .= '</form></td>';
-                    $output .= '<td>'.$result->qr_code_serial_no.'</td>';
+                    //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
                     $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
                     $output .= '<td>'.$product->model_number.'</td>';
                     $output .= '<td>'.$product->specification.'</td>';
@@ -369,14 +370,14 @@ if (!class_exists('otp_service')) {
             }
             $output  = '<h2>Serial Number</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=6 style="text-align:right">';
+            $output .= '<tr><td colspan=5 style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="where_serial_number" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>QR</td>';
+            //$output .= '<td>QR</td>';
             $output .= '<td>serial_no</td>';
             $output .= '<td>model</td>';
             $output .= '<td>spec</td>';
@@ -386,10 +387,10 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td><form method="post">';
-                $output .= '<input type="submit" value="Code" name="display_qr_code">';
+                $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                 $output .= '</form></td>';
-                $output .= '<td>'.$result->qr_code_serial_no.'</td>';
+                //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
                 $output .= '<td>'.$product->model_number.'</td>';
                 $output .= '<td>'.$product->specification.'</td>';
