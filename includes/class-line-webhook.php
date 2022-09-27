@@ -18,6 +18,7 @@ if (!class_exists('line_webhook')) {
             foreach ($client->parseEvents() as $event) {
 
                 $profile = $client->getProfile($event['source']['userId']);
+                $line_user_id = $profile['userId'];
             
                 switch ($event['type']) {
                     case 'message':
@@ -34,9 +35,20 @@ if (!class_exists('line_webhook')) {
                                         $data=array();
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
-                                        $data['last_otp']=$six_digit_random_number;                
-                                        $return_id = $otp_service->insert_curtain_users($data);
+                                        $data['last_otp']=$six_digit_random_number;        
+                                        $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
+                                        if (count($row) == 0) {
+                                            $return_id = $otp_service->insert_curtain_users($data);
+                                        } else {
+                                            $return_id = $user->curtain_user_id;
+                                        }
                                         
+                                        $data=array();
+                                        $data['curtain_user_id']=$return_id;
+                                        $where=array();
+                                        $where['curtain_user_id']=$six_digit_random_number;
+                                        $result = self::update_serial_number($data, $where);
+/*
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
                                         $data = array(
@@ -45,7 +57,7 @@ if (!class_exists('line_webhook')) {
                                         );
                                         $where = array('curtain_user_id' => $six_digit_random_number);
                                         $wpdb->update($table, $data, $where);
-                        
+*/                        
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
