@@ -213,7 +213,6 @@ if (!class_exists('otp_service')) {
                 $data['product_name']=$_POST['_product_name'];
                 $result = self::insert_curtain_products($data);
                 unset($_POST['create_product']);
-                unset($_POST['edit_mode']);
             }
         
             if( isset($_POST['update_product']) ) {
@@ -225,7 +224,6 @@ if (!class_exists('otp_service')) {
                 $where['curtain_product_id']=intval($_POST['_id']);
                 $result = self::update_curtain_products($data, $where);
                 unset($_POST['update_product']);
-                unset($_POST['_id']);
             }
         
             global $wpdb;
@@ -283,7 +281,7 @@ if (!class_exists('otp_service')) {
             if( $_mode=='Create' ) {
                 $output  = '<h2>New Product</h2>';
             } else {
-                $output  = '<h2>Update Product</h2>';
+                $output  = '<h2>Product Update</h2>';
             }
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
@@ -292,11 +290,11 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value=""></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
             } else {
+                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_id">';
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
-            }
-    
+            }   
             $output .= '</tbody></table></figure>';
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
@@ -304,13 +302,6 @@ if (!class_exists('otp_service')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
             } else {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
-/*
-                $output .= '<div class="wp-block-button">';
-                $output .= '</div>';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_product">';
-                $output .= '</div>';
-*/
             }
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
@@ -370,11 +361,9 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             if( isset($_POST['where_users']) ) {
                 $where='"%'.$_POST['where_users'].'%"';
-                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
                 unset($_POST['where_users']);
             } else {
-                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
             }
             $output  = '<h2>Curtain Users</h2>';
