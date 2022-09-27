@@ -247,10 +247,12 @@ if (!class_exists('otp_service')) {
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td>'.$result->curtain_product_id.'</a></td>';
                 $output .= '<td><form method="post">';
-                $output .= '<input type="submit" value="'.$result->curtain_product_id.'" name="_id">';
+                $output .= '<input type="hidden" value="'.$result->curtain_product_id.'" name="_id">';
+                $output .= '<input type="submit" value="'.$result->model_number.'" name="_mode">';
                 $output .= '</form></td>';
-                $output .= '<td>'.$result->model_number.'</a></td>';
+                //$output .= '<td>'.$result->model_number.'</a></td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->product_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
