@@ -278,28 +278,56 @@ if (!class_exists('otp_service')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                //$output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value=""></td></tr>';
-                //$output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value=""></td></tr>';
-                //$output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value=""></td></tr>';            
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number"></td></tr>';
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
-                //$output .= '<tr><td>'.'Model Number:'.'</td><td><input style="width: 100%" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
-                //$output .= '<tr><td>'.'Specification:'.'</td><td><input style="width: 100%" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
-                //$output .= '<tr><td>'.'Product Name:'.'</td><td><input style="width: 100%" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
                 $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
+
+            if( !($_mode=='Create') ) {
+                $where='curtain_product_id='.$row->curtain_product_id;
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
+                $output .= '<figure class="wp-block-table"><table><tbody>';
+                $output .= '<tr style="background-color:yellow">';
+                $output .= '<td>QR</td>';
+                $output .= '<td>serial_no</td>';
+                $output .= '<td>model</td>';
+                $output .= '<td>spec</td>';
+                $output .= '<td>user</td>';
+                $output .= '<td>update_time</td>';
+                $output .= '</tr>';
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<tr>';
+                    $output .= '<td><form method="post">';
+                    $output .= '<input type="submit" value="Code" name="display_qr_code">';
+                    $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                    $output .= '</form></td>';
+                    $output .= '<td>'.$result->qr_code_serial_no.'</td>';
+                    $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
+                    $output .= '<td>'.$product->model_number.'</td>';
+                    $output .= '<td>'.$product->specification.'</td>';
+                    $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
+                    $output .= '<td>'.$user->display_name.'</td>';
+                    $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                    $output .= '</tr>';
+                }
+                $output .= '</tbody></table></figure>';
+            }
+
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             if( $_mode=='Create' ) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
             } else {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
+                $output .= '</div>';
+                $output .= '<div class="wp-block-button">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Generate QR Code" name="generate_code">';
             }
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
@@ -313,17 +341,7 @@ if (!class_exists('otp_service')) {
 
         function list_serial_number() {
 
-            if( isset($_POST['create_serial_no']) ) {
-                $data=array();
-                $data['model_number']=$_POST['_model_number'];
-                $data['specification']=$_POST['_specification'];
-                $data['product_name']=$_POST['_product_name'];
-                $result = self::insert_curtain_products($data);
-                unset($_POST['create_product']);
-            }
-        
-            if( isset($_POST['update_serial_no']) ) {
-            //if( $_POST['submit_action']=='Code' ) {
+            if( isset($_POST['display_qr_code']) ) {
                 $serial_no = $_POST['serial_no'];
                 global $wp;
                 $output = '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
@@ -358,8 +376,7 @@ if (!class_exists('otp_service')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td><form method="post">';
-                //$output .= '<input type="submit" value="Code" name="submit_action">';
-                $output .= '<input type="submit" value="Code" name="update_serial_no">';
+                $output .= '<input type="submit" value="Code" name="display_qr_code">';
                 $output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
@@ -372,16 +389,6 @@ if (!class_exists('otp_service')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
-            $output .= '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_serial_no">';
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
             return $output;
         }
 
