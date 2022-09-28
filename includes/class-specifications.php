@@ -33,16 +33,16 @@ if (!class_exists('specifications')) {
                 $data['spec_description']=$_POST['_spec_description'];
                 $where=array();
                 $where['specification_id']=$_POST['_specification_id'];
-                $result = self::update_specification($data, $where);
+                $result = self::update_specifications($data, $where);
             }
         
             global $wpdb;
             if( isset($_POST['where_specification']) ) {
                 $where='"%'.$_POST['where_specification'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}specification WHERE spec_description LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}specifications WHERE spec_description LIKE {$where}", OBJECT );
                 unset($_POST['where_specification']);
             } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}specification", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}specifications", OBJECT );
             }
             $output  = '<h2>Specification</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
@@ -92,7 +92,7 @@ if (!class_exists('specifications')) {
         function edit_specification( $_id=null, $_mode=null ) {
 
             global $wpdb;
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specification WHERE specification_id={$_id}", OBJECT );
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id={$_id}", OBJECT );
             if( $_mode=='Create' ) {
                 $output  = '<h2>New Specification</h2>';
             } else {
@@ -159,7 +159,7 @@ if (!class_exists('specifications')) {
 
         function insert_specification($data=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'specification';
+            $table = $wpdb->prefix.'specifications';
             $data = array(
                 'specification' => $data['specification'],
                 'spec_description' => $data['spec_description'],
@@ -170,9 +170,9 @@ if (!class_exists('specifications')) {
             return $wpdb->insert_id;
         }
 
-        function update_specification($data=[], $where=[]) {
+        function update_specifications($data=[], $where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'specification';
+            $table = $wpdb->prefix.'specifications';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
@@ -199,7 +199,7 @@ if (!class_exists('specifications')) {
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-            $sql = "CREATE TABLE `{$wpdb->prefix}specification` (
+            $sql = "CREATE TABLE `{$wpdb->prefix}specifications` (
                 specification_id int NOT NULL AUTO_INCREMENT,
                 specification varchar(5),
                 spec_description varchar(50),

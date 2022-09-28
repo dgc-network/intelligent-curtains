@@ -21,9 +21,12 @@ if (!class_exists('curtain_agents')) {
             }
 
             if( isset($_POST['generate_serial_no']) ) {
+                $otp_service = new otp_service();
                 $data=array();
-                $data['curtain_product_id']=$_POST['_product_id'];
-                $result = self::insert_serial_number($data);
+                $data['model_number_id']=$_POST['_model_number_id'];
+                $data['specification_id']=$_POST['_specification_id'];
+                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                $result = $otp_service->insert_serial_number($data);
             }
             
             if( isset($_POST['_create_agent']) ) {
@@ -187,11 +190,13 @@ if (!class_exists('curtain_agents')) {
                 $specifications = new specifications();
 
                 $output .= '<form method="post">';
+                $output .= '<figure class="wp-block-table"><table><tbody>';
+                $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
+                $output .= '<tr><td>'.'Model Number:'.'</td><td><select name="_model_number_id">'.$model_number->select_options().'</select></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><select name="_specification_id">'.$specifications->select_options().'</select></td></tr>';
+                $output .= '</tbody></table></figure>';
                 $output .= '<div class="wp-block-buttons">';
                 $output .= '<div class="wp-block-button">';
-                $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
-                $output .= '<select name="_model_number_id">'.$model_number->select_options().'</select>';
-                $output .= '<select name="_specification_id">'.$specifications->select_options().'</select>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
                 $output .= '</div>';
                 $output .= '</div>';

@@ -437,6 +437,26 @@ if (!class_exists('otp_service')) {
 
         function insert_serial_number($data=[]) {
             global $wpdb;
+            $model_number_id = $data['model_number_id'];
+            $specification_id = $data['specification_id'];
+            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$model_number_id}", OBJECT );
+            $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
+            if ((count($model) > 0) && (count($spec) > 0)) {
+                $qr_code_serial_no = $model->model_number . $spec->specification . time();
+                $table = $wpdb->prefix.'serial_number';
+                $data = array(
+                    'qr_code_serial_no' => $qr_code_serial_no,
+                    'model_number_id' => $data['model_number_id'],
+                    'specification_id' => $data['specification_id'],
+                    'curtain_agent_id' => $data['curtain_agent_id'],
+                    'curtain_user_id' => $data['curtain_user_id'],
+                    'create_timestamp' => time(),
+                    'update_timestamp' => time(),
+                );
+                $wpdb->insert($table, $data);
+                return $wpdb->insert_id;
+            }
+/*
             $curtain_product_id = intval($data['curtain_product_id']);
             $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
             if (count($product) > 0) {
@@ -452,6 +472,7 @@ if (!class_exists('otp_service')) {
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }
+*/                
         }
 
         function update_serial_number($data=[], $where=[]) {
