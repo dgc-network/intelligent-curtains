@@ -81,10 +81,10 @@ if (!class_exists('otp_service')) {
                     $output .= 'Hi, '.$user->display_name.'<br>';
                 }
                 $output .= '感謝您選購我們的電動窗簾<br>';
-                $curtain_product_id=$row->curtain_product_id;
-                $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
-                if (count($product) > 0) {
-                    $output .= '型號:'.$product->model_number.' 規格: '.$product->specification.' '.$product->product_name.'<br>';
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$row->model_number_id}", OBJECT );
+                $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
+                if ((count($model) > 0) && (count($spec) > 0)) {
+                    $output .= '型號:'.$model->model_number.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
                 }
 
                 if (count($user) > 0) {
@@ -125,43 +125,24 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='insert-curtain-product') && (isset($_GET['model_number'])) && (isset($_GET['specification'])) ) {
+                    if( ($_GET['action']=='insert-serial-number') && (isset($_GET['model_number_id'])) && (isset($_GET['specification_id'])) ) {
                         $data=array();
-                        $data['model_number']=$_GET['model_number'];
-                        $data['specification']=$_GET['specification'];
-                        $data['product_name']=$_GET['product_name'];
-                        $result = self::insert_curtain_products($data);
-                        $output .= $result.'<br>';
-                    }
-
-                    if( ($_GET['action']=='update-curtain-product') && (isset($_GET['curtain_product_id'])) ) {
-                        $data=array();
-                        if( isset($_GET['model_number']) ) {
-                            $data['model_number']=$_GET['model_number'];
-                        }
-                        if( isset($_GET['specification']) ) {
-                            $data['specification']=$_GET['specification'];
-                        }
-                        if( isset($_GET['product_name']) ) {
-                            $data['product_name']=$_GET['product_name'];
-                        }
-                        $where=array();
-                        $where['curtain_product_id']=$_GET['curtain_product_id'];
-                        $result = self::update_curtain_products($data, $where);
-                        $output .= $result.'<br>';
-                    }
-
-                    if( ($_GET['action']=='insert-serial-number') && (isset($_GET['curtain_product_id'])) ) {
-                        $data=array();
-                        $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        $data['model_number_id']=$_GET['model_number_id'];
+                        $data['specification_id']=$_GET['specification_id'];
                         $result = self::insert_serial_number($data);
                         $output .= $result.'<br>';
                     }
 
                     if( ($_GET['action']=='update-serial-number') && (isset($_GET['serial_number_id'])) ) {
                         $data=array();
-                        if( isset($_GET['curtain_product_id']) ) {
-                            $data['curtain_product_id']=$_GET['curtain_product_id'];
+                        if( isset($_GET['model_number_id']) ) {
+                            $data['model_number_id']=$_GET['model_number_id'];
+                        }
+                        if( isset($_GET['specification_id']) ) {
+                            $data['specification_id']=$_GET['specification_id'];
+                        }
+                        if( isset($_GET['curtain_agent_id']) ) {
+                            $data['curtain_agent_id']=$_GET['curtain_agent_id'];
                         }
                         if( isset($_GET['curtain_user_id']) ) {
                             $data['curtain_user_id']=$_GET['curtain_user_id'];
@@ -169,14 +150,6 @@ if (!class_exists('otp_service')) {
                         $where=array();
                         $where['serial_number_id']=$_GET['serial_number_id'];
                         $result = self::update_serial_number($data, $where);
-                        $output .= $result.'<br>';
-                    }
-
-                    if( ($_GET['action']=='insert-curtain-user') && (isset($_GET['line_user_id'])) && (isset($_GET['display_name'])) ) {
-                        $data=array();
-                        $data['line_user_id']=$_GET['line_user_id'];
-                        $data['display_name']=$_GET['display_name'];
-                        $result = self::insert_curtain_user($data);
                         $output .= $result.'<br>';
                     }
                 }
@@ -280,7 +253,6 @@ if (!class_exists('otp_service')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}serial_number` (
                 serial_number_id int NOT NULL AUTO_INCREMENT,
-                curtain_product_id int(10),
                 model_number_id int(10),
                 specification_id int(10),
                 curtain_user_id int(10),

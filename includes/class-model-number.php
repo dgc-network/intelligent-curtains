@@ -20,6 +20,32 @@ if (!class_exists('model_number')) {
                 return self::edit_model_number($_POST['_id'], $_POST['_mode']);
             }
 
+            if( ($_GET['action']=='insert-model-number') && (isset($_GET['model_number'])) ) {
+                $data=array();
+                $data['model_number']=$_GET['model_number'];
+                $data['model_description']=$_GET['description'];
+                $data['vendor_name']=$_GET['vendor_name'];
+                $result = self::insert_model_number($data);
+                $output .= $result.'<br>';
+            }
+
+            if( ($_GET['action']=='update-model-number') && (isset($_GET['model_number_id'])) ) {
+                $data=array();
+                if( isset($_GET['model_number']) ) {
+                    $data['model_number']=$_GET['model_number'];
+                }
+                if( isset($_GET['model_description']) ) {
+                    $data['model_description']=$_GET['description'];
+                }
+                if( isset($_GET['vendor_name']) ) {
+                    $data['vendor_name']=$_GET['vendor_name'];
+                }
+                $where=array();
+                $where['model_number_id']=$_GET['model_number_id'];
+                $result = self::update_curtain_products($data, $where);
+                $output .= $result.'<br>';
+            }
+
             if( isset($_POST['create_model_number']) ) {
                 $data=array();
                 $data['model_number']=$_POST['_model_number'];

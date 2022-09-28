@@ -20,6 +20,15 @@ if (!class_exists('curtain_users')) {
                 return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
             }
 
+            if( ($_GET['action']=='insert-curtain-user') && (isset($_GET['line_user_id'])) ) {
+                $data=array();
+                $data['line_user_id']=$_GET['line_user_id'];
+                $data['display_name']=$_GET['display_name'];
+                $data['mobile_phone']=$_GET['mobile_phone'];
+                $result = self::insert_curtain_user($data);
+                $output .= $result.'<br>';
+            }
+                        
             if( isset($_POST['_create_user']) ) {
                 $data=array();
                 $data['line_user_id']=$_POST['_line_user_id'];
