@@ -26,7 +26,7 @@ if (!class_exists('curtain_agents')) {
                 $result = self::insert_serial_number($data);
             }
             
-            if( isset($_POST['create_curtain_agent']) ) {
+            if( isset($_POST['_create_agent']) ) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -38,7 +38,7 @@ if (!class_exists('curtain_agents')) {
                 $result = self::insert_curtain_agent($data);
             }
         
-            if( isset($_POST['update_curtain_agent']) ) {
+            if( isset($_POST['_update_agent']) ) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -53,10 +53,10 @@ if (!class_exists('curtain_agents')) {
             }
         
             global $wpdb;
-            if( isset($_POST['where_curtain_agents']) ) {
-                $where='"%'.$_POST['where_curtain_agents'].'%"';
+            if( isset($_POST['_where_agents']) ) {
+                $where='"%'.$_POST['_where_agents'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_name LIKE {$where}", OBJECT );
-                unset($_POST['where_model_number']);
+                unset($_POST['_where_agents']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
             }
@@ -64,7 +64,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td colspan=6 style="text-align:right">';
             $output .= '<form method="post">';
-            $output .= '<input type="text" name="where_curtain_agents" placeholder="Search...">';
+            $output .= '<input type="text" name="_where_agents" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</td></tr>';
@@ -101,11 +101,13 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
             $output .= '</form>';
 
-            if( isset($_POST['display_qr_code']) ) {
+            //if( isset($_POST['display_qr_code']) ) {
+            if( isset($_POST['_serial_no']) ) {
                 //$serial_no = $_POST['serial_no'];
-                $serial_no = $_POST['display_qr_code'];
+                //$serial_no = $_POST['display_qr_code'];
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
+                $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+                //$output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
             }
                             
             return $output;
@@ -145,9 +147,9 @@ if (!class_exists('curtain_agents')) {
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_curtain_agent">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_agent">';
             } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_curtain_agent">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_agent">';
             }
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
@@ -172,7 +174,8 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<tr>';
                     $output .= '<td></td>';
                     $output .= '<td><form method="post">';
-                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
+                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
+                    //$output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
                     //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
@@ -240,7 +243,7 @@ if (!class_exists('curtain_agents')) {
                 phone2 varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                PRIMARY KEY (curtain_product_id)
+                PRIMARY KEY (curtain_agent_id)
             ) $charset_collate;";
             dbDelta($sql);            
         }
