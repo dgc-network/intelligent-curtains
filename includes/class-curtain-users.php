@@ -20,15 +20,15 @@ if (!class_exists('curtain_users')) {
                 return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
             }
 
-            if( isset($_POST['create_user']) ) {
+            if( isset($_POST['_create_user']) ) {
                 $data=array();
                 $data['line_user_id']=$_POST['_line_user_id'];
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
-                $result = self::insert_curtain_users($data);
+                $result = self::insert_curtain_user($data);
             }
         
-            if( isset($_POST['update_user']) ) {
+            if( isset($_POST['_update_user']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
@@ -98,6 +98,21 @@ if (!class_exists('curtain_users')) {
                 $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_number.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
+            //$output .= '</form>';
+
+            //$output .= '<form method="post">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            if( $_mode=='Create' ) {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_user">';
+            } else {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_user">';
+            }
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+            $output .= '</div>';
+            $output .= '</div>';
             $output .= '</form>';
 
             if( !($_mode=='Create') ) {
@@ -129,21 +144,6 @@ if (!class_exists('curtain_users')) {
                 }
                 $output .= '</tbody></table></figure>';
             }
-
-            $output .= '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_user">';
-            } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_user">';
-            }
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
 
             return $output;
         }
