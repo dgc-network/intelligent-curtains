@@ -14,7 +14,7 @@ if (!class_exists('otp_service')) {
             add_shortcode('registration', __CLASS__ . '::registration');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             //add_shortcode('model-number-list', __CLASS__ . '::list_model_number');
-            add_shortcode('specification-list', __CLASS__ . '::list_specification');
+            //add_shortcode('specification-list', __CLASS__ . '::list_specification');
             add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             self::create_tables();
