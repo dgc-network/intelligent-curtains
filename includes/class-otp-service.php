@@ -1002,7 +1002,7 @@ if (!class_exists('otp_service')) {
                 model_number_id int(10),
                 specification_id int(10),
                 curtain_user_id int(10),
-                agent_id int(10),
+                curtain_agent_id int(10),
                 qr_code_serial_no varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
