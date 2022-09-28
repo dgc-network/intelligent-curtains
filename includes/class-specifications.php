@@ -101,11 +101,11 @@ if (!class_exists('specifications')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_spec_description"></td></tr>';
             } else {
                 $output .= '<input type="hidden" value="'.$row->specification_id.'" name="_specification_id">';
-                $output .= '<tr><td>'.'specification:'.'</td><td><input size="50" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_spec_description" value="'.$row->spec_description.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';

@@ -10,15 +10,9 @@ if (!class_exists('otp_service')) {
          * Class constructor
          */
         public function __construct() {
-            //add_shortcode('product-info', __CLASS__ . '::registration');
             add_shortcode('registration', __CLASS__ . '::registration');
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
-            //add_shortcode('model-number-list', __CLASS__ . '::list_model_number');
-            //add_shortcode('specification-list', __CLASS__ . '::list_specification');
-            add_shortcode('curtain-product-list', __CLASS__ . '::list_curtain_products');
-            //add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             self::create_tables();
-            //self::delete_records();
         }
 
         function push_text_message($text_message='', $line_user_id='') {
@@ -191,176 +185,6 @@ if (!class_exists('otp_service')) {
             return $output;
         }
 
-        function list_curtain_products() {
-
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_curtain_product($_POST['_id'], $_POST['_mode']);
-            }
-
-            if( isset($_POST['generate_serial_no']) ) {
-                $data=array();
-                $data['curtain_product_id']=$_POST['_product_id'];
-                $result = self::insert_serial_number($data);
-                //unset($_POST['generate_serial_no']);
-            }
-            
-            if( isset($_POST['create_product']) ) {
-                $data=array();
-                $data['model_number']=$_POST['_model_number'];
-                $data['specification']=$_POST['_specification'];
-                $data['product_name']=$_POST['_product_name'];
-                $result = self::insert_curtain_products($data);
-            }
-        
-            if( isset($_POST['update_product']) ) {
-                $data=array();
-                $data['model_number']=$_POST['_model_number'];
-                $data['specification']=$_POST['_specification'];
-                $data['product_name']=$_POST['_product_name'];
-                $where=array();
-                $where['curtain_product_id']=$_POST['_product_id'];
-                $result = self::update_curtain_products($data, $where);
-            }
-        
-            global $wpdb;
-            if( isset($_POST['where_products']) ) {
-                $where='"%'.$_POST['where_products'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE product_name LIKE {$where}", OBJECT );
-                unset($_POST['where_products']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
-            }
-            $output  = '<h2>Curtain Products</h2>';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=5 style="text-align:right">';
-            $output .= '<form method="post">';
-            $output .= '<input type="text" name="where_products" placeholder="Search...">';
-            $output .= '<input type="submit" value="Search" name="submit_action">';
-            $output .= '</form>';
-            $output .= '</td></tr>';
-            $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>id</td>';
-            $output .= '<td>model</td>';
-            $output .= '<td>spec</td>';
-            $output .= '<td>product_name</td>';
-            $output .= '<td>update_time</td>';
-            $output .= '</tr>';
-            foreach ( $results as $index=>$result ) {
-                $output .= '<tr>';
-                $output .= '<td>'.$result->curtain_product_id.'</a></td>';
-                $output .= '<td><form method="post">';
-                $output .= '<input type="hidden" value="'.$result->curtain_product_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->model_number.'" name="_mode">';
-                $output .= '<input type="submit" value="'.$result->specification.'" name="_mode">';
-                $output .= '</form></td>';
-                //$output .= '<td>'.$result->model_number.'</a></td>';
-                //$output .= '<td>'.$result->specification.'</td>';
-                $output .= '<td>'.$result->product_name.'</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '</tr>';
-            }
-            $output .= '</tbody></table></figure>';
-            $output .= '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_mode">';
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-
-            if( isset($_POST['display_qr_code']) ) {
-                //$serial_no = $_POST['serial_no'];
-                $serial_no = $_POST['display_qr_code'];
-                $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
-            }
-                            
-            return $output;
-        }
-
-        function edit_curtain_product( $_id=null, $_mode=null ) {
-
-            global $wpdb;
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$_id}", OBJECT );
-            if( $_mode=='Create' ) {
-                $output  = '<h2>New Product</h2>';
-            } else {
-                $output  = '<h2>Product Update</h2>';
-            }
-            $output .= '<form method="post">';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
-            if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number"></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name"></td></tr>';            
-            } else {
-                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number" value="'.$row->model_number.'"></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification" value="'.$row->specification.'"></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name" value="'.$row->product_name.'"></td></tr>';
-            }   
-            $output .= '</tbody></table></figure>';
-
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_product">';
-            } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_product">';
-            }
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-        
-            if( !($_mode=='Create') ) {
-                $where='curtain_product_id='.$row->curtain_product_id;
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
-                $output .= '<figure class="wp-block-table"><table><tbody>';
-                $output .= '<tr style="background-color:yellow">';
-                $output .= '<td></td>';
-                $output .= '<td>serial_no</td>';
-                $output .= '<td>model</td>';
-                $output .= '<td>spec</td>';
-                $output .= '<td>user</td>';
-                $output .= '<td>update_time</td>';
-                $output .= '</tr>';
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<tr>';
-                    $output .= '<td></td>';
-                    $output .= '<td><form method="post">';
-                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
-                    //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
-                    $output .= '</form></td>';
-                    //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                    $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
-                    $output .= '<td>'.$product->model_number.'</td>';
-                    $output .= '<td>'.$product->specification.'</td>';
-                    $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
-                    $output .= '<td>'.$user->display_name.'</td>';
-                    $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                    $output .= '</tr>';
-                }
-                $output .= '</tbody></table></figure>';
-
-                $output .= '<form method="post">';
-                $output .= '<div class="wp-block-buttons">';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_product_id">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '</form>';                
-            }
-
-            return $output;
-        }
-
         function list_serial_number() {
             global $wpdb;
             if( isset($_POST['where_serial_number']) ) {
@@ -390,49 +214,25 @@ if (!class_exists('otp_service')) {
                 $output .= '<tr>';
                 $output .= '<td></td>';
                 $output .= '<td><form method="post">';
-                $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
-                //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form></td>';
-                //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
-                $output .= '<td>'.$product->model_number.'</td>';
-                $output .= '<td>'.$product->specification.'</td>';
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
+                $output .= '<td>'.$model->model_number.'</td>';
+                $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
+                $output .= '<td>'.$spec->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
-                //$output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
 
-            if( isset($_POST['display_qr_code']) ) {
-                $serial_no = $_POST['display_qr_code'];
+            if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
+                $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
             }
                 
             return $output;
-        }
-
-        function insert_curtain_products($data=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'curtain_products';
-            $data = array(
-                'model_number' => $data['model_number'],
-                'specification' => $data['specification'],
-                'product_name' => $data['product_name'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-            $wpdb->insert($table, $data);        
-            return $wpdb->insert_id;
-        }
-
-        function update_curtain_products($data=[], $where=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'curtain_products';
-            $data['update_timestamp'] = time();
-            $wpdb->update($table, $data, $where);
         }
 
         function insert_serial_number($data=[]) {
@@ -456,31 +256,16 @@ if (!class_exists('otp_service')) {
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }
-/*
-            $curtain_product_id = intval($data['curtain_product_id']);
-            $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
-            if (count($product) > 0) {
-                $qr_code_serial_no = $product->model_number . $product->specification . time();
-                $table = $wpdb->prefix.'serial_number';
-                $data = array(
-                    'qr_code_serial_no' => $qr_code_serial_no,
-                    'curtain_product_id' => $data['curtain_product_id'],
-                    'curtain_user_id' => $data['curtain_user_id'],
-                    'create_timestamp' => time(),
-                    'update_timestamp' => time(),
-                );
-                $wpdb->insert($table, $data);
-                return $wpdb->insert_id;
-            }
-*/                
         }
 
         function update_serial_number($data=[], $where=[]) {
             global $wpdb;
-            $curtain_product_id = intval($data['curtain_product_id']);
-            $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$curtain_product_id}", OBJECT );
-            if (count($product) > 0) {
-                $qr_code_serial_no = $product->model_number . $product->specification . time();
+            $model_number_id = $data['model_number_id'];
+            $specification_id = $data['specification_id'];
+            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$model_number_id}", OBJECT );
+            $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
+            if ((count($model) > 0) && (count($spec) > 0)) {
+                $qr_code_serial_no = $model->model_number . $spec->specification . time();
                 $data['qr_code_serial_no'] = $qr_code_serial_no;
             }
             $data['update_timestamp'] = time();
@@ -507,19 +292,6 @@ if (!class_exists('otp_service')) {
                 PRIMARY KEY (serial_number_id)
             ) $charset_collate;";
             dbDelta($sql);
-            
-            $sql = "CREATE TABLE `{$wpdb->prefix}curtain_products` (
-                curtain_product_id int NOT NULL AUTO_INCREMENT,
-                model_number varchar(5),
-                specification varchar(5),
-                product_name varchar(50),
-                create_timestamp int(10),
-                update_timestamp int(10),
-                UNIQUE (model_number),
-                PRIMARY KEY (curtain_product_id)
-            ) $charset_collate;";
-            dbDelta($sql);
-            
         }
     }
     new otp_service();
