@@ -32,6 +32,7 @@ if (!class_exists('line_webhook')) {
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
                                         $otp_service = new otp_service();
+                                        $curtain_users = new curtain_users();
                                         $return_id = 0;
                                         //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
@@ -42,7 +43,7 @@ if (!class_exists('line_webhook')) {
                                             $data['line_user_id']=$profile['userId'];
                                             $data['display_name']=$profile['displayName'];                
                                             $data['last_otp']=$six_digit_random_number;        
-                                            $return_id = $otp_service->insert_curtain_users($data);
+                                            $return_id = $curtain_users->insert_curtain_user($data);
                                         }
                                         
                                         $data=array();

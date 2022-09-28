@@ -43,7 +43,7 @@ if (!class_exists('event_bot')) {
                                         $data['line_user_id']=$profile['userId'];
                                         $data['display_name']=$profile['displayName'];                
                                         $data['last_otp']=$six_digit_random_number;                
-                                        $return_id = $otp_service->insert_curtain_users($data);
+                                        $return_id = $otp_service->insert_curtain_user($data);
                                         
                                         global $wpdb;
                                         $table = $wpdb->prefix.'serial_number';
