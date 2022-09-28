@@ -240,7 +240,6 @@ if (!class_exists('curtain_agents')) {
                 phone2 varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                UNIQUE (model_number),
                 PRIMARY KEY (curtain_product_id)
             ) $charset_collate;";
             dbDelta($sql);            
