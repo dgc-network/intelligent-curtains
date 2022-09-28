@@ -20,13 +20,6 @@ if (!class_exists('model_number')) {
                 return self::edit_model_number($_POST['_id'], $_POST['_mode']);
             }
 
-            if( isset($_POST['generate_serial_no']) ) {
-                $data=array();
-                $data['curtain_product_id']=$_POST['_product_id'];
-                $result = self::insert_serial_number($data);
-                //unset($_POST['generate_serial_no']);
-            }
-            
             if( isset($_POST['create_model_number']) ) {
                 $data=array();
                 $data['model_number']=$_POST['_model_number'];
@@ -92,11 +85,9 @@ if (!class_exists('model_number')) {
             $output .= '</div>';
             $output .= '</form>';
 
-            if( isset($_POST['display_qr_code']) ) {
-                //$serial_no = $_POST['serial_no'];
-                $serial_no = $_POST['display_qr_code'];
+            if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
+                $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
             }
                             
             return $output;
@@ -155,8 +146,7 @@ if (!class_exists('model_number')) {
                     $output .= '<tr>';
                     $output .= '<td></td>';
                     $output .= '<td><form method="post">';
-                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
-                    //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                     $output .= '<td>'.$model->model_number.'</td>';
@@ -168,15 +158,6 @@ if (!class_exists('model_number')) {
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></figure>';
-
-                $output .= '<form method="post">';
-                $output .= '<div class="wp-block-buttons">';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input type="hidden" value="'.$row->model_number_id.'" name="_model_number_id">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '</form>';                
             }
 
             return $output;
@@ -201,6 +182,23 @@ if (!class_exists('model_number')) {
             $table = $wpdb->prefix.'model_number';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        function select_options( $default_id=null ) {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}model_number", OBJECT );
+            $output = '<option value="no_select">-- Select an option --</option>';
+            foreach ($results as $index => $result) {
+                if ( $results[$index]->model_number_id == $default_id ) {
+                    $output .= '<option value="'.$results[$index]->model_number_id.'" selected>';
+                } else {
+                    $output .= '<option value="'.$results[$index]->model_number_id.'">';
+                }
+                $output .= $results[$index]->model_number;
+                $output .= '</option>';        
+            }
+            $output .= '<option value="delete_select">-- Remove this --</option>';
+            return $output;    
         }
 
         function create_tables() {

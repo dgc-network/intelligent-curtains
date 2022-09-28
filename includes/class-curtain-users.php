@@ -101,7 +101,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_user_id">';
                 $output .= '<tr><td>'.'Line User ID:'.'</td><td>'.$row->line_user_id.'</td></tr>';
                 $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
-                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_number.'"></td></tr>';
+                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_phone.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 

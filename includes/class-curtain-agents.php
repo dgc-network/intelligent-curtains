@@ -101,13 +101,9 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
             $output .= '</form>';
 
-            //if( isset($_POST['display_qr_code']) ) {
             if( isset($_POST['_serial_no']) ) {
-                //$serial_no = $_POST['serial_no'];
-                //$serial_no = $_POST['display_qr_code'];
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
-                //$output .= get_site_url().'/service/?serial_no='.$serial_no.'</div></div></div>';
             }
                             
             return $output;
@@ -175,8 +171,6 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<td></td>';
                     $output .= '<td><form method="post">';
                     $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
-                    //$output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
-                    //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                     $output .= '<td>'.$model->model_number.'</td>';
@@ -189,10 +183,15 @@ if (!class_exists('curtain_agents')) {
                 }
                 $output .= '</tbody></table></figure>';
 
+                $model_number = new model_number();
+                $specifications = new specifications();
+
                 $output .= '<form method="post">';
                 $output .= '<div class="wp-block-buttons">';
                 $output .= '<div class="wp-block-button">';
                 $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
+                $output .= '<select name="_model_number_id">'.$model_number->select_options().'</select>';
+                $output .= '<select name="_specification_id">'.$specifications->select_options().'</select>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
                 $output .= '</div>';
                 $output .= '</div>';
