@@ -30,7 +30,7 @@ if (!class_exists('curtain_agents')) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
-                $data['agent_address']=$_POST['_agent_addresss'];
+                $data['agent_address']=$_POST['_agent_address'];
                 $data['contact1']=$_POST['_contact1'];
                 $data['phone1']=$_POST['_phone1'];
                 $data['contact2']=$_POST['_contact2'];
@@ -42,7 +42,7 @@ if (!class_exists('curtain_agents')) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
-                $data['agent_address']=$_POST['_agent_addresss'];
+                $data['agent_address']=$_POST['_agent_address'];
                 $data['contact1']=$_POST['_contact1'];
                 $data['phone1']=$_POST['_phone1'];
                 $data['contact2']=$_POST['_contact2'];
