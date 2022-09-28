@@ -73,6 +73,12 @@ if (!class_exists('curtain_users')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
+
+            if( isset($_POST['_serial_no']) ) {
+                $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+                $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+            }
+                            
             return $output;
         }
 
@@ -98,9 +104,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_number.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
-            //$output .= '</form>';
 
-            //$output .= '<form method="post">';
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             if( $_mode=='Create' ) {
