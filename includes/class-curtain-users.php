@@ -148,7 +148,7 @@ if (!class_exists('curtain_users')) {
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                     $output .= '<td>'.$model->model_number.'</td>';
-                    $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specification WHERE specification_id = {$result->specification_id}", OBJECT );
+                    $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
                     $output .= '<td>'.$spec->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
