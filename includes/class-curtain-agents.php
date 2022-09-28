@@ -17,7 +17,7 @@ if (!class_exists('curtain_agents')) {
         function list_curtain_agents() {
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_curtain_agents($_POST['_id'], $_POST['_mode']);
+                return self::edit_curtain_agent($_POST['_id'], $_POST['_mode']);
             }
 
             if( isset($_POST['generate_serial_no']) ) {
