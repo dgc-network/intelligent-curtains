@@ -210,7 +210,6 @@ if (!class_exists('otp_service')) {
                 $data['specification']=$_POST['_specification'];
                 $data['product_name']=$_POST['_product_name'];
                 $result = self::insert_curtain_products($data);
-                //unset($_POST['create_product']);
             }
         
             if( isset($_POST['update_product']) ) {
@@ -221,7 +220,6 @@ if (!class_exists('otp_service')) {
                 $where=array();
                 $where['curtain_product_id']=$_POST['_product_id'];
                 $result = self::update_curtain_products($data, $where);
-                //unset($_POST['update_product']);
             }
         
             global $wpdb;

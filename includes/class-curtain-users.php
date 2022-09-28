@@ -20,26 +20,44 @@ if (!class_exists('curtain_users')) {
                 return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
             }
 
+            if( isset($_POST['create_user']) ) {
+                $data=array();
+                $data['line_user_id']=$_POST['_line_user_id'];
+                $data['display_name']=$_POST['_display_name'];
+                $data['mobile_phone']=$_POST['_mobile_phone'];
+                $result = self::insert_curtain_users($data);
+            }
+        
+            if( isset($_POST['update_user']) ) {
+                $data=array();
+                $data['display_name']=$_POST['_display_name'];
+                $data['mobile_phone']=$_POST['_mobile_phone'];
+                $where=array();
+                $where['curtain_user_id']=$_POST['_user_id'];
+                $result = self::update_curtain_users($data, $where);
+            }
+        
             global $wpdb;
-            if( isset($_POST['where_users']) ) {
-                $where='"%'.$_POST['where_users'].'%"';
+            if( isset($_POST['_where_users']) ) {
+                $where='"%'.$_POST['_where_users'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
-                unset($_POST['where_users']);
+                unset($_POST['_where_users']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
             }
             $output  = '<h2>Curtain Users</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=4 style="text-align:right">';
+            $output .= '<tr><td colspan=5 style="text-align:right">';
             $output .= '<form method="post">';
-            $output .= '<input type="text" name="where_users" placeholder="Search...">';
+            $output .= '<input type="text" name="_where_users" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
             $output .= '<td>line_user_id</td>';
-            $output .= '<td>display_name</td>';
+            $output .= '<td>name</td>';
+            $output .= '<td>mobile</td>';
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
@@ -49,8 +67,8 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_mode">';
                 $output .= '</form></td>';
-                //$output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
+                $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
@@ -70,17 +88,17 @@ if (!class_exists('curtain_users')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><input size="50" type="text" name="_model_number"></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
-                $output .= '<tr><td>'.'Product Name:'.'</td><td><input size="50" type="text" name="_product_name"></td></tr>';            
+                $output .= '<tr><td>'.'Line User ID:'.'</td><td><input size="50" type="text" name="_line_user_id"></td></tr>';
+                $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name"></td></tr>';
+                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_user_id">';
-                //$output .= '<tr><td>'.'Line User ID:'.'</td><td><input size="50" type="text" name="_line_user_id" value="'.$row->line_user_id.'"></td></tr>';
-                //$output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
                 $output .= '<tr><td>'.'Line User ID:'.'</td><td>'.$row->line_user_id.'</td></tr>';
-                $output .= '<tr><td>'.'Display Name:'.'</td><td>'.$row->display_name.'</td></tr>';
+                $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
+                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_number.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
+            $output .= '</form>';
 
             if( !($_mode=='Create') ) {
                 $where='curtain_user_id='.$row->curtain_user_id;
@@ -98,28 +116,35 @@ if (!class_exists('curtain_users')) {
                     $output .= '<tr>';
                     $output .= '<td></td>';
                     $output .= '<td><form method="post">';
-                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="display_qr_code">';
-                    //$output .= '<input type="hidden" value="'.$result->qr_code_serial_no.'" name="serial_no">';
+                    $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                     $output .= '</form></td>';
-                    //$output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                    $product = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = {$result->curtain_product_id}", OBJECT );
-                    $output .= '<td>'.$product->model_number.'</td>';
-                    $output .= '<td>'.$product->specification.'</td>';
+                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
+                    $output .= '<td>'.$model->model_number.'</td>';
+                    $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specification WHERE specification_id = {$result->specification_id}", OBJECT );
+                    $output .= '<td>'.$spec->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></figure>';
-
-                $output .= '<form method="post">';
-                $output .= '<div class="wp-block-buttons">';
-                $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '</form>';
             }
+
+            $output .= '<form method="post">';
+            $output .= '<div class="wp-block-buttons">';
+            $output .= '<div class="wp-block-button">';
+            if( $_mode=='Create' ) {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_user">';
+            } else {
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_user">';
+            }
+            $output .= '</div>';
+            $output .= '<div class="wp-block-button">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '</form>';
+
             return $output;
         }
 
@@ -141,6 +166,13 @@ if (!class_exists('curtain_users')) {
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }
+        }
+
+        function update_curtain_users($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_users';
+            $data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
         }
 
         function create_tables() {
