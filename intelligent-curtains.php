@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: electric-curtains
- * Plugin URI: https://wordpress.org/plugins/electric-curtains/
+ * Plugin URI: https://wordpress.org/plugins/intelligent-curtains/
  * Description: The leading web api plugin for pig system by shortcode
  * Author: dgc.network
  * Author URI: https://dgc.network/
