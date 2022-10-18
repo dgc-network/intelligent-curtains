@@ -226,7 +226,7 @@ if (!class_exists('otp_service')) {
             //if ((count($model) > 0) && (count($spec) > 0)) {
             if ( count($model) > 0 ) {
                 //$qr_code_serial_no = $model->model_number . $spec->specification . time();
-                $qr_code_serial_no = $model->model_number . $specification . time();
+                $qr_code_serial_no = $model->model_number . $data['specification'] . time();
                 $table = $wpdb->prefix.'serial_number';
                 $data = array(
                     'qr_code_serial_no' => $qr_code_serial_no,
