@@ -221,10 +221,10 @@ if (!class_exists('otp_service')) {
             global $wpdb;
             $model_number_id = $data['model_number_id'];
             //$specification_id = $data['specification_id'];
-            $specification = $data['specification'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$model_number_id}", OBJECT );
             //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
-            if ((count($model) > 0) && (count($spec) > 0)) {
+            //if ((count($model) > 0) && (count($spec) > 0)) {
+            if ( count($model) > 0 ) {
                 //$qr_code_serial_no = $model->model_number . $spec->specification . time();
                 $qr_code_serial_no = $model->model_number . $specification . time();
                 $table = $wpdb->prefix.'serial_number';
