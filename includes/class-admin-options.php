@@ -54,8 +54,8 @@ if (!class_exists('admin_options')) {
             $output .= '</td></tr>';
             $output .= '<tr style="background-color:yellow">';
             $output .= '<td>id</td>';
-            $output .= '<td>spec</td>';
-            $output .= '<td>description</td>';
+            $output .= '<td>title</td>';
+            $output .= '<td>link</td>';
             $output .= '<td>update_time</td>';
             $output .= '</tr>';
             foreach ( $results as $index=>$result ) {
@@ -96,7 +96,7 @@ if (!class_exists('admin_options')) {
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
                 $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_option_title"></td></tr>';
-                $output .= '<tr><td>'.'Option Litle:'.'</td><td><input size="50" type="text" name="_option_link"></td></tr>';
+                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_option_link"></td></tr>';
             } else {
                 $output .= '<input type="hidden" value="'.$row->admin_option_id.'" name="_admin_option_id">';
                 $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_option_title" value="'.$row->option_title.'"></td></tr>';
