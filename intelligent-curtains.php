@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: electric-curtains
+ * Plugin Name: intelligent-curtains
  * Plugin URI: https://wordpress.org/plugins/intelligent-curtains/
  * Description: The leading web api plugin for pig system by shortcode
  * Author: dgc.network
@@ -10,7 +10,7 @@
  * Requires at least: 6.0
  * Tested up to: 6.0.2
  * 
- * Text Domain: electric-curtains
+ * Text Domain: intelligent-curtains
  * Domain Path: /languages/
  */
 

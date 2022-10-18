@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+/*
     $('input').jSearch({ 
         selector  : 'ul',
         child : 'li'
@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
             if (!t.val().length) $('table tr').show();
         }
     });
-    
+*/    
     // open
     $('#basic-demo').PopupWindow("open")
 
@@ -123,6 +123,7 @@ jQuery(document).ready(function($) {
               return;
         }
 */					
+/*
         var $thisbutton = $(this),
         $form = $thisbutton.closest('form.cart'),
         id = $thisbutton.val(),
@@ -170,7 +171,7 @@ jQuery(document).ready(function($) {
                 }
             },
         });
-
+*/
         return false;
     });
 
