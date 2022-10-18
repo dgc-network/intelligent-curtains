@@ -24,7 +24,8 @@ if (!class_exists('curtain_agents')) {
                 $otp_service = new otp_service();
                 $data=array();
                 $data['model_number_id']=$_POST['_model_number_id'];
-                $data['specification_id']=$_POST['_specification_id'];
+                //$data['specification_id']=$_POST['_specification_id'];
+                $data['specification']=$_POST['_specification'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $result = $otp_service->insert_serial_number($data);
             }
@@ -177,8 +178,9 @@ if (!class_exists('curtain_agents')) {
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                     $output .= '<td>'.$model->model_number.'</td>';
-                    $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
-                    $output .= '<td>'.$spec->specification.'</td>';
+                    //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
+                    //$output .= '<td>'.$spec->specification.'</td>';
+                    $output .= '<td>'.$result->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -187,13 +189,14 @@ if (!class_exists('curtain_agents')) {
                 $output .= '</tbody></table></figure>';
 
                 $model_number = new model_number();
-                $specifications = new specifications();
+                //$specifications = new specifications();
 
                 $output .= '<form method="post">';
                 $output .= '<figure class="wp-block-table"><table><tbody>';
                 $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
                 $output .= '<tr><td>'.'Model Number:'.'</td><td><select name="_model_number_id">'.$model_number->select_options().'</select></td></tr>';
-                $output .= '<tr><td>'.'Specification:'.'</td><td><select name="_specification_id">'.$specifications->select_options().'</select></td></tr>';
+                //$output .= '<tr><td>'.'Specification:'.'</td><td><select name="_specification_id">'.$specifications->select_options().'</select></td></tr>';
+                $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
                 $output .= '</tbody></table></figure>';
                 $output .= '<div class="wp-block-buttons">';
                 $output .= '<div class="wp-block-button">';

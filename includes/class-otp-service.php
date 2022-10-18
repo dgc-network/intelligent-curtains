@@ -86,7 +86,7 @@ if (!class_exists('otp_service')) {
                 //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
                 if ((count($model) > 0) && (count($spec) > 0)) {
                     //$output .= '型號:'.$model->model_number.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
-                    $output .= '型號:'.$model->model_number.' 規格: '.$rowspecification.'<br>';
+                    $output .= '型號:'.$model->model_number.' 規格: '.$row->specification.'<br>';
                 }
 
                 if (count($user) > 0) {
@@ -201,7 +201,7 @@ if (!class_exists('otp_service')) {
                 $output .= '<td>'.$model->model_number.'</td>';
                 //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
                 //$output .= '<td>'.$spec->specification.'</td>';
-                $output .= '<td>'.$specification.'</td>';
+                $output .= '<td>'.$result->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
