@@ -83,9 +83,10 @@ if (!class_exists('otp_service')) {
                 }
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$row->model_number_id}", OBJECT );
-                $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
+                //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
                 if ((count($model) > 0) && (count($spec) > 0)) {
-                    $output .= '型號:'.$model->model_number.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
+                    //$output .= '型號:'.$model->model_number.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
+                    $output .= '型號:'.$model->model_number.' 規格: '.$rowspecification.'<br>';
                 }
 
                 if (count($user) > 0) {
@@ -127,10 +128,12 @@ if (!class_exists('otp_service')) {
 
                 if( isset($_GET['action']) ) {
 
-                    if( ($_GET['action']=='insert-serial-number') && (isset($_GET['model_number_id'])) && (isset($_GET['specification_id'])) ) {
+                    //if( ($_GET['action']=='insert-serial-number') && (isset($_GET['model_number_id'])) && (isset($_GET['specification_id'])) ) {
+                    if( ($_GET['action']=='insert-serial-number') && (isset($_GET['model_number_id'])) && (isset($_GET['specification'])) ) {
                         $data=array();
                         $data['model_number_id']=$_GET['model_number_id'];
-                        $data['specification_id']=$_GET['specification_id'];
+                        //$data['specification_id']=$_GET['specification_id'];
+                        $data['specification']=$_GET['specification'];
                         $result = self::insert_serial_number($data);
                         $output .= $result.'<br>';
                     }
@@ -140,8 +143,11 @@ if (!class_exists('otp_service')) {
                         if( isset($_GET['model_number_id']) ) {
                             $data['model_number_id']=$_GET['model_number_id'];
                         }
-                        if( isset($_GET['specification_id']) ) {
-                            $data['specification_id']=$_GET['specification_id'];
+                        //if( isset($_GET['specification_id']) ) {
+                        //    $data['specification_id']=$_GET['specification_id'];
+                        //}
+                        if( isset($_GET['specification']) ) {
+                            $data['specification']=$_GET['specification'];
                         }
                         if( isset($_GET['curtain_agent_id']) ) {
                             $data['curtain_agent_id']=$_GET['curtain_agent_id'];
@@ -193,8 +199,9 @@ if (!class_exists('otp_service')) {
                 $output .= '</form></td>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
                 $output .= '<td>'.$model->model_number.'</td>';
-                $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
-                $output .= '<td>'.$spec->specification.'</td>';
+                //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
+                //$output .= '<td>'.$spec->specification.'</td>';
+                $output .= '<td>'.$specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -215,14 +222,16 @@ if (!class_exists('otp_service')) {
             $model_number_id = $data['model_number_id'];
             $specification_id = $data['specification_id'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$model_number_id}", OBJECT );
-            $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
+            //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
             if ((count($model) > 0) && (count($spec) > 0)) {
-                $qr_code_serial_no = $model->model_number . $spec->specification . time();
+                //$qr_code_serial_no = $model->model_number . $spec->specification . time();
+                $qr_code_serial_no = $model->model_number . $specification . time();
                 $table = $wpdb->prefix.'serial_number';
                 $data = array(
                     'qr_code_serial_no' => $qr_code_serial_no,
                     'model_number_id' => $data['model_number_id'],
-                    'specification_id' => $data['specification_id'],
+                    //'specification_id' => $data['specification_id'],
+                    'specification' => $data['specification'],
                     'curtain_agent_id' => $data['curtain_agent_id'],
                     'curtain_user_id' => $data['curtain_user_id'],
                     'create_timestamp' => time(),
@@ -236,11 +245,13 @@ if (!class_exists('otp_service')) {
         function update_serial_number($data=[], $where=[]) {
             global $wpdb;
             $model_number_id = $data['model_number_id'];
-            $specification_id = $data['specification_id'];
+            //$specification_id = $data['specification_id'];
+            $specification = $data['specification'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$model_number_id}", OBJECT );
-            $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
+            //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$specification_id}", OBJECT );
             if ((count($model) > 0) && (count($spec) > 0)) {
-                $qr_code_serial_no = $model->model_number . $spec->specification . time();
+                //$qr_code_serial_no = $model->model_number . $spec->specification . time();
+                $qr_code_serial_no = $model->model_number . $specification . time();
                 $data['qr_code_serial_no'] = $qr_code_serial_no;
             }
             $data['update_timestamp'] = time();
@@ -257,6 +268,7 @@ if (!class_exists('otp_service')) {
                 serial_number_id int NOT NULL AUTO_INCREMENT,
                 model_number_id int(10),
                 specification_id int(10),
+                specification varchar(10),
                 curtain_user_id int(10),
                 curtain_agent_id int(10),
                 qr_code_serial_no varchar(50),
