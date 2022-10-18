@@ -40,10 +40,11 @@ if (!class_exists('otp_service')) {
 
                 $line_user_id = $_POST['line_user_id'];
 
-                if( $_POST['submit_action']=='Confirm' ) {
+                if( $_POST['submit_action']=='Login' ) {
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
                     if ( $last_otp==$_POST['otp_input'] ) {
-
+                        wp_redirect( home_url().'' ); 
+                        exit;
                     } else {
                         $text_message = 'The '.$_POST['otp_input'].' is a wrong OTP code.';
                         self::push_text_message($text_message, $line_user_id);
@@ -88,17 +89,18 @@ if (!class_exists('otp_service')) {
                 }
 
                 if (count($user) > 0) {
+                    // login
                     $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                     $output .= '<form method="post">';
                     $output .= '<input type="text" name="otp_input">';
                     $output .= '<div class="wp-block-button">';
                     $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Confirm" name="submit_action">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Login" name="submit_action">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                     $output .= '</div>';
                     $output .= '</form>';
                 } else {
-                    // send invitation link by URL for the Line@ account
+                    // registration
                     $six_digit_random_number = random_int(100000, 999999);
                     $data=array();
                     $data['curtain_user_id']=$six_digit_random_number;
