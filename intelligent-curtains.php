@@ -45,7 +45,7 @@ function line_bot_sdk() {
     $client = new LINEBotTiny($channelAccessToken, $channelSecret);
     return $client;
 }
-
+/*
 define('temp_file', ABSPATH.'/_temp_out.txt' );
 
 add_action("activated_plugin", "activation_handler1");
@@ -66,4 +66,5 @@ function pre_output1($action){
         }
     }
 }
+*/
 ?>

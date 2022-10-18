@@ -69,7 +69,7 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 		 */
 		public function __construct() {
 
-			$this->plugin_name = 'electric-curtains';
+			$this->plugin_name = 'intelligent-curtains';
 			$this->version     = '1.0.0';
 
 			$this->load_dependencies();

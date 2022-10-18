@@ -11,11 +11,13 @@ if (!class_exists('line_webhook')) {
          */
         public function __construct() {
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
+            self::create_tables();
         }
 
         public function init() {
             $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
+                self::insertEventLog($event);
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
@@ -25,18 +27,19 @@ if (!class_exists('line_webhook')) {
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
-                                // start my codes from here
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
+                                        // continue the process if the 6 digit number is correct
                                         $otp_service = new otp_service();
                                         $curtain_users = new curtain_users();
                                         $return_id = 0;
                                         //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
+                                            // The user has registered recently
                                             $return_id = $user->curtain_user_id;
                                         } else {
                                             $data=array();
@@ -61,28 +64,36 @@ if (!class_exists('line_webhook')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => '恭喜您完成註冊手續',
+                                                    'text' => '請點擊下方連結進入售後服務區:',
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => home_url().'',
                                                 ]
                                             ]
                                         ]);
+                                    } else {
+                                        // return message for wrong 6 digit number
+                                        $client->replyMessage([
+                                            'replyToken' => $event['replyToken'],
+                                            'messages' => [
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => 'Hi, '.$profile['displayName'],
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => 'message '.$message['text'].' is wrong.',
+                                                ]
+                                            ]
+                                        ]);    
                                     }
                                 } else {
-                                    $client->replyMessage([
-                                        'replyToken' => $event['replyToken'],
-                                        'messages' => [
-                                            [
-                                                'type' => 'text',
-                                                'text' => 'Hi, '.$profile['displayName'],
-                                            ],
-                                            [
-                                                'type' => 'text',
-                                                'text' => 'message '.$message['text'].' is wrong.',
-                                            ]
-                                        ]
-                                    ]);
+                                    //send notification to administrators
                                 }
                                 break;
                             default:
+                                //send notification to administrators
                                 error_log('Unsupported message type: ' . $message['type']);
                                 break;
                         }
@@ -93,6 +104,95 @@ if (!class_exists('line_webhook')) {
                 }    
             }            
         }
+
+        public function insertEventLog($event) {
+
+            switch ($event['type']) {
+                case 'message':
+                    $event_object = $event['message'];
+                    break;
+                case 'unsend':
+                    $event_object = $event['unsend'];
+                    break;
+                case 'memberJoined':
+                    $event_object = $event['joined'];
+                    break;
+                case 'memberLeft':
+                    $event_object = $event['left'];
+                    break;
+                case 'postback':
+                    $event_object = $event['postback'];
+                    break;
+                case 'videoPlayComplete':
+                    $event_object = $event['videoPlayComplete'];
+                    break;
+                case 'beacon':
+                    $event_object = $event['beacon'];
+                    break;
+                case 'accountLink':
+                    $event_object = $event['link'];
+                    break;
+                case 'things':
+                    $event_object = $event['things'];
+                    break;
+            }
+
+            switch ($event['source']['type']) {
+                case 'user':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['userId'];
+                    break;
+                case 'group':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['groupId'];
+                    break;
+                case 'room':
+                    $source_type = $event['source']['type'];
+                    $user_id = $event['source']['userId'];
+                    $group_id = $event['source']['roomId'];
+                    break;
+            }
+
+            global $wpdb;
+            $table = $wpdb->prefix.'eventLogs';
+            $data = array(
+                'event_type' => $event['type'],
+                'event_timestamp' => time(),
+                'source_type' => $source_type,
+                'source_user_id' => $user_id,
+                'source_group_id' => $group_id,
+                'event_replyToken' => $event['replyToken'],
+                //'event_mode' => $event['mode'],
+                //'webhookEventId' => $event['webhookEventId'],
+                //'isRedelivery' => $event['deliveryContext']['isRedelivery'],
+                'event_object' => json_encode($event_object),
+            );
+            $insert_id = $wpdb->insert($table, $data);        
+        }
+    
+        function create_tables() {
+            global $wpdb;
+            $charset_collate = $wpdb->get_charset_collate();
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        
+            $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
+                event_id int NOT NULL AUTO_INCREMENT,
+                event_type varchar(20),
+                event_timestamp int(10),
+                source_type varchar(10),
+                source_user_id varchar(50),
+                source_group_id varchar(50),
+                event_replyToken varchar(50),
+                //event_mode varchar(50),
+                //webhookEventId varchar(50),
+                //isRedelivery boolean,
+                event_object varchar(1000),
+                PRIMARY KEY  (event_id)
+            ) $charset_collate;";
+            dbDelta($sql);
+        }        
     }
 }
 ?>

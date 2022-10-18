@@ -25,6 +25,7 @@ if (!class_exists('curtain_users')) {
                 $data['line_user_id']=$_GET['line_user_id'];
                 $data['display_name']=$_GET['display_name'];
                 $data['mobile_phone']=$_GET['mobile_phone'];
+                $data['user_role']=$_GET['user_role'];
                 $result = self::insert_curtain_user($data);
                 $output .= $result.'<br>';
             }
@@ -34,6 +35,7 @@ if (!class_exists('curtain_users')) {
                 $data['line_user_id']=$_POST['_line_user_id'];
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
+                $data['user_role']=$_POST['_user_role'];
                 $result = self::insert_curtain_user($data);
             }
         
@@ -41,6 +43,7 @@ if (!class_exists('curtain_users')) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
+                $data['user_role']=$_POST['_user_role'];
                 $where=array();
                 $where['curtain_user_id']=$_POST['_user_id'];
                 $result = self::update_curtain_users($data, $where);
@@ -105,12 +108,14 @@ if (!class_exists('curtain_users')) {
             if( $_mode=='Create' ) {
                 $output .= '<tr><td>'.'Line User ID:'.'</td><td><input size="50" type="text" name="_line_user_id"></td></tr>';
                 $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name"></td></tr>';
-                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone"></td></tr>';            
+                $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone"></td></tr>';
+                $output .= '<tr><td>'.'User Role:'.'</td><td><input size="50" type="text" name="_user_role"></td></tr>';
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_user_id">';
                 $output .= '<tr><td>'.'Line User ID:'.'</td><td>'.$row->line_user_id.'</td></tr>';
                 $output .= '<tr><td>'.'Display Name:'.'</td><td><input size="50" type="text" name="_display_name" value="'.$row->display_name.'"></td></tr>';
                 $output .= '<tr><td>'.'Mobile Phone:'.'</td><td><input size="50" type="text" name="_mobile_phone" value="'.$row->mobile_phone.'"></td></tr>';
+                $output .= '<tr><td>'.'User Role:'.'</td><td><input size="50" type="text" name="_user_role" value="'.$row->user_role.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
@@ -173,6 +178,7 @@ if (!class_exists('curtain_users')) {
                     'line_user_id' => $data['line_user_id'],
                     'display_name' => $data['display_name'],
                     'last_otp' => $data['last_otp'],
+                    'user_role' => $data['user_role'],
                     'create_timestamp' => time(),
                     'update_timestamp' => time(),
                 );
@@ -199,6 +205,7 @@ if (!class_exists('curtain_users')) {
                 display_name varchar(50),
                 mobile_phone varchar(20),
                 last_otp varchar(10),
+                user_role varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 UNIQUE (line_user_id),
