@@ -22,10 +22,10 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-options-loader.php';
 include_once dirname( __FILE__ ) . '/includes/class-line-webhook.php';
 include_once dirname( __FILE__ ) . '/includes/class-otp-service.php';
+include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-agents.php';
 include_once dirname( __FILE__ ) . '/includes/class-model-number.php';
-include_once dirname( __FILE__ ) . '/includes/class-specifications.php';
-include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
+include_once dirname( __FILE__ ) . '/includes/class-admin-options.php';
 
 $line_webhook = new line_webhook();
 $line_webhook->init();

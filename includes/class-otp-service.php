@@ -93,8 +93,8 @@ if (!class_exists('otp_service')) {
                 $six_digit_random_number = random_int(100000, 999999);
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
-                $output .= '並按下連結來繼續後續的作業<br>';
+                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
+                $output .= '並按下我們提供的連結來繼續後續的作業<br>';
     
                 if (count($user) > 0) {
                     // login
