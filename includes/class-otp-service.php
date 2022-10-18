@@ -84,34 +84,42 @@ if (!class_exists('otp_service')) {
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$row->model_number_id}", OBJECT );
                 //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
-                if ((count($model) > 0) && (count($spec) > 0)) {
+                //if ((count($model) > 0) && (count($spec) > 0)) {
+                if ( count($model) > 0 ) {
                     //$output .= '型號:'.$model->model_number.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
                     $output .= '型號:'.$model->model_number.' 規格: '.$row->specification.'<br>';
                 }
 
+                $six_digit_random_number = random_int(100000, 999999);
+                $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
+                $output .= '並按下連結來繼續後續的作業<br>';
+    
                 if (count($user) > 0) {
                     // login
-                    $output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
+                    //$output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
+                    $output .= '忘記密碼:';
                     $output .= '<form method="post">';
-                    $output .= '<input type="text" name="otp_input">';
+                    //$output .= '<input type="text" name="otp_input">';
                     $output .= '<div class="wp-block-button">';
                     $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Login" name="submit_action">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Login" name="submit_action">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                     $output .= '</div>';
                     $output .= '</form>';
                 } else {
                     // registration
-                    $six_digit_random_number = random_int(100000, 999999);
+                    //$six_digit_random_number = random_int(100000, 999999);
                     $data=array();
                     $data['curtain_user_id']=$six_digit_random_number;
                     $where=array();
                     $where['qr_code_serial_no']=$qr_code_serial_no;
                     $result = self::update_serial_number($data, $where);
     
-                    $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                    $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.' </p>完成註冊程序<br>';
+                    //$output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                    //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+                    //$output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.' </p>完成註冊程序<br>';
                 }
 
             } else {

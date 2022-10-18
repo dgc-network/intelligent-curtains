@@ -14,7 +14,16 @@ if (!class_exists('curtain_agents')) {
             self::create_tables();
         }
 
-        function list_curtain_agents() {
+        function list_curtain_agents( $_curtain_user_id = 0 ) {
+
+            if( $_curtain_user_id == 0 ) {
+                $six_digit_random_number = random_int(100000, 999999);
+                $output  = '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
+                $output .= '並按下連結來繼續後續的作業<br>';
+                return $output;
+            }
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_agent($_POST['_id'], $_POST['_mode']);
