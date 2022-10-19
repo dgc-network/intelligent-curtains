@@ -114,7 +114,7 @@ if (!class_exists('curtain_service')) {
                 if ( count($model) > 0 ) {
                     $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                 }
-                self::otp_service();
+                return self::otp_service();
 /*
                 $six_digit_random_number = random_int(100000, 999999);
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
