@@ -41,9 +41,11 @@ if (!class_exists('curtain_service')) {
                 $service_option_id = $_POST['_service_option_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = {$service_option_id}", OBJECT );
-                //return $row->service_option_link;
-                wp_redirect( $row->service_option_link );
-                exit();
+                if ( wp_redirect( $row->service_option_link ) ) {
+                    exit();
+                } else {
+                    return $row->service_option_link;
+                }
             }
 
             if( isset($_POST['_submit_action']) ) {
