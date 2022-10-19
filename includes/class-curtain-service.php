@@ -159,7 +159,7 @@ if (!class_exists('curtain_service')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        $output .= '<form method="'.$result->service_option_link.'">';
+                        $output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
                         //$output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_service_option_id">';
                         $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
