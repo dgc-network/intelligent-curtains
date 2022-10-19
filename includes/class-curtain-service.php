@@ -42,7 +42,13 @@ if (!class_exists('curtain_service')) {
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = {$service_option_id}", OBJECT );
                 $url = $row->service_option_link;
-                ob_clean();
+/*
+                ?>
+                <script>window.location='http://www.google.com'</script>
+                <?php
+*/
+                ob_start();
+                //ob_clean();
                 if ( wp_redirect( $url ) ) {
                     exit();
                     //wp_die();
