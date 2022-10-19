@@ -139,7 +139,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         $output .= '<div class="wp-block-button">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->option_title.' name="_option_link">';
+                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->option_title.'" name="_option_link">';
                         $output .= '</div>';
                     }
                     $output .= '</div>';
