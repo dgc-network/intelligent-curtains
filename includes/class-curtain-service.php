@@ -84,10 +84,7 @@ if (!class_exists('curtain_service')) {
                 }
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$row->specification_id}", OBJECT );
-                //if ((count($model) > 0) && (count($spec) > 0)) {
                 if ( count($model) > 0 ) {
-                    //$output .= '型號:'.$model->curtain_model.' 規格: '.$spec->specification.' '.$spec->spec_description.'<br>';
                     $output .= '型號:'.$model->curtain_model.' 規格: '.$row->specification.'<br>';
                 }
 
@@ -95,16 +92,16 @@ if (!class_exists('curtain_service')) {
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
                 $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
-                $output .= '並按下我們提供的連結來繼續後續的作業<br>';
+                $output .= '密碼確認後, 請按下我們提供的連結來繼續後續的作業<br>';
     
                 if (count($user) > 0) {
                     // login
                     //$output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
-                    $output .= '忘記密碼:';
+                    $output .= '如果您忘記密碼, 請按下後方重送的按鍵: ';
                     $output .= '<form method="post">';
+                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
                     //$output .= '<input type="text" name="otp_input">';
                     $output .= '<div class="wp-block-button">';
-                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
                     //$output .= '<input class="wp-block-button__link" type="submit" value="Login" name="submit_action">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
                     $output .= '</div>';
@@ -127,9 +124,27 @@ if (!class_exists('curtain_service')) {
                 // send invitation link by URL for the Line@ account
                 // https://line.me/ti/p/@490tjxdt
                 // <a href="https://lin.ee/LPnyoeD">
-                $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
+                //$output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+                //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+                //$output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
+
+                // Display curtain service menu OR curtain administration menu
+                if (($_GET['_mode']=='admin') ){
+                    $output  = '<h2>Admin Options</h2>';
+
+                } else {
+                    $output  = '<h2>Service Options</h2>';
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-buttons">';
+                    foreach ( $results as $index=>$result ) {
+                        $output .= '<div class="wp-block-button">';
+                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->option_title.' name="_option_link">';
+                        $output .= '</div>';
+                    }
+                    $output .= '</div>';
+                    $output .= '</form>';
+                }
 
             }
             $output .= '</div>';
@@ -166,7 +181,7 @@ if (!class_exists('curtain_service')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
             }
-            $output  = '<h2>Admin Options</h2>';
+            $output  = '<h2>Service Options</h2>';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             $output .= '<tr><td colspan=5 style="text-align:right">';
             $output .= '<form method="post">';
