@@ -17,6 +17,9 @@ if (!class_exists('curtain_agents')) {
         function list_curtain_agents( $_curtain_user_id = 0 ) {
 
             if( $_curtain_user_id == 0 ) {
+                $curtain_service = new curtain_service();
+                return $curtain_service->registration();
+
                 $six_digit_random_number = random_int(100000, 999999);
                 $output = '<div style="text-align:center;">';
                 //$output  = '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
