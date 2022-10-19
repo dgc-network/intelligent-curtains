@@ -10,11 +10,11 @@ if (!class_exists('curtain_models')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_model');
+            add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
             self::create_tables();
         }
 
-        function list_curtain_model() {
+        function list_curtain_models() {
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);

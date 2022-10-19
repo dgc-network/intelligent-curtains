@@ -39,15 +39,15 @@ if (!class_exists('curtain_service')) {
             if ( isset($_POST['_link_submit']) ) {
                 if ( $_POST['_link_submit']=='Agents' ) {
                     $curtain_agents = new curtain_agents();
-                    $curtain_agents->list_curtain_agents();
+                    return $curtain_agents->list_curtain_agents();
                 }
                 if ( $_POST['_link_submit']=='Models' ) {
                     $curtain_models = new curtain_models();
-                    $curtain_models->list_curtain_models();
+                    return $curtain_models->list_curtain_models();
                 }
                 if ( $_POST['_link_submit']=='Users' ) {
                     $curtain_users = new curtain_users();
-                    $curtain_users->list_curtain_users();
+                    return $curtain_users->list_curtain_users();
                 }
             }
 
