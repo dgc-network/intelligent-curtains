@@ -37,13 +37,21 @@ if (!class_exists('curtain_service')) {
 
         function registration() {
 
-            if( isset($_POST['submit_action']) ) {
+            if( isset($_POST['_link_action']) ) {            
+                $service_option_id = $_POST['_service_option_id'];
+                global $wpdb;
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = {$service_option_id}", OBJECT );
+                wp_redirect( $row->service_option_link ); 
+                exit;
+            }
 
-                $line_user_id = $_POST['line_user_id'];
+            if( isset($_POST['_submit_action']) ) {
 
-                if( $_POST['submit_action']=='Login' ) {
+                $line_user_id = $_POST['_line_user_id'];
+
+                if( $_POST['_submit_action']=='Login' ) {
                     // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
-                    if ( $last_otp==$_POST['otp_input'] ) {
+                    if ( $last_otp==$_POST['_otp_input'] ) {
                         wp_redirect( home_url().'' ); 
                         exit;
                     } else {
@@ -52,7 +60,7 @@ if (!class_exists('curtain_service')) {
                     }
                 }
 
-                if( $_POST['submit_action']=='Resend' ) {
+                if( $_POST['_submit_action']=='Resend' ) {
 
                     self::push_OTP_to($line_user_id);
 
@@ -99,11 +107,11 @@ if (!class_exists('curtain_service')) {
                     //$output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                     $output .= '如果您忘記密碼, 請按下後方重送的按鍵: ';
                     $output .= '<form method="post">';
-                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="line_user_id">';
-                    //$output .= '<input type="text" name="otp_input">';
+                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="_line_user_id">';
+                    //$output .= '<input type="text" name="_otp_input">';
                     $output .= '<div class="wp-block-button">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Login" name="submit_action">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="submit_action">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Login" name="_submit_action">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="_submit_action">';
                     $output .= '</div>';
                     $output .= '</form>';
                 } else {
@@ -141,7 +149,8 @@ if (!class_exists('curtain_service')) {
                     foreach ( $results as $index=>$result ) {
                         $output .= '<form method="post">';
                         $output .= '<div class="wp-block-button">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'" name="_service_option_link">';
+                        $output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_service_option_id">';
+                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'" name="_link_action">';
                         $output .= '</div>';
                         $output .= '</form>';
                     }
@@ -233,12 +242,12 @@ if (!class_exists('curtain_service')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_service_option_title"></td></tr>';
-                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_service_option_link"></td></tr>';
+                $output .= '<tr><td>'.'Title:'.'</td><td><input size="50" type="text" name="_service_option_title"></td></tr>';
+                $output .= '<tr><td>'.'Link:'.'</td><td><input size="50" type="text" name="_service_option_link"></td></tr>';
             } else {
                 $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
-                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_service_option_title" value="'.$row->service_option_title.'"></td></tr>';
-                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_service_option_link" value="'.$row->service_option_link.'"></td></tr>';
+                $output .= '<tr><td>'.'Title:'.'</td><td><input size="50" type="text" name="_service_option_title" value="'.$row->service_option_title.'"></td></tr>';
+                $output .= '<tr><td>'.'Link:'.'</td><td><input size="50" type="text" name="_service_option_link" value="'.$row->service_option_link.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
@@ -287,7 +296,7 @@ if (!class_exists('curtain_service')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}service_options` (
                 service_option_id int NOT NULL AUTO_INCREMENT,
                 service_option_title varchar(20),
-                service_option_link varchar(50),
+                service_option_link varchar(255),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (service_option_id)
