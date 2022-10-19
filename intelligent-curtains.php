@@ -26,6 +26,7 @@ include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-agents.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-model.php';
 include_once dirname( __FILE__ ) . '/includes/class-serial-number.php';
+add_option('_service_page', 'service');
 
 $line_webhook = new line_webhook();
 $line_webhook->init();

@@ -116,7 +116,8 @@ if (!class_exists('curtain_agents')) {
 
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+                //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
             }
                             
             return $output;

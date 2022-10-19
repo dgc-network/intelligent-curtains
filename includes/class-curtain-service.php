@@ -37,43 +37,10 @@ if (!class_exists('curtain_service')) {
 
         function registration() {
 
-            if( isset($_POST['_link_action']) ) {            
-                $service_option_id = $_POST['_service_option_id'];
-                global $wpdb;
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = {$service_option_id}", OBJECT );
-                $url = $row->service_option_link;
-/*
-                ?>
-                <script>window.location='http://www.google.com'</script>
-                <?php
-*/
-                ob_start();
-                //ob_clean();
-                if ( wp_redirect( $url ) ) {
-                    exit();
-                    //wp_die();
-                } else {
-                    return $row->service_option_link;
-                }
-            }
-
             if( isset($_POST['_submit_action']) ) {
-
-                $line_user_id = $_POST['_line_user_id'];
-
-                if( $_POST['_submit_action']=='Login' ) {
-                    // check the $_POST['otp_input'] to match the last_otp field in curtain_users table
-                    if ( $last_otp==$_POST['_otp_input'] ) {
-                        wp_redirect( home_url().'' ); 
-                        exit;
-                    } else {
-                        $text_message = 'The '.$_POST['otp_input'].' is a wrong OTP code.';
-                        self::push_text_message($text_message, $line_user_id);
-                    }
-                }
-
                 if( $_POST['_submit_action']=='Resend' ) {
 
+                    $line_user_id = $_POST['_line_user_id'];
                     self::push_OTP_to($line_user_id);
 
                     global $wpdb;
@@ -91,7 +58,7 @@ if (!class_exists('curtain_service')) {
 
             $qr_code_serial_no = $_GET['serial_no'];
             
-            $output = '<div>';
+            $output = '<div style="text-align:center;">';
             global $wpdb;
             //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = {$qr_code_serial_no}", OBJECT );
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
@@ -116,60 +83,42 @@ if (!class_exists('curtain_service')) {
     
                 if (count($user) > 0) {
                     // login
-                    //$output .= '請輸入我們送到您Line帳號的OTP(一次性密碼):';
                     $output .= '如果您忘記密碼, 請按下後方重送的按鍵: ';
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="_line_user_id">';
-                    //$output .= '<input type="text" name="_otp_input">';
                     $output .= '<div class="wp-block-button">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Login" name="_submit_action">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="_submit_action">';
                     $output .= '</div>';
                     $output .= '</form>';
                 } else {
                     // registration
-                    //$six_digit_random_number = random_int(100000, 999999);
                     $data=array();
                     $data['curtain_user_id']=$six_digit_random_number;
                     $where=array();
                     $where['qr_code_serial_no']=$qr_code_serial_no;
                     $result = self::update_serial_number($data, $where);
-    
-                    //$output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                    //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                    //$output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br> 並在Line聊天室中輸入六位數字註冊密碼: <p style="color:blue">'.$six_digit_random_number.' </p>完成註冊程序<br>';
                 }
 
             } else {
-                // send invitation link by URL for the Line@ account
-                // https://line.me/ti/p/@490tjxdt
-                // <a href="https://lin.ee/LPnyoeD">
-                //$output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                //$output .= ' 加入我們的官方帳號, 讓我們成為您的好友,<br>';
-
                 // Display curtain service menu OR curtain administration menu
                 if (($_GET['_mode']=='admin') ){
                     $output .= '<h2>Admin Options</h2>';
 
                 } else {
                     $output .= '<h2>Service Options</h2>';
-
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         $output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
-                        //$output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_service_option_id">';
                         $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
                         $output .= '</div>';
                         $output .= '</form>';
+                        //$output .= '<br>';
                     }
                     $output .= '</div>';
-
                 }
-
             }
             $output .= '</div>';
             return $output;
@@ -309,6 +258,7 @@ if (!class_exists('curtain_service')) {
                 service_option_id int NOT NULL AUTO_INCREMENT,
                 service_option_title varchar(20),
                 service_option_link varchar(255),
+                service_option_category int(2),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (service_option_id)
