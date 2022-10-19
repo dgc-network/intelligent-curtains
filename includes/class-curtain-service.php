@@ -130,20 +130,23 @@ if (!class_exists('curtain_service')) {
 
                 // Display curtain service menu OR curtain administration menu
                 if (($_GET['_mode']=='admin') ){
-                    $output  = '<h2>Admin Options</h2>';
+                    $output .= '<h2>Admin Options</h2>';
 
                 } else {
-                    $output  = '<h2>Service Options</h2>';
+                    $output .= '<h2>Service Options</h2>';
+/*                    
+                    global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
                     $output .= '<form method="post">';
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         $output .= '<div class="wp-block-button">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->option_title.'" name="_option_link">';
+                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'" name="_service_option_link">';
                         $output .= '</div>';
                     }
                     $output .= '</div>';
                     $output .= '</form>';
+*/                    
                 }
 
             }
@@ -159,15 +162,15 @@ if (!class_exists('curtain_service')) {
 
             if( isset($_POST['_create_service_option']) ) {
                 $data=array();
-                $data['option_title']=$_POST['_option_title'];
-                $data['option_link']=$_POST['_option_link'];
+                $data['service_option_title']=$_POST['_service_option_title'];
+                $data['service_option_link']=$_POST['_service_option_link'];
                 $result = self::insert_service_option($data);
             }
         
             if( isset($_POST['_update_service_option']) ) {
                 $data=array();
-                $data['option_title']=$_POST['_option_title'];
-                $data['option_link']=$_POST['_option_link'];
+                $data['service_option_title']=$_POST['_service_option_title'];
+                $data['service_option_link']=$_POST['_service_option_link'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $result = self::update_service_options($data, $where);
@@ -176,7 +179,7 @@ if (!class_exists('curtain_service')) {
             global $wpdb;
             if( isset($_POST['_where_service_options']) ) {
                 $where='"%'.$_POST['_where_service_options'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE option_title LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title LIKE {$where}", OBJECT );
                 unset($_POST['_where_service_options']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
@@ -200,9 +203,9 @@ if (!class_exists('curtain_service')) {
                 $output .= '<td>'.$result->service_option_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->option_title.'" name="_mode">';
+                $output .= '<input type="submit" value="'.$result->service_option_title.'" name="_mode">';
                 $output .= '</form></td>';
-                $output .= '<td>'.$result->option_link.'</td>';
+                $output .= '<td>'.$result->service_option_link.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
@@ -211,8 +214,6 @@ if (!class_exists('curtain_service')) {
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_mode">';
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
@@ -232,12 +233,12 @@ if (!class_exists('curtain_service')) {
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_option_title"></td></tr>';
-                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_option_link"></td></tr>';
+                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_service_option_title"></td></tr>';
+                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_service_option_link"></td></tr>';
             } else {
                 $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
-                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_option_title" value="'.$row->option_title.'"></td></tr>';
-                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_option_link" value="'.$row->option_link.'"></td></tr>';
+                $output .= '<tr><td>'.'Option Title:'.'</td><td><input size="50" type="text" name="_service_option_title" value="'.$row->service_option_title.'"></td></tr>';
+                $output .= '<tr><td>'.'Option Link:'.'</td><td><input size="50" type="text" name="_service_option_link" value="'.$row->service_option_link.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
@@ -262,8 +263,8 @@ if (!class_exists('curtain_service')) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
             $data = array(
-                'option_title' => $data['option_title'],
-                'option_link' => $data['option_link'],
+                'service_option_title' => $data['service_option_title'],
+                'service_option_link' => $data['service_option_link'],
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
@@ -285,11 +286,11 @@ if (!class_exists('curtain_service')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}service_options` (
                 service_option_id int NOT NULL AUTO_INCREMENT,
-                option_title varchar(20),
-                option_link varchar(50),
+                service_option_title varchar(20),
+                service_option_link varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                UNIQUE (option_title),
+                UNIQUE (service_option_title),
                 PRIMARY KEY (service_option_id)
             ) $charset_collate;";
             dbDelta($sql);            
