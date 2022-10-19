@@ -27,6 +27,7 @@ include_once dirname( __FILE__ ) . '/includes/class-curtain-models.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-serial-number.php';
 add_option('_service_page', 'service');
+add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $line_webhook = new line_webhook();
 $line_webhook->init();
