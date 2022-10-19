@@ -134,19 +134,19 @@ if (!class_exists('curtain_service')) {
 
                 } else {
                     $output .= '<h2>Service Options</h2>';
-/*                    
+
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
-                    $output .= '<form method="post">';
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
+                        $output .= '<form method="post">';
                         $output .= '<div class="wp-block-button">';
                         $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'" name="_service_option_link">';
                         $output .= '</div>';
+                        $output .= '</form>';
                     }
                     $output .= '</div>';
-                    $output .= '</form>';
-*/                    
+
                 }
 
             }
@@ -290,7 +290,6 @@ if (!class_exists('curtain_service')) {
                 service_option_link varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                UNIQUE (service_option_title),
                 PRIMARY KEY (service_option_id)
             ) $charset_collate;";
             dbDelta($sql);            
