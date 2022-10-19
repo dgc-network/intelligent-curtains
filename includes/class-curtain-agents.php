@@ -17,6 +17,7 @@ if (!class_exists('curtain_agents')) {
         function list_curtain_agents( $_curtain_user_id = 0 ) {
 
             if( $_curtain_user_id == 0 ) {
+                return;
                 $six_digit_random_number = random_int(100000, 999999);
                 $output  = '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
