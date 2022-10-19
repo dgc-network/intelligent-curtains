@@ -22,9 +22,9 @@ include_once dirname( __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-options-loader.php';
 include_once dirname( __FILE__ ) . '/includes/class-line-webhook.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-service.php';
-include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-agents.php';
-include_once dirname( __FILE__ ) . '/includes/class-curtain-model.php';
+include_once dirname( __FILE__ ) . '/includes/class-curtain-models.php';
+include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-serial-number.php';
 add_option('_service_page', 'service');
 

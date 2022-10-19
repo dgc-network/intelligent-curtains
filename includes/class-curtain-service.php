@@ -34,6 +34,33 @@ if (!class_exists('curtain_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
+        function otp_service() {
+            $six_digit_random_number = random_int(100000, 999999);
+            $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
+            $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
+            $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+            $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
+
+            if (count($user) > 0) {
+                // login
+                $data=array();
+                $data['last_otp']=$six_digit_random_number;
+                $where=array();
+                $where['curtain_user_id']=$user->curtain_user_id;
+                $curtain_users = new curtain_users();
+                $result = $curtain_users->update_curtain_users($data, $where);
+                
+            } else {
+                // registration
+                $data=array();
+                $data['curtain_user_id']=$six_digit_random_number;
+                $where=array();
+                $where['qr_code_serial_no']=$qr_code_serial_no;
+                $serial_number = new serial_number();
+                $result = $serial_number->update_serial_number($data, $where);
+            }
+        }
+
         function registration() {
 
             if ( isset($_POST['_link_submit']) ) {
@@ -74,7 +101,6 @@ if (!class_exists('curtain_service')) {
             
             $output = '<div style="text-align:center;">';
             global $wpdb;
-            //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = {$qr_code_serial_no}", OBJECT );
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
             if (count($row) > 0) {
 
@@ -88,24 +114,16 @@ if (!class_exists('curtain_service')) {
                 if ( count($model) > 0 ) {
                     $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                 }
-
+                self::otp_service();
+/*
                 $six_digit_random_number = random_int(100000, 999999);
                 $output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <p style="color:blue">'.$six_digit_random_number.'</p>';
-                $output .= '密碼確認後, 請按下我們提供的連結來繼續後續的作業<br>';
+                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
     
                 if (count($user) > 0) {
                     // login
-/*
-                    $output .= '如果您忘記密碼, 請按下後方重送的按鍵: ';
-                    $output .= '<form method="post">';
-                    $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="_line_user_id">';
-                    $output .= '<div class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="_submit_action">';
-                    $output .= '</div>';
-                    $output .= '</form>';
-*/
                     $data=array();
                     $data['last_otp']=$six_digit_random_number;
                     $where=array();
@@ -119,15 +137,14 @@ if (!class_exists('curtain_service')) {
                     $data['curtain_user_id']=$six_digit_random_number;
                     $where=array();
                     $where['qr_code_serial_no']=$qr_code_serial_no;
-                    //$result = self::update_serial_number($data, $where);
                     $serial_number = new serial_number();
                     $result = $serial_number->update_serial_number($data, $where);
                 }
-
+*/
             } else {
                 // Display curtain service menu OR curtain administration menu
                 if (($_GET['_mode']=='admin') ){
-                    $output .= '<h2>Admin Options</h2>';
+                    //$output .= '<h2>Admin Options</h2>';
                     $output .= '<div class="wp-block-buttons">';
                     $output .= '<form method="post">';
                     $output .= '<div class="wp-block-button">';
@@ -150,7 +167,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
 
                 } else {
-                    $output .= '<h2>Service Options</h2>';
+                    //$output .= '<h2>Service Options</h2>';
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
                     $output .= '<div class="wp-block-buttons">';

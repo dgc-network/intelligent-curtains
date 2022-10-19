@@ -210,7 +210,7 @@ if (!class_exists('curtain_agents')) {
                 $output .= '</tbody></table></figure>';
                 $output .= '<div class="wp-block-buttons">';
                 $output .= '<div class="wp-block-button">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="New a Serial No" name="generate_serial_no">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Generate a Serial Number" name="generate_serial_no">';
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '</form>';                
