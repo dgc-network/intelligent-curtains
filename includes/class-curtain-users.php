@@ -151,8 +151,8 @@ if (!class_exists('curtain_users')) {
                     $output .= '<td><form method="post">';
                     $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                     $output .= '</form></td>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}model_number WHERE model_number_id = {$result->model_number_id}", OBJECT );
-                    $output .= '<td>'.$model->model_number.'</td>';
+                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
+                    $output .= '<td>'.$model->curtain_model.'</td>';
                     $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
                     $output .= '<td>'.$spec->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
