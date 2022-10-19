@@ -186,8 +186,8 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<td><form method="post">';
                     $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                     $output .= '</form></td>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
-                    $output .= '<td>'.$model->curtain_model.'</td>';
+                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
+                    $output .= '<td>'.$model->curtain_model_name.'</td>';
                     //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
                     //$output .= '<td>'.$spec->specification.'</td>';
                     $output .= '<td>'.$result->specification.'</td>';
@@ -198,13 +198,13 @@ if (!class_exists('curtain_agents')) {
                 }
                 $output .= '</tbody></table></figure>';
 
-                $curtain_model = new curtain_model();
+                $curtain_models = new curtain_models();
                 //$specifications = new specifications();
 
                 $output .= '<form method="post">';
                 $output .= '<figure class="wp-block-table"><table><tbody>';
                 $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
-                $output .= '<tr><td>'.'Model Number:'.'</td><td><select name="_curtain_model_id">'.$curtain_model->select_options().'</select></td></tr>';
+                $output .= '<tr><td>'.'Model Number:'.'</td><td><select name="_curtain_model_id">'.$curtain_models->select_options().'</select></td></tr>';
                 //$output .= '<tr><td>'.'Specification:'.'</td><td><select name="_specification_id">'.$specifications->select_options().'</select></td></tr>';
                 $output .= '<tr><td>'.'Specification:'.'</td><td><input size="50" type="text" name="_specification"></td></tr>';
                 $output .= '</tbody></table></figure>';

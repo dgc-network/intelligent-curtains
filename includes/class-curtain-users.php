@@ -152,10 +152,11 @@ if (!class_exists('curtain_users')) {
                     $output .= '<td><form method="post">';
                     $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                     $output .= '</form></td>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
-                    $output .= '<td>'.$model->curtain_model.'</td>';
-                    $spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
-                    $output .= '<td>'.$spec->specification.'</td>';
+                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
+                    $output .= '<td>'.$model->curtain_model_name.'</td>';
+                    //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
+                    //$output .= '<td>'.$spec->specification.'</td>';
+                    $output .= '<td>'.$result->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';

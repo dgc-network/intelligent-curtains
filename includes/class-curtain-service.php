@@ -12,7 +12,6 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('registration', __CLASS__ . '::registration');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
-            //add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             self::create_tables();
         }
 
@@ -70,9 +69,9 @@ if (!class_exists('curtain_service')) {
                     $output .= 'Hi, '.$user->display_name.'<br>';
                 }
                 $output .= '感謝您選購我們的電動窗簾<br>';
-                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
                 if ( count($model) > 0 ) {
-                    $output .= '型號:'.$model->curtain_model.' 規格: '.$row->specification.'<br>';
+                    $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                 }
 
                 $six_digit_random_number = random_int(100000, 999999);
@@ -83,6 +82,7 @@ if (!class_exists('curtain_service')) {
     
                 if (count($user) > 0) {
                     // login
+/*
                     $output .= '如果您忘記密碼, 請按下後方重送的按鍵: ';
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" value="'.$user->line_user_id.'" name="_line_user_id">';
@@ -90,13 +90,23 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Resend" name="_submit_action">';
                     $output .= '</div>';
                     $output .= '</form>';
+*/
+                    $data=array();
+                    $data['last_otp']=$six_digit_random_number;
+                    $where=array();
+                    $where['curtain_user_id']=$user->curtain_user_id;
+                    $curtain_users = new curtain_users();
+                    $result = $curtain_users->update_curtain_users($data, $where);
+                    
                 } else {
                     // registration
                     $data=array();
                     $data['curtain_user_id']=$six_digit_random_number;
                     $where=array();
                     $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $result = self::update_serial_number($data, $where);
+                    //$result = self::update_serial_number($data, $where);
+                    $serial_number = new serial_number();
+                    $result = $serial_number->update_serial_number($data, $where);
                 }
 
             } else {

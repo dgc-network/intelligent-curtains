@@ -79,8 +79,8 @@ if (!class_exists('serial_number')) {
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form></td>';
-                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
-                $output .= '<td>'.$model->curtain_model.'</td>';
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
+                $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                 $output .= '<td>'.$user->display_name.'</td>';
@@ -101,9 +101,9 @@ if (!class_exists('serial_number')) {
         function insert_serial_number($data=[]) {
             global $wpdb;
             $curtain_model_id = $data['curtain_model_id'];
-            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
+            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
             if ( count($model) > 0 ) {
-                $qr_code_serial_no = $model->curtain_model . $data['specification'] . time();
+                $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time();
                 $table = $wpdb->prefix.'serial_number';
                 $data = array(
                     'qr_code_serial_no' => $qr_code_serial_no,
@@ -123,9 +123,9 @@ if (!class_exists('serial_number')) {
             global $wpdb;
             $curtain_model_id = $data['curtain_model_id'];
             $specification = $data['specification'];
-            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_model WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
+            $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
             if ((count($model) > 0) && (count($spec) > 0)) {
-                $qr_code_serial_no = $model->curtain_model . $specification . time();
+                $qr_code_serial_no = $model->curtain_model_name . $specification . time();
                 $data['qr_code_serial_no'] = $qr_code_serial_no;
             }
             $data['update_timestamp'] = time();
