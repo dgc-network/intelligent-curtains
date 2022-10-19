@@ -36,6 +36,21 @@ if (!class_exists('curtain_service')) {
 
         function registration() {
 
+            if ( isset($_POST['_link_submit']) ) {
+                if ( $_POST['_link_submit']=='Agents' ) {
+                    $curtain_agents = new curtain_agents();
+                    $curtain_agents->list_curtain_agents();
+                }
+                if ( $_POST['_link_submit']=='Models' ) {
+                    $curtain_models = new curtain_models();
+                    $curtain_models->list_curtain_models();
+                }
+                if ( $_POST['_link_submit']=='Users' ) {
+                    $curtain_users = new curtain_users();
+                    $curtain_users->list_curtain_users();
+                }
+            }
+
             if( isset($_POST['_submit_action']) ) {
                 if( $_POST['_submit_action']=='Resend' ) {
 
@@ -113,6 +128,23 @@ if (!class_exists('curtain_service')) {
                 // Display curtain service menu OR curtain administration menu
                 if (($_GET['_mode']=='admin') ){
                     $output .= '<h2>Admin Options</h2>';
+                    $output .= '<div class="wp-block-buttons">';
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Agents" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Models" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Users" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+                    $output .= '</div>';
 
                 } else {
                     $output .= '<h2>Service Options</h2>';
@@ -125,7 +157,6 @@ if (!class_exists('curtain_service')) {
                         $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
                         $output .= '</div>';
                         $output .= '</form>';
-                        //$output .= '<br>';
                     }
                     $output .= '</div>';
                 }
