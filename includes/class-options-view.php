@@ -30,7 +30,6 @@ class Options_View {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 
 	}
 

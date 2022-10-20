@@ -14,10 +14,27 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
+        function line_bot_sdk() {
+            $channelAccessToken = '';
+            $channelSecret = '';
+            if (file_exists(MY_PLUGIN_DIR . '/line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file(MY_PLUGIN_DIR . '/line-bot-sdk-tiny/config.ini', true);
+                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                    error_log("config.ini uncompleted!", 0);
+                } else {
+                    $channelAccessToken = $config['Channel']['Token'];
+                    $channelSecret = $config['Channel']['Secret'];
+                }
+            }
+            $client = new LINEBotTiny($channelAccessToken, $channelSecret);
+            return $client;
+        }
+        
         public function init() {
-            $client = line_bot_sdk();
+            //$client = line_bot_sdk();
+            $client = self::line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
-                self::insertEventLog($event);
+                self::insert_event_log($event);
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
@@ -105,7 +122,7 @@ if (!class_exists('line_webhook')) {
             }            
         }
 
-        public function insertEventLog($event) {
+        function insert_event_log($event) {
 
             switch ($event['type']) {
                 case 'message':

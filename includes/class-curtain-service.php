@@ -16,7 +16,9 @@ if (!class_exists('curtain_service')) {
         }
 
         function push_text_message($text_message='', $line_user_id='') {
-            $client = line_bot_sdk();
+            //$client = line_bot_sdk();
+            $line_webhook = new line_webhook();
+            $client = $line_webhook->line_bot_sdk();
             $client->pushMessage([
                 'to' => $line_user_id,
                 'messages' => [
