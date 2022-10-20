@@ -30,6 +30,7 @@ class Options_View {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 
 	}
 
@@ -60,27 +61,21 @@ class Options_View {
 
 	function enqueue_scripts() {
 		
-		//define('MY_PLUGIN_DIR', get_option('_my_plugin_dir'));
-
-		wp_enqueue_script( 'jquery-js', get_option('_my_plugin_dir') . '/assets/js/jquery.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'qrcode-js', get_option('_my_plugin_dir') . '/assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'popup-js',  get_option('_my_plugin_dir') . '/assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'jquery-js', MY_PLUGIN_DIR . '/assets/js/jquery.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'qrcode-js', MY_PLUGIN_DIR . '/assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'popup-js',  MY_PLUGIN_DIR . '/assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
 		//wp_enqueue_script( 'easysearch-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.easysearch.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'chat-js',  get_option('_my_plugin_dir') . '/chat/js/chat.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'chat-js',  MY_PLUGIN_DIR . '/chat/js/chat.js', array( 'jquery' ), time(), true );
 
-		wp_enqueue_script( 'custom-js', get_option('_my_plugin_dir') . '/assets/js/options-view.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'custom-js', MY_PLUGIN_DIR . '/assets/js/options-view.js', array( 'jquery' ), time(), true );
 		
-		wp_enqueue_style( 'style-css', get_option('_my_plugin_dir') . '/assets/css/options-view.css', '', time() );
-		wp_enqueue_style( 'popup-css', get_option('_my_plugin_dir') . '/assets/css/popupwindow.min.css', '', time() );
-		wp_enqueue_style( 'chat-css', get_option('_my_plugin_dir') . '/chat/css/chat.css', '', time() );
-		wp_enqueue_style( 'screen-css', get_option('_my_plugin_dir') . '/chat/css/screen.css', '', time() );
-/*
-		wp_enqueue_script( 'jquery-js', 'assets/js/jquery.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'qrcode-js', 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_style( 'style-css', MY_PLUGIN_DIR . '/assets/css/options-view.css', '', time() );
+		wp_enqueue_style( 'popup-css', MY_PLUGIN_DIR . '/assets/css/popupwindow.min.css', '', time() );
+		wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
+		wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
 
-		wp_enqueue_script( 'custom-js', 'assets/js/options-view.js', array( 'jquery' ), time(), true );
-		wp_enqueue_style( 'style-css', 'assets/css/options-view.css', '', time() );
-*/
+		//wp_enqueue_style( 'style-css', 'assets/css/options-view.css', '', time() );
+
 		// Load the datepicker script (pre-registered in WordPress).
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
