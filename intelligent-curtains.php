@@ -17,8 +17,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-include_once plugins_url( '', __FILE__ ) . '/line-bot-sdk-tiny/LINEBotTiny.php';
+define('MY_PLUGIN_DIR', plugin_dir_path(dirname( __FILE__ )));
+include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-options-loader.php';
 include_once dirname( __FILE__ ) . '/includes/class-line-webhook.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-service.php';
