@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-include_once WP_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
+include_once plugin_dir_path( dirname( __FILE__ ) ) . 'line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-options-loader.php';
 include_once dirname( __FILE__ ) . '/includes/class-line-webhook.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-service.php';
