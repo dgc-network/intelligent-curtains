@@ -115,8 +115,9 @@ jQuery(document).ready(function($) {
      * AJAX for Woocommerce Add To Cart button
      */
     $( '.single_add_to_cart_button' ).on( 'click', function(e) {
+/*        
         e.preventDefault();
-/*
+
         var myInput = document.getElementById("start_date_input");
         if !(myInput && myInput.value) {
               alert("My input has no value!");
@@ -171,8 +172,9 @@ jQuery(document).ready(function($) {
                 }
             },
         });
-*/
+
         return false;
+*/        
     });
 
     /*
