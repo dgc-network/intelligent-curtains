@@ -60,15 +60,18 @@ class Options_View {
 
 	function enqueue_scripts() {
 		
-		wp_enqueue_script( 'jquery-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'popup-js', plugin_dir_url( __FILE__ ) . 'assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'jquery-js', MY_PLUGIN_DIR . '/assets/js/jquery.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'qrcode-js', MY_PLUGIN_DIR . '/assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'popup-js',  MY_PLUGIN_DIR . '/assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
 		//wp_enqueue_script( 'easysearch-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.easysearch.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'chat-js',  MY_PLUGIN_DIR . '/chat/js/chat.js', array( 'jquery' ), time(), true );
 
-		wp_enqueue_script( 'custom-js', plugin_dir_url( __FILE__ ) . 'assets/js/options-view.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'custom-js', MY_PLUGIN_DIR . '/assets/js/options-view.js', array( 'jquery' ), time(), true );
 		
-		wp_enqueue_style( 'style-css', plugin_dir_url( __FILE__ ) . 'assets/css/options-view.css', '', time() );
-		wp_enqueue_style( 'popup-css', plugin_dir_url( __FILE__ ) . 'assets/css/popupwindow.min.css', '', time() );
+		wp_enqueue_style( 'style-css', MY_PLUGIN_DIR . '/assets/css/options-view.css', '', time() );
+		wp_enqueue_style( 'popup-css', MY_PLUGIN_DIR . '/assets/css/popupwindow.min.css', '', time() );
+		wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
+		wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
 /*
 		wp_enqueue_script( 'jquery-js', 'assets/js/jquery.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );

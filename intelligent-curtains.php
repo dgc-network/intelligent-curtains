@@ -17,6 +17,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 include_once dirname( __FILE__ ) . '/includes/class-options-loader.php';
