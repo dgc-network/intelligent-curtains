@@ -63,7 +63,7 @@ class Options_View {
 		wp_enqueue_script( 'jquery-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'popup-js', plugin_dir_url( __FILE__ ) . 'assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'easysearch-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.easysearch.min.js', array( 'jquery' ), time(), true );
+		//wp_enqueue_script( 'easysearch-js', plugin_dir_url( __FILE__ ) . 'assets/js/jquery.easysearch.min.js', array( 'jquery' ), time(), true );
 
 		wp_enqueue_script( 'custom-js', plugin_dir_url( __FILE__ ) . 'assets/js/options-view.js', array( 'jquery' ), time(), true );
 		
