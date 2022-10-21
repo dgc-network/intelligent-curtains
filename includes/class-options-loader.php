@@ -162,7 +162,6 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 
 		}
 
-
 		/**
 		 * Register all of the hooks related to the public-facing functionality
 		 * of the plugin.
@@ -175,6 +174,27 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 			$plugin_public = new Options_View( $this->get_plugin_name(), $this->get_version() );
 			$plugin_public->run();
 
+		}
+
+		/**
+		 * The name of the plugin used to uniquely identify it within the context of
+		 * WordPress and to define internationalization functionality.
+		 *
+		 * @since     1.0.0
+		 * @return    string    The name of the plugin.
+		 */
+		public function get_plugin_name() {
+			return $this->plugin_name;
+		}
+
+		/**
+		 * Retrieve the version number of the plugin.
+		 *
+		 * @since     1.0.0
+		 * @return    string    The version number of the plugin.
+		 */
+		public function get_version() {
+			return $this->version;
 		}
 
 		/**
@@ -275,27 +295,6 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 	
 		}
 	
-		/**
-		 * The name of the plugin used to uniquely identify it within the context of
-		 * WordPress and to define internationalization functionality.
-		 *
-		 * @since     1.0.0
-		 * @return    string    The name of the plugin.
-		 */
-		public function get_plugin_name() {
-			return $this->plugin_name;
-		}
-
-		/**
-		 * Retrieve the version number of the plugin.
-		 *
-		 * @since     1.0.0
-		 * @return    string    The version number of the plugin.
-		 */
-		public function get_version() {
-			return $this->version;
-		}
-
 	}
 	new Options_Loader();
 }
