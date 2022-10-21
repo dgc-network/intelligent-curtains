@@ -14,7 +14,7 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
-        function line_bot_sdk() {
+        public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
             if (file_exists(MY_PLUGIN_DIR . '/line-bot-sdk-tiny/config.ini')) {
