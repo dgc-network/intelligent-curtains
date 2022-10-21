@@ -18,4 +18,5 @@ html, body {
 	overflow-y: scroll;
 	height:100%;	/* this will make sure that the height will extend at the bottom */
 	position:absolute; /* container div must be absolute, for our fixed bar to work */
+	font-size:22px;
 }
