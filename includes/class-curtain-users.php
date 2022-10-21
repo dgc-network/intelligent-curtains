@@ -16,11 +16,11 @@ if (!class_exists('curtain_users')) {
         }
 
         function my_plugin_assets() {
-            wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array(), time(), true );
-            wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array(), time(), true );
-            wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time(), true );
-            wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time(), true );
-            wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time(), true );
+            wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array(), time() );
+            wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array(), time() );
+            wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time() );
+            wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time() );
+            wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
         }
 
         function list_curtain_users() {
