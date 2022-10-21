@@ -48,6 +48,7 @@ if (!class_exists('curtain_service')) {
                     return $curtain_models->list_curtain_models($_POST['_id']);
                 }
                 if ( $_POST['_link_submit']=='Users' ) {
+                    return chat_sample_a();
                     $curtain_users = new curtain_users();
                     return $curtain_users->list_curtain_users($_POST['_id']);
                 }
