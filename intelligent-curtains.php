@@ -27,6 +27,8 @@ include_once dirname( __FILE__ ) . '/includes/class-curtain-agents.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-models.php';
 include_once dirname( __FILE__ ) . '/includes/class-curtain-users.php';
 include_once dirname( __FILE__ ) . '/includes/class-serial-number.php';
+include_once MY_PLUGIN_DIR . '/chat/chat.php';
+include_once MY_PLUGIN_DIR . '/chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
