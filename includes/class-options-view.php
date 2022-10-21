@@ -37,22 +37,8 @@ class Options_View {
 		
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 /*
-		add_filter( 'woocommerce_product_tabs', array( __CLASS__, 'custom_product_tab' ) );
-		add_action( 'woocommerce_single_product_summary', array( __CLASS__, 'custom_after_single_product_title' ), 6 );
-		add_action( 'woocommerce_before_add_to_cart_form', array( __CLASS__, 'custom_before_add_to_cart_button' ), 10, 0 );	
-
 		add_action( 'wp_ajax_woocommerce_ajax_add_to_cart', array( __CLASS__, 'woocommerce_ajax_add_to_cart' ) );
 		add_action( 'wp_ajax_nopriv_woocommerce_ajax_add_to_cart', array( __CLASS__, 'woocommerce_ajax_add_to_cart' ) );
-
-		add_filter( 'woocommerce_add_cart_item_data', array( __CLASS__, 'add_custom_cart_item_data' ), 25, 2 );
-		add_action( 'woocommerce_before_calculate_totals', array( __CLASS__, 'add_custom_price' ), 9999, 1);
-		add_filter( 'woocommerce_get_item_data', array( __CLASS__, 'get_custom_cart_item_data' ), 25, 2 );
-		add_action( 'woocommerce_checkout_create_order_line_item', array( __CLASS__, 'custom_checkout_create_order_line_item' ), 20, 4 );
-
-		add_filter( 'woocommerce_email_recipient_new_booking', array( __CLASS__, 'additional_customer_email_recipient' ), 10, 2 ); 
-		add_filter( 'woocommerce_email_recipient_new_order', array( __CLASS__, 'additional_customer_email_recipient' ), 10, 2 ); // Optional (testing)
-		
-		add_action( 'woocommerce_after_shop_loop_item', array( __CLASS__, 'remove_add_to_cart_buttons' ), 1 );
 
 		add_action( 'init', array( __CLASS__, 'custom_wc_product_countdown_html' ) );
 */
@@ -61,29 +47,29 @@ class Options_View {
 	function enqueue_scripts() {
 		
 		//wp_enqueue_script( 'jquery-js', MY_PLUGIN_DIR . '/assets/js/jquery.min.js', array( 'jquery' ), time(), true );
-/*
+
 		wp_enqueue_script( 'custom-js', MY_PLUGIN_DIR . '/assets/js/options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', MY_PLUGIN_DIR . '/assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'popup-js',  MY_PLUGIN_DIR . '/assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'chat-js',  MY_PLUGIN_DIR . '/chat/js/chat.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'jquery-js',  MY_PLUGIN_DIR . '/chat/js/jquery.js', array( 'jquery' ), time(), true );
-*/
+/*
 		wp_enqueue_script( 'custom-js', 'assets/js/options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'popup-js',  'assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'chat-js',   'chat/js/chat.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'jquery-js', 'chat/js/jquery.js', array( 'jquery' ), time(), true );
-/*		
+*/
 		wp_enqueue_style( 'style-css', MY_PLUGIN_DIR . '/assets/css/options-view.css', '', time() );
 		wp_enqueue_style( 'popup-css', MY_PLUGIN_DIR . '/assets/css/popupwindow.min.css', '', time() );
 		wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
 		wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
-*/
+/*
 		wp_enqueue_style( 'style-css', 'assets/css/options-view.css', '', time() );
 		wp_enqueue_style( 'popup-css', 'assets/css/popupwindow.min.css', '', time() );
 		wp_enqueue_style( 'chat-css',  'chat/css/chat.css', '', time() );
 		wp_enqueue_style( 'screen-css', 'chat/css/screen.css', '', time() );
-
+*/
 		// Load the datepicker script (pre-registered in WordPress).
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
