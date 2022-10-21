@@ -299,3 +299,4 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 	}
 	new Options_Loader();
 }
+?>

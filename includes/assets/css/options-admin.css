@@ -1,0 +1,41 @@
+
+#woocommerce-product-data ul.wc-tabs li.itinerary_tab a:before { font-family: WooCommerce; content: '\e900'; }
+#woocommerce-product-data ul.wc-tabs li.include_exclude_tab a:before { font-family: WooCommerce; content: '\e604'; }
+#woocommerce-product-data ul.wc-tabs li.faq_tab a:before { font-family: WooCommerce; content: '\e000'; }
+.fa-bars:before { content: "\f0c9"; }
+
+#first-itinerary { background:#ffffff; color:blue; border: none; cursor:pointer; text-decoration:underline; }
+#itineraries-ul { list-style-type:none; margin:0; padding:0; width:100%; }
+#itineraries-ul li { background:#f2f2f2; border:1px solid #ccc; margin:0 3px 3px 3px; padding:0.4em; padding-left:1.5em; font-size:1.4em; }
+#itineraries-ul li span { cursor:pointer; }
+#itineraries-ul li span.fas.fa-bars { margin-left:-1.3em; }
+#itineraries-ul li table { display:none; background:#ffffff; border:1px solid #ccc; margin-left:-1.3em; margin-top:0.3em; padding:0.5em; font-size:1.0em; }
+#itineraries-ul li table.toggle-access { display:block; }
+#itineraries-ul li th { width:20%; }
+#itineraries-ul li input { width:100%; }
+#itineraries-ul li textarea { width:100%; }
+#itineraries-ul li button.remove-itinerary { font-size:0.8em; color:red; width:100% }
+
+#itineraries-ul li th.assignment-row-head { width:30%; }
+#itineraries-ul li button#first-assignment { background:#ffffff; color:blue; border: none; cursor:pointer; text-decoration:underline; }
+#itineraries-ul li button.add-assignment { font-size:0.7em; color:blue; }
+
+#first-faq { background:#ffffff; color:blue; border: none; cursor:pointer; text-decoration:underline; }
+#faqs-ul { list-style-type:none; margin:0; padding:0; width:100%; }
+#faqs-ul li { background:#f2f2f2; border:1px solid #ccc; margin:0 3px 3px 3px; padding:0.4em; padding-left:1.5em; font-size:1.4em; }
+#faqs-ul li span { cursor:pointer; }
+#faqs-ul li span.fas.fa-bars { margin-left:-1.3em; }
+#faqs-ul li table { display:none; background:#ffffff; border:1px solid #ccc; margin-left:-1.3em;  margin-top:0.3em; padding:0.5em; font-size:1.0em; }
+#faqs-ul li .toggle-access { display:block; }
+#faqs-ul li th { width:25%; }
+#faqs-ul li input { width:100%; }
+#faqs-ul li textarea { width:100%; }
+#faqs-ul li button.remove-faq { font-size:0.8em; color:red; width:100% }
+
+#tabs-ul { list-style-type:none; margin:0; padding:0; width:100%; }
+#tabs-ul li { background:#f2f2f2; border:1px solid #ccc; margin:0 3px 3px 3px; padding:0.4em; padding-left:1.5em; font-size:1.4em; }
+#tabs-ul li span { cursor:pointer; }
+#tabs-ul li span.fas.fa-bars { margin-left:-1.3em; }
+#tabs-ul li table { display:none; background:#ffffff; border:1px solid #ccc; margin-left:-1.3em;  margin-top:0.3em; padding:0.5em; font-size:1.0em; }
+#tabs-ul li .toggle-access { display:block; }
+#tabs-ul li input { width:100%; }
