@@ -20,15 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 require_once MY_PLUGIN_DIR . '/includes/class-options-loader.php';
-include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
-include_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
-include_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
+require_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
+require_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
+require_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-agents.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-models.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . '/includes/class-serial-number.php';
-include_once MY_PLUGIN_DIR . '/chat/chat.php';
-include_once MY_PLUGIN_DIR . '/chat/samplea.php';
+require_once MY_PLUGIN_DIR . '/chat/chat.php';
+require_once MY_PLUGIN_DIR . '/chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
