@@ -19,21 +19,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
-//include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 require_once MY_PLUGIN_DIR . '/includes/class-options-loader.php';
-//include_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
-//include_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
+include_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
+include_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
+include_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-agents.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-models.php';
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . '/includes/class-serial-number.php';
-//include_once MY_PLUGIN_DIR . '/chat/chat.php';
-//include_once MY_PLUGIN_DIR . '/chat/samplea.php';
+include_once MY_PLUGIN_DIR . '/chat/chat.php';
+include_once MY_PLUGIN_DIR . '/chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-//$line_webhook = new line_webhook();
-//$line_webhook->init();
+$line_webhook = new line_webhook();
+$line_webhook->init();
 
 /*
 function line_bot_sdk() {
