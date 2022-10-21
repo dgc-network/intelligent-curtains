@@ -26,9 +26,10 @@ define ('DBNAME','chat');
 
 session_start();
 
-global $dbh;
-$dbh = mysql_connect(DBPATH,DBUSER,DBPASS);
-mysql_selectdb(DBNAME,$dbh);
+//global $dbh;
+//$dbh = mysql_connect(DBPATH,DBUSER,DBPASS);
+//mysql_selectdb(DBNAME,$dbh);
+create_tables();
 
 if ($_GET['action'] == "chatheartbeat") { chatHeartbeat(); } 
 if ($_GET['action'] == "sendchat") { sendChat(); } 
@@ -43,9 +44,26 @@ if (!isset($_SESSION['openChatBoxes'])) {
 	$_SESSION['openChatBoxes'] = array();	
 }
 
+function create_tables() {
+	global $wpdb;
+	$charset_collate = $wpdb->get_charset_collate();
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+	$sql = "CREATE TABLE `{$wpdb->prefix}chat` (
+		`id` int NOT NULL AUTO_INCREMENT,
+		`from` varchar(255) NOT NULL DEFAULT '',
+		`to` varchar(255) NOT NULL DEFAULT '',
+		`message` TEXT NOT NULL,
+		`sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+		`recd` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+		PRIMARY KEY (`id`)
+	) $charset_collate;";
+	dbDelta($sql);
+}        
+
 function chatHeartbeat() {
 	
-	$sql = "select * from chat where (chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
+	$sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
 	$query = mysql_query($sql);
 	$items = '';
 
@@ -116,7 +134,7 @@ EOD;
 	}
 }
 
-	$sql = "update chat set recd = 1 where chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
+	$sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
 	$query = mysql_query($sql);
 
 	if ($items != '') {
@@ -197,7 +215,7 @@ EOD;
 
 	unset($_SESSION['tsChatBoxes'][$_POST['to']]);
 
-	$sql = "insert into chat (chat.from,chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
+	$sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
 	$query = mysql_query($sql);
 	echo "1";
 	exit(0);
