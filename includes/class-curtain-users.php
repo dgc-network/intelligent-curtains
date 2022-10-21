@@ -11,7 +11,16 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
+            add_action( 'wp_enqueue_scripts', __CLASS__ . '::my_plugin_assets' );
             self::create_tables();
+        }
+
+        function my_plugin_assets() {
+            wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array(), time(), true );
+            wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array(), time(), true );
+            wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time(), true );
+            wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time(), true );
+            wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time(), true );
         }
 
         function list_curtain_users() {
