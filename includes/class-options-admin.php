@@ -64,8 +64,8 @@ class Options_Admin {
 	 * @since    1.0.0
 	 */
 	function enqueue_scripts() {
-		wp_enqueue_script( 'custom-js', plugin_dir_url( __FILE__ ) . 'assets/js/options-admin.js', array( 'jquery' ), time(), true );
-		wp_enqueue_style( 'style-css', plugin_dir_url( __FILE__ ) . 'assets/css/options-admin.css', '', time() );
+		wp_enqueue_script( 'custom-js', plugin_dir_url( __FILE__ ) . 'assets/js/custom-options-admin.js', array( 'jquery' ), time(), true );
+		wp_enqueue_style( 'style-css', plugin_dir_url( __FILE__ ) . 'assets/css/custom-options-admin.css', '', time() );
 	}
 
 	/**
