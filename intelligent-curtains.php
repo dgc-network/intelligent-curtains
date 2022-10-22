@@ -39,8 +39,8 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 add_shortcode('test','test_mode');
 
-function(){
-    
+function test_mode(){
+
     $output = '<div>';
     if( isset($_POST['_serial_no']) ) {
         $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
