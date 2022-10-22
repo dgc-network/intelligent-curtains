@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define('MY_PLUGIN_DIR', trailingslashit( plugin_dir_url( __FILE__ )));
 
-require_once MY_PLUGIN_DIR . '/includes/class-options-loader.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-options-loader.php';
 //require_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
 //require_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
 //require_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
@@ -37,8 +37,16 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 //$line_webhook = new line_webhook();
 //$line_webhook->init();
 
-add_shortcode('test','test_mode');
+add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
+function my_plugin_assets() {
+    wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array(), time() );
+    wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array(), time() );
+    wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time() );
+    wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time() );
+    wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
+}
 
+add_shortcode('test','test_mode');
 function test_mode(){
 
     $output = '<div>';
