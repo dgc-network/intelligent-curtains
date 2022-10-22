@@ -11,7 +11,7 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 20 );
+            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ), 20 );
             self::create_tables();
         }
 
