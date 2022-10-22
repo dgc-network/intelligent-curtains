@@ -33,7 +33,8 @@ if (!class_exists('curtain_models')) {
 ?>
             <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
             <link rel="stylesheet" href="/resources/demos/style.css">
-            <style>            
+            <style>
+                
 /*            
             label, input { display:block; }
             input.text { margin-bottom:12px; width:95%; padding: .4em; }
