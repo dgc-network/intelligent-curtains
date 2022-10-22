@@ -44,6 +44,11 @@ function my_plugin_assets() {
     wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time() );
     wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time() );
     wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
+    
+    wp_enqueue_style( 'style-css', MY_PLUGIN_DIR . '/assets/css/custom-options-view.css', '', time() );
+    wp_enqueue_style( 'popup-css', MY_PLUGIN_DIR . '/assets/css/popupwindow.min.css', '', time() );
+    wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
+    wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
 }
 
 add_shortcode('test','test_mode');
