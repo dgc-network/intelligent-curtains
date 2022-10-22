@@ -1,0 +1,9 @@
+.woocommerce ul.products li.product a.button { display: none; }
+
+.example_content {
+    display : none;
+} 
+
+#qrcode_content {
+    display : none;
+} 

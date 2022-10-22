@@ -39,14 +39,14 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
 function my_plugin_assets() {
-    wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array(), time() );
-    wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array(), time() );
-    wp_enqueue_script( 'popup-js',  plugins_url( '/assets/js/popupwindow.min.js' , __FILE__ ), array(), time() );
+    wp_enqueue_script( 'custom-js', 'custom-options-view.js', array(), time() );
+    wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array(), time() );
+    wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array(), time() );
     //wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array(), time() );
     //wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
     
-    wp_enqueue_style( 'custom-css', MY_PLUGIN_DIR . '/assets/css/custom-options-view.css', '', time() );
-    wp_enqueue_style( 'popup-css', MY_PLUGIN_DIR . '/assets/css/popupwindow.min.css', '', time() );
+    wp_enqueue_style( 'custom-css', 'custom-options-view.css', '', time() );
+    wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
     //wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
     //wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
 }
