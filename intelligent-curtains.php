@@ -53,6 +53,7 @@ function my_plugin_assets() {
     wp_head();
 }
 
+add_shortcode('chat','chat_sample_a');
 add_shortcode('test','test_mode');
 function test_mode(){
 
@@ -67,7 +68,6 @@ function test_mode(){
     $output .= '<input type="submit" value="123456789" name="_serial_no">';
     $output .= '</form>';
     $output .= '</div>';
-    chat_sample_a();
 
     return $output;    
 }
