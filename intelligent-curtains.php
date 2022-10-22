@@ -50,7 +50,7 @@ function my_plugin_assets() {
     //wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
     //wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
     //wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
-    wp_head();
+    //wp_head();
 }
 
 add_shortcode('chat','chat_sample_a');
