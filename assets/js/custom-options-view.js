@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     // open
-    //$('#basic-demo').PopupWindow("open")
+    $('#basic-demo').PopupWindow("open")
 
     $("#basic-demo").PopupWindow({
         // options here
