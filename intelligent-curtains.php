@@ -39,14 +39,13 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
 function my_plugin_assets() {
-    wp_enqueue_script("jquery");
-    wp_enqueue_script( 'custom-js', plugins_url( '/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
+    wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
     //wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array( 'jquery' ), time() );
     //wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
     
-    wp_enqueue_style( 'custom-css', plugins_url( '/assets/js/custom-options-view.css' , __FILE__ ), '', time() );
+    wp_enqueue_style( 'custom-css', 'custom-options-view.css', '', time() );
     //wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
     wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
     wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
