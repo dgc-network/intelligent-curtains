@@ -56,6 +56,7 @@ class Options_View {
 
 		// Load the datepicker script (pre-registered in WordPress).
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( 'jquery-ui-dialog' );
 
 		// You need styling for the datepicker. For simplicity I've linked to the jQuery UI CSS on a CDN.
 		wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
