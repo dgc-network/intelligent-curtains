@@ -16,16 +16,16 @@ if (!class_exists('curtain_models')) {
         }
 
         function enqueue_scripts() {
-            wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
-            wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
+            wp_enqueue_script( 'custom-js', MY_PLUGIN_DIR . 'assets/js/custom-options-view.js', array( 'jquery' ), time() );
+            wp_enqueue_script( 'qrcode-js', MY_PLUGIN_DIR . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time() );
             //wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
-            wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array( 'jquery' ), time() );
+            wp_enqueue_script( 'chat-js',  MY_PLUGIN_DIR . 'chat/js/chat.js', array( 'jquery' ), time() );
             //wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
             
-            wp_enqueue_style( 'custom-css', plugins_url( '/assets/css/custom-options-view.css' , __FILE__ ), '', time() );
+            wp_enqueue_style( 'custom-css', MY_PLUGIN_DIR . 'assets/css/custom-options-view.css', '', time() );
             //wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
-            wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
-            wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
+            wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . 'chat/css/chat.css', '', time() );
+            wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . 'chat/css/screen.css', '', time() );
             //wp_head();
         }
 
