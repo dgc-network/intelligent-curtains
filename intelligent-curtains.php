@@ -29,8 +29,8 @@ define('MY_PLUGIN_DIR', trailingslashit( plugin_dir_url( __FILE__ )));
 require_once MY_PLUGIN_DIR . '/includes/class-curtain-models.php';
 //require_once MY_PLUGIN_DIR . '/includes/class-curtain-users.php';
 //require_once MY_PLUGIN_DIR . '/includes/class-serial-number.php';
-require_once MY_PLUGIN_DIR . '/chat/chat.php';
-require_once MY_PLUGIN_DIR . '/chat/samplea.php';
+//require_once MY_PLUGIN_DIR . '/chat/chat.php';
+//require_once MY_PLUGIN_DIR . '/chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
@@ -42,13 +42,13 @@ function my_plugin_assets() {
     wp_enqueue_script("jquery");
     wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
-    wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
-    wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array( 'jquery' ), time() );
+    //wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
+    //wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array( 'jquery' ), time() );
     //wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
     
     wp_enqueue_style( 'custom-css', 'custom-options-view.css', '', time() );
-    wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
-    wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
+    //wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
+    //wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
     //wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
     wp_head();
 }
