@@ -16,13 +16,13 @@ if (!class_exists('curtain_models')) {
         }
 
         function enqueue_scripts() {
-            wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
-            wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
+            wp_enqueue_script( 'custom-js', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
+            wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
             //wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
             wp_enqueue_script( 'chat-js',  plugins_url( '/chat/js/chat.js' , __FILE__ ), array( 'jquery' ), time() );
             //wp_enqueue_script( 'jquery-js',  plugins_url( '/chat/js/jquery.js' , __FILE__ ), array(), time() );
             
-            wp_enqueue_style( 'custom-css', 'custom-options-view.css', '', time() );
+            wp_enqueue_style( 'custom-css', plugins_url( '/assets/css/custom-options-view.css' , __FILE__ ), '', time() );
             //wp_enqueue_style( 'popup-css', 'popupwindow.min.css', '', time() );
             wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . '/chat/css/chat.css', '', time() );
             wp_enqueue_style( 'screen-css', MY_PLUGIN_DIR . '/chat/css/screen.css', '', time() );
@@ -34,6 +34,7 @@ if (!class_exists('curtain_models')) {
             <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
             <link rel="stylesheet" href="/resources/demos/style.css">
             <style>            
+/*            
             label, input { display:block; }
             input.text { margin-bottom:12px; width:95%; padding: .4em; }
             fieldset { padding:0; border:0; margin-top:25px; }
@@ -44,6 +45,7 @@ if (!class_exists('curtain_models')) {
             div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
             .ui-dialog .ui-state-error { padding: .3em; }
             .validateTips { border: 1px solid transparent; padding: 0.3em; }
+*/            
             </style>
             <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
             <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
