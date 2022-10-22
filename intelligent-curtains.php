@@ -22,20 +22,35 @@ define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 define('MY_PLUGIN_DIR', trailingslashit( plugin_dir_url( __FILE__ )));
 
 require_once MY_PLUGIN_DIR . '/includes/class-options-loader.php';
-require_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
-require_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
-require_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
-require_once MY_PLUGIN_DIR . '/includes/class-curtain-agents.php';
-require_once MY_PLUGIN_DIR . '/includes/class-curtain-models.php';
-require_once MY_PLUGIN_DIR . '/includes/class-curtain-users.php';
-require_once MY_PLUGIN_DIR . '/includes/class-serial-number.php';
-require_once MY_PLUGIN_DIR . '/chat/chat.php';
-require_once MY_PLUGIN_DIR . '/chat/samplea.php';
+//require_once MY_PLUGIN_DIR . '/line-bot-sdk-tiny/LINEBotTiny.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-line-webhook.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-curtain-service.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-curtain-agents.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-curtain-models.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-curtain-users.php';
+//require_once MY_PLUGIN_DIR . '/includes/class-serial-number.php';
+//require_once MY_PLUGIN_DIR . '/chat/chat.php';
+//require_once MY_PLUGIN_DIR . '/chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-$line_webhook = new line_webhook();
-$line_webhook->init();
+//$line_webhook = new line_webhook();
+//$line_webhook->init();
+
+$output = '<div>';
+if( isset($_POST['_serial_no']) ) {
+    $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+    //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+    $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+}
+$output .= '<form method="post">';
+$output .= '<input type="submit" value="123456789" name="_serial_no">';
+$output .= '</form>';
+$output .= '</div>';
+                
+return $output;
+
+
 
 /*
 function line_bot_sdk() {
