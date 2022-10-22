@@ -15,7 +15,7 @@ if (!class_exists('curtain_models')) {
             self::create_tables();
         }
 
-        function my_plugin_assets() {
+        function enqueue_scripts() {
             wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
             wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
             //wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
