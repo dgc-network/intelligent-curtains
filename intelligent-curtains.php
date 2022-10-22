@@ -37,18 +37,23 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 //$line_webhook = new line_webhook();
 //$line_webhook->init();
 
-$output = '<div>';
-if( isset($_POST['_serial_no']) ) {
-    $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-    //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
-    $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+add_shortcode('test','test_mode');
+
+function(){
+    
+    $output = '<div>';
+    if( isset($_POST['_serial_no']) ) {
+        $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
+        //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+        $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+    }
+    $output .= '<form method="post">';
+    $output .= '<input type="submit" value="123456789" name="_serial_no">';
+    $output .= '</form>';
+    $output .= '</div>';
+                    
+    return $output;    
 }
-$output .= '<form method="post">';
-$output .= '<input type="submit" value="123456789" name="_serial_no">';
-$output .= '</form>';
-$output .= '</div>';
-                
-return $output;
 
 
 
