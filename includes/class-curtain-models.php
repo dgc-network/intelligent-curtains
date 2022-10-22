@@ -17,6 +17,10 @@ if (!class_exists('curtain_models')) {
         function list_curtain_models() {
 ?>
 
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+            <link rel="stylesheet" href="/resources/demos/style.css">
+
+
             <div id="dialog-form" title="Create new user">
             <p class="validateTips">All form fields are required.</p>
            
