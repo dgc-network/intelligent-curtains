@@ -130,40 +130,16 @@ if (!class_exists('curtain_models')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
-?>
-           
-           
-           <div id="users-contain" class="ui-widget">
-            <h1>Existing Users:</h1>
-            <table id="users" class="ui-widget ui-widget-content">
-              <thead>
-                <tr class="ui-widget-header ">
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Password</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>John Doe</td>
-                  <td>john.doe@example.com</td>
-                  <td>johndoe1</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button id="create-user">Create new user</button>
 
-<?php            
             $output  = '<div id="users-contain" class="ui-widget">';
             $output .= '<h1>Model Number</h1>';
-            $output .= '<table id="users" class="ui-widget ui-widget-content">';
-            $output .= '<tr><td colspan=5 style="text-align:right">';
+            $output .= '<div style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
-            $output .= '</td></tr>';
+            $output .= '</div>';
+            $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>id</td>';
             $output .= '<th>model</td>';
