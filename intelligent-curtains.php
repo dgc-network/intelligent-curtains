@@ -39,6 +39,7 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
 function my_plugin_assets() {
+    wp_enqueue_script("jquery");
     wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'popup-js',  'popupwindow.min.js', array( 'jquery' ), time() );
