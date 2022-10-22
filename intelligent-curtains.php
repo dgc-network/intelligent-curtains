@@ -37,7 +37,7 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 //$line_webhook = new line_webhook();
 //$line_webhook->init();
 
-add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
+//add_action( 'wp_enqueue_scripts', 'my_plugin_assets' );
 function my_plugin_assets() {
     wp_enqueue_script( 'custom-js', 'custom-options-view.js', array( 'jquery' ), time() );
     wp_enqueue_script( 'qrcode-js', 'jquery.qrcode.min.js', array( 'jquery' ), time() );
