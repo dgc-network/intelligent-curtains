@@ -34,7 +34,7 @@ if (!class_exists('curtain_models')) {
             <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
             <link rel="stylesheet" href="/resources/demos/style.css">
             <style>
-                
+
 /*            
             label, input { display:block; }
             input.text { margin-bottom:12px; width:95%; padding: .4em; }
@@ -155,21 +155,23 @@ if (!class_exists('curtain_models')) {
           <button id="create-user">Create new user</button>
 
 <?php            
-            $output  = '<h2>Model Number</h2>';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
+            $output  = '<div id="users-contain" class="ui-widget">';
+            $output .= '<h1>Model Number</h1>';
+            $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<tr><td colspan=5 style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</td></tr>';
-            $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>id</td>';
-            $output .= '<td>model</td>';
-            $output .= '<td>description</td>';
-            $output .= '<td>vendor</td>';
-            $output .= '<td>update_time</td>';
-            $output .= '</tr>';
+            $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th>id</td>';
+            $output .= '<th>model</td>';
+            $output .= '<th>description</td>';
+            $output .= '<th>vendor</td>';
+            $output .= '<th>update_time</td>';
+            $output .= '</tr></thead>';
+            $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_model_id.'</a></td>';
@@ -182,7 +184,9 @@ if (!class_exists('curtain_models')) {
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
-            $output .= '</tbody></table></figure>';
+            $output .= '</tbody></table></div>';
+            $output .= '<button id="create-model">Create new model</button>';
+/*
             $output .= '<form method="post">';
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
@@ -193,7 +197,7 @@ if (!class_exists('curtain_models')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
-
+*/
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
