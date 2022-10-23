@@ -120,7 +120,7 @@ if (!class_exists('curtain_models')) {
                     }
                 });
 
-                $( "#dialog-form" ).dialog( "open" );
+                //$( "#dialog-form" ).dialog( "open" );
     
                 form = dialog.find( "form" ).on( "submit", function( event ) {
                     event.preventDefault();
@@ -188,8 +188,6 @@ if (!class_exists('curtain_models')) {
             </script>
 <?php            
 
-            $output = '';
-            
             global $wpdb;
             if( isset($_POST['_where_curtain_model']) ) {
                 $where='"%'.$_POST['_where_curtain_model'].'%"';
@@ -198,7 +196,7 @@ if (!class_exists('curtain_models')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
-            $output .= '<h2>Model Number</h2>';
+            $output  = '<h2>Model Number</h2>';
             $output .= '<span style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
