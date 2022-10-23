@@ -220,12 +220,12 @@ if (!class_exists('curtain_models')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
             $output .= '<h2>Model Number</h2>';
-            $output .= '<div style="text-align:right">';
+            $output .= '<span style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
-            $output .= '</div>';
+            $output .= '</span>';
             $output .= '<div id="users-contain" class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
