@@ -40,11 +40,11 @@ if (!class_exists('curtain_models')) {
 
 <?php          
 
-/*
+
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
-*/
+
             if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
                 $data=array();
                 $data['curtain_model_name']=$_GET['curtain_model_name'];
@@ -118,6 +118,8 @@ if (!class_exists('curtain_models')) {
                         allFields.removeClass( "ui-state-error" );
                     }
                 });
+                
+                dialog.dialog( "open" );
     
                 form = dialog.find( "form" ).on( "submit", function( event ) {
                     event.preventDefault();
@@ -180,6 +182,7 @@ if (!class_exists('curtain_models')) {
                 $( "#create-model" ).button().on( "click", function() {
                     dialog.dialog( "open" );
                 });
+
             } );
             </script>
 <?php            
@@ -237,6 +240,7 @@ if (!class_exists('curtain_models')) {
             $output .= '</div>';
             $output .= '</form>';
 
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
@@ -262,7 +266,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</fieldset></form>';
                 $output .= '</div>';
             }
-            
+*/            
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode"><div id="qrcode_content">';
