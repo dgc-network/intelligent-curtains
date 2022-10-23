@@ -94,7 +94,7 @@ if (!class_exists('curtain_models')) {
             <script>
             $( function() {
 
-                var dialog, form,           
+                var dialog, form,  
                 emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
                 name = $( "#name" ),
                 email = $( "#email" ),
@@ -249,8 +249,8 @@ if (!class_exists('curtain_models')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<button id="create-model">Create new model</button>';
-/*
+            //$output .= '<button id="create-model">Create new model</button>';
+
             $output .= '<form method="post">';
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
@@ -261,11 +261,13 @@ if (!class_exists('curtain_models')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
-*/
+
             if( isset($_POST['_serial_no']) ) {
-                $output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
-                //$output .= get_site_url().'/service/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
+                $output .= '<div id="dialog" title="QR Code">';
+                $output .= '<div id="qrcode"><div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
+                $output .= '</div></div>';
+                $output .= '</div>';
             }
                             
             return $output;
