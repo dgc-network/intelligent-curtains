@@ -102,10 +102,6 @@ if (!class_exists('curtain_models')) {
                 allFields = $( [] ).add( name ).add( email ).add( password ),
                 tips = $( ".validateTips" );
     
-                $( "#create-model" ).button().on( "click", function() {
-                    dialog.dialog( "open" );
-                });
-                  
                 dialog = $( "#dialog-form" ).dialog({
                     autoOpen: false,
                     height: 400,
@@ -179,7 +175,11 @@ if (!class_exists('curtain_models')) {
                         dialog.dialog( "close" );
                     }
                     return valid;
-                }    
+                }
+
+                $( "#create-model" ).button().on( "click", function() {
+                    dialog.dialog( "open" );
+                });
             } );
             </script>
 <?php            

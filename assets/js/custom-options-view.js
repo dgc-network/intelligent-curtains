@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+/*    
     // open
     $('#basic-demo').PopupWindow("open")
 
@@ -76,7 +77,7 @@ jQuery(document).ready(function($) {
         mouseMoveEvents     : true
     
     });   
-
+*/
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });

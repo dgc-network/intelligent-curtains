@@ -45,12 +45,12 @@ class Options_View {
 
 		wp_enqueue_script( 'custom-js', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'popup-js',  plugin_dir_url( __DIR__ ) . 'assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
+		//wp_enqueue_script( 'popup-js',  plugin_dir_url( __DIR__ ) . 'assets/js/popupwindow.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'chat-js',  plugin_dir_url( __DIR__ ) . 'chat/js/chat.js', array( 'jquery' ), time(), true );
 		//wp_enqueue_script( 'jquery-js',  MY_PLUGIN_DIR . 'chat/js/jquery.js', array( 'jquery' ), time(), true );
 
 		wp_enqueue_style( 'style-css', plugin_dir_url( __DIR__ ) . 'assets/css/custom-options-view.css', '', time() );
-		wp_enqueue_style( 'popup-css', plugin_dir_url( __DIR__ ) . 'assets/css/popupwindow.min.css', '', time() );
+		//wp_enqueue_style( 'popup-css', plugin_dir_url( __DIR__ ) . 'assets/css/popupwindow.min.css', '', time() );
 		wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'chat/css/chat.css', '', time() );
 		wp_enqueue_style( 'screen-css', plugin_dir_url( __DIR__ ) . 'chat/css/screen.css', '', time() );
 
