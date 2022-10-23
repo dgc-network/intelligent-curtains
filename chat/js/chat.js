@@ -42,7 +42,6 @@ jQuery(document).ready(function($) {
 		windowFocus = true;
 		document.title = originalTitle;
 	});
-});
 
 function restructureChatBoxes() {
 	align = 0;
@@ -183,7 +182,19 @@ function chatHeartbeat(){
 	}
 	
 	$.ajax({
-	  url: "chat.php?action=chatheartbeat",
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        //dataType: "json",
+        data: {
+            'action': 'chatHeartbeat',
+        },
+        //success: function (data) {
+        //    categories = data;
+        //},
+        error: function(error){
+            alert(error);
+        },
+	  //url: "chat.php?action=chatheartbeat",
 	  cache: false,
 	  dataType: "json",
 	  success: function(data) {
@@ -323,7 +334,19 @@ function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
 
 function startChatSession(){  
 	$.ajax({
-	  url: "chat.php?action=startchatsession",
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        //dataType: "json",
+        data: {
+            'action': 'startChatSession',
+        },
+        //success: function (data) {
+        //    categories = data;
+        //},
+        error: function(error){
+            alert(error);
+        },
+	  //url: "chat.php?action=startchatsession",
 	  cache: false,
 	  dataType: "json",
 	  success: function(data) {
@@ -361,6 +384,8 @@ function startChatSession(){
 		
 	}});
 }
+
+});
 
 /**
  * Cookie plugin

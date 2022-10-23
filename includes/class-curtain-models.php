@@ -12,6 +12,10 @@ if (!class_exists('curtain_models')) {
         public function __construct() {
             add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
             //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+            add_action( 'wp_ajax_get_categories', array( __CLASS__, 'get_categories' ) );
+            add_action( 'wp_ajax_nopriv_get_categories', array( __CLASS__, 'get_categories' ) );
+            add_action( 'wp_ajax_get_product_by_category', array( __CLASS__, 'get_product_by_category' ) );
+            add_action( 'wp_ajax_nopriv_get_product_by_category', array( __CLASS__, 'get_product_by_category' ) );
             self::create_tables();
         }
 
@@ -25,6 +29,60 @@ if (!class_exists('curtain_models')) {
             wp_enqueue_style( 'demos-style-css' );  
         }    
 
+	/**
+	 * Product Categories List by AJAX
+	 */
+	function get_categories() {
+		$args = array(
+			'taxonomy'   => "product_cat",
+			'number'     => $number,
+			'orderby'    => $orderby,
+			'order'      => $order,
+			'hide_empty' => $hide_empty,
+			'include'    => $ids
+		);
+		$product_categories = get_terms($args);
+
+		$titles = array();
+		foreach( $product_categories as $cat ) {
+			if ($cat->name != 'Uncategorized') {
+				array_push($titles, $cat->name);
+			}
+		}
+		$json = json_encode( $titles );
+		echo $json;
+		
+		die();		
+	}
+		
+	/**
+	 * Product List by Category by AJAX
+	 */
+	function get_product_by_category() {
+
+		$product_category_slug = ( isset($_POST['term_chosen']) && !empty( $_POST['term_chosen']) ? $_POST['term_chosen'] : false );
+		
+		$query = new WC_Product_Query( array(
+			'category' => array( $product_category_slug ),
+			'limit' => 10,
+			'orderby' => 'date',
+			'order' => 'DESC'
+		) );
+		
+		$products = $query->get_products();
+		
+		$titles = array();
+		foreach( $products as $product ) {
+			$title = array();
+			array_push($title, $product->get_id());
+			array_push($title, $product->get_title());
+			array_push($titles, $title);
+		}	
+		$json = json_encode( $titles );
+		echo $json;
+		
+		die();		
+	}
         function list_curtain_models() {
 ?>
 
@@ -121,6 +179,29 @@ if (!class_exists('curtain_models')) {
         addUser();
     });
 
+    function addUser() {
+        var valid = true;
+        allFields.removeClass( "ui-state-error" );
+
+        valid = valid && checkLength( name, "username", 3, 16 );
+        valid = valid && checkLength( email, "email", 6, 80 );
+        valid = valid && checkLength( password, "password", 5, 16 );
+
+        valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+        valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
+        valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+
+        if ( valid ) {
+            $( "#users tbody" ).append( "<tr>" +
+                "<td>" + name.val() + "</td>" +
+                "<td>" + email.val() + "</td>" +
+                "<td>" + password.val() + "</td>" +
+            "</tr>" );
+            dialog.dialog( "close" );
+        }
+        return valid;
+    }
+
     function updateTips( t ) {
         tips
             .text( t )
@@ -149,29 +230,6 @@ if (!class_exists('curtain_models')) {
         } else {
             return true;
         }
-    }
-
-    function addUser() {
-        var valid = true;
-        allFields.removeClass( "ui-state-error" );
-
-        valid = valid && checkLength( name, "username", 3, 16 );
-        valid = valid && checkLength( email, "email", 6, 80 );
-        valid = valid && checkLength( password, "password", 5, 16 );
-
-        valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-        valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
-        valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-
-        if ( valid ) {
-            $( "#users tbody" ).append( "<tr>" +
-                "<td>" + name.val() + "</td>" +
-                "<td>" + email.val() + "</td>" +
-                "<td>" + password.val() + "</td>" +
-            "</tr>" );
-            dialog.dialog( "close" );
-        }
-        return valid;
     }
 
     $( "#create-model" ).button().on( "click", function() {

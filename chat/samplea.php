@@ -15,7 +15,7 @@ body {
 	padding:0;
 	margin:0 auto;
 	font-family:"Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
-	font-size:11px;
+	/*font-size:11px;*/
 }
 </style>
 

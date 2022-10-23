@@ -61,6 +61,10 @@ function create_tables() {
 	dbDelta($sql);
 }        
 
+//add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+//add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
+add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
 function chatHeartbeat() {
 	
 	$sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
@@ -163,6 +167,8 @@ function chatBoxSession($chatbox) {
 	return $items;
 }
 
+add_action( 'wp_ajax_startChatSession', 'startChatSession' );
+add_action( 'wp_ajax_nopriv_startChatSession', 'startChatSession' );
 function startChatSession() {
 	$items = '';
 	if (!empty($_SESSION['openChatBoxes'])) {

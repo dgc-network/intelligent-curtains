@@ -1,5 +1,65 @@
 jQuery(document).ready(function($) {
 
+    var categories = '';
+    $.ajax({
+        type: 'POST',
+        url: '/wp-admin/admin-ajax.php',
+        dataType: "json",
+        data: {
+            'action': 'get_categories',
+        },
+        success: function (data) {
+            categories = data;
+        },
+        error: function(error){
+            alert(error);
+        }
+    });
+
+    $( '.opt_categorias', sub_element ).on( 'change', function() {
+        var opt_categorias = this.value;
+        $.ajax({
+            type: 'POST',
+            url: '/wp-admin/admin-ajax.php',
+            dataType: "json",
+            data: {
+                'action': 'get_product_by_category',
+                'term_chosen': opt_categorias,
+            },
+            success: function (data) {
+                //alert(data);
+                $( '.opt_tipo', sub_element ).empty();
+                $( '.opt_tipo', sub_element ).append('<option value="">- Select Resource -</option>');
+
+                var product_id;
+                var product_title;
+                var product_id;
+                var product_title;
+                $.each(data, function (m, items) {
+                $.each(items, function (n, item) {
+                    //alert(item);
+                    if (n % 2 == 0) {
+                        product_id = item;
+                    }
+                    if (Math.abs(n % 2) == 1) {
+                        product_title = item;
+                        $( '.opt_tipo', sub_element ).append('<option value="' + product_id + '">' + product_title + '</option>');
+                    }
+                    //$( '.opt_tipo', sub_element ).append('<option value="' + item + '">' + item + '</option>');
+                });
+                });
+            },
+            error: function(error){
+                alert(error);
+            }
+        });									
+        if (this.value=='_delete_assignment') {
+            $( this ).closest( sub_element ).remove();
+        }							
+    });
+
+
+
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
