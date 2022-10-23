@@ -40,11 +40,11 @@ if (!class_exists('curtain_models')) {
 
 <?php          
 
-/*
+
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
-*/
+
             if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
                 $data=array();
                 $data['curtain_model_name']=$_GET['curtain_model_name'];
@@ -185,6 +185,7 @@ if (!class_exists('curtain_models')) {
 <?php            
 
             $output = '';
+/*            
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
@@ -210,7 +211,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</fieldset></form>';
                 $output .= '</div>';
             }
-            
+*/            
             global $wpdb;
             if( isset($_POST['_where_curtain_model']) ) {
                 $where='"%'.$_POST['_where_curtain_model'].'%"';
@@ -282,6 +283,28 @@ if (!class_exists('curtain_models')) {
             } else {
                 $output  = '<h2>Model Name Update</h2>';
             }
+            if (count($row) > 0) {
+                $output .= '<h2>Model Name Update</h2>';
+            } else {
+                $output .= '<h2>New Model Name</h2>';
+            }
+            $output  = '<div id="dialog-form" title="Create new model">';
+            $output .= '<form><fieldset>';
+            if (count($row) > 0) {
+                $output  = '<h2>Model Name Update</h2>';
+            } else {
+                $output .= '<label for="name">Model Name</label>';
+                $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="name">Description</label>';
+                $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="name">Curtain Vendor</label>';
+                $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
+            }
+            $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+            $output .= '</fieldset></form>';
+            $output .= '</div>';
+            return $output;
+
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
