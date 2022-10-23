@@ -42,24 +42,9 @@ if (!class_exists('curtain_models')) {
             </script>
 
 
-            <div id="dialog-form" title="Create new user">
-            <p class="validateTips">All form fields are required.</p>
-           
-            <form>
-              <fieldset>
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
-           
-                <!-- Allow form submission with keyboard without duplicating the dialog button -->
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-              </fieldset>
-            </form>
-          </div>
 <?php          
+
+
           if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
@@ -108,6 +93,52 @@ if (!class_exists('curtain_models')) {
                 $result = self::update_curtain_model($data, $where);
             }
         
+
+?>
+            <div id="dialog-form" title="Create new user">
+            <p class="validateTips">All form fields are required.</p>
+           
+            <form>
+              <fieldset>
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+           
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+              </fieldset>
+            </form>
+          </div>
+
+
+<?php            
+
+            global $wpdb;
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
+            if (count($row) > 0) {
+                $output  = '<h2>Model Name Update</h2>';
+            } else {
+                $output  = '<h2>New Model Name</h2>';
+            }
+            $output  = '<div id="dialog-form" title="Create new model">';
+            $output .= '<form><fieldset>';
+            if (count($row) > 0) {
+                $output  = '<h2>Model Name Update</h2>';
+            } else {
+                $output .= '<label for="name">Model Name</label>';
+                $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="name">Description</label>';
+                $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="name">Curtain Vendor</label>';
+                $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
+            }
+            $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+            $output .= '</fieldset></form>';
+            $output .= '</div>';
+            
             global $wpdb;
             if( isset($_POST['_where_curtain_model']) ) {
                 $where='"%'.$_POST['_where_curtain_model'].'%"';
@@ -116,15 +147,14 @@ if (!class_exists('curtain_models')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
-
-            $output  = '<div id="users-contain" class="ui-widget">';
-            $output .= '<h1>Model Number</h1>';
+            $output .= '<h2>Model Number</h2>';
             $output .= '<div style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
+            $output .= '<div id="users-contain" class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>id</td>';
