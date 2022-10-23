@@ -40,11 +40,11 @@ if (!class_exists('curtain_models')) {
 
 <?php          
 
-
-          if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+/*
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
-
+*/
             if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
                 $data=array();
                 $data['curtain_model_name']=$_GET['curtain_model_name'];
