@@ -120,7 +120,7 @@ if (!class_exists('curtain_models')) {
                     }
                 });
 
-                //$( "#dialog-form" ).dialog( "open" );
+                $( "#dialog-form" ).dialog( "open" );
     
                 form = dialog.find( "form" ).on( "submit", function( event ) {
                     event.preventDefault();
