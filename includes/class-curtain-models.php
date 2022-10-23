@@ -52,7 +52,7 @@ if (!class_exists('curtain_models')) {
 		$json = json_encode( $titles );
 		echo $json;
 		
-		die();		
+		die();
 	}
 		
 	/**

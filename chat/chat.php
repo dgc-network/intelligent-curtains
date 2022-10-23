@@ -30,20 +30,6 @@ session_start();
 //$dbh = mysql_connect(DBPATH,DBUSER,DBPASS);
 //mysql_selectdb(DBNAME,$dbh);
 create_tables();
-
-if ($_GET['action'] == "chatheartbeat") { chatHeartbeat(); } 
-if ($_GET['action'] == "sendchat") { sendChat(); } 
-if ($_GET['action'] == "closechat") { closeChat(); } 
-if ($_GET['action'] == "startchatsession") { startChatSession(); } 
-
-if (!isset($_SESSION['chatHistory'])) {
-	$_SESSION['chatHistory'] = array();	
-}
-
-if (!isset($_SESSION['openChatBoxes'])) {
-	$_SESSION['openChatBoxes'] = array();	
-}
-
 function create_tables() {
 	global $wpdb;
 	$charset_collate = $wpdb->get_charset_collate();
@@ -60,6 +46,20 @@ function create_tables() {
 	) $charset_collate;";
 	dbDelta($sql);
 }        
+
+/*
+if ($_GET['action'] == "chatheartbeat") { chatHeartbeat(); } 
+if ($_GET['action'] == "sendchat") { sendChat(); } 
+if ($_GET['action'] == "closechat") { closeChat(); } 
+if ($_GET['action'] == "startchatsession") { startChatSession(); } 
+*/
+if (!isset($_SESSION['chatHistory'])) {
+	$_SESSION['chatHistory'] = array();	
+}
+
+if (!isset($_SESSION['openChatBoxes'])) {
+	$_SESSION['openChatBoxes'] = array();	
+}
 
 //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
 //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
@@ -144,6 +144,7 @@ EOD;
 	if ($items != '') {
 		$items = substr($items, 0, -1);
 	}
+/*
 header('Content-type: application/json');
 ?>
 {
@@ -154,6 +155,12 @@ header('Content-type: application/json');
 
 <?php
 			exit(0);
+*/			
+	$json = array();
+	$json['username'] = $_SESSION['username'];
+	$json['items'] = $items;
+	echo json_encode( $json );
+	die();
 }
 
 function chatBoxSession($chatbox) {
@@ -170,14 +177,16 @@ function chatBoxSession($chatbox) {
 add_action( 'wp_ajax_startChatSession', 'startChatSession' );
 add_action( 'wp_ajax_nopriv_startChatSession', 'startChatSession' );
 function startChatSession() {
-	$items = '';
+
+	//$items = '';
+	$items = array();
 	if (!empty($_SESSION['openChatBoxes'])) {
 		foreach ($_SESSION['openChatBoxes'] as $chatbox => $void) {
-			$items .= chatBoxSession($chatbox);
+			//$items .= chatBoxSession($chatbox);
+			array_push($items, chatBoxSession($chatbox));
 		}
 	}
-
-
+/*
 	if ($items != '') {
 		$items = substr($items, 0, -1);
 	}
@@ -192,9 +201,14 @@ header('Content-type: application/json');
 }
 
 <?php
-
-
 	exit(0);
+*/
+	$json = array();
+	$json['username'] = $_SESSION['username'];
+	$json['items'] = $items;
+	echo json_encode( $json );
+	die();
+
 }
 
 function sendChat() {
