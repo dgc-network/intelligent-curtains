@@ -102,7 +102,7 @@ if (!class_exists('curtain_models')) {
                 allFields = $( [] ).add( name ).add( email ).add( password ),
                 tips = $( ".validateTips" );
     
-                $( "#create-button" ).button().on( "click", function() {
+                $( "#create-model" ).button().on( "click", function() {
                     dialog.dialog( "open" );
                 });
                   
@@ -249,7 +249,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<button id="create-button">Create new model</button>';
+            $output .= '<button id="create-model">Create new model</button>';
 /*
             $output .= '<form method="post">';
             $output .= '<div class="wp-block-buttons">';
