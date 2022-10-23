@@ -88,11 +88,11 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the &apos;x&apos; icon.</p>';
+                //$output .= '<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the &apos;x&apos; icon.</p>';
 
-                //$output .= '<div id="qrcode"><div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                //$output .= '</div></div>';
+                $output .= '<div id="qrcode"><div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
+                $output .= '</div></div>';
                 $output .= '</div>';
                 //$output .= '<div id="basic-demo" class="example_content"><div id="qrcode"><div id="qrcode_content">';
                 //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'].'</div></div></div>';
