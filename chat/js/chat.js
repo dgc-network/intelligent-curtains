@@ -385,6 +385,14 @@ function startChatSession(){
 	}});
 }
 
+	$( "#chat-with-jane-doe" ).button().on( "click", function() {
+		chatWith('janedoe');
+	});
+
+	$( "#chat-with-baby-doe" ).button().on( "click", function() {
+		chatWith('babydoe');
+	});
+
 });
 
 /**

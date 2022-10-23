@@ -29,9 +29,13 @@ body {
 </head>
 <body>
 <div id="main_container">
-
+<!--
 <a href="javascript:void(0)" onclick="javascript:chatWith('janedoe')">Chat With Jane Doe</a>
 <a href="javascript:void(0)" onclick="javascript:chatWith('babydoe')">Chat With Baby Doe</a>
+-->
+<button id="chat-with-jane-doe">Chat With Jane Doe</button>
+<button id="chat-with-baby-doe">Chat With Baby Doe</button>
+
 <!-- YOUR BODY HERE -->
 
 </div>
