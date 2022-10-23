@@ -17,10 +17,11 @@ if (!class_exists('curtain_models')) {
 
         function enqueue_scripts() {		
             wp_enqueue_script( 'custom-curtain-models', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-models.js', array( 'jquery' ), time(), true );
+            wp_enqueue_script( 'jquery-ui-js' );
             wp_enqueue_script( 'jquery-ui-dialog' );
             wp_enqueue_style( 'jquery-ui' );  
             wp_enqueue_style( 'demos-style' );  
-            }    
+        }    
 
         function list_curtain_models() {
 ?>
