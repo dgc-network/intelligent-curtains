@@ -278,15 +278,10 @@ if (!class_exists('curtain_models')) {
 
             global $wpdb;
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
-            if( $_mode=='Create' ) {
-                $output  = '<h2>New Model Name</h2>';
-            } else {
-                $output  = '<h2>Model Name Update</h2>';
-            }
             if (count($row) > 0) {
-                $output .= '<h2>Model Name Update</h2>';
+                $output = '<h2>Model Name Update</h2>';
             } else {
-                $output .= '<h2>New Model Name</h2>';
+                $output = '<h2>New Model Name</h2>';
             }
             $output  = '<div id="dialog-form" title="Create new model">';
             $output .= '<form><fieldset>';
@@ -305,6 +300,11 @@ if (!class_exists('curtain_models')) {
             $output .= '</div>';
             return $output;
 
+            if( $_mode=='Create' ) {
+                $output  = '<h2>New Model Name</h2>';
+            } else {
+                $output  = '<h2>Model Name Update</h2>';
+            }
             $output .= '<form method="post">';
             $output .= '<figure class="wp-block-table"><table><tbody>';
             if( $_mode=='Create' ) {
