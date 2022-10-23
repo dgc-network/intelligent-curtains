@@ -40,11 +40,11 @@ if (!class_exists('curtain_models')) {
 
 <?php          
 
-
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
-
+*/
             if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
                 $data=array();
                 $data['curtain_model_name']=$_GET['curtain_model_name'];
@@ -241,7 +241,7 @@ if (!class_exists('curtain_models')) {
             $output .= '</div>';
             $output .= '</form>';
 
-/*
+
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
@@ -249,25 +249,20 @@ if (!class_exists('curtain_models')) {
                 if (count($row) > 0) {
                     $output .= '<h2>Model Name Update</h2>';
                 } else {
-                    $output .= '<h2>New Model Name</h2>';
-                }
-                $output  = '<div id="dialog-form" title="Create new model">';
-                $output .= '<form><fieldset>';
-                if (count($row) > 0) {
-                    $output  = '<h2>Model Name Update</h2>';
-                } else {
+                    $output .= '<div id="dialog-form" title="Create new model">';
+                    $output .= '<form><fieldset>';
                     $output .= '<label for="name">Model Name</label>';
                     $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+                    $output .= '</fieldset></form>';
+                    $output .= '</div>';
                 }
-                $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
-                $output .= '</fieldset></form>';
-                $output .= '</div>';
             }
-*/            
+         
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode"><div id="qrcode_content">';
@@ -288,7 +283,7 @@ if (!class_exists('curtain_models')) {
             } else {
                 $output = '<h2>New Model Name</h2>';
             }
-            $output  = '<div id="dialog-form" title="Create new model">';
+            $output .= '<div id="dialog-form" title="Create new model">';
             $output .= '<form><fieldset>';
             if (count($row) > 0) {
                 $output  = '<h2>Model Name Update</h2>';
@@ -358,8 +353,6 @@ if (!class_exists('curtain_models')) {
                     $output .= '</form></td>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
-                    //$spec = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}specifications WHERE specification_id = {$result->specification_id}", OBJECT );
-                    //$output .= '<td>'.$spec->specification.'</td>';
                     $output .= '<td>'.$result->specification.'</td>';
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                     $output .= '<td>'.$user->display_name.'</td>';
