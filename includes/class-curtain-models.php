@@ -103,7 +103,8 @@ if (!class_exists('curtain_models')) {
                 tips = $( ".validateTips" );
     
                 dialog = $( "#dialog-form" ).dialog({
-                    autoOpen: false,
+                    //autoOpen: false,
+                    autoOpen: true,
                     height: 400,
                     width: 350,
                     modal: true,
@@ -118,8 +119,8 @@ if (!class_exists('curtain_models')) {
                         allFields.removeClass( "ui-state-error" );
                     }
                 });
-                
-                dialog.dialog( "open" );
+
+                //$( "#dialog-form" ).dialog( "open" );
     
                 form = dialog.find( "form" ).on( "submit", function( event ) {
                     event.preventDefault();
