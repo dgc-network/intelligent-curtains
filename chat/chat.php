@@ -69,16 +69,22 @@ function chatHeartbeat() {
 	
 	$sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
 	$query = mysql_query($sql);
-	$items = '';
+	//$items = '';
+	$items = array();
 
 	$chatBoxes = array();
 
 	while ($chat = mysql_fetch_array($query)) {
 
+		$chat['message'] = sanitize($chat['message']);
 		if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
-			$items = $_SESSION['chatHistory'][$chat['from']];
+			//$items = $_SESSION['chatHistory'][$chat['from']];
+			$item = $_SESSION['chatHistory'][$chat['from']];
+			$items[$item]['s']=0;
+			$items[$item]['f']=$chat['from'];
+			$items[$item]['s']=$chat['message'];
 		}
-
+/*
 		$chat['message'] = sanitize($chat['message']);
 
 		$items .= <<<EOD
@@ -88,11 +94,15 @@ function chatHeartbeat() {
 			"m": "{$chat['message']}"
 	   },
 EOD;
-
+*/
 	if (!isset($_SESSION['chatHistory'][$chat['from']])) {
 		$_SESSION['chatHistory'][$chat['from']] = '';
 	}
-
+	$item = $_SESSION['chatHistory'][$chat['from']];
+	$items[$item]['s']=0;
+	$items[$item]['f']=$chat['from'];
+	$items[$item]['s']=$chat['message'];
+/*
 	$_SESSION['chatHistory'][$chat['from']] .= <<<EOD
 						   {
 			"s": "0",
@@ -100,7 +110,7 @@ EOD;
 			"m": "{$chat['message']}"
 	   },
 EOD;
-		
+*/		
 		unset($_SESSION['tsChatBoxes'][$chat['from']]);
 		$_SESSION['openChatBoxes'][$chat['from']] = $chat['sent'];
 	}
@@ -113,6 +123,11 @@ EOD;
 
 			$message = "Sent at $time";
 			if ($now > 180) {
+				$item = $_SESSION['tsChatBoxes'][$chatbox];
+				$items[$item]['s']=2;
+				$items[$item]['f']=$chatbox;
+				$items[$item]['s']=$message;
+/*			
 				$items .= <<<EOD
 {
 "s": "2",
@@ -120,11 +135,15 @@ EOD;
 "m": "{$message}"
 },
 EOD;
-
+*/
 	if (!isset($_SESSION['chatHistory'][$chatbox])) {
 		$_SESSION['chatHistory'][$chatbox] = '';
 	}
-
+	$item = $_SESSION['tsChatBoxes'][$chatbox];
+	$items[$item]['s']=2;
+	$items[$item]['f']=$chatbox;
+	$items[$item]['s']=$message;
+/*
 	$_SESSION['chatHistory'][$chatbox] .= <<<EOD
 		{
 "s": "2",
@@ -132,6 +151,7 @@ EOD;
 "m": "{$message}"
 },
 EOD;
+*/
 			$_SESSION['tsChatBoxes'][$chatbox] = 1;
 		}
 		}
@@ -140,11 +160,11 @@ EOD;
 
 	$sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
 	$query = mysql_query($sql);
-
+/*
 	if ($items != '') {
 		$items = substr($items, 0, -1);
 	}
-/*
+
 header('Content-type: application/json');
 ?>
 {
@@ -157,7 +177,6 @@ header('Content-type: application/json');
 			exit(0);
 */			
 	$json = array();
-	$json['username'] = $_SESSION['username'];
 	$json['items'] = $items;
 	echo json_encode( $json );
 	die();
