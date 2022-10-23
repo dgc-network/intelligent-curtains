@@ -254,7 +254,7 @@ if (!class_exists('curtain_models')) {
             $output .= '<form method="post">';
             $output .= '<div class="wp-block-buttons">';
             $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
             //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
