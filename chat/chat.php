@@ -61,6 +61,14 @@ if (!isset($_SESSION['openChatBoxes'])) {
 	$_SESSION['openChatBoxes'] = array();	
 }
 
+//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+add_action( 'wp_enqueue_scripts', 'chat_enqueue_scripts'  );
+function chat_enqueue_scripts() {
+	wp_enqueue_script( 'chat-js',  plugin_dir_url( __DIR__ ) . 'chat/js/chat.js', array( 'jquery' ), time(), true );
+	wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'chat/css/chat.css', '', time() );
+	wp_enqueue_style( 'screen-css', plugin_dir_url( __DIR__ ) . 'chat/css/screen.css', '', time() );
+}
+
 //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
 //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
 add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );

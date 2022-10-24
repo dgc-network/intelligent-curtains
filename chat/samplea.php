@@ -1,4 +1,5 @@
 <?php
+add_shortcode('chat','chat_sample_a');
 function chat_sample_a(){
 	session_start();
 	$_SESSION['username'] = "johndoe" // Must be already set

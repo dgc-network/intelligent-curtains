@@ -19,7 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
-
 require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
 require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
@@ -35,8 +34,6 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $line_webhook = new line_webhook();
 $line_webhook->init();
-
-add_shortcode('chat','chat_sample_a');
 
 /*
 function line_bot_sdk() {
