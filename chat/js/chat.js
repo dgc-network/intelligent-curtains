@@ -17,6 +17,28 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+jQuery(document).ready(function($) {
+
+	$( "#chat-with-jane-doe" ).button().on( "click", function() {
+		chatWith('janedoe');
+	});
+
+	$( "#chat-with-baby-doe" ).button().on( "click", function() {
+		chatWith('babydoe');
+	});
+	
+	$( "#chatboxoptions-" ).button().on( "click", function() {
+		toggleChatBoxGrowth(chatboxtitle);
+	});
+
+	$( "#chatboxoptionsX" ).button().on( "click", function() {
+		closeChatBox(chatboxtitle);
+	});
+
+	$( ".chatboxtextarea" ).on( "keydown", function() {
+		checkChatBoxInputKey(event,this,chatboxtitle);
+	});
+
 var windowFocus = true;
 var username;
 var chatHeartbeatCount = 0;
@@ -32,7 +54,6 @@ var newMessagesWin = new Array();
 var chatBoxes = new Array();
 
 //$(document).ready(function(){
-jQuery(document).ready(function($) {
 	originalTitle = document.title;
 	startChatSession();
 
@@ -42,6 +63,7 @@ jQuery(document).ready(function($) {
 		windowFocus = true;
 		document.title = originalTitle;
 	});
+//});
 
 function restructureChatBoxes() {
 	align = 0;
@@ -77,7 +99,12 @@ function createChatBox(chatboxtitle,minimizeChatBox) {
 
 	$(" <div />" ).attr("id","chatbox_"+chatboxtitle)
 	.addClass("chatbox")
-	.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><a href="javascript:void(0)" onclick="javascript:toggleChatBoxGrowth(\''+chatboxtitle+'\')">-</a> <a href="javascript:void(0)" onclick="javascript:closeChatBox(\''+chatboxtitle+'\')">X</a></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
+	//.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><a href="javascript:void(0)" onclick="javascript:toggleChatBoxGrowth(\''+chatboxtitle+'\')">-</a> <a href="javascript:void(0)" onclick="javascript:closeChatBox(\''+chatboxtitle+'\')">X</a></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
+	.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions">')
+	.html('<button id="chatboxoptions-">-</button> ')
+	.html('<button id="chatboxoptionsX">-</button> ')
+	.html('</div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput">')
+	.html('<textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
 	.appendTo($( "body" ));
 			   
 	$("#chatbox_"+chatboxtitle).css('bottom', '0px');
@@ -384,14 +411,6 @@ function startChatSession(){
 		
 	}});
 }
-
-	$( "#chat-with-jane-doe" ).button().on( "click", function() {
-		chatWith('janedoe');
-	});
-
-	$( "#chat-with-baby-doe" ).button().on( "click", function() {
-		chatWith('babydoe');
-	});
 
 });
 
