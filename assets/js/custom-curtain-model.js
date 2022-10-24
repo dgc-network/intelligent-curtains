@@ -79,7 +79,8 @@ jQuery(document).ready(function($) {
     allFields = $( [] ).add( name ).add( email ).add( password ),
     tips = $( ".validateTips" );
 
-    dialog = $( "#dialog-form" ).dialog({
+    //dialog = $( "#dialog-form" ).dialog({
+    $( "#dialog-form" ).dialog({
         //autoOpen: false,
         autoOpen: true,
         height: 400,

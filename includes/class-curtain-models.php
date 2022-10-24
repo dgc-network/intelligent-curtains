@@ -92,7 +92,7 @@ if (!class_exists('curtain_models')) {
 ?>
             <script>
             $( function() {
-
+/*
                 var dialog, form,  
     emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
     name = $( "#name" ),
@@ -182,7 +182,7 @@ if (!class_exists('curtain_models')) {
     $( "#create-model" ).button().on( "click", function() {
         dialog.dialog( "open" );
     });
-
+*/
 
             } );
             </script>
