@@ -221,7 +221,7 @@ if (!class_exists('curtain_models')) {
                 $output .= $result.'<br>';
             }
 */            
-            if( isset($_POST['create_curtain_model']) ) {
+            if( isset($_POST['_create_curtain_model']) ) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
@@ -229,7 +229,7 @@ if (!class_exists('curtain_models')) {
                 $result = self::insert_curtain_model($data);
             }
             
-            if( isset($_POST['update_curtain_model']) ) {
+            if( isset($_POST['_update_curtain_model']) ) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
@@ -294,47 +294,47 @@ if (!class_exists('curtain_models')) {
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
                 if (count($row) > 0) {
                     //$output .= '<div id="dialog-form" title="Model Number update">';
-                    $output .= '<div id="dialog" title="Model Number update">';
-                    $output .= '<form><fieldset>';
+                    $output .= '<div id="dialog" title="Model Number update"><form>';
+                    $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
                     $output .= '<label for="name">Model Name</label>';
-                    $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
+                    $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
                     $output .= '<label for="name">Description</label>';
-                    $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
+                    $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
                     $output .= '<label for="name">Curtain Vendor</label>';
-                    $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->vendor_name.'">';
+                    $output .= '<input type="text" name="_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->vendor_name.'">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
-                    $output .= '</fieldset></form>';
-                    $output .= '</div>';
+                    $output .= '</fieldset>';
                     $output .= '<div class="wp-block-buttons">';
                     $output .= '<div class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_curtain_model">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_model">';
                     $output .= '</div>';
                     $output .= '<div class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_curtain_model">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_model">';
                     $output .= '</div>';
                     $output .= '</div>';
+                    $output .= '</form></div>';
                 } else {
                     //$output .= '<div id="dialog-form" title="Create new model">';
-                    $output .= '<div id="dialog" title="Create new model">';
-                    $output .= '<form><fieldset>';
+                    $output .= '<div id="dialog" title="Create new model"><form>';
+                    $output .= '<fieldset>';
                     $output .= '<label for="name">Model Name</label>';
-                    $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Description</label>';
-                    $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Curtain Vendor</label>';
-                    $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
-                    $output .= '</fieldset></form>';
-                    $output .= '</div>';
+                    $output .= '</fieldset>';
                     $output .= '<div class="wp-block-buttons">';
                     $output .= '<div class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_curtain_model">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_curtain_model">';
                     $output .= '</div>';
                     $output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</div>';
                     $output .= '</div>';
+                    $output .= '</form></div>';
                 }
             }
          
