@@ -7,7 +7,25 @@ jQuery(document).ready(function($) {
 /* jQuery UI Dialog - Basic dialog */
 
     $( "#dialog" ).dialog();
-    $( "#dialog-form" ).dialog();
+    //$( "#dialog-form" ).dialog();
+    $( "#dialog-form" ).dialog({
+        //autoOpen: false,
+        autoOpen: true,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Create": addUser,
+            Cancel: function() {
+                dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+            form[ 0 ].reset();
+            allFields.removeClass( "ui-state-error" );
+        }
+    });
+
 
 /* jQuery UI Dialog - Modal form */
 
