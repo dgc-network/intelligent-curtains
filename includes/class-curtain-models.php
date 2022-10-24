@@ -194,7 +194,7 @@ if (!class_exists('curtain_models')) {
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
             }
-*/
+
             if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
                 $data=array();
                 $data['curtain_model_name']=$_GET['curtain_model_name'];
@@ -220,7 +220,7 @@ if (!class_exists('curtain_models')) {
                 $result = self::update_curtain_products($data, $where);
                 $output .= $result.'<br>';
             }
-            
+*/            
             if( isset($_POST['create_curtain_model']) ) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
@@ -284,19 +284,17 @@ if (!class_exists('curtain_models')) {
             $output .= '<div class="wp-block-button">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            //$output .= '<a class="wp-block-button__link" href="/">Cancel</a>';
-            $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
 
 
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+            if( isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
                 if (count($row) > 0) {
-                    $output .= '<div id="dialog-form" title="Model Number update">';
+                    //$output .= '<div id="dialog-form" title="Model Number update">';
+                    $output .= '<div id="dialog" title="Model Number update">';
                     $output .= '<form><fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
                     $output .= '<label for="name">Model Name</label>';
@@ -308,8 +306,17 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
                     $output .= '</fieldset></form>';
                     $output .= '</div>';
+                    $output .= '<div class="wp-block-buttons">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_curtain_model">';
+                    $output .= '</div>';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="delete_curtain_model">';
+                    $output .= '</div>';
+                    $output .= '</div>';
                 } else {
-                    $output .= '<div id="dialog-form" title="Create new model">';
+                    //$output .= '<div id="dialog-form" title="Create new model">';
+                    $output .= '<div id="dialog" title="Create new model">';
                     $output .= '<form><fieldset>';
                     $output .= '<label for="name">Model Name</label>';
                     $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
@@ -319,6 +326,14 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
                     $output .= '</fieldset></form>';
+                    $output .= '</div>';
+                    $output .= '<div class="wp-block-buttons">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_curtain_model">';
+                    $output .= '</div>';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    $output .= '</div>';
                     $output .= '</div>';
                 }
             }
