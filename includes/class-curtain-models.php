@@ -24,6 +24,7 @@ if (!class_exists('curtain_models')) {
         function enqueue_scripts() {		
             wp_enqueue_script( 'custom-curtain-models', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-models.js', array( 'jquery' ), time(), true );
             wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), time(), true  );
+            wp_enqueue_script( 'jquery-ui-dialog' );
             //wp_register_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
             //wp_register_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
             //wp_register_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
