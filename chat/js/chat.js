@@ -27,11 +27,11 @@ jQuery(document).ready(function($) {
 		chatWith('babydoe');
 	});
 	
-	$( "#chatboxoptions-" ).button().on( "click", function() {
+	$( "#chat-box-options-" ).on( "click", function() {
 		toggleChatBoxGrowth(chatboxtitle);
 	});
 
-	$( "#chatboxoptionsX" ).button().on( "click", function() {
+	$( "#chat-box-options-X" ).on( "click", function() {
 		closeChatBox(chatboxtitle);
 	});
 
@@ -56,13 +56,14 @@ var chatBoxes = new Array();
 //$(document).ready(function(){
 	originalTitle = document.title;
 	startChatSession();
-
+/*
 	$([window, document]).blur(function(){
 		windowFocus = false;
 	}).focus(function(){
 		windowFocus = true;
 		document.title = originalTitle;
 	});
+*/	
 //});
 
 function restructureChatBoxes() {
@@ -100,7 +101,7 @@ function createChatBox(chatboxtitle,minimizeChatBox) {
 	$(" <div />" ).attr("id","chatbox_"+chatboxtitle)
 	.addClass("chatbox")
 	//.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><a href="javascript:void(0)" onclick="javascript:toggleChatBoxGrowth(\''+chatboxtitle+'\')">-</a> <a href="javascript:void(0)" onclick="javascript:closeChatBox(\''+chatboxtitle+'\')">X</a></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea" onkeydown="javascript:return checkChatBoxInputKey(event,this,\''+chatboxtitle+'\');"></textarea></div>')
-	.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><button id="chatboxoptions-">-</button> <button id="chatboxoptionsX">-</button></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>')
+	.html('<div class="chatboxhead"><div class="chatboxtitle">'+chatboxtitle+'</div><div class="chatboxoptions"><span id="chat-box-options-">-</span> <span id="chat-box-options-X">X</span></div><br clear="all"/></div><div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>')
 	.appendTo($( "body" ));
 			   
 	$("#chatbox_"+chatboxtitle).css('bottom', '0px');
@@ -358,54 +359,50 @@ function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
 function startChatSession(){  
 	$.ajax({
         type: 'POST',
-        url: '/wp-admin/admin-ajax.php',
-        //dataType: "json",
+		cache: false,
+		dataType: "json",
+		url: '/wp-admin/admin-ajax.php',
         data: {
             'action': 'startChatSession',
         },
-        //success: function (data) {
-        //    categories = data;
-        //},
-        error: function(error){
+		success: function(data) {
+ 
+			username = data.username;
+	
+			$.each(data.items, function(i,item){
+				if (item)	{ // fix strange ie bug
+	
+					chatboxtitle = item.f;
+	
+					if ($("#chatbox_"+chatboxtitle).length <= 0) {
+						createChatBox(chatboxtitle,1);
+					}
+					
+					if (item.s == 1) {
+						item.f = username;
+					}
+	
+					if (item.s == 2) {
+						$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
+					} else {
+						$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
+					}
+				}
+			});
+			
+			for (i=0;i<chatBoxes.length;i++) {
+				chatboxtitle = chatBoxes[i];
+				$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+				setTimeout('$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
+			}
+		
+			setTimeout('chatHeartbeat();',chatHeartbeatTime);
+			
+		},
+		error: function(error){
             alert(error);
         },
-	  //url: "chat.php?action=startchatsession",
-	  cache: false,
-	  dataType: "json",
-	  success: function(data) {
- 
-		username = data.username;
-
-		$.each(data.items, function(i,item){
-			if (item)	{ // fix strange ie bug
-
-				chatboxtitle = item.f;
-
-				if ($("#chatbox_"+chatboxtitle).length <= 0) {
-					createChatBox(chatboxtitle,1);
-				}
-				
-				if (item.s == 1) {
-					item.f = username;
-				}
-
-				if (item.s == 2) {
-					$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-				} else {
-					$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-				}
-			}
-		});
-		
-		for (i=0;i<chatBoxes.length;i++) {
-			chatboxtitle = chatBoxes[i];
-			$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
-			setTimeout('$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
-		}
-	
-	setTimeout('chatHeartbeat();',chatHeartbeatTime);
-		
-	}});
+	});
 }
 
 });
