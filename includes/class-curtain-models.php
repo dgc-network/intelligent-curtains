@@ -288,7 +288,7 @@ if (!class_exists('curtain_models')) {
             $output .= '</form>';
 
 
-            if( isset($_POST['_id']) ) {
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
@@ -305,14 +305,14 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->vendor_name.'">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
                     $output .= '</fieldset>';
-                    $output .= '<div class="wp-block-buttons">';
-                    $output .= '<div class="wp-block-button">';
+                    //$output .= '<div class="wp-block-buttons">';
+                    //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_model">';
-                    $output .= '</div>';
-                    $output .= '<div class="wp-block-button">';
+                    //$output .= '</div>';
+                    //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_model">';
-                    $output .= '</div>';
-                    $output .= '</div>';
+                    //$output .= '</div>';
+                    //$output .= '</div>';
                     $output .= '</form></div>';
                 } else {
                     //$output .= '<div id="dialog-form" title="Create new model">';
