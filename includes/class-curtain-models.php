@@ -11,78 +11,75 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
-            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-            add_action( 'wp_ajax_get_categories', array( __CLASS__, 'get_categories' ) );
-            add_action( 'wp_ajax_nopriv_get_categories', array( __CLASS__, 'get_categories' ) );
-            add_action( 'wp_ajax_get_product_by_category', array( __CLASS__, 'get_product_by_category' ) );
-            add_action( 'wp_ajax_nopriv_get_product_by_category', array( __CLASS__, 'get_product_by_category' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+            add_action( 'wp_ajax_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
+            add_action( 'wp_ajax_nopriv_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
+            add_action( 'wp_ajax_update_model', array( __CLASS__, 'ajax_update_model' ) );
+            add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
+            add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
+            add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
             self::create_tables();
         }
 
         function enqueue_scripts() {		
             wp_enqueue_script( 'custom-curtain-models', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-models.js', array( 'jquery' ), time(), true );
-            wp_register_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
-            wp_register_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
-            wp_register_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
-            wp_enqueue_script( 'jquery-ui-js' );
-            wp_enqueue_style( 'jquery-ui-css' );  
-            wp_enqueue_style( 'demos-style-css' );  
+            //wp_register_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
+            //wp_register_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
+            //wp_register_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
+            //wp_enqueue_script( 'jquery-ui-js' );
+            //wp_enqueue_style( 'jquery-ui-css' );  
+            //wp_enqueue_style( 'demos-style-css' );  
         }    
 
-	/**
-	 * Product Categories List by AJAX
-	 */
-	function get_categories() {
-		$args = array(
-			'taxonomy'   => "product_cat",
-			'number'     => $number,
-			'orderby'    => $orderby,
-			'order'      => $order,
-			'hide_empty' => $hide_empty,
-			'include'    => $ids
-		);
-		$product_categories = get_terms($args);
+        function ajax_insert_model() {
+            $args = array(
+                'taxonomy'   => "product_cat",
+                'number'     => $number,
+                'orderby'    => $orderby,
+                'order'      => $order,
+                'hide_empty' => $hide_empty,
+                'include'    => $ids
+            );
+            $product_categories = get_terms($args);
+    
+            $titles = array();
+            foreach( $product_categories as $cat ) {
+                if ($cat->name != 'Uncategorized') {
+                    array_push($titles, $cat->name);
+                }
+            }
+            $json = json_encode( $titles );
+            echo $json;
+            
+            die();
+        }
+            
+        function ajax_update_model() {
 
-		$titles = array();
-		foreach( $product_categories as $cat ) {
-			if ($cat->name != 'Uncategorized') {
-				array_push($titles, $cat->name);
-			}
-		}
-		$json = json_encode( $titles );
-		echo $json;
-		
-		die();
-	}
-		
-	/**
-	 * Product List by Category by AJAX
-	 */
-	function get_product_by_category() {
-
-		$product_category_slug = ( isset($_POST['term_chosen']) && !empty( $_POST['term_chosen']) ? $_POST['term_chosen'] : false );
-		
-		$query = new WC_Product_Query( array(
-			'category' => array( $product_category_slug ),
-			'limit' => 10,
-			'orderby' => 'date',
-			'order' => 'DESC'
-		) );
-		
-		$products = $query->get_products();
-		
-		$titles = array();
-		foreach( $products as $product ) {
-			$title = array();
-			array_push($title, $product->get_id());
-			array_push($title, $product->get_title());
-			array_push($titles, $title);
-		}	
-		$json = json_encode( $titles );
-		echo $json;
-		
-		die();		
-	}
+            $product_category_slug = ( isset($_POST['term_chosen']) && !empty( $_POST['term_chosen']) ? $_POST['term_chosen'] : false );
+            
+            $query = new WC_Product_Query( array(
+                'category' => array( $product_category_slug ),
+                'limit' => 10,
+                'orderby' => 'date',
+                'order' => 'DESC'
+            ) );
+            
+            $products = $query->get_products();
+            
+            $titles = array();
+            foreach( $products as $product ) {
+                $title = array();
+                array_push($title, $product->get_id());
+                array_push($title, $product->get_title());
+                array_push($titles, $title);
+            }	
+            $json = json_encode( $titles );
+            echo $json;
+            
+            die();		
+        }
+            
         function list_curtain_models() {
 ?>
 
@@ -91,56 +88,6 @@ if (!class_exists('curtain_models')) {
 
 
 <?php          
-
-/*
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
-            }
-*/
-            if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
-                $data=array();
-                $data['curtain_model_name']=$_GET['curtain_model_name'];
-                $data['model_description']=$_GET['description'];
-                $data['vendor_name']=$_GET['vendor_name'];
-                $result = self::insert_curtain_model($data);
-                $output .= $result.'<br>';
-            }
-
-            if( ($_GET['action']=='update-curtain-model') && (isset($_GET['curtain_model_id'])) ) {
-                $data=array();
-                if( isset($_GET['curtain_model_name']) ) {
-                    $data['curtain_model_name']=$_GET['curtain_model_name'];
-                }
-                if( isset($_GET['model_description']) ) {
-                    $data['model_description']=$_GET['description'];
-                }
-                if( isset($_GET['vendor_name']) ) {
-                    $data['vendor_name']=$_GET['vendor_name'];
-                }
-                $where=array();
-                $where['curtain_model_id']=$_GET['curtain_model_id'];
-                $result = self::update_curtain_products($data, $where);
-                $output .= $result.'<br>';
-            }
-
-            if( isset($_POST['create_curtain_model']) ) {
-                $data=array();
-                $data['curtain_model_name']=$_POST['_curtain_model_name'];
-                $data['model_description']=$_POST['_model_description'];
-                $data['vendor_name']=$_POST['_vendor_name'];
-                $result = self::insert_curtain_model($data);
-            }
-        
-            if( isset($_POST['update_curtain_model']) ) {
-                $data=array();
-                $data['curtain_model_name']=$_POST['_curtain_model_name'];
-                $data['model_description']=$_POST['_model_description'];
-                $data['vendor_name']=$_POST['_vendor_name'];
-                $where=array();
-                $where['curtain_model_id']=$_POST['_curtain_model_id'];
-                $result = self::update_curtain_model($data, $where);
-            }
-        
 
 ?>
             <script>
@@ -241,6 +188,55 @@ if (!class_exists('curtain_models')) {
             </script>
 <?php            
 
+/*
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+                return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
+            }
+*/
+            if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
+                $data=array();
+                $data['curtain_model_name']=$_GET['curtain_model_name'];
+                $data['model_description']=$_GET['description'];
+                $data['vendor_name']=$_GET['vendor_name'];
+                $result = self::insert_curtain_model($data);
+                $output .= $result.'<br>';
+            }
+            
+            if( ($_GET['action']=='update-curtain-model') && (isset($_GET['curtain_model_id'])) ) {
+                $data=array();
+                if( isset($_GET['curtain_model_name']) ) {
+                    $data['curtain_model_name']=$_GET['curtain_model_name'];
+                }
+                if( isset($_GET['model_description']) ) {
+                    $data['model_description']=$_GET['description'];
+                }
+                if( isset($_GET['vendor_name']) ) {
+                    $data['vendor_name']=$_GET['vendor_name'];
+                }
+                $where=array();
+                $where['curtain_model_id']=$_GET['curtain_model_id'];
+                $result = self::update_curtain_products($data, $where);
+                $output .= $result.'<br>';
+            }
+            
+            if( isset($_POST['create_curtain_model']) ) {
+                $data=array();
+                $data['curtain_model_name']=$_POST['_curtain_model_name'];
+                $data['model_description']=$_POST['_model_description'];
+                $data['vendor_name']=$_POST['_vendor_name'];
+                $result = self::insert_curtain_model($data);
+            }
+            
+            if( isset($_POST['update_curtain_model']) ) {
+                $data=array();
+                $data['curtain_model_name']=$_POST['_curtain_model_name'];
+                $data['model_description']=$_POST['_model_description'];
+                $data['vendor_name']=$_POST['_vendor_name'];
+                $where=array();
+                $where['curtain_model_id']=$_POST['_curtain_model_id'];
+                $result = self::update_curtain_model($data, $where);
+            }
+
             global $wpdb;
             if( isset($_POST['_where_curtain_model']) ) {
                 $where='"%'.$_POST['_where_curtain_model'].'%"';
@@ -298,7 +294,18 @@ if (!class_exists('curtain_models')) {
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
                 if (count($row) > 0) {
-                    $output .= '<h2>Model Name Update</h2>';
+                    $output .= '<div id="dialog-form" title="Model Number update">';
+                    $output .= '<form><fieldset>';
+                    $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
+                    $output .= '<label for="name">Model Name</label>';
+                    $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
+                    $output .= '<label for="name">Description</label>';
+                    $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
+                    $output .= '<label for="name">Curtain Vendor</label>';
+                    $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all" value="'.$row->vendor_name.'">';
+                    $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+                    $output .= '</fieldset></form>';
+                    $output .= '</div>';
                 } else {
                     $output .= '<div id="dialog-form" title="Create new model">';
                     $output .= '<form><fieldset>';
@@ -326,30 +333,6 @@ if (!class_exists('curtain_models')) {
         }
 
         function edit_curtain_model( $_id=null, $_mode=null ) {
-
-            global $wpdb;
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
-            if (count($row) > 0) {
-                $output = '<h2>Model Name Update</h2>';
-            } else {
-                $output = '<h2>New Model Name</h2>';
-            }
-            $output .= '<div id="dialog-form" title="Create new model">';
-            $output .= '<form><fieldset>';
-            if (count($row) > 0) {
-                $output  = '<h2>Model Name Update</h2>';
-            } else {
-                $output .= '<label for="name">Model Name</label>';
-                $output .= '<input type="text" name="_curtain_model_name" id="name" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="name">Description</label>';
-                $output .= '<input type="text" name="_model_description" id="name" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="name">Curtain Vendor</label>';
-                $output .= '<input type="text" name="_vendor_name" id="name" class="text ui-widget-content ui-corner-all">';
-            }
-            $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
-            $output .= '</fieldset></form>';
-            $output .= '</div>';
-            return $output;
 
             if( $_mode=='Create' ) {
                 $output  = '<h2>New Model Name</h2>';

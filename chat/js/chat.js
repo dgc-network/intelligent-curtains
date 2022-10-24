@@ -56,14 +56,14 @@ var chatBoxes = new Array();
 //$(document).ready(function(){
 	originalTitle = document.title;
 	startChatSession();
-/*
+
 	$([window, document]).blur(function(){
 		windowFocus = false;
 	}).focus(function(){
 		windowFocus = true;
 		document.title = originalTitle;
 	});
-*/	
+
 //});
 
 function restructureChatBoxes() {
@@ -208,66 +208,62 @@ function chatHeartbeat(){
 	$.ajax({
         type: 'POST',
         url: '/wp-admin/admin-ajax.php',
-        //dataType: "json",
+		cache: false,
+		dataType: "json",
         data: {
             'action': 'chatHeartbeat',
         },
-        //success: function (data) {
-        //    categories = data;
-        //},
+	  	success: function(data) {
+
+			$.each(data.items, function(i,item){
+				if (item)	{ // fix strange ie bug
+					chatboxtitle = item.f;
+
+					if ($("#chatbox_"+chatboxtitle).length <= 0) {
+						createChatBox(chatboxtitle);
+					}
+					if ($("#chatbox_"+chatboxtitle).css('display') == 'none') {
+						$("#chatbox_"+chatboxtitle).css('display','block');
+						restructureChatBoxes();
+					}
+					
+					if (item.s == 1) {
+						item.f = username;
+					}
+	
+					if (item.s == 2) {
+						$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
+					} else {
+						newMessages[chatboxtitle] = true;
+						newMessagesWin[chatboxtitle] = true;
+						$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
+					}
+	
+					$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+					itemsfound += 1;
+	
+				}
+			});
+
+			chatHeartbeatCount++;
+
+			if (itemsfound > 0) {
+				chatHeartbeatTime = minChatHeartbeat;
+				chatHeartbeatCount = 1;
+			} else if (chatHeartbeatCount >= 10) {
+				chatHeartbeatTime *= 2;
+				chatHeartbeatCount = 1;
+				if (chatHeartbeatTime > maxChatHeartbeat) {
+					chatHeartbeatTime = maxChatHeartbeat;
+				}
+			}
+			
+			setTimeout('chatHeartbeat();',chatHeartbeatTime);
+		},
         error: function(error){
             alert(error);
         },
-	  //url: "chat.php?action=chatheartbeat",
-	  cache: false,
-	  dataType: "json",
-	  success: function(data) {
-
-		$.each(data.items, function(i,item){
-			if (item)	{ // fix strange ie bug
-
-				chatboxtitle = item.f;
-
-				if ($("#chatbox_"+chatboxtitle).length <= 0) {
-					createChatBox(chatboxtitle);
-				}
-				if ($("#chatbox_"+chatboxtitle).css('display') == 'none') {
-					$("#chatbox_"+chatboxtitle).css('display','block');
-					restructureChatBoxes();
-				}
-				
-				if (item.s == 1) {
-					item.f = username;
-				}
-
-				if (item.s == 2) {
-					$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-				} else {
-					newMessages[chatboxtitle] = true;
-					newMessagesWin[chatboxtitle] = true;
-					$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-				}
-
-				$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
-				itemsfound += 1;
-			}
-		});
-
-		chatHeartbeatCount++;
-
-		if (itemsfound > 0) {
-			chatHeartbeatTime = minChatHeartbeat;
-			chatHeartbeatCount = 1;
-		} else if (chatHeartbeatCount >= 10) {
-			chatHeartbeatTime *= 2;
-			chatHeartbeatCount = 1;
-			if (chatHeartbeatTime > maxChatHeartbeat) {
-				chatHeartbeatTime = maxChatHeartbeat;
-			}
-		}
-		
-		setTimeout('chatHeartbeat();',chatHeartbeatTime);
-	}});
+	});
 }
 
 function closeChatBox(chatboxtitle) {
