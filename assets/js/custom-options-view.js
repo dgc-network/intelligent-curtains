@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
         autoOpen: true,
         height: 400,
         width: 350,
-        modal: true,
+        //modal: true,
         buttons: {
             "Create": addUser,
             Cancel: function() {
