@@ -64,7 +64,7 @@ if (!isset($_SESSION['openChatBoxes'])) {
 //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 add_action( 'wp_enqueue_scripts', 'chat_enqueue_scripts'  );
 function chat_enqueue_scripts() {
-	wp_enqueue_script( 'chat-js',  plugin_dir_url( __DIR__ ) . 'chat/js/chat.js', array( 'jquery' ), time(), true );
+	//wp_enqueue_script( 'chat-js',  plugin_dir_url( __DIR__ ) . 'chat/js/chat.js', array( 'jquery' ), time(), true );
 	wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'chat/css/chat.css', '', time() );
 	wp_enqueue_style( 'screen-css', plugin_dir_url( __DIR__ ) . 'chat/css/screen.css', '', time() );
 }
