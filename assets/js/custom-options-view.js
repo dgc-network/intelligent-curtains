@@ -7,6 +7,7 @@ jQuery(document).ready(function($) {
 /* jQuery UI Dialog - Basic dialog */
 
     $( "#dialog" ).dialog();
+    $( "#dialog-form" ).dialog();
 
 /* jQuery UI Dialog - Modal form */
 
