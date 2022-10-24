@@ -67,6 +67,7 @@ jQuery(document).ready(function($) {
 /* jQuery UI Dialog - Basic dialog */
 
     $( "#dialog" ).dialog();
+    $( "#dialog-form" ).dialog();
 
 /* jQuery UI Dialog - Modal form */
 
@@ -80,7 +81,7 @@ jQuery(document).ready(function($) {
     tips = $( ".validateTips" );
 
     //dialog = $( "#dialog-form" ).dialog({
-    $( "#dialog-form" ).dialog({
+    $( "#dialog-form-" ).dialog({
         //autoOpen: false,
         autoOpen: true,
         height: 400,
