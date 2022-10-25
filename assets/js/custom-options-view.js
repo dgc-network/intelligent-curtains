@@ -72,7 +72,7 @@ jQuery(document).ready(function($) {
             if (message != '') {
               
                 $.ajax({
-                    type: 'POST',
+                    type: 'post',
                     url: '/wp-admin/admin-ajax.php',
                     //url: 'admin-ajax.php',
                     //cache: false,
