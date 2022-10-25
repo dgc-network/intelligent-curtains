@@ -1,5 +1,12 @@
 jQuery(document).ready(function($) {
 
+    $('.chatboxinput').on('keypress',function(e) {
+        if(e.which == 13) {
+            alert('You pressed enter!');
+        }
+    });
+
+
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
