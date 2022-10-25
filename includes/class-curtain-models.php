@@ -114,8 +114,8 @@ if (!class_exists('curtain_models')) {
             $output .= '<form method="post">';
             $output .= '<div style="display: inline">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
-            $output .= '</div>';
-            $output .= '<div style="display: inline">';
+            //$output .= '</div>';
+            //$output .= '<div style="display: inline">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</div>';
             $output .= '</form>';
