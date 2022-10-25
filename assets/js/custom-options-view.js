@@ -73,8 +73,8 @@ jQuery(document).ready(function($) {
               
                 $.ajax({
                     type: 'POST',
-                    //url: '/wp-admin/admin-ajax.php',
-                    url: 'admin-ajax.php',
+                    url: '/wp-admin/admin-ajax.php',
+                    //url: 'admin-ajax.php',
                     //cache: false,
                     dataType: "json",
                     data: {
