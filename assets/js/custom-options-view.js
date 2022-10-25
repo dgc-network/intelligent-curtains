@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
 					}
 	
 					$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-					itemsfound += 1;
+					//itemsfound += 1;
 	
 				}
 			});
@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
                     url: '/wp-admin/admin-ajax.php',
                     data: {
                         'action': 'sendChat',
-                        'to': chatboxtitle,
+                        //'to': chatboxtitle,
                         'message': message,
                     },
                     success: function(data) {
