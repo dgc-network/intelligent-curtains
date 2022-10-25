@@ -83,160 +83,23 @@ if (!class_exists('curtain_models')) {
         }
             
         function list_curtain_models() {
-?>
 
-            <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-            <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-
-
-<?php          
-
-?>
-            <script>
-            $( function() {
-/*
-                var dialog, form,  
-    emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    name = $( "#name" ),
-    email = $( "#email" ),
-    password = $( "#password" ),
-    allFields = $( [] ).add( name ).add( email ).add( password ),
-    tips = $( ".validateTips" );
-
-    dialog = $( "#dialog-form" ).dialog({
-        //autoOpen: false,
-        autoOpen: true,
-        height: 400,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Create": addUser,
-            Cancel: function() {
-                dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-            form[ 0 ].reset();
-            allFields.removeClass( "ui-state-error" );
-        }
-    });
-
-    //$( "#dialog-form" ).dialog( "open" );
-
-    form = dialog.find( "form" ).on( "submit", function( event ) {
-        event.preventDefault();
-        addUser();
-    });
-
-    function addUser() {
-        var valid = true;
-        allFields.removeClass( "ui-state-error" );
-
-        valid = valid && checkLength( name, "username", 3, 16 );
-        valid = valid && checkLength( email, "email", 6, 80 );
-        valid = valid && checkLength( password, "password", 5, 16 );
-
-        valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-        valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
-        valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
-
-        if ( valid ) {
-            $( "#users tbody" ).append( "<tr>" +
-                "<td>" + name.val() + "</td>" +
-                "<td>" + email.val() + "</td>" +
-                "<td>" + password.val() + "</td>" +
-            "</tr>" );
-            dialog.dialog( "close" );
-        }
-        return valid;
-    }
-
-    function updateTips( t ) {
-        tips
-            .text( t )
-            .addClass( "ui-state-highlight" );
-        setTimeout(function() {
-            tips.removeClass( "ui-state-highlight", 1500 );
-        }, 500 );
-    }
-
-    function checkLength( o, n, min, max ) {
-        if ( o.val().length > max || o.val().length < min ) {
-            o.addClass( "ui-state-error" );
-            updateTips( "Length of " + n + " must be between " +
-                min + " and " + max + "." );
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function checkRegexp( o, regexp, n ) {
-        if ( !( regexp.test( o.val() ) ) ) {
-            o.addClass( "ui-state-error" );
-            updateTips( n );
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    $( "#create-model" ).button().on( "click", function() {
-        dialog.dialog( "open" );
-    });
-*/
-
-            } );
-            </script>
-<?php            
-
-/*
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_curtain_model($_POST['_id'], $_POST['_mode']);
-            }
-
-            if( ($_GET['action']=='insert-curtain-model') && (isset($_GET['curtain_model_name'])) ) {
-                $data=array();
-                $data['curtain_model_name']=$_GET['curtain_model_name'];
-                $data['model_description']=$_GET['description'];
-                $data['vendor_name']=$_GET['vendor_name'];
-                $result = self::insert_curtain_model($data);
-                $output .= $result.'<br>';
-            }
-            
-            if( ($_GET['action']=='update-curtain-model') && (isset($_GET['curtain_model_id'])) ) {
-                $data=array();
-                if( isset($_GET['curtain_model_name']) ) {
-                    $data['curtain_model_name']=$_GET['curtain_model_name'];
-                }
-                if( isset($_GET['model_description']) ) {
-                    $data['model_description']=$_GET['description'];
-                }
-                if( isset($_GET['vendor_name']) ) {
-                    $data['vendor_name']=$_GET['vendor_name'];
-                }
-                $where=array();
-                $where['curtain_model_id']=$_GET['curtain_model_id'];
-                $result = self::update_curtain_products($data, $where);
-                $output .= $result.'<br>';
-            }
-*/            
             if( isset($_POST['_create_curtain_model']) ) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
-                $data['vendor_name']=$_POST['_vendor_name'];
+                $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $result = self::insert_curtain_model($data);
             }
             
-            if( isset($_POST['_update_curtain_model']) ) {
+            if( isset($_POST['_update_curtain_models']) ) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
-                $data['vendor_name']=$_POST['_vendor_name'];
+                $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $where=array();
                 $where['curtain_model_id']=$_POST['_curtain_model_id'];
-                $result = self::update_curtain_model($data, $where);
+                $result = self::update_curtain_models($data, $where);
             }
 
             global $wpdb;
@@ -248,12 +111,12 @@ if (!class_exists('curtain_models')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
             $output  = '<h2>Model Number</h2>';
-            $output .= '<span style="text-align:right">';
+            //$output .= '<span style="text-align:right">';
             $output .= '<form method="post">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
-            $output .= '</span>';
+            //$output .= '</span>';
             $output .= '<div id="users-contain" class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
@@ -272,7 +135,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="submit" value="'.$result->curtain_model_name.'" name="_mode">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->model_description.'</td>';
-                $output .= '<td>'.$result->vendor_name.'</td>';
+                $output .= '<td>'.$result->curtain_vendor_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
@@ -280,11 +143,11 @@ if (!class_exists('curtain_models')) {
             //$output .= '<button id="create-model">Create new model</button>';
 
             $output .= '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
+            //$output .= '<div class="wp-block-buttons">';
+            //$output .= '<div class="wp-block-button">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
-            $output .= '</div>';
-            $output .= '</div>';
+            //$output .= '</div>';
+            //$output .= '</div>';
             $output .= '</form>';
 
 
@@ -302,17 +165,17 @@ if (!class_exists('curtain_models')) {
                     $output .= '<label for="name">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
                     $output .= '<label for="name">Curtain Vendor</label>';
-                    $output .= '<input type="text" name="_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->vendor_name.'">';
+                    $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
-                    $output .= '</fieldset>';
                     //$output .= '<div class="wp-block-buttons">';
                     //$output .= '<div class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_model">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_models">';
                     //$output .= '</div>';
                     //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_model">';
                     //$output .= '</div>';
                     //$output .= '</div>';
+                    $output .= '</fieldset>';
                     $output .= '</form></div>';
                 } else {
                     //$output .= '<div id="dialog-form" title="Create new model">';
@@ -323,17 +186,17 @@ if (!class_exists('curtain_models')) {
                     $output .= '<label for="name">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Curtain Vendor</label>';
-                    $output .= '<input type="text" name="_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
                     $output .= '</fieldset>';
-                    $output .= '<div class="wp-block-buttons">';
-                    $output .= '<div class="wp-block-button">';
+                    //$output .= '<div class="wp-block-buttons">';
+                    //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_curtain_model">';
-                    $output .= '</div>';
-                    $output .= '<div class="wp-block-button">';
+                    //$output .= '</div>';
+                    //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-                    $output .= '</div>';
-                    $output .= '</div>';
+                    //$output .= '</div>';
+                    //$output .= '</div>';
                     $output .= '</form></div>';
                 }
             }
@@ -361,12 +224,12 @@ if (!class_exists('curtain_models')) {
             if( $_mode=='Create' ) {
                 $output .= '<tr><td>'.'Model Name:'.'</td><td><input size="50" type="text" name="_curtain_model_name"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_model_description"></td></tr>';
-                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_name"></td></tr>';            
+                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_curtain_vendor_name"></td></tr>';            
             } else {
                 $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
                 $output .= '<tr><td>'.'Model Name:'.'</td><td><input size="50" type="text" name="_curtain_model_name" value="'.$row->curtain_model_name.'"></td></tr>';
                 $output .= '<tr><td>'.'Description :'.'</td><td><input size="50" type="text" name="_model_description" value="'.$row->model_description.'"></td></tr>';
-                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_vendor_name" value="'.$row->vendor_name.'"></td></tr>';
+                $output .= '<tr><td>'.'Vendor      :'.'</td><td><input size="50" type="text" name="_curtain_vendor_name" value="'.$row->curtain_vendor_name.'"></td></tr>';
             }   
             $output .= '</tbody></table></figure>';
 
@@ -375,7 +238,7 @@ if (!class_exists('curtain_models')) {
             if( $_mode=='Create' ) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="create_curtain_model">';
             } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_curtain_model">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="update_curtain_models">';
             }
             $output .= '</div>';
             $output .= '<div class="wp-block-button">';
@@ -422,7 +285,7 @@ if (!class_exists('curtain_models')) {
             $data = array(
                 'curtain_model_name' => $data['curtain_model_name'],
                 'model_description' => $data['model_description'],
-                'vendor_name' => $data['vendor_name'],
+                'curtain_vendor_name' => $data['curtain_vendor_name'],
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
@@ -430,7 +293,7 @@ if (!class_exists('curtain_models')) {
             return $wpdb->insert_id;
         }
 
-        function update_curtain_model($data=[], $where=[]) {
+        function update_curtain_models($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_models';
             $data['update_timestamp'] = time();
@@ -463,7 +326,7 @@ if (!class_exists('curtain_models')) {
                 curtain_model_id int NOT NULL AUTO_INCREMENT,
                 curtain_model_name varchar(5),
                 model_description varchar(50),
-                vendor_name varchar(50),
+                curtain_vendor_name varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 UNIQUE (curtain_model_name),
