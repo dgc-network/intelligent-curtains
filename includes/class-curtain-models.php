@@ -167,7 +167,8 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
                     $output .= '<label for="name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
-                    $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+                    //$output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+                    $output .= '</fieldset>';
                     //$output .= '<div class="wp-block-buttons">';
                     //$output .= '<div class="wp-block-button">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_models">';
@@ -176,7 +177,6 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_model">';
                     //$output .= '</div>';
                     //$output .= '</div>';
-                    $output .= '</fieldset>';
                     $output .= '</form></div>';
                 } else {
                     //$output .= '<div id="dialog-form" title="Create new model">';
@@ -188,7 +188,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
+                    //$output .= '<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">';
                     $output .= '</fieldset>';
                     //$output .= '<div class="wp-block-buttons">';
                     //$output .= '<div class="wp-block-button">';
