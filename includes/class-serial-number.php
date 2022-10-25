@@ -10,7 +10,7 @@ if (!class_exists('serial_number')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('serial-number-list', __CLASS__ . '::list_model_serial');
+            add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             self::create_tables();
         }
 
