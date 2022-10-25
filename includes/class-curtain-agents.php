@@ -35,7 +35,7 @@ if (!class_exists('curtain_agents')) {
                 return self::edit_curtain_agent($_POST['_id'], $_POST['_mode']);
             }
 */
-            if( isset($_POST['generate_serial_no']) ) {
+            if( isset($_POST['_generate_serial_no']) ) {
                 $curtain_service = new curtain_service();
                 $data=array();
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
@@ -45,7 +45,7 @@ if (!class_exists('curtain_agents')) {
                 $result = $curtain_service->insert_serial_number($data);
             }
             
-            if( isset($_POST['_create_agent']) ) {
+            if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -57,7 +57,7 @@ if (!class_exists('curtain_agents')) {
                 $result = self::insert_curtain_agent($data);
             }
         
-            if( isset($_POST['_update_agent']) ) {
+            if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -182,8 +182,8 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<label for="_phone1">Phone</label>';
                     $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all" value="'.$row->phone1.'">';
                     $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_models">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_models">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {
@@ -199,7 +199,7 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<label for="_phone1">Phone</label>';
                     $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all"';
                     $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_curtain_agent">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
@@ -336,6 +336,23 @@ if (!class_exists('curtain_agents')) {
             $table = $wpdb->prefix.'curtain_agents';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        function select_options( $default_id=null ) {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
+            $output = '<option value="no_select">-- Select an option --</option>';
+            foreach ($results as $index => $result) {
+                if ( $results[$index]->curtain_agent_id == $default_id ) {
+                    $output .= '<option value="'.$results[$index]->curtain_agent_id.'" selected>';
+                } else {
+                    $output .= '<option value="'.$results[$index]->curtain_agent_id.'">';
+                }
+                $output .= $results[$index]->agent_number.'/'.$results[$index]->agent_name;
+                $output .= '</option>';        
+            }
+            $output .= '<option value="delete_select">-- Remove this --</option>';
+            return $output;    
         }
 
         function create_tables() {

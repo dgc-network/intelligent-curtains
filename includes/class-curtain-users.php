@@ -39,7 +39,7 @@ if (!class_exists('curtain_users')) {
                 $result = self::insert_curtain_user($data);
             }
 */        
-            if( isset($_POST['_update_curtain_users']) ) {
+            if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
@@ -106,8 +106,8 @@ if (!class_exists('curtain_users')) {
                     $output .= '<label for="_user_role">User Role</label>';
                     $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
                     $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_users">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_users">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     //$output .= '</div>';
 /*
