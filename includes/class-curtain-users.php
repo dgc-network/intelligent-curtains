@@ -97,8 +97,8 @@ if (!class_exists('curtain_users')) {
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
-                    $output .= '<label for="_line_user_id">Line User ID</label>';
-                    $output .= '<input type="text" name="_line_user_id" id="line_user_id" class="text ui-widget-content ui-corner-all" value="'.$row->line_user_id.'" disabled>';
+                    //$output .= '<label for="_line_user_id">Line User ID</label>';
+                    //$output .= '<input type="text" name="_line_user_id" id="line_user_id" class="text ui-widget-content ui-corner-all" value="'.$row->line_user_id.'" disabled>';
                     $output .= '<label for="_display_name">Display Name</label>';
                     $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
                     $output .= '<label for="_mobile_phone">Mobile Phone</label>';
@@ -109,7 +109,7 @@ if (!class_exists('curtain_users')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_users">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_users">';
                     $output .= '</form>';
-                    $output .= '</div>';
+                    //$output .= '</div>';
 
                     $where='curtain_user_id='.$row->curtain_user_id;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
@@ -137,7 +137,9 @@ if (!class_exists('curtain_users')) {
                         $output .= '</tr>';
                     }
                     $output .= '</tbody></table></figure>';
-    
+                    
+                    $output .= '</div>';
+
                 }
             }
 
@@ -263,8 +265,8 @@ if (!class_exists('curtain_users')) {
                 line_user_id varchar(50),
                 display_name varchar(50),
                 mobile_phone varchar(20),
-                last_otp varchar(10),
                 user_role varchar(20),
+                last_otp varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 UNIQUE (line_user_id),
