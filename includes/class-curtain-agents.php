@@ -34,7 +34,7 @@ if (!class_exists('curtain_agents')) {
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_agent($_POST['_id'], $_POST['_mode']);
             }
-*/
+
             if( isset($_POST['_generate_serial_no']) ) {
                 $curtain_service = new curtain_service();
                 $data=array();
@@ -44,7 +44,7 @@ if (!class_exists('curtain_agents')) {
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $result = $curtain_service->insert_serial_number($data);
             }
-            
+*/            
             if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];

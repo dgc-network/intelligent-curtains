@@ -15,7 +15,7 @@ if (!class_exists('serial_number')) {
         }
 
         function list_serial_number() {
-
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 //return self::edit_serial_number($_POST['_id'], $_POST['_mode']);
             }
@@ -88,7 +88,20 @@ if (!class_exists('serial_number')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></figure>';
-//
+*/
+            
+
+            if( isset($_POST['_create']) ) {
+                //$curtain_service = new curtain_service();
+                $data=array();
+                $data['curtain_model_id']=$_POST['_curtain_model_id'];
+                //$data['specification_id']=$_POST['_specification_id'];
+                $data['specification']=$_POST['_specification'];
+                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                //$result = $curtain_service->insert_serial_number($data);
+                $result = insert_serial_number($data);
+            }
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -159,7 +172,7 @@ if (!class_exists('serial_number')) {
 
                     $curtain_models = new curtain_models();
                     $curtain_agents = new curtain_agents();
-
+/*
                     $output .= '<form method="post">';
                     $output .= '<figure class="wp-block-table"><table><tbody>';
                     $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
@@ -169,20 +182,21 @@ if (!class_exists('serial_number')) {
                     $output .= '</tbody></table></figure>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Generate a Serial Number" name="_generate_serial_no">';
                     $output .= '</form>';                
-/*
+*/
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
-                    $output .= '<label for="name">Model Name</label>';
-                    $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="name">Description</label>';
-                    $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="name">Curtain Vendor</label>';
-                    $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_curtain_model_id">Model Name</label>';                    
+                    //$output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<select name="_curtain_model_id">'.$curtain_models->select_options().'</select>';
+                    $output .= '<label for="_specification">Specification</label>';
+                    $output .= '<input type="text" name="_specification" id="specification" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_curtain_agent_id">Agent Name</label>';
+                    $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options().'</select>';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
-*/                    
+
                     $output .= '</div>';
                 }
             }
