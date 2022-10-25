@@ -117,7 +117,8 @@ if (!class_exists('curtain_models')) {
             $output .= '<input type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             //$output .= '</span>';
-            $output .= '<div id="users-contain" class="ui-widget">';
+            //$output .= '<div id="users-contain" class="ui-widget">';
+            $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>id</td>';
