@@ -15,7 +15,7 @@ if (!class_exists('curtain_users')) {
         }
 
         function list_curtain_users() {
-            
+/*            
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
             }
@@ -38,7 +38,7 @@ if (!class_exists('curtain_users')) {
                 $data['user_role']=$_POST['_user_role'];
                 $result = self::insert_curtain_user($data);
             }
-        
+*/        
             if( isset($_POST['_update_user']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
@@ -50,41 +50,68 @@ if (!class_exists('curtain_users')) {
             }
         
             global $wpdb;
-            if( isset($_POST['_where_users']) ) {
-                $where='"%'.$_POST['_where_users'].'%"';
+            if( isset($_POST['_where']) ) {
+                $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
-                unset($_POST['_where_users']);
+                unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
             }
             $output  = '<h2>Curtain Users</h2>';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=5 style="text-align:right">';
+            $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            $output .= '<input type="text" name="_where_users" placeholder="Search...">';
-            $output .= '<input type="submit" value="Search" name="submit_action">';
+            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
-            $output .= '</td></tr>';
-            $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>id</td>';
-            $output .= '<td>line_user_id</td>';
-            $output .= '<td>name</td>';
-            $output .= '<td>mobile</td>';
-            $output .= '<td>update_time</td>';
-            $output .= '</tr>';
+            $output .= '</div>';
+            $output .= '<div class="ui-widget">';
+            $output .= '<table id="users" class="ui-widget ui-widget-content">';
+            $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th>id</td>';
+            $output .= '<th>line_user_id</td>';
+            $output .= '<th>name</td>';
+            $output .= '<th>mobile</td>';
+            $output .= '<th>update_time</td>';
+            $output .= '</tr></thead>';
+            $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td>'.$result->curtain_user_id.'</td>';
+                $output .= '<td>'.$result->curtain_user_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_mode">';
+                $output .= '<input type="submit" value="'.$result->line_user_id.'">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
-            $output .= '</tbody></table></figure>';
+            $output .= '</tbody></table></div>';
+
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+                $_id = $_POST['_id'];
+                global $wpdb;
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
+                if (count($row) > 0) {
+                    $output .= '<div id="dialog" title="Curtain user update">';
+                    $output .= '<form method="post">';
+                    $output .= '<fieldset>';
+                    $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
+                    $output .= '<label for="_line_user_id">Line User ID</label>';
+                    $output .= '<input type="text" name="_line_user_id" id="line_user_id" class="text ui-widget-content ui-corner-all" value="'.$row->line_user_id.'" disabled>';
+                    $output .= '<label for="_display_name">Display Name</label>';
+                    $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
+                    $output .= '<label for="_mobile_phone">Mobile Phone</label>';
+                    $output .= '<input type="text" name="_mobile_phone" id="mobile_phone" class="text ui-widget-content ui-corner-all" value="'.$row->mobile_phone.'">';
+                    $output .= '<label for="_user_role">User Role</label>';
+                    $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
+                    $output .= '</fieldset>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_users">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_user">';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                }
+            }
 
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
@@ -93,7 +120,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div></div>';
                 $output .= '</div>';
             }
-                            
+
             return $output;
         }
 

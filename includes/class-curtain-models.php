@@ -103,17 +103,17 @@ if (!class_exists('curtain_models')) {
             }
 
             global $wpdb;
-            if( isset($_POST['_where_curtain_model']) ) {
-                $where='"%'.$_POST['_where_curtain_model'].'%"';
+            if( isset($_POST['_where']) ) {
+                $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE model_description LIKE {$where}", OBJECT );
-                unset($_POST['_where_curtain_model']);
+                unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
             $output  = '<h2>Model Number</h2>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            $output .= '<input style="display:inline" type="text" name="_where_curtain_model" placeholder="Search...">';
+            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
@@ -132,7 +132,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '<td>'.$result->curtain_model_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_model_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->curtain_model_name.'" name="_mode">';
+                $output .= '<input type="submit" value="'.$result->curtain_model_name.'">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->model_description.'</td>';
                 $output .= '<td>'.$result->curtain_vendor_name.'</td>';
@@ -143,7 +143,6 @@ if (!class_exists('curtain_models')) {
             $output .= '<form method="post">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</form>';
-
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
@@ -182,7 +181,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '</div>';
                 }
             }
-         
+
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode"><div id="qrcode_content">';
@@ -190,7 +189,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</div></div>';
                 $output .= '</div>';
             }
-                            
+
             return $output;
         }
 
