@@ -1,8 +1,26 @@
 jQuery(document).ready(function($) {
 
-    $('.chatboxinput').on('keypress',function(e) {
+    $('.chatboxtextarea').on('keypress',function(e) {
         if(e.which == 13) {
-            alert('You pressed enter!');
+            //alert('You pressed enter!');
+            message = $('.chatboxtextarea').val();
+            message = message.replace(/^\s+|\s+$/g,"");
+    
+            $('.chatboxtextarea').val('');
+            $('.chatboxtextarea').focus();
+            $('.chatboxtextarea').css('height','44px');
+            if (message != '') {
+                //$.post("chat.php?action=sendchat", {to: chatboxtitle, message: message} , function(data){
+                    message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                    $("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                    $("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
+                //});
+            }
+            chatHeartbeatTime = minChatHeartbeat;
+            chatHeartbeatCount = 1;
+    
+            return false;
+    
         }
     });
 
