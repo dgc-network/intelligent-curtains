@@ -20,7 +20,7 @@ if (!class_exists('curtain_agents')) {
 
                 $output = '<div style="text-align:center;">';
                 $output .= '請掃描QR Code進入本系統';
-                $output = '</div>';
+                $output .= '</div>';
                 return $output;
 
                 $curtain_service = new curtain_service();
@@ -32,7 +32,7 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
                 $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
                 $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
-                $output = '</div>';
+                $output .= '</div>';
                 return $output;
             }
 /*
