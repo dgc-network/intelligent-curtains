@@ -79,16 +79,20 @@ if (!class_exists('curtain_users')) {
                 $output .= '<td>'.$result->curtain_user_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->line_user_id.'">';
+                $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_update_user">';
                 $output .= '</form></td>';
-                $output .= '<td>'.$result->display_name.'</td>';
+                $output .= '<td><form method="post">';
+                $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
+                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user">';
+                $output .= '</form></td>';
+                //$output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
 
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+            if( isset($_POST['_update_user']) && isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
@@ -97,8 +101,6 @@ if (!class_exists('curtain_users')) {
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
-                    //$output .= '<label for="_line_user_id">Line User ID</label>';
-                    //$output .= '<input type="text" name="_line_user_id" id="line_user_id" class="text ui-widget-content ui-corner-all" value="'.$row->line_user_id.'" disabled>';
                     $output .= '<label for="_display_name">Display Name</label>';
                     $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
                     $output .= '<label for="_mobile_phone">Mobile Phone</label>';
@@ -109,46 +111,20 @@ if (!class_exists('curtain_users')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
-                    //$output .= '</div>';
-/*
-                    $where='curtain_user_id='.$row->curtain_user_id;
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE {$where}", OBJECT );
-                    $output .= '<figure class="wp-block-table"><table><tbody>';
-                    $output .= '<tr style="background-color:yellow">';
-                    $output .= '<td></td>';
-                    $output .= '<td>serial_no</td>';
-                    $output .= '<td>model</td>';
-                    $output .= '<td>spec</td>';
-                    $output .= '<td>user</td>';
-                    $output .= '<td>update_time</td>';
-                    $output .= '</tr>';
-                    foreach ( $results as $index=>$result ) {
-                        $output .= '<tr>';
-                        $output .= '<td></td>';
-                        $output .= '<td><form method="post">';
-                        $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
-                        $output .= '</form></td>';
-                        $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
-                        $output .= '<td>'.$model->curtain_model_name.'</td>';
-                        $output .= '<td>'.$result->specification.'</td>';
-                        $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
-                        $output .= '<td>'.$user->display_name.'</td>';
-                        $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                        $output .= '</tr>';
-                    }
-                    $output .= '</tbody></table></figure>';
-*/                    
                     $output .= '</div>';
 
                 }
             }
 
-            if( isset($_POST['_serial_no']) ) {
-                $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div></div>';
-                $output .= '</div>';
+            if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {
+                $_id = $_POST['_id'];
+                global $wpdb;
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
+                if (count($row) > 0) {
+                    $output .= '<div id="dialog" title="Chat to "'.$row->display_name.'>';
+                    $output .= '<div class="chatboxcontent"></div><div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
+                    $output .= '</div>';
+                }
             }
 
             return $output;
