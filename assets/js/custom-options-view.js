@@ -72,13 +72,13 @@ jQuery(document).ready(function($) {
             if (message != '') {
                 $.ajax({
                     type: 'POST',
-                    cache: false,
-                    dataType: "json",
                     url: '/wp-admin/admin-ajax.php',
+                    //cache: false,
+                    dataType: "json",
                     data: {
-                        'action': 'sendChat',
+                        action: 'sendChat',
                         //'to': chatboxtitle,
-                        'message': message,
+                        //'message': message,
                     },
                     success: function(data) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
