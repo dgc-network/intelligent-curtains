@@ -70,6 +70,7 @@ jQuery(document).ready(function($) {
             $('.chatboxtextarea').focus();
             $('.chatboxtextarea').css('height','44px');
             if (message != '') {
+/*                
                 $.ajax({
                     type: 'POST',
                     url: '/wp-admin/admin-ajax.php',
@@ -89,11 +90,13 @@ jQuery(document).ready(function($) {
                     error: function(error){
                         alert(error);
                     },
-                });         
+                });        
+*/                
+                
                 //$.post("chat.php?action=sendchat", {to: chatboxtitle, message: message} , function(data){
-                    //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                    //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                    //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+                    message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                    $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                    $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     //$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                     //$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
                 //});
