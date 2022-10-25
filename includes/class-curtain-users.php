@@ -11,34 +11,175 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
+            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
+            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
+            add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+            add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             self::create_tables();
         }
 
-        function list_curtain_users() {
-/*            
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_curtain_user($_POST['_id'], $_POST['_mode']);
+        //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
+        //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
+        function chatHeartbeat() {
+            
+            $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
+            $query = mysql_query($sql);
+            //$items = '';
+            $items = array();
+        
+            $chatBoxes = array();
+        
+            while ($chat = mysql_fetch_array($query)) {
+        
+                $chat['message'] = sanitize($chat['message']);
+                if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
+                    //$items = $_SESSION['chatHistory'][$chat['from']];
+                    $item = $_SESSION['chatHistory'][$chat['from']];
+                    $items[$item]['s']=0;
+                    $items[$item]['f']=$chat['from'];
+                    $items[$item]['s']=$chat['message'];
+                }
+        /*
+                $chat['message'] = sanitize($chat['message']);
+        
+                $items .= <<<EOD
+                               {
+                    "s": "0",
+                    "f": "{$chat['from']}",
+                    "m": "{$chat['message']}"
+               },
+        EOD;
+        */
+        /*
+            if (!isset($_SESSION['chatHistory'][$chat['from']])) {
+                $_SESSION['chatHistory'][$chat['from']] = '';
             }
+        */    
+        /*
+            $_SESSION['chatHistory'][$chat['from']] .= <<<EOD
+                                   {
+                    "s": "0",
+                    "f": "{$chat['from']}",
+                    "m": "{$chat['message']}"
+               },
+        EOD;
+        */		
 
-            if( ($_GET['action']=='insert-curtain-user') && (isset($_GET['line_user_id'])) ) {
-                $data=array();
-                $data['line_user_id']=$_GET['line_user_id'];
-                $data['display_name']=$_GET['display_name'];
-                $data['mobile_phone']=$_GET['mobile_phone'];
-                $data['user_role']=$_GET['user_role'];
-                $result = self::insert_curtain_user($data);
-                $output .= $result.'<br>';
+                $item = $_SESSION['chatHistory'][$chat['from']];
+                $items[$item]['s']=0;
+                $items[$item]['f']=$chat['from'];
+                $items[$item]['s']=$chat['message'];
+
+                unset($_SESSION['tsChatBoxes'][$chat['from']]);
+                $_SESSION['openChatBoxes'][$chat['from']] = $chat['sent'];
             }
-                        
-            if( isset($_POST['_create_user']) ) {
-                $data=array();
-                $data['line_user_id']=$_POST['_line_user_id'];
-                $data['display_name']=$_POST['_display_name'];
-                $data['mobile_phone']=$_POST['_mobile_phone'];
-                $data['user_role']=$_POST['_user_role'];
-                $result = self::insert_curtain_user($data);
+        
+            if (!empty($_SESSION['openChatBoxes'])) {
+                foreach ($_SESSION['openChatBoxes'] as $chatbox => $time) {
+                    if (!isset($_SESSION['tsChatBoxes'][$chatbox])) {
+                        $now = time()-strtotime($time);
+                        $time = date('g:iA M dS', strtotime($time));
+        
+                        $message = "Sent at $time";
+                        if ($now > 180) {
+                            $item = $_SESSION['tsChatBoxes'][$chatbox];
+                            $items[$item]['s']=2;
+                            $items[$item]['f']=$chatbox;
+                            $items[$item]['s']=$message;
+        /*			
+                        $items .= <<<EOD
+        {
+        "s": "2",
+        "f": "$chatbox",
+        "m": "{$message}"
+        },
+        EOD;
+        */
+        /*
+            if (!isset($_SESSION['chatHistory'][$chatbox])) {
+                $_SESSION['chatHistory'][$chatbox] = '';
             }
-*/        
+        */
+                            $item = $_SESSION['tsChatBoxes'][$chatbox];
+                            $items[$item]['s']=2;
+                            $items[$item]['f']=$chatbox;
+                            $items[$item]['s']=$message;
+        /*
+            $_SESSION['chatHistory'][$chatbox] .= <<<EOD
+                {
+        "s": "2",
+        "f": "$chatbox",
+        "m": "{$message}"
+        },
+        EOD;
+        */
+                            $_SESSION['tsChatBoxes'][$chatbox] = 1;
+                        }
+                    }
+                }
+            }
+        
+            $sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
+            $query = mysql_query($sql);
+        /*
+            if ($items != '') {
+                $items = substr($items, 0, -1);
+            }
+        
+        header('Content-type: application/json');
+        ?>
+        {
+                "items": [
+                    <?php echo $items;?>
+                ]
+        }
+        
+        <?php
+                    exit(0);
+        */			
+            $json = array();
+            $json['items'] = $items;
+            echo json_encode( $json );
+            die();
+        }
+        
+        
+
+        function sendChat() {
+            $from = $_SESSION['username'];
+            $to = $_POST['to'];
+            $message = $_POST['message'];
+        
+            $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
+            
+            $messagesan = sanitize($message);
+/*        
+            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
+                $_SESSION['chatHistory'][$_POST['to']] = '';
+            }
+        
+            $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
+                               {
+                    "s": "1",
+                    "f": "{$to}",
+                    "m": "{$messagesan}"
+               },
+        EOD;
+*/          
+            $_SESSION['chatHistory'][$_POST['to']]['s']=1;
+            $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
+            $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
+
+            unset($_SESSION['tsChatBoxes'][$_POST['to']]);
+        
+            $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
+            $query = mysql_query($sql);
+            echo "1";
+            exit(0);
+        }
+
+        function list_curtain_users() {
+
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
@@ -177,6 +318,18 @@ if (!class_exists('curtain_users')) {
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
             dbDelta($sql);
+
+            $sql = "CREATE TABLE `{$wpdb->prefix}chat` (
+                `id` int NOT NULL AUTO_INCREMENT,
+                `from` varchar(255) NOT NULL DEFAULT '',
+                `to` varchar(255) NOT NULL DEFAULT '',
+                `message` TEXT NOT NULL,
+                `sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+                `recd` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+                PRIMARY KEY (`id`)
+            ) $charset_collate;";
+            dbDelta($sql);
+        
         }
     }
     new curtain_users();
