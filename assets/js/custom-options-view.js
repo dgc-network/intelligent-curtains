@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+/*
 	$.ajax({
         type: 'POST',
         url: '/wp-admin/admin-ajax.php',
@@ -13,15 +13,15 @@ jQuery(document).ready(function($) {
 			$.each(data.items, function(i,item){
 				if (item)	{ // fix strange ie bug
 					chatboxtitle = item.f;
-/*
-					if ($("#chatbox_"+chatboxtitle).length <= 0) {
-						createChatBox(chatboxtitle);
-					}
-					if ($("#chatbox_"+chatboxtitle).css('display') == 'none') {
-						$("#chatbox_"+chatboxtitle).css('display','block');
-						restructureChatBoxes();
-					}
-*/					
+
+					//if ($("#chatbox_"+chatboxtitle).length <= 0) {
+					//	createChatBox(chatboxtitle);
+					//}
+					//if ($("#chatbox_"+chatboxtitle).css('display') == 'none') {
+					//	$("#chatbox_"+chatboxtitle).css('display','block');
+					//	restructureChatBoxes();
+					//}
+				
 					if (item.s == 1) {
 						//item.f = username;
 					}
@@ -39,27 +39,27 @@ jQuery(document).ready(function($) {
 	
 				}
 			});
-/*
-			chatHeartbeatCount++;
 
-			if (itemsfound > 0) {
-				chatHeartbeatTime = minChatHeartbeat;
-				chatHeartbeatCount = 1;
-			} else if (chatHeartbeatCount >= 10) {
-				chatHeartbeatTime *= 2;
-				chatHeartbeatCount = 1;
-				if (chatHeartbeatTime > maxChatHeartbeat) {
-					chatHeartbeatTime = maxChatHeartbeat;
-				}
-			}
-*/			
+			//chatHeartbeatCount++;
+
+			//if (itemsfound > 0) {
+			//	chatHeartbeatTime = minChatHeartbeat;
+			//	chatHeartbeatCount = 1;
+			//} else if (chatHeartbeatCount >= 10) {
+			//	chatHeartbeatTime *= 2;
+			//	chatHeartbeatCount = 1;
+			//	if (chatHeartbeatTime > maxChatHeartbeat) {
+			//		chatHeartbeatTime = maxChatHeartbeat;
+			//	}
+			//}
+			
 			//setTimeout('chatHeartbeat();',chatHeartbeatTime);
 		},
         error: function(error){
             alert(error);
         },
 	});
-
+*/
     $('.chatboxtextarea').on('keypress',function(e) {
         if(e.which == 13) {
             //alert('You pressed enter!');
@@ -84,11 +84,13 @@ jQuery(document).ready(function($) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                         $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-                    }
+                    },
+                    error: function(error){
+                        alert(error);
+                    },
                 });         
                 //$.post("chat.php?action=sendchat", {to: chatboxtitle, message: message} , function(data){
                     //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                    //$(".chatboxcontent").append(message)
                     //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                     //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     //$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
