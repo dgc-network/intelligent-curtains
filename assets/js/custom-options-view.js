@@ -23,14 +23,14 @@ jQuery(document).ready(function($) {
 					}
 */					
 					if (item.s == 1) {
-						item.f = username;
+						//item.f = username;
 					}
 	
 					if (item.s == 2) {
 						$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
 					} else {
-						newMessages[chatboxtitle] = true;
-						newMessagesWin[chatboxtitle] = true;
+						//newMessages[chatboxtitle] = true;
+						//newMessagesWin[chatboxtitle] = true;
 						$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
 					}
 	
@@ -39,7 +39,7 @@ jQuery(document).ready(function($) {
 	
 				}
 			});
-
+/*
 			chatHeartbeatCount++;
 
 			if (itemsfound > 0) {
@@ -52,7 +52,7 @@ jQuery(document).ready(function($) {
 					chatHeartbeatTime = maxChatHeartbeat;
 				}
 			}
-			
+*/			
 			//setTimeout('chatHeartbeat();',chatHeartbeatTime);
 		},
         error: function(error){

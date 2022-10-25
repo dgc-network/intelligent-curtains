@@ -47,8 +47,8 @@ class Options_View {
 		//wp_enqueue_script( 'jquery-js',  MY_PLUGIN_DIR . 'chat/js/jquery.js', array( 'jquery' ), time(), true );
 
 		wp_enqueue_style( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/css/custom-options-view.css', '', time() );
-		//wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'chat/css/chat.css', '', time() );
-		//wp_enqueue_style( 'screen-css', plugin_dir_url( __DIR__ ) . 'chat/css/screen.css', '', time() );
+		wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'chat/css/chat.css', '', time() );
+		wp_enqueue_style( 'screen-css', plugin_dir_url( __DIR__ ) . 'chat/css/screen.css', '', time() );
 
 		// Load the datepicker script (pre-registered in WordPress).
 		wp_enqueue_script( 'jquery-ui-datepicker' );
