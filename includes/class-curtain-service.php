@@ -10,7 +10,7 @@ if (!class_exists('curtain_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('registration', __CLASS__ . '::registration');
+            add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
             self::create_tables();
         }
@@ -36,7 +36,7 @@ if (!class_exists('curtain_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        function registration() {
+        function init_curtain_service( $init_page=0 ) {
 
             if ( isset($_POST['_link_submit']) ) {
                 if ( $_POST['_link_submit']=='Agents' ) {
@@ -78,7 +78,7 @@ if (!class_exists('curtain_service')) {
             $output = '<div style="text-align:center;">';
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            if (count($row) > 0) {
+            if ((count($row) > 0) || $init_page==1) {
 
                 $curtain_user_id=$row->curtain_user_id;
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
@@ -108,7 +108,7 @@ if (!class_exists('curtain_service')) {
                     $result = $curtain_users->update_curtain_users($data, $where);
                     
                 } else {
-                    // registration
+                    // init_curtain_service
                     $data=array();
                     $data['curtain_user_id']=$six_digit_random_number;
                     $where=array();
