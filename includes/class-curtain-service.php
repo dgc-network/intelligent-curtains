@@ -36,7 +36,7 @@ if (!class_exists('curtain_service')) {
             self::push_text_message($text_message, $line_user_id);
         }
 
-        function init_curtain_service( $init_page=0 ) {
+        function init_curtain_service() {
 
             if ( isset($_POST['_link_submit']) ) {
                 if ( $_POST['_link_submit']=='Agents' ) {
@@ -78,8 +78,8 @@ if (!class_exists('curtain_service')) {
             $output = '<div style="text-align:center;">';
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            if ((count($row) > 0) || $init_page==1) {
-
+            if ((count($row) > 0)) {
+                
                 $curtain_user_id=$row->curtain_user_id;
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                 if (count($user) > 0) {

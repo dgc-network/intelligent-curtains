@@ -17,6 +17,12 @@ if (!class_exists('curtain_agents')) {
         function list_curtain_agents( $_curtain_user_id = 0 ) {
 
             if( $_curtain_user_id == 0 ) {
+
+                $output = '<div style="text-align:center;">';
+                $output .= '請掃描QR Code進入本系統';
+                $output = '</div>';
+                return $output;
+
                 $curtain_service = new curtain_service();
                 return $curtain_service->init_curtain_service(1);
 
