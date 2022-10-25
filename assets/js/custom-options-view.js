@@ -80,9 +80,9 @@ jQuery(document).ready(function($) {
                     data: {
                         action: 'sendChat',
                         //'to': chatboxtitle,
-                        to: 'chatboxtitle',
                         //'message': message,
-                        message: message,
+                        //to: 'chatboxtitle',
+                        //message: message,
                     },
                     success: function(data) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
