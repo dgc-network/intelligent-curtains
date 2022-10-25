@@ -110,7 +110,7 @@ if (!class_exists('curtain_models')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
-            $output  = '<h2>Model Number</h2>';
+            $output  = '<h2>Curtain Models</h2>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
@@ -120,11 +120,11 @@ if (!class_exists('curtain_models')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th>id</td>';
-            $output .= '<th>model</td>';
-            $output .= '<th>description</td>';
-            $output .= '<th>vendor</td>';
-            $output .= '<th>update_time</td>';
+            $output .= '<th>id</th>';
+            $output .= '<th>model</th>';
+            $output .= '<th>description</th>';
+            $output .= '<th>vendor</th>';
+            $output .= '<th>update_time</th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
@@ -149,19 +149,19 @@ if (!class_exists('curtain_models')) {
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
                 if (count($row) > 0) {
-                    $output .= '<div id="dialog" title="Model Number update">';
+                    $output .= '<div id="dialog" title="Curtain model update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
-                    $output .= '<label for="name">Model Name</label>';
+                    $output .= '<label for="_curtain_model_name">Model Name</label>';
                     $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
-                    $output .= '<label for="name">Description</label>';
+                    $output .= '<label for="_model_description">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
-                    $output .= '<label for="name">Curtain Vendor</label>';
+                    $output .= '<label for="_curtain_vendor_name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_curtain_models">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_model">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete_curtain_models">';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {
