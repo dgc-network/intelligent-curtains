@@ -112,10 +112,12 @@ if (!class_exists('curtain_models')) {
             }
             $output  = '<h2>Model Number</h2>';
             $output .= '<form method="post">';
+            $output .= '<div style="display: inline">';
             $output .= '<input type="text" name="_where_curtain_model" placeholder="Search...">';
-            $output .= '<span>';
+            $output .= '</div>';
+            $output .= '<div style="display: inline">';
             $output .= '<input type="submit" value="Search" name="submit_action">';
-            $output .= '</span>';
+            $output .= '</div>';
             $output .= '</form>';
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
