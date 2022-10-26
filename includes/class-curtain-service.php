@@ -104,12 +104,15 @@ if (!class_exists('curtain_service')) {
                         $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                     }
     
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+                    global $wpdb;
+                    $where='"%view%"';
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         $output .= '<form action="'.$result->service_option_link.'">';
-                        $output .= '<div style="display:inline" class="wp-block-button">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                        $output .= '<div class="wp-block-button">';
+                        //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                         $output .= '</div>';
                         $output .= '</form>';
                     }
@@ -149,6 +152,20 @@ if (!class_exists('curtain_service')) {
     
                 } else {
     
+                    global $wpdb;
+                    $where='"%admin%"';
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
+                    $output .= '<div class="wp-block-buttons">';
+                    foreach ( $results as $index=>$result ) {
+                        $output .= '<form action="'.$result->service_option_link.'">';
+                        $output .= '<div class="wp-block-button">';
+                        //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        $output .= '</div>';
+                        $output .= '</form>';
+                    }
+                    $output .= '</div>';
+/*
                     $output .= '<div class="wp-block-buttons">';
                     $output .= '<form method="post">';
                     $output .= '<div class="wp-block-button">';
@@ -173,7 +190,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Serial Number" name="_link_submit">';
                     $output .= '</div>';
                     $output .= '</form>';
-
+*/
     /*
                     // Display curtain service menu OR curtain administration menu
                     if (($_GET['_mode']=='admin') ){
