@@ -25,7 +25,7 @@ if (!class_exists('curtain_users')) {
             //wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
         
             //wp_localize_script( 'ajax-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-            wp_localize_script( 'ajax-script', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+            wp_localize_script( 'custom-options-view', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
