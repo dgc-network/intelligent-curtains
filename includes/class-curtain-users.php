@@ -237,9 +237,11 @@ if (!class_exists('curtain_users')) {
                     return 'Welcome '.$user->display_name;
                 } else {
                     return 'You are not validated to read this page. Please check to the administrators.';
+                    wp_die();
                 }
             } else {
                 return 'You are not validated to read this page. Please check to the administrators.';
+                wp_die();
             }
         }
 
@@ -260,7 +262,7 @@ if (!class_exists('curtain_users')) {
 */
 
             self::check_permission();
-            
+
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
