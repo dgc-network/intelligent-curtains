@@ -50,16 +50,19 @@ if (!class_exists('curtain_service')) {
             if ( isset($_POST['_link_submit']) ) {
                 if ( $_POST['_link_submit']=='Agents' ) {
                     $curtain_agents = new curtain_agents();
-                    return $curtain_agents->list_curtain_agents($_POST['_id']);
+                    return $curtain_agents->list_curtain_agents();
                 }
                 if ( $_POST['_link_submit']=='Models' ) {
                     $curtain_models = new curtain_models();
-                    return $curtain_models->list_curtain_models($_POST['_id']);
+                    return $curtain_models->list_curtain_models();
                 }
                 if ( $_POST['_link_submit']=='Users' ) {
-                    return chat_sample_a();
                     $curtain_users = new curtain_users();
-                    return $curtain_users->list_curtain_users($_POST['_id']);
+                    return $curtain_users->list_curtain_users();
+                }
+                if ( $_POST['_link_submit']=='Serial Number' ) {
+                    $curtain_users = new serial_number();
+                    return $curtain_users->list_serial_number();
                 }
             }
 
@@ -146,31 +149,35 @@ if (!class_exists('curtain_service')) {
     
                 } else {
     
-        
+                    $output .= '<div class="wp-block-buttons">';
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Agents" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Models" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Users" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+
+                    $output .= '<form method="post">';
+                    $output .= '<div class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Serial Number" name="_link_submit">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+
     /*
                     // Display curtain service menu OR curtain administration menu
                     if (($_GET['_mode']=='admin') ){
                         //$output .= '<h2>Admin Options</h2>';
-                        $output .= '<div class="wp-block-buttons">';
-                        $output .= '<form method="post">';
-                        $output .= '<div class="wp-block-button">';
-                        $output .= '<input type="hidden" value="'.$_GET['_id'].'" name="_id">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="Agents" name="_link_submit">';
-                        $output .= '</div>';
-                        $output .= '</form>';
-                        $output .= '<form method="post">';
-                        $output .= '<div class="wp-block-button">';
-                        $output .= '<input type="hidden" value="'.$_GET['_id'].'" name="_id">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="Models" name="_link_submit">';
-                        $output .= '</div>';
-                        $output .= '</form>';
-                        $output .= '<form method="post">';
-                        $output .= '<div class="wp-block-button">';
-                        $output .= '<input type="hidden" value="'.$_GET['_id'].'" name="_id">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="Users" name="_link_submit">';
-                        $output .= '</div>';
-                        $output .= '</form>';
-                        $output .= '</div>';
     
                     } else {
                         //$output .= '<h2>Service Options</h2>';
