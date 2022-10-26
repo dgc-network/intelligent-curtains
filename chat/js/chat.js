@@ -53,6 +53,7 @@ var newMessages = new Array();
 var newMessagesWin = new Array();
 var chatBoxes = new Array();
 
+
 //$(document).ready(function(){
 	originalTitle = document.title;
 	startChatSession();

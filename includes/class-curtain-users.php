@@ -11,6 +11,8 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
+            add_action( 'wp_ajax_startChatSession', array( __CLASS__, 'startChatSession' ) );
+            add_action( 'wp_ajax_nopriv_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
@@ -24,7 +26,44 @@ if (!class_exists('curtain_users')) {
             wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
-        //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
+        //add_action( 'wp_ajax_startChatSession', 'startChatSession' );
+        //add_action( 'wp_ajax_nopriv_startChatSession', 'startChatSession' );
+        function startChatSession() {
+        
+            //$items = '';
+            $items = array();
+            if (!empty($_SESSION['openChatBoxes'])) {
+                foreach ($_SESSION['openChatBoxes'] as $chatbox => $void) {
+                    //$items .= chatBoxSession($chatbox);
+                    array_push($items, chatBoxSession($chatbox));
+                }
+            }
+        /*
+            if ($items != '') {
+                $items = substr($items, 0, -1);
+            }
+        
+        header('Content-type: application/json');
+        ?>
+        {
+                "username": "<?php echo $_SESSION['username'];?>",
+                "items": [
+                    <?php echo $items;?>
+                ]
+        }
+        
+        <?php
+            exit(0);
+        */
+            $json = array();
+            $json['username'] = $_SESSION['username'];
+            $json['items'] = $items;
+            echo json_encode( $json );
+            wp_die();
+        
+        }
+        
+            //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
             
