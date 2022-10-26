@@ -18,6 +18,7 @@ if (!class_exists('curtain_models')) {
             add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
             add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
             add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
+            add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
         }
 
@@ -76,7 +77,20 @@ if (!class_exists('curtain_models')) {
             die();		
         }
             
-        function list_curtain_models() {
+        public function list_curtain_models() {
+
+            if( isset($_SESSION['line_user_id']) ) {
+                $line_user_id = $_SESSION['line_user_id'];
+                global $wpdb;
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
+                if (count($user) > 0) {
+                    return 'Welcome '.$user->display_name;
+                } else {
+                    return 'You are not validated to read this page. Please check to the administrators.';
+                }
+            } else {
+                return 'You are not validated to read this page. Please check to the administrators.';
+            }
 
             if( isset($_POST['_create']) ) {
                 $data=array();
@@ -208,7 +222,7 @@ if (!class_exists('curtain_models')) {
             $wpdb->update($table, $data, $where);
         }
 
-        function select_options( $default_id=null ) {
+        public function select_options( $default_id=null ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             $output = '<option value="no_select">-- Select an option --</option>';
