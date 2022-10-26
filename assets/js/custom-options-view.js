@@ -79,7 +79,10 @@ jQuery(document).ready(function($) {
                         'foobar_id':   123
                     }, 
                     function(response) {
-                        console.log('The server responded: ', response);
+                        message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+                        //console.log('The server responded: ', response);
                     }
                 );
             
