@@ -22,7 +22,7 @@ if (!class_exists('curtain_agents')) {
         }
         public function list_curtain_agents( $_curtain_user_id = 0 ) {
 
-            if( isset($_SESSION['line_user_id']) ) {
+            if( isset($_SESSION['line_user_id']) && get_option('_check_permission') ) {
                 $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            

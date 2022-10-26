@@ -214,15 +214,12 @@ if (!class_exists('curtain_service')) {
         }
 
         function list_service_options() {
-/*
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                return self::edit_service_options($_POST['_id'], $_POST['_mode']);
-            }
-*/
+
             if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
+                $data['service_option_category']=$_POST['_service_option_category'];
                 $result = self::insert_service_option($data);
             }
         
@@ -230,53 +227,12 @@ if (!class_exists('curtain_service')) {
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
+                $data['service_option_category']=$_POST['_service_option_category'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $result = self::update_service_options($data, $where);
             }
-/*
-            global $wpdb;
-            if( isset($_POST['_where_service_options']) ) {
-                $where='"%'.$_POST['_where_service_options'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title LIKE {$where}", OBJECT );
-                unset($_POST['_where_service_options']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
-            }
-            $output  = '<h2>Service Options</h2>';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
-            $output .= '<tr><td colspan=5 style="text-align:right">';
-            $output .= '<form method="post">';
-            $output .= '<input type="text" name="_where_service_options" placeholder="Search...">';
-            $output .= '<input type="submit" value="Search" name="submit_action">';
-            $output .= '</form>';
-            $output .= '</td></tr>';
-            $output .= '<tr style="background-color:yellow">';
-            $output .= '<td>id</td>';
-            $output .= '<td>title</td>';
-            $output .= '<td>link</td>';
-            $output .= '<td>update_time</td>';
-            $output .= '</tr>';
-            foreach ( $results as $index=>$result ) {
-                $output .= '<tr>';
-                $output .= '<td>'.$result->service_option_id.'</a></td>';
-                $output .= '<td><form method="post">';
-                $output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->service_option_title.'" name="_mode">';
-                $output .= '</form></td>';
-                $output .= '<td>'.$result->service_option_link.'</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '</tr>';
-            }
-            $output .= '</tbody></table></figure>';
-            $output .= '<form method="post">';
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_mode">';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-*/
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -359,45 +315,7 @@ if (!class_exists('curtain_service')) {
 
             return $output;
         }
-/*
-        function edit_service_options( $_id=null, $_mode=null ) {
 
-            global $wpdb;
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id={$_id}", OBJECT );
-            if( $_mode=='Create' ) {
-                $output  = '<h2>New Service Option</h2>';
-            } else {
-                $output  = '<h2>Service Option Update</h2>';
-            }
-            $output .= '<form method="post">';
-            $output .= '<figure class="wp-block-table"><table><tbody>';
-            if( $_mode=='Create' ) {
-                $output .= '<tr><td>'.'Title:'.'</td><td><input size="50" type="text" name="_service_option_title"></td></tr>';
-                $output .= '<tr><td>'.'Link:'.'</td><td><input size="50" type="text" name="_service_option_link"></td></tr>';
-            } else {
-                $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
-                $output .= '<tr><td>'.'Title:'.'</td><td><input size="50" type="text" name="_service_option_title" value="'.$row->service_option_title.'"></td></tr>';
-                $output .= '<tr><td>'.'Link:'.'</td><td><input size="50" type="text" name="_service_option_link" value="'.$row->service_option_link.'"></td></tr>';
-            }   
-            $output .= '</tbody></table></figure>';
-
-            $output .= '<div class="wp-block-buttons">';
-            $output .= '<div class="wp-block-button">';
-            if( $_mode=='Create' ) {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create_service_option">';
-            } else {
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_service_option">';
-            }
-            $output .= '</div>';
-            $output .= '<div class="wp-block-button">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-            $output .= '</div>';
-            $output .= '</div>';
-            $output .= '</form>';
-        
-            return $output;
-        }
-*/
         function insert_service_option($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
