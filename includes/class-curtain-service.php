@@ -127,23 +127,25 @@ if (!class_exists('curtain_service')) {
                         $curtain_users = new curtain_users();
                         $result = $curtain_users->update_curtain_users($data, $where);
                         
-                    }
+                    } else {
+
+                        $six_digit_random_number = random_int(100000, 999999);
+                        $output .= '請利用手機按 '.'<a href="'.get_option('_line_account').'">';
+                        $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
+                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                        //$output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
+                        $output .= '完成註冊程序<br>';
+                        // registration
+                        $data=array();
+                        $data['curtain_user_id']=$six_digit_random_number;
+                        $where=array();
+                        $where['qr_code_serial_no']=$qr_code_serial_no;
+                        $serial_number = new serial_number();
+                        $result = $serial_number->update_serial_number($data, $where);    
+                        }
     
                 } else {
     
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機按 '.'<a href="'.get_option('_line_account').'">';
-                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
-                    $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
-                    //$output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
-                    $output .= '完成註冊程序<br>';
-                    // registration
-                    $data=array();
-                    $data['curtain_user_id']=$six_digit_random_number;
-                    $where=array();
-                    $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $serial_number = new serial_number();
-                    $result = $serial_number->update_serial_number($data, $where);    
         
     /*
                     // Display curtain service menu OR curtain administration menu
