@@ -15,9 +15,17 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+            add_action( 'wp_ajax_foobar', array( __CLASS__, 'my_ajax_foobar_handler' ) );
             self::create_tables();
         }
 
+
+function my_ajax_foobar_handler() {
+    // Make your response and echo it.
+
+    // Don't forget to stop execution afterward.
+    wp_die();
+}
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
@@ -140,7 +148,7 @@ if (!class_exists('curtain_users')) {
             $json = array();
             $json['items'] = $items;
             echo json_encode( $json );
-            die();
+            wp_die();
         }
         
         
@@ -179,7 +187,7 @@ if (!class_exists('curtain_users')) {
             $query = mysql_query($sql);            
             echo "1";
 */            
-            exit(0);
+            wp_die();
         }
 
         function list_curtain_users() {
