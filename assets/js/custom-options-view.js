@@ -76,8 +76,8 @@ jQuery(document).ready(function($) {
                     my_ajax_object.ajaxurl, 
                     {
                         'action': 'sendChat',
-                        'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
-                        'message': message,
+                        //'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
+                        //'message': message,
                     }, 
                     function(response) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
