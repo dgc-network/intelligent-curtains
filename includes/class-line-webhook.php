@@ -31,7 +31,6 @@ if (!class_exists('line_webhook')) {
         }
         
         public function init() {
-            //$client = line_bot_sdk();
             $client = self::line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 self::insert_event_log($event);

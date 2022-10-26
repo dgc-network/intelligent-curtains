@@ -12,7 +12,16 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
+            add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
+        }
+
+        // Start session on init hook.
+        //add_action( 'init', 'wpse16119876_init_session' );
+        function wpse16119876_init_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
         }
 
         function push_text_message($text_message='', $line_user_id='') {
@@ -84,6 +93,7 @@ if (!class_exists('curtain_service')) {
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                 if (count($user) > 0) {
                     $output .= 'Hi, '.$user->display_name.'<br>';
+                    $_SESSION['line_user_id'] = $user->line_user_id;
                 }
                 $output .= '感謝您選購我們的電動窗簾<br>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -91,15 +101,25 @@ if (!class_exists('curtain_service')) {
                     $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                 }
 
-                $six_digit_random_number = random_int(100000, 999999);
-                //$output .= '請利用手機按 '.'<a href="https://line.me/ti/p/@490tjxdt">';
-                $output  = '請利用手機按 '.'<a href="'.get_option('_line_account').'">';
-                $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="36" border="0"></a>';
-                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
-                $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
-    
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+                $output .= '<div class="wp-block-buttons">';
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<form action="'.$result->service_option_link.'">';
+                    $output .= '<div style="display:inline" class="wp-block-button">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                    $output .= '</div>';
+                    $output .= '</form>';
+                }
+                $output .= '</div>';
+
                 if (count($user) > 0) {
                     // login
+                    $six_digit_random_number = random_int(100000, 999999);
+                    $output .= '如需其他服服, 請利用手機按 '.'<a href="'.get_option('_line_account').'">';
+                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
+                    $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                    $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
+
                     $data=array();
                     $data['last_otp']=$six_digit_random_number;
                     $where=array();
@@ -107,17 +127,25 @@ if (!class_exists('curtain_service')) {
                     $curtain_users = new curtain_users();
                     $result = $curtain_users->update_curtain_users($data, $where);
                     
-                } else {
-                    // init_curtain_service
-                    $data=array();
-                    $data['curtain_user_id']=$six_digit_random_number;
-                    $where=array();
-                    $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $serial_number = new serial_number();
-                    $result = $serial_number->update_serial_number($data, $where);
                 }
 
             } else {
+
+                $six_digit_random_number = random_int(100000, 999999);
+                $output .= '請利用手機按 '.'<a href="'.get_option('_line_account').'">';
+                $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
+                $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                //$output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
+                $output .= '完成註冊程序<br>';
+                // registration
+                $data=array();
+                $data['curtain_user_id']=$six_digit_random_number;
+                $where=array();
+                $where['qr_code_serial_no']=$qr_code_serial_no;
+                $serial_number = new serial_number();
+                $result = $serial_number->update_serial_number($data, $where);    
+    
+/*
                 // Display curtain service menu OR curtain administration menu
                 if (($_GET['_mode']=='admin') ){
                     //$output .= '<h2>Admin Options</h2>';
@@ -156,7 +184,9 @@ if (!class_exists('curtain_service')) {
                     }
                     $output .= '</div>';
                 }
+*/
             }
+
             $output .= '</div>';
             return $output;
         }
