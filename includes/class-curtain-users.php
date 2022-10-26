@@ -158,12 +158,12 @@ if (!class_exists('curtain_users')) {
         function sendChat() {
 
             //$from = $_SESSION['username'];
-            $to = $_POST['to'];
-            $message = $_POST['message'];
+            //$to = $_POST['to'];
+            //$message = $_POST['message'];
         
             //$_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
             
-            $messagesan = sanitize($message);
+            //$messagesan = sanitize($message);
 /*        
             if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
                 $_SESSION['chatHistory'][$_POST['to']] = '';
