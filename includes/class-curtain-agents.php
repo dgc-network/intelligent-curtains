@@ -30,7 +30,7 @@ if (!class_exists('curtain_agents')) {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }
             } else {
-                if ( get_option('_check_permission') == true ) {
+                if ( get_option('_check_permission') == 'true' ) {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }
             }

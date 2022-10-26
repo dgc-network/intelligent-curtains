@@ -31,7 +31,7 @@ require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 //require_once MY_PLUGIN_DIR . 'chat/samplea.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
-add_option('_check_permission', true);
+add_option('_check_permission', 'true');
 
 $line_webhook = new line_webhook();
 $line_webhook->init();
