@@ -16,7 +16,16 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             //add_action( 'wp_ajax_foobar', array( __CLASS__, 'my_ajax_foobar_handler' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
             self::create_tables();
+        }
+
+        function my_enqueue() {
+
+            wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
+        
+            wp_localize_script( 'ajax-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+            wp_localize_script( 'ajax-script', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
 
