@@ -11,10 +11,10 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
-            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
-            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
-            add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-            add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'ajax_sendChat' ) );
+            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'ajax_sendChat' ) );
+            add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'ajax_chatHeartbeat' ) );
+            add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'ajax_chatHeartbeat' ) );
             //add_action( 'wp_ajax_foobar', array( __CLASS__, 'my_ajax_foobar_handler' ) );
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
             self::create_tables();
@@ -22,22 +22,15 @@ if (!class_exists('curtain_users')) {
 
         function my_enqueue() {
 
-            wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
+            //wp_enqueue_script( 'ajax-script', get_template_directory_uri() . '/js/my-ajax-script.js', array('jquery') );
         
+            //wp_localize_script( 'ajax-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
             wp_localize_script( 'ajax-script', 'my_ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-            wp_localize_script( 'ajax-script', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
-
-function my_ajax_foobar_handler() {
-    // Make your response and echo it.
-
-    // Don't forget to stop execution afterward.
-    wp_die();
-}
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
-        function chatHeartbeat() {
+        function ajax_chatHeartbeat() {
             
             $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
             $query = mysql_query($sql);
@@ -162,8 +155,8 @@ function my_ajax_foobar_handler() {
         
         
 
-        function sendChat() {
-/*            
+        function ajax_sendChat() {
+
             $from = $_SESSION['username'];
             $to = $_POST['to'];
             $message = $_POST['message'];
@@ -171,7 +164,6 @@ function my_ajax_foobar_handler() {
             $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
             
             $messagesan = sanitize($message);
-*/            
 /*        
             if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
                 $_SESSION['chatHistory'][$_POST['to']] = '';

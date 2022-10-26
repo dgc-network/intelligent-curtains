@@ -73,16 +73,16 @@ jQuery(document).ready(function($) {
             if (message != '') {
 
                 jQuery.post(
-                    my_foobar_client.ajaxurl, 
+                    my_ajax_object.ajaxurl, 
                     {
                         'action': 'sendChat',
-                        'foobar_id':   123
+                        'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
+                        'message': message,
                     }, 
                     function(response) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                         $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-                        //console.log('The server responded: ', response);
                     }
                 );
             
