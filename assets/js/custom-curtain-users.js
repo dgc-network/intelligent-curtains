@@ -30,8 +30,8 @@ jQuery(document).ready(function($) {
     });
 
     function startChatSession(){  
-        //jQuery.post(
-        $.post(
+        jQuery.post(
+        //$.post(
             my_foobar_client.ajaxurl, 
             {
                 'action': 'startChatSession',
@@ -72,9 +72,9 @@ jQuery(document).ready(function($) {
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
     
-            $(chatboxtextarea).val('');
-            $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','44px');
+            //$(chatboxtextarea).val('');
+            //$(chatboxtextarea).focus();
+            //$(chatboxtextarea).css('height','44px');
             if (message != '') {
                 jQuery.post(
                 //$.post(
@@ -92,6 +92,9 @@ jQuery(document).ready(function($) {
                     }
                 );
             }
+            $(chatboxtextarea).val('');
+            $(chatboxtextarea).focus();
+            $(chatboxtextarea).css('height','44px');
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
     
@@ -153,7 +156,8 @@ jQuery(document).ready(function($) {
             }
         }
         
-        $.post(
+        jQuery.post(
+        //$.post(
             my_foobar_client.ajaxurl, 
             {
                 'action': 'chatHeartbeat',
