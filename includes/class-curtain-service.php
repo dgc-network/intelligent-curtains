@@ -198,12 +198,14 @@ if (!class_exists('curtain_service')) {
     
             } else {
                 global $wpdb;
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+                $_where='';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category={$_where}", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<form action="'.$result->service_option_link.'">';
                     $output .= '<div style="display:inline" class="wp-block-button">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
+                    $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                     $output .= '</div>';
                     $output .= '</form>';
                 }
@@ -335,6 +337,7 @@ if (!class_exists('curtain_service')) {
             $data = array(
                 'service_option_title' => $data['service_option_title'],
                 'service_option_link' => $data['service_option_link'],
+                'service_option_category' => $data['service_option_category'],
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
