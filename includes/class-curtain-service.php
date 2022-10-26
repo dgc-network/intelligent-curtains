@@ -142,7 +142,7 @@ if (!class_exists('curtain_service')) {
                         $where['qr_code_serial_no']=$qr_code_serial_no;
                         $serial_number = new serial_number();
                         $result = $serial_number->update_serial_number($data, $where);    
-                        }
+                    }
     
                 } else {
     
