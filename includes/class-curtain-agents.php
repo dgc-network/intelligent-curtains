@@ -27,15 +27,13 @@ if (!class_exists('curtain_agents')) {
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) > 0) {
-                    return 'Welcome '.$user->display_name;
+                    //return 'Welcome '.$user->display_name;
                 } else {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }
             } else {
                 if ( get_option('_check_permission') ) {
                     return 'You are not validated to read this page. Please check to the administrators.';
-                } else {
-                    return;
                 }
             }
 
