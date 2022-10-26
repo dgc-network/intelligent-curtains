@@ -13,7 +13,8 @@ jQuery(document).ready(function($) {
     var newMessages = new Array();
     var newMessagesWin = new Array();
     var chatBoxes = new Array();
-
+    var chatboxtitle;
+    
 	originalTitle = document.title;
 	startChatSession();
 
@@ -23,6 +24,10 @@ jQuery(document).ready(function($) {
 		windowFocus = true;
 		document.title = originalTitle;
 	});
+
+    $('.chatboxtextarea').on('keypress',function(e) {
+		checkChatBoxInputKey(e,this,chatboxtitle);
+    });
 
     function startChatSession(){  
         //jQuery.post(
@@ -39,9 +44,9 @@ jQuery(document).ready(function($) {
         
                         chatboxtitle = item.f;
         
-                        if ($("#chatbox_"+chatboxtitle).length <= 0) {
-                            createChatBox(chatboxtitle,1);
-                        }
+                        //if ($("#chatbox_"+chatboxtitle).length <= 0) {
+                        //    createChatBox(chatboxtitle,1);
+                        //}
                         
                         if (item.s == 1) {
                             item.f = username;
@@ -60,10 +65,6 @@ jQuery(document).ready(function($) {
             }
         );
     }
-
-    $('.chatboxtextarea').on('keypress',function(e) {
-		checkChatBoxInputKey(e,this,chatboxtitle);
-    });
 
     function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
 	 
