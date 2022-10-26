@@ -61,6 +61,7 @@ jQuery(document).ready(function($) {
         },
 	});
 */
+/*
     $('.chatboxtextarea').on('keypress',function(e) {
         if(e.which == 13) {
             //alert('You pressed enter!');
@@ -71,7 +72,7 @@ jQuery(document).ready(function($) {
             $('.chatboxtextarea').focus();
             $('.chatboxtextarea').css('height','44px');
             if (message != '') {
-/*
+
                 jQuery.post(
                     my_foobar_client.ajaxurl, 
                     {
@@ -85,7 +86,7 @@ jQuery(document).ready(function($) {
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     }
                 );
-*/
+
                 //$.post("chat.php?action=sendchat", {to: chatboxtitle, message: message} , function(data){
                     //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                     //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
@@ -101,7 +102,7 @@ jQuery(document).ready(function($) {
     
         }
     });
-
+*/
 
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
