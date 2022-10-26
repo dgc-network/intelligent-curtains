@@ -177,7 +177,7 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
 */          
-/*
+
             $_SESSION['chatHistory'][$_POST['to']]['s']=1;
             $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
             $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
@@ -186,8 +186,8 @@ if (!class_exists('curtain_users')) {
         
             $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
             $query = mysql_query($sql);            
-            echo "1";
-*/            
+            //echo "1";
+          
             wp_die();
         }
 
