@@ -11,10 +11,30 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
+            add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
         }
 
+        function wpse16119876_init_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
+        }
+
         function list_serial_number() {
+
+            if( isset($_SESSION['line_user_id']) ) {
+                $line_user_id = $_SESSION['line_user_id'];
+                global $wpdb;
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
+                if (count($user) == 0) {
+                    return 'You are not validated to read this page. Please check to the administrators.';
+                }
+            } else {
+                if ( $_GET['_check_permission'] != 'false' ) {
+                    return 'You are not validated to read this page. Please check to the administrators.'.get_option('_check_permission');
+                }
+            }
 
             if( isset($_POST['_create']) ) {
                 $data=array();

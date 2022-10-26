@@ -20,6 +20,7 @@ if (!class_exists('curtain_agents')) {
                 session_start();
             }
         }
+
         public function list_curtain_agents() {
 
             if( isset($_SESSION['line_user_id']) ) {
