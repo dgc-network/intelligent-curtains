@@ -1,15 +1,5 @@
 jQuery(document).ready(function($) {
 
-    jQuery.post(
-        my_foobar_client.ajaxurl, 
-        {
-            'action': 'foobar',
-            'foobar_id':   123
-        }, 
-        function(response) {
-            console.log('The server responded: ', response);
-        }
-    );
 /*
 	$.ajax({
         type: 'POST',
@@ -81,6 +71,18 @@ jQuery(document).ready(function($) {
             $('.chatboxtextarea').focus();
             $('.chatboxtextarea').css('height','44px');
             if (message != '') {
+
+                jQuery.post(
+                    my_foobar_client.ajaxurl, 
+                    {
+                        'action': 'sendChat',
+                        'foobar_id':   123
+                    }, 
+                    function(response) {
+                        console.log('The server responded: ', response);
+                    }
+                );
+            
 /*              
                 $.ajax({
                     type: 'post',
@@ -107,9 +109,9 @@ jQuery(document).ready(function($) {
 */                
                 
                 //$.post("chat.php?action=sendchat", {to: chatboxtitle, message: message} , function(data){
-                    message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                    $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                    $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+                    //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                    //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                    //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     //$("#chatbox_"+chatboxtitle+" .chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                     //$("#chatbox_"+chatboxtitle+" .chatboxcontent").scrollTop($("#chatbox_"+chatboxtitle+" .chatboxcontent")[0].scrollHeight);
                 //});
