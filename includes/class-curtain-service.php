@@ -198,7 +198,7 @@ if (!class_exists('curtain_service')) {
     
             } else {
                 global $wpdb;
-                $_where='';
+                $_where='view';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category={$_where}", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
                 foreach ( $results as $index=>$result ) {
