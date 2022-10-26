@@ -246,7 +246,7 @@ if (!class_exists('curtain_users')) {
         }
 
         function list_curtain_users() {
-/*
+
             if( isset($_SESSION['line_user_id']) ) {
                 $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
@@ -259,9 +259,6 @@ if (!class_exists('curtain_users')) {
             } else {
                 return 'You are not validated to read this page. Please check to the administrators.';
             }
-*/
-
-            self::check_permission();
 
             if( isset($_POST['_update']) ) {
                 $data=array();
