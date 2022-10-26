@@ -20,7 +20,8 @@ if (!class_exists('curtain_users')) {
         }
 
         function my_enqueue() {
-            wp_localize_script( 'custom-options-view', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+            wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
+            wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
