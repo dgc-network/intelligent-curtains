@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
             if (message != '') {
 
                 jQuery.post(
-                    my_ajax_object.ajaxurl, 
+                    my_foobar_client.ajaxurl, 
                     {
                         'action': 'sendChat',
                         //'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
