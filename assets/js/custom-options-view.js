@@ -76,9 +76,9 @@ jQuery(document).ready(function($) {
                     my_foobar_client.ajaxurl, 
                     {
                         'action': 'sendChat',
-                        'foobar_id':   123
-                        //'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
-                        //'message': message,
+                        //'foobar_id':   123
+                        'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
+                        'message': message,
                     }, 
                     function(response) {
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
