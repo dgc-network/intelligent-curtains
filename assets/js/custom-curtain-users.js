@@ -76,8 +76,8 @@ jQuery(document).ready(function($) {
             $(chatboxtextarea).focus();
             $(chatboxtextarea).css('height','44px');
             if (message != '') {
-                //jQuery.post(
-                $.post(
+                jQuery.post(
+                //$.post(
                     my_foobar_client.ajaxurl, 
                     {
                         'action': 'sendChat',
