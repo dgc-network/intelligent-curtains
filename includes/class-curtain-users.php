@@ -227,7 +227,7 @@ if (!class_exists('curtain_users')) {
             wp_die();
         }
 
-        function list_curtain_users() {
+        function check_permission() {
 
             if( isset($_SESSION['line_user_id']) ) {
                 $line_user_id = $_SESSION['line_user_id'];
@@ -236,12 +236,31 @@ if (!class_exists('curtain_users')) {
                 if (count($user) > 0) {
                     return 'Welcome '.$user->display_name;
                 } else {
-                    return;
+                    return 'You are not validated to read this page. Please check to the administrators.';
                 }
             } else {
-                return;
+                return 'You are not validated to read this page. Please check to the administrators.';
             }
+        }
 
+        function list_curtain_users() {
+/*
+            if( isset($_SESSION['line_user_id']) ) {
+                $line_user_id = $_SESSION['line_user_id'];
+                global $wpdb;
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
+                if (count($user) > 0) {
+                    return 'Welcome '.$user->display_name;
+                } else {
+                    return 'You are not validated to read this page. Please check to the administrators.';
+                }
+            } else {
+                return 'You are not validated to read this page. Please check to the administrators.';
+            }
+*/
+
+            self::check_permission();
+            
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
