@@ -20,9 +20,9 @@ if (!class_exists('curtain_agents')) {
                 session_start();
             }
         }
-        public function list_curtain_agents( $_curtain_user_id = 0 ) {
+        public function list_curtain_agents() {
 
-            if( isset($_SESSION['line_user_id']) && get_option('_check_permission') ) {
+            if( isset($_SESSION['line_user_id']) ) {
                 $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
@@ -32,7 +32,11 @@ if (!class_exists('curtain_agents')) {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }
             } else {
-                return 'You are not validated to read this page. Please check to the administrators.';
+                if ( get_option('_check_permission') ) {
+                    return 'You are not validated to read this page. Please check to the administrators.';
+                } else {
+                    return;
+                }
             }
 
             if( isset($_POST['_create']) ) {
