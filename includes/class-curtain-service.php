@@ -214,19 +214,19 @@ if (!class_exists('curtain_service')) {
         }
 
         function list_service_options() {
-
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 return self::edit_service_options($_POST['_id'], $_POST['_mode']);
             }
-
-            if( isset($_POST['_create_service_option']) ) {
+*/
+            if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $result = self::insert_service_option($data);
             }
         
-            if( isset($_POST['_update_service_option']) ) {
+            if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
@@ -234,7 +234,7 @@ if (!class_exists('curtain_service')) {
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $result = self::update_service_options($data, $where);
             }
-        
+/*
             global $wpdb;
             if( isset($_POST['_where_service_options']) ) {
                 $where='"%'.$_POST['_where_service_options'].'%"';
@@ -276,10 +276,90 @@ if (!class_exists('curtain_service')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</form>';
+*/
+            global $wpdb;
+            if( isset($_POST['_where']) ) {
+                $where='"%'.$_POST['_where'].'%"';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title LIKE {$where}", OBJECT );
+                unset($_POST['_where']);
+            } else {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+            }
+            $output  = '<h2>Service Options</h2>';
+            $output .= '<div style="text-align: right">';
+            $output .= '<form method="post">';
+            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            $output .= '</form>';
+            $output .= '</div>';
+            $output .= '<div class="ui-widget">';
+            $output .= '<table id="users" class="ui-widget ui-widget-content">';
+            $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th>id</th>';
+            $output .= '<th>title</th>';
+            $output .= '<th>link</th>';
+            $output .= '<th>category</th>';
+            $output .= '<th>update_time</th>';
+            $output .= '</tr></thead>';
+            $output .= '<tbody>';
+            foreach ( $results as $index=>$result ) {
+                $output .= '<tr>';
+                $output .= '<td>'.$result->service_option_id.'</a></td>';
+                $output .= '<td><form method="post">';
+                $output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_id">';
+                $output .= '<input type="submit" value="'.$result->service_option_title.'">';
+                $output .= '</form></td>';
+                $output .= '<td>'.$result->service_option_link.'</td>';
+                $output .= '<td>'.$result->service_option_category.'</td>';
+                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '</tr>';
+            }
+            $output .= '</tbody></table></div>';
+            $output .= '<form method="post">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '</form>';
+
+            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
+                $_id = $_POST['_id'];
+                global $wpdb;
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id={$_id}", OBJECT );
+                if (count($row) > 0) {
+                    $output .= '<div id="dialog" title="Service Option update">';
+                    $output .= '<form method="post">';
+                    $output .= '<fieldset>';
+                    $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
+                    $output .= '<label for="_service_option_title">Option Title</label>';
+                    $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_title.'">';
+                    $output .= '<label for="_service_option_link">Option Link</label>';
+                    $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_link.'">';
+                    $output .= '<label for="_service_option_category">Category</label>';
+                    $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_category.'">';
+                    $output .= '</fieldset>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                } else {
+                    $output .= '<div id="dialog" title="Create new option">';
+                    $output .= '<form method="post">';
+                    $output .= '<fieldset>';
+                    $output .= '<label for="_service_option_title">Option Title</label>';
+                    $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_service_option_link">Option Link</label>';
+                    $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_service_option_category">Category</label>';
+                    $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                    $output .= '</fieldset>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                }
+            }
 
             return $output;
         }
-
+/*
         function edit_service_options( $_id=null, $_mode=null ) {
 
             global $wpdb;
@@ -317,7 +397,7 @@ if (!class_exists('curtain_service')) {
         
             return $output;
         }
-
+*/
         function insert_service_option($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
@@ -347,7 +427,7 @@ if (!class_exists('curtain_service')) {
                 service_option_id int NOT NULL AUTO_INCREMENT,
                 service_option_title varchar(20),
                 service_option_link varchar(255),
-                service_option_category int(2),
+                service_option_category varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (service_option_id)
