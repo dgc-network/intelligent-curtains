@@ -155,7 +155,7 @@ if (!class_exists('curtain_users')) {
         
         
 
-        function ajax_sendChat() {
+        function sendChat() {
 
             $from = $_SESSION['username'];
             $to = $_POST['to'];
