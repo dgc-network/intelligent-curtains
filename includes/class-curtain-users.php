@@ -373,7 +373,7 @@ if (!class_exists('curtain_users')) {
             }
         }
 
-        function update_curtain_users($data=[], $where=[]) {
+        public function update_curtain_users($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_users';
             $data['update_timestamp'] = time();

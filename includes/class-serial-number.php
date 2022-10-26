@@ -141,6 +141,13 @@ if (!class_exists('serial_number')) {
             }
         }
 
+        public function update_serial_number($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'serial_number';
+            $data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
