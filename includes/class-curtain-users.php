@@ -18,12 +18,21 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
+            add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
         }
 
         function my_enqueue() {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
             wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+        }
+
+        // Start session on init hook.
+        //add_action( 'init', 'wpse16119876_init_session' );
+        function wpse16119876_init_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
         }
 
         //add_action( 'wp_ajax_startChatSession', 'startChatSession' );
@@ -39,12 +48,25 @@ if (!class_exists('curtain_users')) {
 
             $json = array();
             $json['username'] = $_SESSION['username'];
+            $json['line_user_id'] = $_SESSION['line_user_id'];
             $json['items'] = $items;
             echo json_encode( $json );
             wp_die();
         
         }
         
+        function chatBoxSession($chatbox) {
+	
+            //$items = '';
+            
+            $items = array();
+            if (isset($_SESSION['chatHistory'][$chatbox])) {
+                $items = $_SESSION['chatHistory'][$chatbox];
+            }
+        
+            return $items;
+        }
+                
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
@@ -60,11 +82,7 @@ if (!class_exists('curtain_users')) {
         
                 $chat['message'] = sanitize($chat['message']);
                 if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
-                    //$items = $_SESSION['chatHistory'][$chat['from']];
-                    $item = $_SESSION['chatHistory'][$chat['from']];
-                    $items[$item]['s']=0;
-                    $items[$item]['f']=$chat['from'];
-                    $items[$item]['s']=$chat['message'];
+                    $items = $_SESSION['chatHistory'][$chat['from']];
                 }
         /*
                 $chat['message'] = sanitize($chat['message']);
@@ -77,11 +95,15 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
         */
-        /*
-            if (!isset($_SESSION['chatHistory'][$chat['from']])) {
-                $_SESSION['chatHistory'][$chat['from']] = '';
-            }
-        */    
+                $items['s']=0;
+                $items['f']=$chat['from'];
+                $items['s']=$chat['message'];
+        
+                if (!isset($_SESSION['chatHistory'][$chat['from']])) {
+                    //$_SESSION['chatHistory'][$chat['from']] = '';
+                    $_SESSION['chatHistory'][$chat['from']] = array();
+                }
+            
         /*
             $_SESSION['chatHistory'][$chat['from']] .= <<<EOD
                                    {
@@ -91,11 +113,9 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
         */		
-
-                $item = $_SESSION['chatHistory'][$chat['from']];
-                $items[$item]['s']=0;
-                $items[$item]['f']=$chat['from'];
-                $items[$item]['s']=$chat['message'];
+                $_SESSION['chatHistory'][$chat['from']]['s']=0;
+                $_SESSION['chatHistory'][$chat['from']]['f']=$chat['from'];
+                $_SESSION['chatHistory'][$chat['from']]['s']=$chat['message'];
 
                 unset($_SESSION['tsChatBoxes'][$chat['from']]);
                 $_SESSION['openChatBoxes'][$chat['from']] = $chat['sent'];
@@ -109,10 +129,6 @@ if (!class_exists('curtain_users')) {
         
                         $message = "Sent at $time";
                         if ($now > 180) {
-                            $item = $_SESSION['tsChatBoxes'][$chatbox];
-                            $items[$item]['s']=2;
-                            $items[$item]['f']=$chatbox;
-                            $items[$item]['s']=$message;
         /*			
                         $items .= <<<EOD
         {
@@ -122,15 +138,14 @@ if (!class_exists('curtain_users')) {
         },
         EOD;
         */
-        /*
-            if (!isset($_SESSION['chatHistory'][$chatbox])) {
-                $_SESSION['chatHistory'][$chatbox] = '';
-            }
-        */
-                            $item = $_SESSION['tsChatBoxes'][$chatbox];
-                            $items[$item]['s']=2;
-                            $items[$item]['f']=$chatbox;
-                            $items[$item]['s']=$message;
+                            $items['s']=2;
+                            $items['f']=$chatbox;
+                            $items['s']=$message;
+        
+                            if (!isset($_SESSION['chatHistory'][$chatbox])) {
+                                //$_SESSION['chatHistory'][$chatbox] = '';
+                                $_SESSION['chatHistory'][$chatbox] = array();
+                            }
         /*
             $_SESSION['chatHistory'][$chatbox] .= <<<EOD
                 {
@@ -140,6 +155,9 @@ if (!class_exists('curtain_users')) {
         },
         EOD;
         */
+                            $_SESSION['tsChatBoxes'][$chatbox]['s']=2;
+                            $_SESSION['tsChatBoxes'][$chatbox]['f']=$chatbox;
+                            $_SESSION['tsChatBoxes'][$chatbox]['s']=$message;
                             $_SESSION['tsChatBoxes'][$chatbox] = 1;
                         }
                     }
@@ -181,11 +199,12 @@ if (!class_exists('curtain_users')) {
             $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
             
             $messagesan = sanitize($message);
-/*        
-            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
-                $_SESSION['chatHistory'][$_POST['to']] = '';
-            }
         
+            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
+                //$_SESSION['chatHistory'][$_POST['to']] = '';
+                $_SESSION['chatHistory'][$_POST['to']] = array();
+            }
+/*        
             $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
                                {
                     "s": "1",

@@ -72,9 +72,9 @@ jQuery(document).ready(function($) {
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
     
-            //$(chatboxtextarea).val('');
-            //$(chatboxtextarea).focus();
-            //$(chatboxtextarea).css('height','44px');
+            $(chatboxtextarea).val('');
+            $(chatboxtextarea).focus();
+            $(chatboxtextarea).css('height','44px');
             if (message != '') {
                 jQuery.post(
                 //$.post(
@@ -92,9 +92,9 @@ jQuery(document).ready(function($) {
                     }
                 );
             }
-            $(chatboxtextarea).val('');
-            $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','44px');
+            //$(chatboxtextarea).val('');
+            //$(chatboxtextarea).focus();
+            //$(chatboxtextarea).css('height','44px');
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
     
