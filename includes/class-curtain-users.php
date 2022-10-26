@@ -11,8 +11,8 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
-            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'ajax_sendChat' ) );
-            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'ajax_sendChat' ) );
+            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
+            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'ajax_chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'ajax_chatHeartbeat' ) );
             //add_action( 'wp_ajax_foobar', array( __CLASS__, 'my_ajax_foobar_handler' ) );
