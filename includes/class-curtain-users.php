@@ -295,7 +295,7 @@ if (!class_exists('curtain_users')) {
                 $_SESSION['username'] = 'line_bot';
                 $_SESSION['chatboxtitle'] = $result->line_user_id;
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" id="chat-user">';
+                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" id="startChatSession">';
                 $output .= '</form></td>';
                 //$output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
