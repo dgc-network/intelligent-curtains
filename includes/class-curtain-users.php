@@ -57,7 +57,8 @@ if (!class_exists('curtain_users')) {
             $json['username'] = $_SESSION['username'];
             $json['chatboxtitle'] = $_SESSION['chatboxtitle'];
             $json['items'] = $items;
-            echo json_encode( $json );
+            $json_encode = json_encode( $json );
+            echo $json_encode;
             wp_die();
         
         }
