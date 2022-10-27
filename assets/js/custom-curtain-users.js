@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
     var chatboxtitle;
     
 	originalTitle = document.title;
-	$("chat-user").click(function(){
+	$("#chat-user").click(function(){
         startChatSession();
     });
 
