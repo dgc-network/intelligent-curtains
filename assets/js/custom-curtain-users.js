@@ -16,6 +16,7 @@ jQuery(document).ready(function($) {
     var chatboxtitle;
     
 	originalTitle = document.title;
+    chatHeartbeat();
 	startChatSession();
 
 	$([window, document]).blur(function(){

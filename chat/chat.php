@@ -86,7 +86,7 @@ function chatHeartbeat() {
 
 		$chat['message'] = sanitize($chat['message']);
 		if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
-			//$items = $_SESSION['chatHistory'][$chat['from']];
+			$items = $_SESSION['chatHistory'][$chat['from']];
 		}
 /*
 		$items .= <<<EOD
@@ -97,13 +97,9 @@ function chatHeartbeat() {
 	   },
 EOD;
 */
-	if (!isset($_SESSION['chatHistory'][$chat['from']])) {
-		$_SESSION['chatHistory'][$chat['from']] = '';
-	}
-	$item = $_SESSION['chatHistory'][$chat['from']];
-	$items[$item]['s']=0;
-	$items[$item]['f']=$chat['from'];
-	$items[$item]['s']=$chat['message'];
+		if (!isset($_SESSION['chatHistory'][$chat['from']])) {
+			$_SESSION['chatHistory'][$chat['from']] = '';
+		}
 /*
 	$_SESSION['chatHistory'][$chat['from']] .= <<<EOD
 						   {
@@ -118,17 +114,14 @@ EOD;
 	}
 
 	if (!empty($_SESSION['openChatBoxes'])) {
-	foreach ($_SESSION['openChatBoxes'] as $chatbox => $time) {
-		if (!isset($_SESSION['tsChatBoxes'][$chatbox])) {
-			$now = time()-strtotime($time);
-			$time = date('g:iA M dS', strtotime($time));
+		foreach ($_SESSION['openChatBoxes'] as $chatbox => $time) {
+			if (!isset($_SESSION['tsChatBoxes'][$chatbox])) {
+				$now = time()-strtotime($time);
+				$time = date('g:iA M dS', strtotime($time));
 
-			$message = "Sent at $time";
-			if ($now > 180) {
-				$item = $_SESSION['tsChatBoxes'][$chatbox];
-				$items[$item]['s']=2;
-				$items[$item]['f']=$chatbox;
-				$items[$item]['s']=$message;
+				$message = "Sent at $time";
+				if ($now > 180) {
+					$items = $_SESSION['tsChatBoxes'][$chatbox];
 /*			
 				$items .= <<<EOD
 {
@@ -138,13 +131,9 @@ EOD;
 },
 EOD;
 */
-	if (!isset($_SESSION['chatHistory'][$chatbox])) {
-		$_SESSION['chatHistory'][$chatbox] = '';
-	}
-	$item = $_SESSION['tsChatBoxes'][$chatbox];
-	$items[$item]['s']=2;
-	$items[$item]['f']=$chatbox;
-	$items[$item]['s']=$message;
+					if (!isset($_SESSION['chatHistory'][$chatbox])) {
+						$_SESSION['chatHistory'][$chatbox] = '';
+					}
 /*
 	$_SESSION['chatHistory'][$chatbox] .= <<<EOD
 		{
@@ -154,12 +143,11 @@ EOD;
 },
 EOD;
 */
-			$_SESSION['tsChatBoxes'][$chatbox] = 1;
-		}
-		}
+					$_SESSION['tsChatBoxes'][$chatbox] = 1;
+				}
+			}			
+		}		
 	}
-}
-
 	$sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
 	$query = mysql_query($sql);
 /*
