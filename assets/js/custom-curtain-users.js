@@ -16,7 +16,6 @@ jQuery(document).ready(function($) {
     var chatboxtitle;
     
 	originalTitle = document.title;
-    chatHeartbeat();
 	startChatSession();
 
 	$([window, document]).blur(function(){
@@ -39,6 +38,7 @@ jQuery(document).ready(function($) {
             function(response) {
                 username = response.username;
                 chatboxtitle = response.chatboxtitle;
+                alert('chatboxtitle:'+chatboxtitle+'username:'+username);
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
@@ -95,10 +95,10 @@ jQuery(document).ready(function($) {
             }
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
+            alert('chatboxtitle:'+chatboxtitle+'message:'+message);
     
             return false;
         }
-        alert('chatboxtitle:'+chatboxtitle+'message:'+message);
     
         var adjustedHeight = chatboxtextarea.clientHeight;
         var maxHeight = 94;
