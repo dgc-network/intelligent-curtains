@@ -38,9 +38,10 @@ jQuery(document).ready(function($) {
                 'action': 'startChatSession',
             }, 
             function(response) {
+                alert(response);
                 username = response.username;
-                chatboxtitle = response.chatboxtitle;
-                alert('chatboxtitle:'+chatboxtitle+'username:'+username);
+                chatboxtitle = response.chatboxtitle;                
+                alert('chatboxtitle:'+chatboxtitle+', username:'+username);
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
