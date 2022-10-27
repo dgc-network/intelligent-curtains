@@ -98,6 +98,7 @@ jQuery(document).ready(function($) {
     
             return false;
         }
+        alert('chatboxtitle:'+chatboxtitle+'message:'+message);
     
         var adjustedHeight = chatboxtextarea.clientHeight;
         var maxHeight = 94;
