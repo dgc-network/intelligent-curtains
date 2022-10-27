@@ -16,7 +16,9 @@ jQuery(document).ready(function($) {
     var chatboxtitle;
     
 	originalTitle = document.title;
-	startChatSession();
+	$("chat-user").click(function(){
+        startChatSession();
+    });
 
 	$([window, document]).blur(function(){
 		windowFocus = false;

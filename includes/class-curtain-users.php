@@ -53,7 +53,6 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
-            $_SESSION['username'] = 'line_bot';
             $json = array();
             $json['username'] = $_SESSION['username'];
             $json['chatboxtitle'] = $_SESSION['chatboxtitle'];
@@ -293,8 +292,10 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_update_user">';
                 $output .= '</form></td>';
                 $output .= '<td><form method="post">';
+                $_SESSION['username'] = 'line_bot';
+                $_SESSION['chatboxtitle'] = $result->line_user_id;
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user">';
+                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" id="chat-user">';
                 $output .= '</form></td>';
                 //$output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
@@ -333,7 +334,6 @@ if (!class_exists('curtain_users')) {
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (count($row) > 0) {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
-                    $_SESSION['chatboxtitle'] = $row->line_user_id;
                     $output .= '<div class="chatboxcontent"></div>';
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
                     $output .= '</div>';
