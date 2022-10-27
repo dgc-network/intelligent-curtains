@@ -236,7 +236,7 @@ if (!class_exists('curtain_users')) {
 
         public function list_curtain_users() {
             
-            unset($_SESSION['line_user_id']);
+            //unset($_SESSION['line_user_id']);
             if( isset($_SESSION['line_user_id']) ) {
                 $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
