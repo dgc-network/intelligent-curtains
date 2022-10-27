@@ -56,7 +56,7 @@ if (!class_exists('curtain_users')) {
             $_SESSION['username'] = 'line_bot';
             $json = array();
             $json['username'] = $_SESSION['username'];
-            $json['line_user_id'] = $_SESSION['line_user_id'];
+            $json['chatboxtitle'] = $_SESSION['chatboxtitle'];
             $json['items'] = $items;
             echo json_encode( $json );
             wp_die();
@@ -240,7 +240,7 @@ if (!class_exists('curtain_users')) {
                 $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
-                if (count($user) == 0) {
+                if (count($user) == 0 && $_GET['_check_permission'] != 'false') {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }
             } else {
@@ -332,7 +332,7 @@ if (!class_exists('curtain_users')) {
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (count($row) > 0) {
                     $output .= '<div id="dialog" title="Chat to '.$row->display_name.'">';
-                    $_SESSION['line_user_id'] = $row->line_user_id;
+                    $_SESSION['chatboxtitle'] = $row->line_user_id;
                     $output .= '<div class="chatboxcontent"></div>';
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
                     $output .= '</div>';

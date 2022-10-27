@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
             }, 
             function(response) {
                 username = response.username;
-                chatboxtitle = response.line_user_id;
+                chatboxtitle = response.chatboxtitle;
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
