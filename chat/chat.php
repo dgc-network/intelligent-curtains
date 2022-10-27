@@ -87,14 +87,8 @@ function chatHeartbeat() {
 		$chat['message'] = sanitize($chat['message']);
 		if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
 			//$items = $_SESSION['chatHistory'][$chat['from']];
-			$item = $_SESSION['chatHistory'][$chat['from']];
-			$items[$item]['s']=0;
-			$items[$item]['f']=$chat['from'];
-			$items[$item]['s']=$chat['message'];
 		}
 /*
-		$chat['message'] = sanitize($chat['message']);
-
 		$items .= <<<EOD
 					   {
 			"s": "0",

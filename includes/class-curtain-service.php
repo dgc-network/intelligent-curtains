@@ -109,18 +109,9 @@ if (!class_exists('curtain_service')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        //$output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
-                        //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                        //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                        $url = wp_parse_url( $result->service_option_link );
-                        if ( isset($url[scheme]) && isset($url[host]) ){
-                            $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
-                        } else {
-                            $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
-                        }
+                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                         $output .= '</div>';
-                        //$output .= '</form>';
                     }
                     $output .= '</div>';
     
@@ -163,18 +154,9 @@ if (!class_exists('curtain_service')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        //$output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
-                        //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                        //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                        $url = wp_parse_url( $result->service_option_link );
-                        if ( isset($url[scheme]) && isset($url[host]) ){
-                            $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
-                        } else {
-                            $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
-                        }
+                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                         $output .= '</div>';
-                        //$output .= '</form>';
                     }
                     $output .= '</div>';
                 }
@@ -185,18 +167,9 @@ if (!class_exists('curtain_service')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
                 foreach ( $results as $index=>$result ) {
-                    //$output .= '<form action="'.$result->service_option_link.'">';
                     $output .= '<div class="wp-block-button">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                    //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                    $url = wp_parse_url( $result->service_option_link );
-                    if ( isset($url[scheme]) && isset($url[host]) ){
-                        $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
-                    } else {
-                        $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
-                    }
-                $output .= '</div>';
-                    //$output .= '</form>';
+                    $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                    $output .= '</div>';
                 }
                 $output .= '</div>';
             }
