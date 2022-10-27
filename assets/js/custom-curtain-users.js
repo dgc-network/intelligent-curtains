@@ -38,7 +38,7 @@ jQuery(document).ready(function($) {
                 'action': 'startChatSession',
             }, 
             function(response) {
-                alert(response);
+                alert(JSON.stringify(response));
                 username = response.username;
                 chatboxtitle = response.chatboxtitle;                
                 alert('chatboxtitle:'+chatboxtitle+', username:'+username);
