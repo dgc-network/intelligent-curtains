@@ -112,7 +112,13 @@ if (!class_exists('curtain_service')) {
                         //$output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
                         //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        $url = wp_parse_url( $result->service_option_link );
+                        if ( isset($url[scheme]) && isset($url[host]) ){
+                            $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
+                        } else {
+                            $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
+                        }
                         $output .= '</div>';
                         //$output .= '</form>';
                     }
@@ -160,7 +166,13 @@ if (!class_exists('curtain_service')) {
                         //$output .= '<form action="'.$result->service_option_link.'">';
                         $output .= '<div class="wp-block-button">';
                         //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        $url = wp_parse_url( $result->service_option_link );
+                        if ( isset($url[scheme]) && isset($url[host]) ){
+                            $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
+                        } else {
+                            $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
+                        }
                         $output .= '</div>';
                         //$output .= '</form>';
                     }
@@ -176,8 +188,14 @@ if (!class_exists('curtain_service')) {
                     //$output .= '<form action="'.$result->service_option_link.'">';
                     $output .= '<div class="wp-block-button">';
                     //$output .= '<input class="wp-block-button__link" type="submit" value="'.$result->service_option_title.'">';
-                    $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                    $output .= '</div>';
+                    //$output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                    $url = wp_parse_url( $result->service_option_link );
+                    if ( isset($url[scheme]) && isset($url[host]) ){
+                        $output .= '<a class="wp-block-button__link" href="'.$url.'">'.$result->service_option_title.'</a>';
+                    } else {
+                        $output .= '<a class="wp-block-button__link" href="'.home_url().$url.'">'.$result->service_option_title.'</a>';                            
+                    }
+                $output .= '</div>';
                     //$output .= '</form>';
                 }
                 $output .= '</div>';
