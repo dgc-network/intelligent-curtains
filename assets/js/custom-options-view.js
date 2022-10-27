@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
     $( "#dialog" ).dialog();
 
     /* jQuery UI Dialog - Modal form */
-
+/*
     $( "#dialog-form-1" ).dialog({
         //autoOpen: false,
         autoOpen: true,
@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
             allFields.removeClass( "ui-state-error" );
         }
     });
-    
+*/    
     // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
 
 });

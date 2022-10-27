@@ -11,13 +11,13 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-            add_action( 'wp_ajax_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
-            add_action( 'wp_ajax_nopriv_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
-            add_action( 'wp_ajax_update_model', array( __CLASS__, 'ajax_update_model' ) );
-            add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
-            add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
-            add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
+            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+            //add_action( 'wp_ajax_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
+            //add_action( 'wp_ajax_nopriv_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
+            //add_action( 'wp_ajax_update_model', array( __CLASS__, 'ajax_update_model' ) );
+            //add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
+            //add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
+            //add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
             add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
         }
