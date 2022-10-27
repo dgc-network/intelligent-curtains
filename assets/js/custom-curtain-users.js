@@ -38,6 +38,7 @@ jQuery(document).ready(function($) {
                 'action': 'startChatSession',
             }, 
             function(response) {
+                console.log(response);
                 //alert(response.toSource());
                 //alert(JSON.stringify(response));
                 username = response.username;
