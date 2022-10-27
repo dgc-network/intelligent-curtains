@@ -38,7 +38,8 @@ jQuery(document).ready(function($) {
                 'action': 'startChatSession',
             }, 
             function(response) {
-                console.log(JSON.parse(JSON.stringify(response)))
+                alert(JSON.parse(JSON.stringify(response)));
+                //console.log(JSON.parse(JSON.stringify(response)));
                 //console.log(response);
                 //alert(response.toSource());
                 //alert(JSON.stringify(response));
