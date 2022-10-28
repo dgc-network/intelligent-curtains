@@ -31,9 +31,10 @@ jQuery(document).ready(function($) {
 		checkChatBoxInputKey(e,this,chatboxtitle);
     });
 
-    function startChatSession(){  
+    function startChatSession(){
         jQuery.post(
-            my_foobar_client.ajaxurl, 
+            //my_foobar_client.ajaxurl,
+            '/wp-admin/admin-ajax.php',
             {
                 'action': 'startChatSession',
             }, 
