@@ -32,6 +32,50 @@ jQuery(document).ready(function($) {
     });
 
     function startChatSession(){
+
+        jQuery.ajax({
+            type: 'POST',
+            url: '/wp-admin/admin-ajax.php',
+            dataType: "json",
+            data: {
+                'action': 'startChatSession',
+            },
+            success: function (response) {
+                username = response.username;
+                chatboxtitle = response.chatboxtitle;                
+                alert('chatboxtitle:'+chatboxtitle+', username:'+username);
+        
+                $.each(response.items, function(i,item){
+                    if (item)	{ // fix strange ie bug
+        
+                        chatboxtitle = item.f;
+        
+                        //if ($("#chatbox_"+chatboxtitle).length <= 0) {
+                        //    createChatBox(chatboxtitle,1);
+                        //}
+                        
+                        if (item.s == 1) {
+                            item.f = username;
+                        }
+        
+                        if (item.s == 2) {
+                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
+                        } else {
+                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
+                        }
+                    }
+                });
+
+                $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+                setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
+                setTimeout('chatHeartbeat();',chatHeartbeatTime);
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    
+/*    
         jQuery.post(
             //my_foobar_client.ajaxurl,
             '/wp-admin/admin-ajax.php',
@@ -77,6 +121,7 @@ jQuery(document).ready(function($) {
                 setTimeout('chatHeartbeat();',chatHeartbeatTime);
             },
         );
+*/        
     }
 
     function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
