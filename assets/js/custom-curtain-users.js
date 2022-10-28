@@ -87,7 +87,8 @@ jQuery(document).ready(function($) {
             $(chatboxtextarea).css('height','44px');
             if (message != '') {
                 jQuery.post(
-                    my_foobar_client.ajaxurl, 
+                    //my_foobar_client.ajaxurl, 
+                    '/wp-admin/admin-ajax.php',
                     {
                         'action': 'sendChat',
                         //'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
@@ -164,7 +165,8 @@ jQuery(document).ready(function($) {
         }
         
         jQuery.post(
-            my_foobar_client.ajaxurl, 
+            //my_foobar_client.ajaxurl, 
+            '/wp-admin/admin-ajax.php',
             {
                 'action': 'chatHeartbeat',
             }, 
