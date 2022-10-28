@@ -78,9 +78,11 @@ jQuery(document).ready(function($) {
 
     function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
 	 
-        if(event.keyCode == 13 && event.shiftKey == 0)  {
+        //if(event.keyCode == 13 && event.shiftKey == 0)  {
+        if(event.keyCode == 13)  {
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
+            alert('chatboxtitle:'+chatboxtitle+', message:'+message);
     
             $(chatboxtextarea).val('');
             $(chatboxtextarea).focus();
@@ -124,7 +126,6 @@ jQuery(document).ready(function($) {
             }
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
-            alert('chatboxtitle:'+chatboxtitle+', message:'+message);
     
             return false;
         }
