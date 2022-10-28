@@ -39,12 +39,13 @@ jQuery(document).ready(function($) {
                 'action': 'startChatSession',
             }, 
             function(response) {
-                alert(JSON.parse(JSON.stringify(response)));
+                response = JSON.stringify(response);
+                //alert(JSON.parse(JSON.stringify(response)));
                 //console.log(JSON.parse(JSON.stringify(response)));
                 //console.log(response);
                 //alert(response.toSource());
                 //alert(JSON.stringify(response));
-                alert('username:'+response.username);
+                //alert('username:'+response.username);
                 username = response.username;
                 chatboxtitle = response.chatboxtitle;                
                 alert('chatboxtitle:'+chatboxtitle+', username:'+username);
@@ -73,7 +74,7 @@ jQuery(document).ready(function($) {
                 $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                 setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
                 setTimeout('chatHeartbeat();',chatHeartbeatTime);
-            }
+            },
         );
     }
 
