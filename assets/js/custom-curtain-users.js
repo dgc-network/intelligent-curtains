@@ -27,10 +27,6 @@ jQuery(document).ready(function($) {
 		document.title = originalTitle;
 	});
 
-    $('.chatboxtextarea').on('keypress',function(e) {
-		checkChatBoxInputKey(e,this,chatboxtitle);
-    });
-
     function startChatSession(){
 
         jQuery.ajax({
@@ -76,7 +72,13 @@ jQuery(document).ready(function($) {
         });    
     }
 
-    function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
+    $('.chatboxtextarea').on('keypress',function(e) {
+		//checkChatBoxInputKey(e,this,chatboxtitle);
+		checkChatBoxInputKey(e,this);
+    });
+
+    //function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
+    function checkChatBoxInputKey(event,chatboxtextarea) {
 	 
         //if(event.keyCode == 13 && event.shiftKey == 0)  {
         if(event.keyCode == 13)  {
