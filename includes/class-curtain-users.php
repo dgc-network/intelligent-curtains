@@ -74,6 +74,43 @@ if (!class_exists('curtain_users')) {
             return $items;
         }
                 
+        function sendChat() {
+
+            $from = $_SESSION['username'];
+            $to = $_POST['to'];
+            $message = $_POST['message'];
+        
+            $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
+            
+            $messagesan = sanitize($message);
+        
+            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
+                //$_SESSION['chatHistory'][$_POST['to']] = '';
+                $_SESSION['chatHistory'][$_POST['to']] = array();
+            }
+            $_SESSION['chatHistory'][$_POST['to']]['s']=1;
+            $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
+            $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
+
+/*        
+            $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
+                               {
+                    "s": "1",
+                    "f": "{$to}",
+                    "m": "{$messagesan}"
+               },
+        EOD;
+*/          
+
+            unset($_SESSION['tsChatBoxes'][$_POST['to']]);
+        
+            $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
+            $query = mysql_query($sql);            
+            //echo "1";
+          
+            wp_die();
+        }
+
         //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
@@ -195,43 +232,6 @@ if (!class_exists('curtain_users')) {
         }
         
         
-
-        function sendChat() {
-
-            $from = $_SESSION['username'];
-            $to = $_POST['to'];
-            $message = $_POST['message'];
-        
-            $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
-            
-            $messagesan = sanitize($message);
-        
-            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
-                //$_SESSION['chatHistory'][$_POST['to']] = '';
-                $_SESSION['chatHistory'][$_POST['to']] = array();
-            }
-            $_SESSION['chatHistory'][$_POST['to']]['s']=1;
-            $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
-            $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
-
-/*        
-            $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
-                               {
-                    "s": "1",
-                    "f": "{$to}",
-                    "m": "{$messagesan}"
-               },
-        EOD;
-*/          
-
-            unset($_SESSION['tsChatBoxes'][$_POST['to']]);
-        
-            $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
-            $query = mysql_query($sql);            
-            //echo "1";
-          
-            wp_die();
-        }
 
         public function list_curtain_users() {
             
