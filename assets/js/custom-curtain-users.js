@@ -73,15 +73,15 @@ jQuery(document).ready(function($) {
     }
 
     $('.chatboxtextarea').on('keypress',function(e) {
-		//checkChatBoxInputKey(e,this,chatboxtitle);
-		checkChatBoxInputKey(e,this);
+		checkChatBoxInputKey(e,this,chatboxtitle);
+		//checkChatBoxInputKey(e,this);
     });
 
-    //function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
-    function checkChatBoxInputKey(event,chatboxtextarea) {
+    function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
+    //function checkChatBoxInputKey(event,chatboxtextarea) {
 	 
-        //if(event.keyCode == 13 && event.shiftKey == 0)  {
-        if(event.keyCode == 13)  {
+        if(event.keyCode == 13 && event.shiftKey == 0)  {
+        //if(event.keyCode == 13)  {
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
             alert('chatboxtitle:'+chatboxtitle+', message:'+message);
@@ -108,30 +108,13 @@ jQuery(document).ready(function($) {
                         alert(error);
                     }
                 });
-/*            
-                jQuery.post(
-                    //my_foobar_client.ajaxurl, 
-                    '/wp-admin/admin-ajax.php',
-                    {
-                        'action': 'sendChat',
-                        //'to': 'Uc12a5ff53a702d188e609709d6ef3edf',
-                        'to': chatboxtitle,
-                        'message': message,
-                    }, 
-                    function(response) {
-                        message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-                    }
-                );
-*/                
             }
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
     
             return false;
         }
-    
+/*    
         var adjustedHeight = chatboxtextarea.clientHeight;
         var maxHeight = 94;
     
@@ -144,6 +127,7 @@ jQuery(document).ready(function($) {
         } else {
             $(chatboxtextarea).css('overflow','auto');
         }         
+*/        
     }
 
     function chatHeartbeat(){
