@@ -44,6 +44,7 @@ jQuery(document).ready(function($) {
                 //console.log(response);
                 //alert(response.toSource());
                 //alert(JSON.stringify(response));
+                alert('username:'+response.username);
                 username = response.username;
                 chatboxtitle = response.chatboxtitle;                
                 alert('chatboxtitle:'+chatboxtitle+', username:'+username);
