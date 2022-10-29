@@ -13,7 +13,7 @@ if (!class_exists('line_webhook')) {
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
-
+/*
         public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
@@ -29,9 +29,10 @@ if (!class_exists('line_webhook')) {
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
         }
-        
+*/        
         public function init() {
-            $client = self::line_bot_sdk();
+            //$client = self::line_bot_sdk();
+            $client = line_bot_sdk();
             foreach ($client->parseEvents() as $event) {
                 self::insert_event_log($event);
 

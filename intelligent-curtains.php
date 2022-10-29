@@ -33,7 +33,7 @@ add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 $line_webhook = new line_webhook();
 $line_webhook->init();
 
-/*
+
 function line_bot_sdk() {
     $channelAccessToken = '';
     $channelSecret = '';
@@ -49,7 +49,7 @@ function line_bot_sdk() {
     $client = new LINEBotTiny($channelAccessToken, $channelSecret);
     return $client;
 }
-*/
+
 /*
 define('temp_file', ABSPATH.'/_temp_out.txt' );
 
