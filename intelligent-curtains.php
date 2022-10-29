@@ -18,15 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-//define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-options-loader.php';
-require_once plugin_dir_url( __DIR__ ) . 'line-bot-sdk-tiny/LINEBotTiny.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-line-webhook.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-curtain-service.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-curtain-agents.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-curtain-models.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-curtain-users.php';
-require_once plugin_dir_url( __DIR__ ) . 'includes/class-serial-number.php';
+define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
+require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
+require_once plugin_dir_url( __FILE__ ) . 'line-bot-sdk-tiny/LINEBotTiny.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-line-webhook.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-curtain-service.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-curtain-agents.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-curtain-models.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-curtain-users.php';
+require_once plugin_dir_url( __FILE__ ) . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
