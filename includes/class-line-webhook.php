@@ -92,20 +92,42 @@ if (!class_exists('line_webhook')) {
                                             ]
                                         ]);
                                     } else {
-                                        // return message for wrong 6 digit number
-                                        $client->replyMessage([
-                                            'replyToken' => $event['replyToken'],
-                                            'messages' => [
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => 'Hi, '.$profile['displayName'],
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => 'message '.$message['text'].' is wrong.',
+                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
+                                        if (count($user) > 0) {
+                                            $client->replyMessage([
+                                                'replyToken' => $event['replyToken'],
+                                                'messages' => [
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => 'Hi, '.$profile['displayName'],
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => '請點擊下方連結進入售後服務區:',
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => get_site_url().'/'.get_option('_service_page'),
+                                                    ]
                                                 ]
-                                            ]
-                                        ]);    
+                                            ]);
+                                        } else {
+                                            $client->replyMessage([
+                                                // return message for wrong 6 digit number
+                                                'replyToken' => $event['replyToken'],
+                                                'messages' => [
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => 'Hi, '.$profile['displayName'],
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => 'message '.$message['text'].' is wrong.',
+                                                    ]
+                                                ]
+                                            ]);    
+
+                                        }
                                     }
                                 } else {
                                     //send notification to administrators
