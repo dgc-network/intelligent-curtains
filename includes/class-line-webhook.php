@@ -17,8 +17,8 @@ if (!class_exists('line_webhook')) {
         public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
-            if (file_exists(MY_PLUGIN_DIR . 'line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file(MY_PLUGIN_DIR . 'line-bot-sdk-tiny/config.ini', true);
+            if (file_exists(plugin_dir_url( __DIR__ ) . 'line-bot-sdk-tiny/config.ini')) {
+                $config = parse_ini_file(plugin_dir_url( __DIR__ ) . 'line-bot-sdk-tiny/config.ini', true);
                 if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
                     error_log("config.ini uncompleted!", 0);
                 } else {
