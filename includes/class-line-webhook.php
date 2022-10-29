@@ -112,8 +112,8 @@ if (!class_exists('line_webhook')) {
                                                 ]
                                             ]);
                                         } else {
+                                            // return message for wrong 6 digit number
                                             $client->replyMessage([
-                                                // return message for wrong 6 digit number
                                                 'replyToken' => $event['replyToken'],
                                                 'messages' => [
                                                     [
@@ -126,7 +126,6 @@ if (!class_exists('line_webhook')) {
                                                     ]
                                                 ]
                                             ]);    
-
                                         }
                                     }
                                 } else {
