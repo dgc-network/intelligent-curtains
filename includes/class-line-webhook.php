@@ -13,7 +13,7 @@ if (!class_exists('line_webhook')) {
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
-
+/*
         public function line_bot_sdk() {
             $channelAccessToken = '';
             $channelSecret = '';
@@ -29,7 +29,7 @@ if (!class_exists('line_webhook')) {
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
         }
-        
+*/        
         public function init() {
             //$client = self::line_bot_sdk();
             $client = line_bot_sdk();
@@ -87,7 +87,7 @@ if (!class_exists('line_webhook')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => home_url().'',
+                                                    'text' => get_site_url().'/'.get_option('_service_page'),
                                                 ]
                                             ]
                                         ]);

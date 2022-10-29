@@ -46,7 +46,7 @@ if (!class_exists('curtain_service')) {
         }
 
         function init_curtain_service() {
-
+/*
             if ( isset($_POST['_link_submit']) ) {
                 if ( $_POST['_link_submit']=='Agents' ) {
                     $curtain_agents = new curtain_agents();
@@ -65,7 +65,7 @@ if (!class_exists('curtain_service')) {
                     return $curtain_users->list_serial_number();
                 }
             }
-
+*/
             if( isset($_POST['_submit_action']) ) {
                 if( $_POST['_submit_action']=='Resend' ) {
 
@@ -120,7 +120,7 @@ if (!class_exists('curtain_service')) {
                         $six_digit_random_number = random_int(100000, 999999);
                         $output .= '如需其他服服, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
                         $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
                         $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
     
                         $data=array();
@@ -135,7 +135,7 @@ if (!class_exists('curtain_service')) {
                         $six_digit_random_number = random_int(100000, 999999);
                         $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
                         $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="color:blue">'.$six_digit_random_number.'</span>';
+                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
                         $output .= ' 完成註冊程序<br>';
                         // registration
                         $data=array();
