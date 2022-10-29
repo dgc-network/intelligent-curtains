@@ -50,7 +50,8 @@ if (!class_exists('line_webhook')) {
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
                                         // continue the process if the 6 digit number is correct
-                                        $curtain_service = new curtain_service();
+                                        //$curtain_service = new curtain_service();
+                                        $serial_number = new serial_number();
                                         $curtain_users = new curtain_users();
                                         $return_id = 0;
                                         //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
@@ -70,7 +71,8 @@ if (!class_exists('line_webhook')) {
                                         $data['curtain_user_id']=$return_id;
                                         $where=array();
                                         $where['curtain_user_id']=$six_digit_random_number;
-                                        $result = $curtain_service->update_serial_number($data, $where);
+                                        //$result = $curtain_service->update_serial_number($data, $where);
+                                        $result = $serial_number->update_serial_number($data, $where);
 
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
