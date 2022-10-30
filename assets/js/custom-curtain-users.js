@@ -73,7 +73,12 @@ jQuery(document).ready(function($) {
     }
 
     $('.chatboxtextarea').on('keypress',function(e) {
-		checkChatBoxInputKey(e,this,chatboxtitle);
+        if(e.keyCode == 13 && e.shiftKey == 0)  {
+            message = $(chatboxtextarea).val();
+            message = message.replace(/^\s+|\s+$/g,"");
+            alert('chatboxtitle:'+chatboxtitle+', message:'+message);
+        }
+        checkChatBoxInputKey(e,this,chatboxtitle);
 		//checkChatBoxInputKey(e,this);
     });
 

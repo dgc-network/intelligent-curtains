@@ -101,7 +101,6 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
 */          
-
             unset($_SESSION['tsChatBoxes'][$_POST['to']]);
         
             $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
