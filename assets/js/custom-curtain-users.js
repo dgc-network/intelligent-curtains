@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
             message = message.replace(/^\s+|\s+$/g,"");
             alert('chatboxtitle:'+chatboxtitle+', message:'+message);
         }
-        checkChatBoxInputKey(e,this,chatboxtitle);
+        //checkChatBoxInputKey(e,this,chatboxtitle);
 		//checkChatBoxInputKey(e,this);
     });
 
