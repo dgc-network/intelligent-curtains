@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
 
     $('.chatboxtextarea').on('keypress',function(e) {
         if(e.keyCode == 13 && e.shiftKey == 0)  {
-            message = this.val();
+            message = $('.chatboxtextarea').val();
             message = message.replace(/^\s+|\s+$/g,"");
             alert('chatboxtitle:'+chatboxtitle+', message:'+message);
         }
