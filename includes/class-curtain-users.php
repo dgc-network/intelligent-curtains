@@ -371,6 +371,28 @@ if (!class_exists('curtain_users')) {
             $wpdb->update($table, $data, $where);
         }
 
+        public function insert_chat_message($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat';
+            $data = array(
+                //'id' => $data['id'],
+                'from' => $data['from'],
+                'to' => $data['to'],
+                'message' => $data['message'],
+                'sent' => time(),
+                'recd' => time(),
+            );
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
+        }
+
+        public function update_chat_messages($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat';
+            //$data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();

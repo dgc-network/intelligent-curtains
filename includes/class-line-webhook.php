@@ -129,7 +129,13 @@ if (!class_exists('line_webhook')) {
                                         }
                                     }
                                 } else {
-                                    //send notification to administrators
+                                    //send message to line_bot
+                                    $curtain_users = new curtain_users();
+                                    $data=array();
+                                    $data['from']=$line_user_id;
+                                    $data['to']='line_bot';
+                                    $data['message']=$message;
+                                    $result = $curtain_users->insert_curtain_model($data);
                                 }
                                 break;
                             default:
