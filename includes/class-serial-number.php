@@ -89,6 +89,9 @@ if (!class_exists('serial_number')) {
             $output .= '<form method="post">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</form>';
+            $print_me = do_shortcode('[print-me target="body"/]');
+            //[print-me target="body"/]
+            $output .= $print_me;
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
@@ -135,6 +138,9 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="qrcode"><div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div></div>';
+                //if(function_exists('wp_print')) {
+                //    print_link();
+                //}
                 $output .= '</div>';
             }
 
