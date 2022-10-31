@@ -92,7 +92,7 @@ if (!class_exists('serial_number')) {
             echo do_shortcode('[print-me target="body"/]');
             $print_me = do_shortcode('[print-me target="body"/]');
             //[print-me target="body"/]
-            //$output .= $print_me;
+            $output .= $print_me;
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
