@@ -73,10 +73,10 @@ if (!class_exists('serial_number')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->serial_number_id.'</td>';
-                $output .= '<td><form method="post">';
+                $output .= '<td style="display: flex;"><form method="post">';
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form>';
-                $print_me = do_shortcode('[print-me target="body"/]');
+                $print_me = do_shortcode('[print-me target=".print-me-'.$result->qr_code_serial_no.'"/]');
                 $output .= $print_me;
                 $output .= '</td>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
@@ -136,12 +136,9 @@ if (!class_exists('serial_number')) {
 
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode"><div id="qrcode_content">';
+                $output .= '<div id="qrcode" class="print-me-'.$_POST['_serial_no'].'"><div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div></div>';
-                //if(function_exists('wp_print')) {
-                //    print_link();
-                //}
                 $output .= '</div>';
             }
 
