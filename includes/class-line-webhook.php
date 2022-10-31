@@ -210,9 +210,6 @@ if (!class_exists('line_webhook')) {
                 'source_user_id' => $user_id,
                 'source_group_id' => $group_id,
                 'event_replyToken' => $event['replyToken'],
-                //'event_mode' => $event['mode'],
-                //'webhookEventId' => $event['webhookEventId'],
-                //'isRedelivery' => $event['deliveryContext']['isRedelivery'],
                 'event_object' => json_encode($event_object),
             );
             $insert_id = $wpdb->insert($table, $data);        
@@ -231,9 +228,6 @@ if (!class_exists('line_webhook')) {
                 source_user_id varchar(50),
                 source_group_id varchar(50),
                 event_replyToken varchar(50),
-                //event_mode varchar(50),
-                //webhookEventId varchar(50),
-                //isRedelivery boolean,
                 event_object varchar(1000),
                 PRIMARY KEY  (event_id)
             ) $charset_collate;";
