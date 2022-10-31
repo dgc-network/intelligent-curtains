@@ -11,8 +11,8 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $serial_number = new serial_number();
-            //add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
-            add_shortcode('serial-number-list', $serial_number->list_serial_number());
+            add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
+            //add_shortcode('serial-number-list', $serial_number->list_serial_number());
             //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
         }
