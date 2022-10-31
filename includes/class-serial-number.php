@@ -92,7 +92,7 @@ if (!class_exists('serial_number')) {
             $output .= '<form method="post">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</form>';
-            //echo do_shortcode('[print-me target="body"/]');
+            echo do_shortcode('[print-me target="body"/]');
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
