@@ -72,10 +72,13 @@ if (!class_exists('serial_number')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td>'.$result->serial_number_id.'</a></td>';
+                $output .= '<td>'.$result->serial_number_id.'</td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
-                $output .= '</form></td>';
+                $output .= '</form>';
+                $print_me = do_shortcode('[print-me target="body"/]');
+                $output .= $print_me;
+                $output .= '</td>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
@@ -89,10 +92,7 @@ if (!class_exists('serial_number')) {
             $output .= '<form method="post">';
             $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
             $output .= '</form>';
-            echo do_shortcode('[print-me target="body"/]');
-            $print_me = do_shortcode('[print-me target="body"/]');
-            //[print-me target="body"/]
-            $output .= $print_me;
+            //echo do_shortcode('[print-me target="body"/]');
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
