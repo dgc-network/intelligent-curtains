@@ -77,8 +77,13 @@ if (!class_exists('serial_number')) {
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form>';
                 $output .= '</td>';
-                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
-                $output .= '<td>'.$model->curtain_model_name.'</td>';
+                //$model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
+                $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
+                if (count($model) > 0) {
+                    $output .= '<td>'.$model->curtain_model_name.'</td>';
+                } else {
+                    $output .= '<td></td>';
+                }
                 $output .= '<td>'.$result->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
                 $output .= '<td>'.$user->display_name.'</td>';
