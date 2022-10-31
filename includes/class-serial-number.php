@@ -80,10 +80,10 @@ if (!class_exists('serial_number')) {
                 $output .= '</td>';
                 //$model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                if (count($model) > 0) {
-                    $output .= '<td>'.$model->curtain_model_name.'</td>';
-                } else {
+                if (is_null($results) || !empty($wpdb->last_error)) {
                     $output .= '<td></td>';
+                } else {
+                    $output .= '<td>'.$model->curtain_model_name.'</td>';
                 }
                 $output .= '<td>'.$result->specification.'</td>';
                 $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
