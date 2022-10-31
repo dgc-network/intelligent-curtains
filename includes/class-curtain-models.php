@@ -246,9 +246,9 @@ if (!class_exists('curtain_models')) {
         }
 
         function create_tables() {
-            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
             global $wpdb;
             $tablename = 'curtain_models'; 
+            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
             $main_sql_create  = 'CREATE TABLE ' . $tablename . '(';
             $main_sql_create .= 'curtain_model_id int NOT NULL AUTO_INCREMENT,';
             $main_sql_create .= 'curtain_model_name varchar(5),';
