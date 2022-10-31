@@ -76,8 +76,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<td style="display: flex;"><form method="post">';
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form>';
-                //$print_me = do_shortcode('[print-me target=".print-me-'.$result->qr_code_serial_no.'"/]');
-                //$output .= $print_me;
                 $output .= '</td>';
                 $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                 $output .= '<td>'.$model->curtain_model_name.'</td>';

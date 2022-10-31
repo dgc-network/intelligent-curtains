@@ -28,6 +28,12 @@ if (!class_exists('curtain_models')) {
             wp_enqueue_script( 'jquery-ui-dialog' );
         }    
 
+        function wpse16119876_init_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
+        }
+
         function ajax_insert_model() {
             $args = array(
                 'taxonomy'   => "product_cat",
@@ -244,7 +250,7 @@ if (!class_exists('curtain_models')) {
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-            $sql = "CREATE TABLE `{$wpdb->prefix}curtain_models` (
+            $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}curtain_models` (
                 curtain_model_id int NOT NULL AUTO_INCREMENT,
                 curtain_model_name varchar(5),
                 model_description varchar(50),
