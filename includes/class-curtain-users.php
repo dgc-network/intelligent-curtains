@@ -18,7 +18,7 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
-            add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
             self::create_tables();
 
             if (!isset($_SESSION['chatHistory'])) {
