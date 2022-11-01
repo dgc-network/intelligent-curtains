@@ -331,7 +331,8 @@ if (!class_exists('curtain_users')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
-                if (count($row) > 0) {
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                } else {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<div class="chatboxtitle" style="display: none;">'.$row->line_user_id.'</div>';
                     $output .= '<div class="chatboxcontent"></div>';
