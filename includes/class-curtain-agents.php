@@ -110,7 +110,24 @@ if (!class_exists('curtain_agents')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id={$_id}", OBJECT );
-                if (count($row) > 0) {
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                    $output .= '<div id="dialog" title="Create new agent">';
+                    $output .= '<form method="post">';
+                    $output .= '<fieldset>';
+                    $output .= '<label for="_agent_number">Agent Number</label>';
+                    $output .= '<input type="text" name="_agent_number" id="agent_number" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_agent_name">Agent Name</label>';
+                    $output .= '<input type="text" name="_agent_name" id="agent_name" class="text ui-widget-content ui-corner-all"';
+                    $output .= '<label for="_contact1">Contact</label>';
+                    $output .= '<input type="text" name="_contact1" id="contact1" class="text ui-widget-content ui-corner-all"';
+                    $output .= '<label for="_phone1">Phone</label>';
+                    $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all"';
+                    $output .= '</fieldset>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                } else {                    
                     $output .= '<div id="dialog" title="Curtain agent update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
@@ -126,23 +143,6 @@ if (!class_exists('curtain_agents')) {
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                } else {
-                    $output .= '<div id="dialog" title="Create new agent">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<label for="_agent_number">Agent Number</label>';
-                    $output .= '<input type="text" name="_agent_number" id="agent_number" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_agent_name">Agent Name</label>';
-                    $output .= '<input type="text" name="_agent_name" id="agent_name" class="text ui-widget-content ui-corner-all"';
-                    $output .= '<label for="_contact1">Contact</label>';
-                    $output .= '<input type="text" name="_contact1" id="contact1" class="text ui-widget-content ui-corner-all"';
-                    $output .= '<label for="_phone1">Phone</label>';
-                    $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all"';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 }

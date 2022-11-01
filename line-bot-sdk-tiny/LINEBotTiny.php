@@ -94,14 +94,14 @@ class LINEBotTiny
             //exit();
             return;
         }
-
+/*
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
             //exit();
             return;
         }
-
+*/
         $data = json_decode($entityBody, true);
         if (!isset($data['events'])) {
             http_response_code(400);

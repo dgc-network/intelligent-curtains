@@ -255,7 +255,22 @@ if (!class_exists('curtain_service')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id={$_id}", OBJECT );
-                if (count($row) > 0) {
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                    $output .= '<div id="dialog" title="Create new option">';
+                    $output .= '<form method="post">';
+                    $output .= '<fieldset>';
+                    $output .= '<label for="_service_option_title">Option Title</label>';
+                    $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_service_option_link">Option Link</label>';
+                    $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="_service_option_category">Category</label>';
+                    $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                    $output .= '</fieldset>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                } else {                    
                     $output .= '<div id="dialog" title="Service Option update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
@@ -269,21 +284,6 @@ if (!class_exists('curtain_service')) {
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                } else {
-                    $output .= '<div id="dialog" title="Create new option">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<label for="_service_option_title">Option Title</label>';
-                    $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_service_option_link">Option Link</label>';
-                    $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_service_option_category">Category</label>';
-                    $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
