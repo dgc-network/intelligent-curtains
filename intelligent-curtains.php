@@ -1,5 +1,5 @@
 <?php
-update_option( 'home', 'https://aihome.tw' );
+//update_option( 'home', 'https://aihome.tw' );
 update_option( 'siteurl', 'https://aihome.tw' );
 /**
  * Plugin Name: intelligent-curtains
