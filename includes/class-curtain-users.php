@@ -423,7 +423,7 @@ if (!class_exists('curtain_users')) {
                 PRIMARY KEY (`id`)
             ) $charset_collate;";
             dbDelta($sql);
-        
+/*        
             global $wpdb;
             $tablename = 'curtain_users'; 
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -439,7 +439,7 @@ if (!class_exists('curtain_users')) {
             $main_sql_create .= 'PRIMARY KEY (curtain_user_id)';
             $main_sql_create .= ');';
             maybe_create_table( $wpdb->prefix . $tablename, $main_sql_create );
-/*
+*/
             $sql = "CREATE TABLE {$wpdb->prefix}curtain_users (
                 curtain_user_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50),
@@ -453,7 +453,7 @@ if (!class_exists('curtain_users')) {
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
             dbDelta($sql);
-*/
+
         }
     }
     new curtain_users();

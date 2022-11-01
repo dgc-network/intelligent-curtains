@@ -246,6 +246,7 @@ if (!class_exists('curtain_models')) {
         }
 
         function create_tables() {
+/*            
             global $wpdb;
             $tablename = 'curtain_models'; 
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -260,7 +261,7 @@ if (!class_exists('curtain_models')) {
             $main_sql_create .= 'PRIMARY KEY (curtain_model_id)';
             $main_sql_create .= ');';
             maybe_create_table( $wpdb->prefix . $tablename, $main_sql_create );
-/*
+*/
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -276,7 +277,6 @@ if (!class_exists('curtain_models')) {
                 PRIMARY KEY (curtain_model_id)
             ) $charset_collate;";
             dbDelta($sql);
-*/                
         }
     }
     new curtain_models();
