@@ -80,7 +80,7 @@ if (!class_exists('serial_number')) {
                 $output .= '</td>';
                 //$model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                if (is_null($results) || !empty($wpdb->last_error)) {
+                if (is_null($model) || !empty($wpdb->last_error)) {
                     $output .= '<td></td>';
                 } else {
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
