@@ -73,8 +73,6 @@ jQuery(document).ready(function($) {
     }
 
     $('.chatboxtextarea').on('keypress',function(e) {
-        chatboxtitle = $('.chatboxchatboxtitle').val();
-        alert('chatboxtitle:'+chatboxtitle);
         checkChatBoxInputKey(e,this,chatboxtitle);
 		//checkChatBoxInputKey(e,this);
     });
@@ -84,6 +82,7 @@ jQuery(document).ready(function($) {
 	 
         if(event.keyCode == 13 && event.shiftKey == 0)  {
         //if(event.keyCode == 13)  {
+            chatboxtitle = $('.chatboxchatboxtitle').val();
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
             alert('chatboxtitle:'+chatboxtitle+', message:'+message);
