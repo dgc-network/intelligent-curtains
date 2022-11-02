@@ -82,7 +82,7 @@ jQuery(document).ready(function($) {
 	 
         if(event.keyCode == 13 && event.shiftKey == 0)  {
         //if(event.keyCode == 13)  {
-            chatboxtitle = $('.chatboxchatboxtitle').val();
+            chatboxtitle = $('.chatboxtitle').val();
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
             alert('chatboxtitle:'+chatboxtitle+', message:'+message);
