@@ -96,7 +96,8 @@ if (!class_exists('curtain_service')) {
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     if (count($user) > 0) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['line_user_id'] = $user->line_user_id;
+                        //$_COOKIE['line_user_id'] = $user->line_user_id;
+                        setcookie('line_user_id',  $user->line_user_id);
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -178,8 +179,8 @@ if (!class_exists('curtain_service')) {
 
         function list_service_options() {
 
-            if( isset($_SESSION['line_user_id']) ) {
-                $line_user_id = $_SESSION['line_user_id'];
+            if( isset($_COOKIE['line_user_id']) ) {
+                $line_user_id = $_COOKIE['line_user_id'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {

@@ -1,6 +1,6 @@
 <?php
 //update_option( 'home', 'https://aihome.tw' );
-update_option( 'siteurl', 'https://aihome.tw' );
+//update_option( 'siteurl', 'https://aihome.tw' );
 /**
  * Plugin Name: intelligent-curtains
  * Plugin URI: https://wordpress.org/plugins/intelligent-curtains/
@@ -30,17 +30,53 @@ require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
-
+/*
 function init_session() {
     if ( ! session_id() ) {
         session_start();
     }
 }
 add_action( 'init', 'init_session' );
+*/
+/*
+function wpb_cookies_tutorial2() { 
+    // Time of user's visit
+    $visit_time = date('F j, Y g:i a');
+     
+    // Check if cookie is already set
+    if(isset($_COOKIE['wpb_visit_time'])) {
+     
+        // Do this if cookie is set 
+        function visitor_greeting() {
+     
+            // Use information stored in the cookie 
+            $lastvisit = $_COOKIE['wpb_visit_time'];
+     
+            $string .= 'You last visited our website '. $lastvisit .'. Check out whats new'; 
+     
+            // Delete the old cookie so that we can set it again with updated time
+            unset($_COOKIE['wpb_visit_time']); 
+     
+            return $string;
+        }   
+     
+    } else { 
 
+        // Do this if the cookie doesn't exist
+        function visitor_greeting() { 
+            $string .= 'New here? Check out these resources...' ;
+            return $string;
+        }   
+    }
+    add_shortcode('greet_me', 'visitor_greeting');
+     
+    // Set or Reset the cookie
+    setcookie('wpb_visit_time',  $visit_time, time()+31556926);
+} 
+add_action('init', 'wpb_cookies_tutorial2');
+*/
 $line_webhook = new line_webhook();
 $line_webhook->init();
-
 
 function line_bot_sdk() {
     $channelAccessToken = '';
@@ -57,27 +93,4 @@ function line_bot_sdk() {
     $client = new LINEBotTiny($channelAccessToken, $channelSecret);
     return $client;
 }
-
-/*
-define('temp_file', ABSPATH.'/_temp_out.txt' );
-
-add_action("activated_plugin", "activation_handler1");
-function activation_handler1(){
-    $cont = ob_get_contents();
-    if(!empty($cont)) file_put_contents(temp_file, $cont );
-}
-
-add_action( "pre_current_active_plugins", "pre_output1" );
-function pre_output1($action){
-    if(is_admin() && file_exists(temp_file))
-    {
-        $cont= file_get_contents(temp_file);
-        if(!empty($cont))
-        {
-            echo '<div class="error"> Error Message:' . $cont . '</div>';
-            @unlink(temp_file);
-        }
-    }
-}
-*/
 ?>
