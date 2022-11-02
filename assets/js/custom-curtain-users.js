@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
 
     $('.chatboxtextarea').on('keypress',function(e) {
         chatboxtitle = $('.chatboxchatboxtitle').val();
-        alert('chatboxtitle:'+chatboxtitle+', message:'+message);
+        alert('chatboxtitle:'+chatboxtitle);
         checkChatBoxInputKey(e,this,chatboxtitle);
 		//checkChatBoxInputKey(e,this);
     });
