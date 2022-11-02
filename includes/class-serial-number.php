@@ -12,11 +12,11 @@ if (!class_exists('serial_number')) {
         public function __construct() {
             //add_shortcode('serial-number-list', __CLASS__ . '::list_serial_number');
             add_shortcode( 'serial-number-list', array( __CLASS__, 'list_serial_number' ) );
-            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
-        function wpse16119876_init_session() {
+        function init_session() {
             if ( ! session_id() ) {
                 session_start();
             }

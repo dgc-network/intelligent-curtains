@@ -11,11 +11,11 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             add_shortcode('curtain-agent-list', __CLASS__ . '::list_curtain_agents');
-            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
-        function wpse16119876_init_session() {
+        function init_session() {
             if ( ! session_id() ) {
                 session_start();
             }

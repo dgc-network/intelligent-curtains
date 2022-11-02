@@ -12,13 +12,13 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
-            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
         // Start session on init hook.
-        //add_action( 'init', 'wpse16119876_init_session' );
-        function wpse16119876_init_session() {
+        //add_action( 'init', 'init_session' );
+        function init_session() {
             if ( ! session_id() ) {
                 session_start();
             }

@@ -31,6 +31,13 @@ require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
+function init_session() {
+    if ( ! session_id() ) {
+        session_start();
+    }
+}
+add_action( 'init', 'init_session' );
+
 $line_webhook = new line_webhook();
 $line_webhook->init();
 

@@ -18,7 +18,7 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
-            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
 
             if (!isset($_SESSION['chatHistory'])) {
@@ -32,10 +32,11 @@ if (!class_exists('curtain_users')) {
 
         function my_enqueue() {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
-            wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+            //wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
-        function wpse16119876_init_session() {
+        //add_action( 'init', array( __CLASS__, 'init_session' ) );
+        function init_session() {
             if ( ! session_id() ) {
                 session_start();
             }

@@ -18,7 +18,7 @@ if (!class_exists('curtain_models')) {
             //add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
             //add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
             //add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
-            //add_action( 'init', array( __CLASS__, 'wpse16119876_init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
@@ -28,7 +28,7 @@ if (!class_exists('curtain_models')) {
             wp_enqueue_script( 'jquery-ui-dialog' );
         }    
 
-        function wpse16119876_init_session() {
+        function init_session() {
             if ( ! session_id() ) {
                 session_start();
             }
