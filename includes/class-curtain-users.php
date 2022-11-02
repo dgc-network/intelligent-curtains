@@ -298,12 +298,11 @@ if (!class_exists('curtain_users')) {
                 $output .= '<td><form method="post">';
                 //$_COOKIE['username'] = 'line_bot';
                 //$_COOKIE['chatboxtitle'] = $result->line_user_id;
-                setcookie('username',  'line_bot');
-                setcookie('chatboxtitle',  $result->line_user_id);
+                //setcookie('username',  'line_bot');
+                //setcookie('chatboxtitle',  $result->line_user_id);
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" class="startChatSession">';
                 $output .= '</form></td>';
-                //$output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
@@ -340,6 +339,8 @@ if (!class_exists('curtain_users')) {
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                 } else {
+                    setcookie('username',  'line_bot');
+                    setcookie('chatboxtitle',  $row->line_user_id);
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<div class="chatboxtitle" style="display: none;">'.$row->line_user_id.'</div>';
                     $output .= '<div class="chatboxcontent"></div>';
