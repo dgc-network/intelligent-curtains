@@ -11,7 +11,7 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
-            add_shortcode('chat-message-list', __CLASS__ . '::list_chat_messages');
+            add_shortcode('chat-message-list', array( __CLASS__, 'list_chat_messages' ));
             add_action( 'wp_ajax_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_nopriv_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
