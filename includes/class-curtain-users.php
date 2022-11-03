@@ -81,6 +81,9 @@ if (!class_exists('curtain_users')) {
             $to = $_POST['to'];
             $message = $_POST['message'];
 
+            $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
+            $query = mysql_query($sql);            
+
             $json = array();
             $json['username'] = $from;
             $json['chatboxtitle'] = $to;

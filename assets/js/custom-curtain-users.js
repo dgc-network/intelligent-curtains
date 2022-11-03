@@ -98,9 +98,10 @@ jQuery(document).ready(function($) {
                         'message': message,
                     },
                     success: function (response) {
-                        username = response.username;
-                        chatboxtitle = response.chatboxtitle;                
-                        alert('chatboxtitle:'+chatboxtitle+', username:'+username);
+                        message = response.message;
+                        //username = response.username;
+                        //chatboxtitle = response.chatboxtitle;                
+                        //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
 
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                         $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
