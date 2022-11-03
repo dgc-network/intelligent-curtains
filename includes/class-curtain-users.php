@@ -411,7 +411,7 @@ if (!class_exists('curtain_users')) {
                 'from' => $data['from'],
                 'to' => $data['to'],
                 'message' => $data['message'],
-                'sent' => current_time( 'mysql' ),
+                'sent' => date( 'Y-m-d H:i:s', current_time( 'timestamp', 0 ) ),
             );
             $wpdb->insert($table, $data);
             return $wpdb->insert_id;
