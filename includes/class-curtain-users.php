@@ -21,13 +21,13 @@ if (!class_exists('curtain_users')) {
             //add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
 
-            if (!isset($_COOKIE['chatHistory'])) {
-                //$_COOKIE['chatHistory'] = array();	
+            if (!isset($_SESSION['chatHistory'])) {
+                //$_SESSION['chatHistory'] = array();	
                 setcookie('chatHistory',  array());
             }
             
-            if (!isset($_COOKIE['openChatBoxes'])) {
-                //$_COOKIE['openChatBoxes'] = array();	
+            if (!isset($_SESSION['openChatBoxes'])) {
+                //$_SESSION['openChatBoxes'] = array();	
                 setcookie('openChatBoxes',  array());
             }            
         }
@@ -49,16 +49,16 @@ if (!class_exists('curtain_users')) {
         function startChatSession() {
         
             $items = array();
-            if (!empty($_COOKIE['openChatBoxes'])) {
-                foreach ($_COOKIE['openChatBoxes'] as $chatbox => $void) {
+            if (!empty($_SESSION['openChatBoxes'])) {
+                foreach ($_SESSION['openChatBoxes'] as $chatbox => $void) {
                     //array_push($items, chatBoxSession($chatbox));
-                    array_push($items, $_COOKIE['chatHistory'][$chatbox]);
+                    array_push($items, $_SESSION['chatHistory'][$chatbox]);
                 }
             }
 
             $json = array();
-            $json['username'] = $_COOKIE['username'];
-            $json['chatboxtitle'] = $_COOKIE['chatboxtitle'];
+            $json['username'] = $_SESSION['username'];
+            $json['chatboxtitle'] = $_SESSION['chatboxtitle'];
             $json['items'] = $items;
             echo json_encode( $json );
             wp_die();        
@@ -69,8 +69,8 @@ if (!class_exists('curtain_users')) {
             //$items = '';
             
             $items = array();
-            if (isset($_COOKIE['chatHistory'][$chatbox])) {
-                $items = $_COOKIE['chatHistory'][$chatbox];
+            if (isset($_SESSION['chatHistory'][$chatbox])) {
+                $items = $_SESSION['chatHistory'][$chatbox];
             }
         
             return $items;
@@ -79,29 +79,29 @@ if (!class_exists('curtain_users')) {
         function sendChat() {
             wp_die();
         }
-        
+
         function sendChat_backup() {
 
-            $from = $_COOKIE['username'];
+            $from = $_SESSION['username'];
             $to = $_POST['to'];
             $message = $_POST['message'];
         
-            $_COOKIE['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
+            $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
             //setcookie('openChatBoxes',  array());
 
             $messagesan = sanitize($message);
         
-            if (!isset($_COOKIE['chatHistory'][$_POST['to']])) {
-                //$_COOKIE['chatHistory'][$_POST['to']] = '';
-                $_COOKIE['chatHistory'][$_POST['to']] = array();
+            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
+                //$_SESSION['chatHistory'][$_POST['to']] = '';
+                $_SESSION['chatHistory'][$_POST['to']] = array();
                 //setcookie('openChatBoxes',  array());
             }
-            $_COOKIE['chatHistory'][$_POST['to']]['s']=1;
-            $_COOKIE['chatHistory'][$_POST['to']]['f']=$to;
-            $_COOKIE['chatHistory'][$_POST['to']]['m']=$messagesan;
+            $_SESSION['chatHistory'][$_POST['to']]['s']=1;
+            $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
+            $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
 
 /*        
-            $_COOKIE['chatHistory'][$_POST['to']] .= <<<EOD
+            $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
                                {
                     "s": "1",
                     "f": "{$to}",
@@ -109,7 +109,7 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
 */          
-            unset($_COOKIE['tsChatBoxes'][$_POST['to']]);
+            unset($_SESSION['tsChatBoxes'][$_POST['to']]);
         
             $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
             $query = mysql_query($sql);            
@@ -122,7 +122,7 @@ if (!class_exists('curtain_users')) {
         //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
             
-            $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_COOKIE['username'])."' AND recd = 0) order by id ASC";
+            $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
             $query = mysql_query($sql);
             //$items = '';
             $items = array();
@@ -133,8 +133,8 @@ if (!class_exists('curtain_users')) {
         
                 $chat['message'] = sanitize($chat['message']);
 
-                if (!isset($_COOKIE['openChatBoxes'][$chat['from']]) && isset($_COOKIE['chatHistory'][$chat['from']])) {
-                    $items = $_COOKIE['chatHistory'][$chat['from']];
+                if (!isset($_SESSION['openChatBoxes'][$chat['from']]) && isset($_SESSION['chatHistory'][$chat['from']])) {
+                    $items = $_SESSION['chatHistory'][$chat['from']];
                 }
                 $items['s']=0;
                 $items['f']=$chat['from'];
@@ -149,17 +149,17 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
         */
-                if (!isset($_COOKIE['chatHistory'][$chat['from']])) {
-                    //$_COOKIE['chatHistory'][$chat['from']] = '';
-                    $_COOKIE['chatHistory'][$chat['from']] = array();
+                if (!isset($_SESSION['chatHistory'][$chat['from']])) {
+                    //$_SESSION['chatHistory'][$chat['from']] = '';
+                    $_SESSION['chatHistory'][$chat['from']] = array();
                     //setcookie('openChatBoxes',  array());
                 }
-                $_COOKIE['chatHistory'][$chat['from']]['s']=0;
-                $_COOKIE['chatHistory'][$chat['from']]['f']=$chat['from'];
-                $_COOKIE['chatHistory'][$chat['from']]['s']=$chat['message'];
+                $_SESSION['chatHistory'][$chat['from']]['s']=0;
+                $_SESSION['chatHistory'][$chat['from']]['f']=$chat['from'];
+                $_SESSION['chatHistory'][$chat['from']]['s']=$chat['message'];
             
         /*
-            $_COOKIE['chatHistory'][$chat['from']] .= <<<EOD
+            $_SESSION['chatHistory'][$chat['from']] .= <<<EOD
                                    {
                     "s": "0",
                     "f": "{$chat['from']}",
@@ -167,13 +167,13 @@ if (!class_exists('curtain_users')) {
                },
         EOD;
         */		
-                unset($_COOKIE['tsChatBoxes'][$chat['from']]);
-                $_COOKIE['openChatBoxes'][$chat['from']] = $chat['sent'];
+                unset($_SESSION['tsChatBoxes'][$chat['from']]);
+                $_SESSION['openChatBoxes'][$chat['from']] = $chat['sent'];
             }
         
-            if (!empty($_COOKIE['openChatBoxes'])) {
-                foreach ($_COOKIE['openChatBoxes'] as $chatbox => $time) {
-                    if (!isset($_COOKIE['tsChatBoxes'][$chatbox])) {
+            if (!empty($_SESSION['openChatBoxes'])) {
+                foreach ($_SESSION['openChatBoxes'] as $chatbox => $time) {
+                    if (!isset($_SESSION['tsChatBoxes'][$chatbox])) {
                         $now = time()-strtotime($time);
                         $time = date('g:iA M dS', strtotime($time));
         
@@ -192,16 +192,16 @@ if (!class_exists('curtain_users')) {
         },
         EOD;
         */
-                            if (!isset($_COOKIE['chatHistory'][$chatbox])) {
-                                //$_COOKIE['chatHistory'][$chatbox] = '';
-                                $_COOKIE['chatHistory'][$chatbox] = array();
+                            if (!isset($_SESSION['chatHistory'][$chatbox])) {
+                                //$_SESSION['chatHistory'][$chatbox] = '';
+                                $_SESSION['chatHistory'][$chatbox] = array();
                             }
-                            $_COOKIE['chatHistory'][$chatbox]['s']=2;
-                            $_COOKIE['chatHistory'][$chatbox]['f']=$chatbox;
-                            $_COOKIE['chatHistory'][$chatbox]['s']=$message;
+                            $_SESSION['chatHistory'][$chatbox]['s']=2;
+                            $_SESSION['chatHistory'][$chatbox]['f']=$chatbox;
+                            $_SESSION['chatHistory'][$chatbox]['s']=$message;
 
         /*
-            $_COOKIE['chatHistory'][$chatbox] .= <<<EOD
+            $_SESSION['chatHistory'][$chatbox] .= <<<EOD
                 {
         "s": "2",
         "f": "$chatbox",
@@ -209,13 +209,13 @@ if (!class_exists('curtain_users')) {
         },
         EOD;
         */
-                            $_COOKIE['tsChatBoxes'][$chatbox] = 1;
+                            $_SESSION['tsChatBoxes'][$chatbox] = 1;
                         }
                     }
                 }
             }
         
-            $sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_COOKIE['username'])."' and recd = 0";
+            $sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
             $query = mysql_query($sql);
         /*
             if ($items != '') {
@@ -243,9 +243,9 @@ if (!class_exists('curtain_users')) {
 
         public function list_curtain_users() {
             
-            //unset($_COOKIE['line_user_id']);
-            if( isset($_COOKIE['line_user_id']) ) {
-                $line_user_id = $_COOKIE['line_user_id'];
+            //unset($_SESSION['line_user_id']);
+            if( isset($_SESSION['line_user_id']) ) {
+                $line_user_id = $_SESSION['line_user_id'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {
@@ -300,8 +300,8 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_update_user">';
                 $output .= '</form></td>';
                 $output .= '<td><form method="post">';
-                //$_COOKIE['username'] = 'line_bot';
-                //$_COOKIE['chatboxtitle'] = $result->line_user_id;
+                //$_SESSION['username'] = 'line_bot';
+                //$_SESSION['chatboxtitle'] = $result->line_user_id;
                 //setcookie('username',  'line_bot');
                 //setcookie('chatboxtitle',  $result->line_user_id);
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';

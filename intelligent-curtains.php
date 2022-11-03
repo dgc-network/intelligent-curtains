@@ -44,18 +44,18 @@ function wpb_cookies_tutorial2() {
     $visit_time = date('F j, Y g:i a');
      
     // Check if cookie is already set
-    if(isset($_COOKIE['wpb_visit_time'])) {
+    if(isset($_SESSION['wpb_visit_time'])) {
      
         // Do this if cookie is set 
         function visitor_greeting() {
      
             // Use information stored in the cookie 
-            $lastvisit = $_COOKIE['wpb_visit_time'];
+            $lastvisit = $_SESSION['wpb_visit_time'];
      
             $string .= 'You last visited our website '. $lastvisit .'. Check out whats new'; 
      
             // Delete the old cookie so that we can set it again with updated time
-            unset($_COOKIE['wpb_visit_time']); 
+            unset($_SESSION['wpb_visit_time']); 
      
             return $string;
         }   
