@@ -48,6 +48,8 @@ if (!class_exists('curtain_users')) {
         function list_chat_messages() {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
+            //$to = $_POST['to'];
+            //$results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
             return var_dump($results);
         }
 
@@ -59,7 +61,7 @@ if (!class_exists('curtain_users')) {
 
             $items = array();
             global $wpdb;
-            $results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
+            $results = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_from = %s OR message_to = %s", $to, $to ), OBJECT );            
             foreach ( $results as $index=>$result ) {
                 $item = array();
                 if ($result->chat_from==$from) {
