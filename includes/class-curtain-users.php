@@ -86,9 +86,9 @@ if (!class_exists('curtain_users')) {
             //$query = mysql_query($sql);        
 
             $data=array();
-            $data['from']=mysql_real_escape_string($from);
-            $data['to']=mysql_real_escape_string($to);
-            $data['message']=mysql_real_escape_string($message);
+            $data['from']= esc_sql($from);
+            $data['to']= esc_sql($to);
+            $data['message']= esc_sql($message);
             $result = self::insert_chat_message($data);
 
             $json = array();
@@ -405,13 +405,12 @@ if (!class_exists('curtain_users')) {
 
         public function insert_chat_message($data=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'chat';
+            $table = $wpdb->prefix.'chat_messages';
             $data = array(
-                //'id' => $data['id'],
-                'from' => $data['from'],
-                'to' => $data['to'],
-                'message' => $data['message'],
-                'sent' => date( 'Y-m-d H:i:s', current_time( 'timestamp', 0 ) ),
+                'message_from' => $data['from'],
+                'message_to' => $data['to'],
+                'chat_message' => $data['message'],
+                'sent_timestamp' => time(),
             );
             $wpdb->insert($table, $data);
             return $wpdb->insert_id;
@@ -419,7 +418,7 @@ if (!class_exists('curtain_users')) {
 
         public function update_chat_messages($data=[], $where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'chat';
+            $table = $wpdb->prefix.'chat_messages';
             //$data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
@@ -484,6 +483,15 @@ if (!class_exists('curtain_users')) {
             ) $charset_collate;";
             dbDelta($sql);
 
+            $sql = "CREATE TABLE {$wpdb->prefix}chat_messages (
+                message_id int NOT NULL AUTO_INCREMENT,
+                message_from varchar(255) NOT NULL DEFAULT '',
+                message_to varchar(255) NOT NULL DEFAULT '',
+                chat_message TEXT NOT NULL,
+                sent_timestamp int(10),
+                PRIMARY KEY (message_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         }
     }
     new curtain_users();
