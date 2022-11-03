@@ -77,6 +77,10 @@ if (!class_exists('curtain_users')) {
         }
 */                
         function sendChat() {
+            wp_die();
+        }
+        
+        function sendChat_backup() {
 
             $from = $_COOKIE['username'];
             $to = $_POST['to'];
