@@ -72,7 +72,8 @@ if (!class_exists('curtain_users')) {
                     $item['f']=$result->message_from;
                 }
                 $item['m']=$result->chat_message;
-                array_push($items,$item);
+                //array_push($items,$item);
+                $items[] = $item;
             }
 /*            
             if (!empty($_SESSION['openChatBoxes'])) {
@@ -82,11 +83,11 @@ if (!class_exists('curtain_users')) {
                 }
             }
 */
-            $json = array();
-            $json['username'] = $from;
-            $json['chatboxtitle'] = $to;
-            $json['items'] = $items;
-            echo json_encode( $json );
+            $response = array();
+            $response['username'] = $from;
+            $response['chatboxtitle'] = $to;
+            $response['items'] = $items;
+            echo json_encode( $response );
             wp_die();        
         }
 /*        
@@ -113,11 +114,11 @@ if (!class_exists('curtain_users')) {
             $data['message']= esc_sql($message);
             $result = self::insert_chat_message($data);
 
-            $json = array();
-            $json['username'] = $from;
-            $json['chatboxtitle'] = $to;
-            $json['message'] = $message;
-            echo json_encode( $json );
+            $response = array();
+            $response['username'] = $from;
+            $response['chatboxtitle'] = $to;
+            $response['message'] = $message;
+            echo json_encode( $response );
             wp_die();
         }
 
@@ -274,9 +275,9 @@ if (!class_exists('curtain_users')) {
         <?php
                     exit(0);
         */			
-            $json = array();
-            $json['items'] = $items;
-            echo json_encode( $json );
+            $response = array();
+            $response['items'] = $items;
+            echo json_encode( $response );
             wp_die();
         }
         

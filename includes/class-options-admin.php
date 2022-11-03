@@ -139,8 +139,8 @@ class Options_Admin {
 				array_push($titles, $cat->name);
 			}
 		}
-		$json = json_encode( $titles );
-		echo $json;
+		$response = json_encode( $titles );
+		echo $response;
 		
 		die();		
 	}
@@ -168,8 +168,8 @@ class Options_Admin {
 			array_push($title, $product->get_title());
 			array_push($titles, $title);
 		}	
-		$json = json_encode( $titles );
-		echo $json;
+		$response = json_encode( $titles );
+		echo $response;
 		
 		die();		
 	}

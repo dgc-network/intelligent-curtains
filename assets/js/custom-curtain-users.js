@@ -40,14 +40,14 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
                 username = response.username;
-                chatboxtitle = response.chatboxtitle;                
+                //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
+                alert(response.items);
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
         
                         chatboxtitle = item.f;
-                        //alert(item.m);
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
                         //    createChatBox(chatboxtitle,1);
                         //}
