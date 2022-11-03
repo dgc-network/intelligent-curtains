@@ -11,6 +11,7 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
+            add_shortcode('chat-message-list', __CLASS__ . '::list_chat_messages');
             add_action( 'wp_ajax_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_nopriv_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
@@ -41,6 +42,14 @@ if (!class_exists('curtain_users')) {
         function init_session() {
             if ( ! session_id() ) {
                 session_start();
+            }
+        }
+
+        function list_chat_messages() {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = {$to} OR chat_to = {$to}", OBJECT );
+            var_dump($results);
+            foreach ( $results as $index=>$result ) {
             }
         }
 

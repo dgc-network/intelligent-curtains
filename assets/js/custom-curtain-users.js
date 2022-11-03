@@ -47,7 +47,7 @@ jQuery(document).ready(function($) {
                     if (item)	{ // fix strange ie bug
         
                         chatboxtitle = item.f;
-                        alert(item.m);
+                        //alert(item.m);
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
                         //    createChatBox(chatboxtitle,1);
                         //}
