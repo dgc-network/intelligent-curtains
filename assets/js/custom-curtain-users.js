@@ -24,10 +24,11 @@ jQuery(document).ready(function($) {
 	});
 
 	$(".startChatSession").click(function(){
-        //startChatSession();
+        startChatSession();
     });
 
     function startChatSession(){
+        chatboxtitle = $('.chatboxtitle').val();
 
         jQuery.ajax({
             type: 'POST',
@@ -35,6 +36,7 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'startChatSession',
+                'to': chatboxtitle,
             },
             success: function (response) {
                 username = response.username;

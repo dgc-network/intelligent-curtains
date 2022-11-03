@@ -47,18 +47,34 @@ if (!class_exists('curtain_users')) {
         //add_action( 'wp_ajax_startChatSession', 'startChatSession' );
         //add_action( 'wp_ajax_nopriv_startChatSession', 'startChatSession' );
         function startChatSession() {
-        
+            $from = get_option('_chat_from');
+            $to = $_POST['to'];
+
             $items = array();
+            $where='"%'.$_POST['_where'].'%"';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = {$to} OR chat_to = {$to}", OBJECT );
+            foreach ( $results as $index=>$result ) {
+                $item = array();
+                if ($result->chat_from==$from) {
+                    $item['s']=1;
+                } else {
+                    $item['s']=2;
+                }
+                $item['f']=$result->chat_from;
+                $item['m']=$result->chat_message;
+                array_push($items,$item);
+            }
+/*            
             if (!empty($_SESSION['openChatBoxes'])) {
                 foreach ($_SESSION['openChatBoxes'] as $chatbox => $void) {
                     //array_push($items, chatBoxSession($chatbox));
                     array_push($items, $_SESSION['chatHistory'][$chatbox]);
                 }
             }
-
+*/
             $json = array();
-            $json['username'] = $_SESSION['username'];
-            $json['chatboxtitle'] = $_SESSION['chatboxtitle'];
+            $json['username'] = $from;
+            $json['chatboxtitle'] = $to;
             $json['items'] = $items;
             echo json_encode( $json );
             wp_die();        
@@ -80,10 +96,6 @@ if (!class_exists('curtain_users')) {
             $from = get_option('_chat_from');
             $to = $_POST['to'];
             $message = $_POST['message'];
-
-            //global $wpdb;
-            //$sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
-            //$query = mysql_query($sql);        
 
             $data=array();
             $data['from']= esc_sql($from);
@@ -324,6 +336,7 @@ if (!class_exists('curtain_users')) {
                 //setcookie('username',  'line_bot');
                 //setcookie('chatboxtitle',  $result->line_user_id);
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
+                $output .= '<input type="hidden" value="'.$result->line_user_id.'" class="chatboxtitle">';
                 $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" class="startChatSession">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
