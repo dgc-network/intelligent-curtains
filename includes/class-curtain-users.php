@@ -51,7 +51,7 @@ if (!class_exists('curtain_users')) {
             $to = $_POST['to'];
 
             $items = array();
-            $where='"%'.$_POST['_where'].'%"';
+            global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = {$to} OR chat_to = {$to}", OBJECT );
             foreach ( $results as $index=>$result ) {
                 $item = array();
