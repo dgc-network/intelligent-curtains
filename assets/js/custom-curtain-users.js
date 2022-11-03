@@ -16,16 +16,16 @@ jQuery(document).ready(function($) {
     var chatboxtitle;
     
 	originalTitle = document.title;
-	$(".startChatSession").click(function(){
-        startChatSession();
-    });
-
 	$([window, document]).blur(function(){
 		windowFocus = false;
 	}).focus(function(){
 		windowFocus = true;
 		document.title = originalTitle;
 	});
+
+	$(".startChatSession").click(function(){
+        //startChatSession();
+    });
 
     function startChatSession(){
 
@@ -73,19 +73,16 @@ jQuery(document).ready(function($) {
     }
 
     $('.chatboxtextarea').on('keypress',function(e) {
+        chatboxtitle = $('.chatboxtitle').val();
         checkChatBoxInputKey(e,this,chatboxtitle);
-		//checkChatBoxInputKey(e,this);
     });
 
     function checkChatBoxInputKey(event,chatboxtextarea,chatboxtitle) {
-    //function checkChatBoxInputKey(event,chatboxtextarea) {
 	 
         if(event.keyCode == 13 && event.shiftKey == 0)  {
-        //if(event.keyCode == 13)  {
-            chatboxtitle = $('.chatboxtitle').val();
             message = $(chatboxtextarea).val();
             message = message.replace(/^\s+|\s+$/g,"");
-            alert('chatboxtitle:'+chatboxtitle+', message:'+message);
+            //alert('chatboxtitle:'+chatboxtitle+', message:'+message);
     
             $(chatboxtextarea).val('');
             $(chatboxtextarea).focus();
