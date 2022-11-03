@@ -77,6 +77,8 @@ if (!class_exists('curtain_users')) {
         }
 */                
         function sendChat() {
+            $to = $_POST['to'];
+            $message = $_POST['message'];
             wp_die();
         }
 
