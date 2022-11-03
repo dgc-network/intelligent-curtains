@@ -64,12 +64,13 @@ if (!class_exists('curtain_users')) {
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_from = %s OR message_to = %s", $to, $to ), OBJECT );            
             foreach ( $results as $index=>$result ) {
                 $item = array();
-                if ($result->chat_from==$from) {
+                if ($result->message_from==$from) {
                     $item['s']=1;
+                    $item['f']=$result->message_to;
                 } else {
                     $item['s']=2;
+                    $item['f']=$result->message_from;
                 }
-                $item['f']=$result->chat_from;
                 $item['m']=$result->chat_message;
                 array_push($items,$item);
             }
