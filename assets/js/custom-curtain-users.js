@@ -97,7 +97,11 @@ jQuery(document).ready(function($) {
                         'to': chatboxtitle,
                         'message': message,
                     },
-                    success: function (data) {
+                    success: function (response) {
+                        username = response.username;
+                        chatboxtitle = response.chatboxtitle;                
+                        alert('chatboxtitle:'+chatboxtitle+', username:'+username);
+
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                         $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);

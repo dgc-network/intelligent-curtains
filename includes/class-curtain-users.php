@@ -77,8 +77,15 @@ if (!class_exists('curtain_users')) {
         }
 */                
         function sendChat() {
+            $from = get_option('_chat_from');
             $to = $_POST['to'];
             $message = $_POST['message'];
+
+            $json = array();
+            $json['username'] = $from;
+            $json['chatboxtitle'] = $to;
+            $json['message'] = $message;
+            echo json_encode( $json );
             wp_die();
         }
 
