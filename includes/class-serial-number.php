@@ -139,6 +139,7 @@ if (!class_exists('serial_number')) {
             }
 
             if( isset($_POST['_serial_no']) ) {
+/*                
                 $output .= '<div style="display: none;" class="print-me-'.$_POST['_serial_no'].'">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
@@ -151,9 +152,10 @@ if (!class_exists('serial_number')) {
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '</div>';
+*/                
                 $output .= '<div id="dialog" title="QR Code">';
-                //$output .= '<div id="qrcode" class="print-me-'.$_POST['_serial_no'].'">';
-                $output .= '<div id="qrcode">';
+                $output .= '<div id="qrcode" class="print-me-'.$_POST['_serial_no'].'">';
+                //$output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
