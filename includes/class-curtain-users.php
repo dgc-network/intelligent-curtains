@@ -47,7 +47,7 @@ if (!class_exists('curtain_users')) {
 
         function list_chat_messages() {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = {$to} OR chat_to = {$to}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
             return var_dump($results);
         }
 
