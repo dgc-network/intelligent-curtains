@@ -342,7 +342,7 @@ if (!class_exists('curtain_users')) {
                     setcookie('username',  'line_bot');
                     setcookie('chatboxtitle',  $row->line_user_id);
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
-                    $output .= '<div class="chatboxtitle" style="display: none;">'.$row->line_user_id.'</div>';
+                    $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
                     $output .= '<div class="chatboxcontent"></div>';
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
                     $output .= '</div>';
