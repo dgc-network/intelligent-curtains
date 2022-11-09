@@ -139,7 +139,7 @@ if (!class_exists('serial_number')) {
             }
 
             if( isset($_POST['_serial_no']) ) {
-                
+/*                
                 $output .= '<div id="dialog" title="QR Code">';
                 //$output .= '<div id="qrcode" class="print-me-'.$_POST['_serial_no'].'">';
                 $output .= '<div id="qrcode">';
@@ -150,7 +150,7 @@ if (!class_exists('serial_number')) {
                 $print_me = do_shortcode('[print-me target=".print-me-'.$_POST['_serial_no'].'"/]');
                 $output .= $print_me;
                 $output .= '</div>';
-                
+*/                
                 $output .= '<div class="print-me-'.$_POST['_serial_no'].'">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
