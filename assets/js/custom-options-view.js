@@ -4,6 +4,14 @@ jQuery(document).ready(function($) {
         text: $("#qrcode_content").text()
     });
 
+    $('#qrcode1').qrcode({
+        text: $("#qrcode_content").text()
+    });
+
+    $('#qrcode2').qrcode({
+        text: $("#qrcode_content").text()
+    });
+
     /* jQuery UI Dialog - Basic dialog */
 
     $( "#dialog" ).dialog();
