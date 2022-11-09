@@ -49,7 +49,7 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
             $to = 'Uc12a5ff53a702d188e609709d6ef3edf';
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_from = %s OR message_to = %s", $to, $to ), OBJECT );            
+            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
             return var_dump($results);
         }
 
@@ -61,15 +61,15 @@ if (!class_exists('curtain_users')) {
 
             $items = array();
             global $wpdb;
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_from = %s OR message_to = %s", $to, $to ), OBJECT );            
+            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
             foreach ( $results as $index=>$result ) {
                 $item = array();
-                if ($result->message_from==$from) {
+                if ($result->chat_from==$from) {
                     $item['s']=1;
-                    $item['f']=$result->message_to;
+                    $item['f']=$result->chat_to;
                 } else {
                     $item['s']=2;
-                    $item['f']=$result->message_from;
+                    $item['f']=$result->chat_from;
                 }
                 $item['m']=$result->chat_message;
                 //array_push($items,$item);
@@ -431,8 +431,8 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';
             $data = array(
-                'message_from' => $data['from'],
-                'message_to' => $data['to'],
+                'chat_from' => $data['from'],
+                'chat_to' => $data['to'],
                 'chat_message' => $data['message'],
                 'sent_timestamp' => time(),
             );
@@ -508,8 +508,8 @@ if (!class_exists('curtain_users')) {
 
             $sql = "CREATE TABLE {$wpdb->prefix}chat_messages (
                 message_id int NOT NULL AUTO_INCREMENT,
-                message_from varchar(255) NOT NULL DEFAULT '',
-                message_to varchar(255) NOT NULL DEFAULT '',
+                chat_from varchar(255) NOT NULL DEFAULT '',
+                chat_to varchar(255) NOT NULL DEFAULT '',
                 chat_message TEXT NOT NULL,
                 sent_timestamp int(10),
                 PRIMARY KEY (message_id)
