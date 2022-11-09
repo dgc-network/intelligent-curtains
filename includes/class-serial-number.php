@@ -151,7 +151,7 @@ if (!class_exists('serial_number')) {
                 $output .= $print_me;
                 $output .= '</div>';
                 
-                $output .= '<div style="display: none;" class="print-me-'.$_POST['_serial_no'].'">';
+                $output .= '<div class="print-me-'.$_POST['_serial_no'].'">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
