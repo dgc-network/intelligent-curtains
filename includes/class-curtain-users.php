@@ -24,12 +24,12 @@ if (!class_exists('curtain_users')) {
 
             if (!isset($_SESSION['chatHistory'])) {
                 //$_SESSION['chatHistory'] = array();	
-                setcookie('chatHistory',  array());
+                //setcookie('chatHistory',  array());
             }
             
             if (!isset($_SESSION['openChatBoxes'])) {
                 //$_SESSION['openChatBoxes'] = array();	
-                setcookie('openChatBoxes',  array());
+                //setcookie('openChatBoxes',  array());
             }            
         }
 
@@ -386,8 +386,8 @@ if (!class_exists('curtain_users')) {
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                 } else {
-                    setcookie('username',  'line_bot');
-                    setcookie('chatboxtitle',  $row->line_user_id);
+                    //setcookie('username',  'line_bot');
+                    //setcookie('chatboxtitle',  $row->line_user_id);
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
                     $output .= '<div class="chatboxcontent"></div>';
