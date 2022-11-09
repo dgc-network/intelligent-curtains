@@ -266,7 +266,7 @@ if (!class_exists('curtain_models')) {
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-            $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}curtain_models` (
+            $sql = "CREATE TABLE `{$wpdb->prefix}curtain_models` (
                 curtain_model_id int NOT NULL AUTO_INCREMENT,
                 curtain_model_name varchar(5),
                 model_description varchar(50),

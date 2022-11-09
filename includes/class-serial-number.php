@@ -86,7 +86,8 @@ if (!class_exists('serial_number')) {
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
                 }
                 $output .= '<td>'.$result->specification.'</td>';
-                $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
+                //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
                 $output .= '<td>'.$user->display_name.'</td>';
                 //$output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -228,10 +229,9 @@ if (!class_exists('serial_number')) {
                 specification varchar(10),
                 curtain_user_id int(10),
                 curtain_agent_id int(10),
-                qr_code_serial_no varchar(50),
+                qr_code_serial_no varchar(50) UNiQUE,
                 create_timestamp int(10),
                 update_timestamp int(10),
-                UNIQUE (qr_code_serial_no),
                 PRIMARY KEY (serial_number_id)
             ) $charset_collate;";
             dbDelta($sql);

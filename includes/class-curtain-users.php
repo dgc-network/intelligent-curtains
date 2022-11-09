@@ -495,14 +495,13 @@ if (!class_exists('curtain_users')) {
 */
             $sql = "CREATE TABLE {$wpdb->prefix}curtain_users (
                 curtain_user_id int NOT NULL AUTO_INCREMENT,
-                line_user_id varchar(50),
+                line_user_id varchar(50) UNIQUE,
                 display_name varchar(50),
                 mobile_phone varchar(20),
                 user_role varchar(20),
                 last_otp varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                UNIQUE (line_user_id),
                 PRIMARY KEY (curtain_user_id)
             ) $charset_collate;";
             dbDelta($sql);
