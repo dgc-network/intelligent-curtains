@@ -78,7 +78,7 @@ function wpb_cookies_tutorial2() {
 add_action('init', 'wpb_cookies_tutorial2');
 */
 $line_webhook = new line_webhook();
-$line_webhook->init();
+//$line_webhook->init();
 /*
 function line_bot_sdk() {
     $channelAccessToken = '';
