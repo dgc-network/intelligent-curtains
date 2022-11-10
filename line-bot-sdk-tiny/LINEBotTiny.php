@@ -16,13 +16,10 @@
  * under the License.
  */
 
-/*
- * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
- *
- * Copyright (c) 2015 Indigo Development Team
- * Released under the MIT license
- * https://github.com/indigophp/hash-compat/blob/43a19f42093a0cd2d11874dff9d891027fc42214/LICENSE
- */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 if (!function_exists('line_bot_sdk')) {
     function line_bot_sdk() {
         $channelAccessToken = '';
@@ -41,6 +38,13 @@ if (!function_exists('line_bot_sdk')) {
     }
 }
 
+/*
+ * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
+ *
+ * Copyright (c) 2015 Indigo Development Team
+ * Released under the MIT license
+ * https://github.com/indigophp/hash-compat/blob/43a19f42093a0cd2d11874dff9d891027fc42214/LICENSE
+ */
 if (!function_exists('hash_equals')) {
     defined('USE_MB_STRING') or define('USE_MB_STRING', function_exists('mb_strlen'));
 
@@ -100,9 +104,10 @@ class LINEBotTiny
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             error_log('Method not allowed');
-            exit();
+            //exit();
             //return;
             //wp_die();
+            exit;
         }
 
         $entityBody = file_get_contents('php://input');
