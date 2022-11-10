@@ -112,14 +112,14 @@ class LINEBotTiny
             //exit();
             return;
         }
-/*
+
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
             //exit();
             return;
         }
-*/
+
         $data = json_decode($entityBody, true);
         if (!isset($data['events'])) {
             http_response_code(400);
@@ -310,45 +310,45 @@ class LINEBotTiny
   * @param string $img Base64 encoded image.
   * @return false|string File name on success, false on failure.
   */
-  protected function save_temp_image($img)
-  {
-      // Strip the "data:image/png;base64," part and decode the image.
-      $img = explode(',', $img);
-      $img = isset($img[1]) ? base64_decode($img[1]) : base64_decode($img[0]);
-      if (!$img) {
-          return false;
-      }
-      // Upload to tmp folder.
-      $filename = 'user-feedback-' . date('Y-m-d-H-i-s');
-      $tempfile = wp_tempnam($filename, sys_get_temp_dir());
-      if (!$tempfile) {
-          return false;
-      }
-      // WordPress adds a .tmp file extension, but we want .png.
-      if (rename($tempfile, $filename . '.png')) {
-          $tempfile = $filename . '.png';
-      }
-      if (!WP_Filesystem(request_filesystem_credentials(''))) {
-          return false;
-      }
-      /**
-       * WordPress Filesystem API.
-       *
-       * @var \WP_Filesystem_Base $wp_filesystem
-       */
-      global $wp_filesystem;
-      //$wp_filesystem->chdir(get_temp_dir());
-      $success = $wp_filesystem->put_contents($tempfile, $img);
-      if (!$success) {
-          return false;
-      }
-      //return $tempfile;
-      $upload = wp_get_upload_dir();
-      $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
-      $url = '<img src="'.sys_get_temp_dir().$filename. '.png">';
-      //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
-      return $url;
-  }
+    protected function save_temp_image($img)
+    {
+        // Strip the "data:image/png;base64," part and decode the image.
+        $img = explode(',', $img);
+        $img = isset($img[1]) ? base64_decode($img[1]) : base64_decode($img[0]);
+        if (!$img) {
+            return false;
+        }
+        // Upload to tmp folder.
+        $filename = 'user-feedback-' . date('Y-m-d-H-i-s');
+        $tempfile = wp_tempnam($filename, sys_get_temp_dir());
+        if (!$tempfile) {
+            return false;
+        }
+        // WordPress adds a .tmp file extension, but we want .png.
+        if (rename($tempfile, $filename . '.png')) {
+            $tempfile = $filename . '.png';
+        }
+        if (!WP_Filesystem(request_filesystem_credentials(''))) {
+            return false;
+        }
+        /**
+         * WordPress Filesystem API.
+         *
+         * @var \WP_Filesystem_Base $wp_filesystem
+         */
+        global $wp_filesystem;
+        //$wp_filesystem->chdir(get_temp_dir());
+        $success = $wp_filesystem->put_contents($tempfile, $img);
+        if (!$success) {
+            return false;
+        }
+        //return $tempfile;
+        $upload = wp_get_upload_dir();
+        $url = '<img src="'.$upload['url'].'/'.$filename. '.png">';
+        $url = '<img src="'.sys_get_temp_dir().$filename. '.png">';
+        //$url = $wp_filesystem->wp_content_dir().'/'.$filename;
+        return $url;
+    }
   
     /**
      * @param string $body
