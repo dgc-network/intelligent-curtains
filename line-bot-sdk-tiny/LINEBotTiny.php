@@ -101,7 +101,8 @@ class LINEBotTiny
             http_response_code(405);
             error_log('Method not allowed');
             //exit();
-            return;
+            //return;
+            wp_die();
         }
 
         $entityBody = file_get_contents('php://input');
@@ -110,14 +111,16 @@ class LINEBotTiny
             http_response_code(400);
             error_log('Missing request body');
             //exit();
-            return;
+            //return;
+            wp_die();
         }
 
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
             //exit();
-            return;
+            //return;
+            wp_die();
         }
 
         $data = json_decode($entityBody, true);
@@ -125,7 +128,8 @@ class LINEBotTiny
             http_response_code(400);
             error_log('Invalid request body: missing events property');
             //exit();
-            return;
+            //return;
+            wp_die();
         }
         return $data['events'];
    
