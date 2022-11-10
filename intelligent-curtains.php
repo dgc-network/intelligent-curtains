@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 //require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
-//require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
+require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 //require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
 //require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
 //require_once MY_PLUGIN_DIR . 'includes/class-curtain-agents.php';
@@ -77,8 +77,8 @@ function wpb_cookies_tutorial2() {
 } 
 add_action('init', 'wpb_cookies_tutorial2');
 */
-//$line_webhook = new line_webhook();
-//$line_webhook->init();
+$line_webhook = new line_webhook();
+$line_webhook->init();
 
 function line_bot_sdk() {
     $channelAccessToken = '';
