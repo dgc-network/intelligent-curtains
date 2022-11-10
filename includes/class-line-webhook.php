@@ -37,7 +37,7 @@ if (!class_exists('line_webhook')) {
             //$data = $client->parseEvents();
             //$events = $data['events'];
             $events = $client->parseEvents();
-            var_dump($events);
+            //var_dump($events);
             //array_push($events,$client->parseEvents());
             //foreach ($events as $event) {
             //}
