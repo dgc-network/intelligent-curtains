@@ -34,12 +34,9 @@ if (!class_exists('line_webhook')) {
         public function init() {
 
             $client = line_bot_sdk();
-            $events = array();
             if ( is_array($client->parseEvents()) ) {
-                $events = $client->parseEvents();
-            }
-            foreach ($events as $event) {
-/*                
+                foreach ($client->parseEvents() as $event) {
+                }
             }
         }
 
@@ -49,7 +46,7 @@ if (!class_exists('line_webhook')) {
             $client = line_bot_sdk();
             foreach ((array)$client->parseEvents() as $event) {
                 //self::insert_event_log($event);
-*/
+
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
             
