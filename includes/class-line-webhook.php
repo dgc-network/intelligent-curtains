@@ -29,7 +29,7 @@ if (!class_exists('line_webhook')) {
             $client = new LINEBotTiny($channelAccessToken, $channelSecret);
             return $client;
         }
-*/        
+*/
         public function init() {
             //$client = self::line_bot_sdk();
             $client = line_bot_sdk();

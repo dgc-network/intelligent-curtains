@@ -23,6 +23,24 @@
  * Released under the MIT license
  * https://github.com/indigophp/hash-compat/blob/43a19f42093a0cd2d11874dff9d891027fc42214/LICENSE
  */
+if (!function_exists('line_bot_sdk')) {
+    function line_bot_sdk() {
+        $channelAccessToken = '';
+        $channelSecret = '';
+        if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
+            $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
+            if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                error_log("config.ini uncompleted!", 0);
+            } else {
+                $channelAccessToken = $config['Channel']['Token'];
+                $channelSecret = $config['Channel']['Secret'];
+            }
+        }
+        $client = new LINEBotTiny($channelAccessToken, $channelSecret);
+        return $client;
+    }
+}
+
 if (!function_exists('hash_equals')) {
     defined('USE_MB_STRING') or define('USE_MB_STRING', function_exists('mb_strlen'));
 
