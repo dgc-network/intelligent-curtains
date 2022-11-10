@@ -32,9 +32,11 @@ if (!class_exists('line_webhook')) {
         }
 */
         public function init() {
-/*
+
             $client = line_bot_sdk();
-            $events = array();
+            $data = $client->parseEvents();
+            $events = $data['events'];
+            
             //array_push($events,$client->parseEvents());
             foreach ($events as $event) {
             }
@@ -44,7 +46,7 @@ if (!class_exists('line_webhook')) {
         }
 
         public function init_backup() {
-*/
+
             //$client = self::line_bot_sdk();
             $client = line_bot_sdk();
             foreach ((array)$client->parseEvents() as $event) {

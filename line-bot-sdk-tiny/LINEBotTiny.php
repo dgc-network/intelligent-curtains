@@ -136,7 +136,8 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
-        return $data['events'];
+        //return $data['events'];
+        return $data;
    
     }
 
