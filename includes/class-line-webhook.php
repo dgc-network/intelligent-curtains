@@ -10,6 +10,7 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
+            require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
