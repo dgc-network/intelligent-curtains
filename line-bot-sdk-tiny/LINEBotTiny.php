@@ -100,7 +100,7 @@ class LINEBotTiny
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             error_log('Method not allowed');
-            //exit();
+            exit();
             //return;
             //wp_die();
         }
