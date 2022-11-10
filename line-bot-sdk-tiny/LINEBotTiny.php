@@ -19,7 +19,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
+/*
 if (!function_exists('line_bot_sdk')) {
     function line_bot_sdk() {
         $channelAccessToken = '';
@@ -37,7 +37,7 @@ if (!function_exists('line_bot_sdk')) {
         return $client;
     }
 }
-
+*/
 /*
  * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
  *

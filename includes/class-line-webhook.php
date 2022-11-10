@@ -36,7 +36,7 @@ if (!class_exists('line_webhook')) {
             $client = line_bot_sdk();
             //$data = $client->parseEvents();
             //$events = $data['events'];
-            //$events = $client->parseEvents();
+            $events = $client->parseEvents();
             //var_dump($events);
             //array_push($events,$client->parseEvents());
             //foreach ($events as $event) {

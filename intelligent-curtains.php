@@ -79,7 +79,7 @@ add_action('init', 'wpb_cookies_tutorial2');
 */
 $line_webhook = new line_webhook();
 $line_webhook->init();
-/*
+
 function line_bot_sdk() {
     $channelAccessToken = '';
     $channelSecret = '';
@@ -95,5 +95,5 @@ function line_bot_sdk() {
     $client = new LINEBotTiny($channelAccessToken, $channelSecret);
     return $client;
 }
-*/
+
 ?>
