@@ -129,7 +129,7 @@ class LINEBotTiny
         }
 
         $entityBody = file_get_contents('php://input');
-/*
+
         if ($entityBody === false || strlen($entityBody) === 0) {
             http_response_code(400);
             error_log('Missing request body');
@@ -137,7 +137,7 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
-
+/*
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
