@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
         
                 $.each(response.items, function(i,item){
-                    if (item)	{ // fix strange ie bug
+                    //if (item)	{ // fix strange ie bug
         
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
@@ -54,16 +54,16 @@ jQuery(document).ready(function($) {
                         if (item.s == 1) {
                             item.f = username;
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                            alert(response.items.item.m);
+                            //alert(response.items.item.m);
                         }
         
                         if (item.s == 2) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                            alert(response.items.item.m);
+                            //alert(response.items.item.m);
                         } else {
                             //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
                         }
-                    }
+                    //}
                 });
 
                 $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
