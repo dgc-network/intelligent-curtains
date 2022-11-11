@@ -137,7 +137,7 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
-/*
+
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
@@ -145,7 +145,7 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
-*/
+
         $data = json_decode($entityBody, true);
 /*
         if (!isset($data['events'])) {
