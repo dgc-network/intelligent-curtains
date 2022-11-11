@@ -112,7 +112,8 @@ if (!class_exists('curtain_users')) {
             $data['from']= esc_sql($from);
             $data['to']= esc_sql($to);
             $data['message']= esc_sql($message);
-            $result = self::insert_chat_message($data);
+            $line_webhook = new line_webhook();
+            $result = $line_webhook->insert_chat_message($data);
 
             $response = array();
             $response['username'] = $from;
