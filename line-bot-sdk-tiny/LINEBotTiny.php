@@ -89,8 +89,26 @@ class LINEBotTiny
      * @param string $channelAccessToken
      * @param string $channelSecret
      */
+/*    
     public function __construct($channelAccessToken, $channelSecret)
     {
+        $this->channelAccessToken = $channelAccessToken;
+        $this->channelSecret = $channelSecret;
+    }
+*/
+    public function __construct($channelAccessToken='', $channelSecret='')
+    {
+        if ($channelAccessToken==''||$channelSecret=='') {
+            if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
+                $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
+                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                    error_log("config.ini uncompleted!", 0);
+                } else {
+                    $channelAccessToken = $config['Channel']['Token'];
+                    $channelSecret = $config['Channel']['Secret'];
+                }
+            }    
+        } 
         $this->channelAccessToken = $channelAccessToken;
         $this->channelSecret = $channelSecret;
     }
