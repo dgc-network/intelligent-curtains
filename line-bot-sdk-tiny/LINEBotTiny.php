@@ -127,9 +127,9 @@ class LINEBotTiny
             //wp_die();
             //exit;
         }
-
+*/
         $entityBody = file_get_contents('php://input');
-
+/*
         if ($entityBody === false || strlen($entityBody) === 0) {
             http_response_code(400);
             error_log('Missing request body');
