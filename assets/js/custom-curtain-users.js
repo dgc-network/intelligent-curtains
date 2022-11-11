@@ -46,6 +46,8 @@ jQuery(document).ready(function($) {
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
         
+                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
+
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
                         //    createChatBox(chatboxtitle,1);
