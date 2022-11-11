@@ -118,7 +118,7 @@ class LINEBotTiny
      */
     public function parseEvents()
     {
-     
+/*     
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             error_log('Method not allowed');
@@ -128,16 +128,7 @@ class LINEBotTiny
             //exit;
         }
 
-        //$entityBody = file_get_contents('php://input');
-        global $wp_filesystem;
-        if (empty($wp_filesystem)) {
-            require_once (ABSPATH . '/wp-admin/includes/file.php');
-            WP_Filesystem();
-        }
-
-        //$raw_post_data  = file_get_contents('php://input');
-        //$raw_post_data =  $wp_filesystem->get_contents('php://input');
-        $entityBody =  $wp_filesystem->get_contents('php://input');
+        $entityBody = file_get_contents('php://input');
 
         if ($entityBody === false || strlen($entityBody) === 0) {
             http_response_code(400);
@@ -154,8 +145,9 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
-
+*/
         $data = json_decode($entityBody, true);
+/*
         if (!isset($data['events'])) {
             http_response_code(400);
             error_log('Invalid request body: missing events property');
@@ -163,6 +155,7 @@ class LINEBotTiny
             //return;
             //wp_die();
         }
+*/
         return $data['events'];
         //return $data;
    
