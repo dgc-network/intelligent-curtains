@@ -72,8 +72,8 @@ if (!class_exists('curtain_users')) {
                     $item['f']=$result->chat_from;
                 }
                 $item['m']=$result->chat_message;
-                array_push($items,$item);
-                //$items[] = $item;
+                //array_push($items,$item);
+                $items['item'] = $item;
             }
 /*            
             if (!empty($_SESSION['openChatBoxes'])) {
