@@ -42,10 +42,10 @@ jQuery(document).ready(function($) {
                 username = response.username;
                 //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-                alert(response.items.item.s);
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
+                        alert(response.items.item.s);
         
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
