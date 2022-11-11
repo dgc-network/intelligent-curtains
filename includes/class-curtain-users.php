@@ -427,42 +427,11 @@ if (!class_exists('curtain_users')) {
             $wpdb->update($table, $data, $where);
         }
 
-        public function insert_chat_message($data=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'chat_messages';
-            $data = array(
-                'chat_from' => $data['from'],
-                'chat_to' => $data['to'],
-                'chat_message' => $data['message'],
-                'sent_timestamp' => time(),
-            );
-            $wpdb->insert($table, $data);
-            return $wpdb->insert_id;
-        }
-
-        public function update_chat_messages($data=[], $where=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'chat_messages';
-            //$data['update_timestamp'] = time();
-            $wpdb->update($table, $data, $where);
-        }
-
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-/*
-            $sql = "CREATE TABLE `{$wpdb->prefix}chat` (
-                `id` int NOT NULL AUTO_INCREMENT,
-                `from` varchar(255) NOT NULL DEFAULT '',
-                `to` varchar(255) NOT NULL DEFAULT '',
-                `message` TEXT NOT NULL,
-                `sent` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `recd` INTEGER UNSIGNED NOT NULL DEFAULT 0,
-                PRIMARY KEY (`id`)
-            ) $charset_collate;";
-            dbDelta($sql);
-*/
+
             $sql = "CREATE TABLE {$wpdb->prefix}curtain_users (
                 curtain_user_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50) UNIQUE,
@@ -473,16 +442,6 @@ if (!class_exists('curtain_users')) {
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)
-            ) $charset_collate;";
-            dbDelta($sql);
-
-            $sql = "CREATE TABLE {$wpdb->prefix}chat_messages (
-                message_id int NOT NULL AUTO_INCREMENT,
-                chat_from varchar(255) NOT NULL DEFAULT '',
-                chat_to varchar(255) NOT NULL DEFAULT '',
-                chat_message TEXT NOT NULL,
-                sent_timestamp int(10),
-                PRIMARY KEY (message_id)
             ) $charset_collate;";
             dbDelta($sql);
         }

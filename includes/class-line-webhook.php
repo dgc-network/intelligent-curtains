@@ -10,27 +10,11 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
-            require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
+            //require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
             //add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
-/*
-        public function line_bot_sdk() {
-            $channelAccessToken = '';
-            $channelSecret = '';
-            if (file_exists(plugin_dir_url( __DIR__ ) . 'line-bot-sdk-tiny/config.ini')) {
-                $config = parse_ini_file(plugin_dir_url( __DIR__ ) . 'line-bot-sdk-tiny/config.ini', true);
-                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-                    error_log("config.ini uncompleted!", 0);
-                } else {
-                    $channelAccessToken = $config['Channel']['Token'];
-                    $channelSecret = $config['Channel']['Secret'];
-                }
-            }
-            $client = new LINEBotTiny($channelAccessToken, $channelSecret);
-            return $client;
-        }
-*/
+
         public function init() {
 
             $client = new LINEBotTiny();
@@ -51,11 +35,9 @@ if (!class_exists('line_webhook')) {
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
                                         // continue the process if the 6 digit number is correct
-                                        //$curtain_service = new curtain_service();
                                         $serial_number = new serial_number();
                                         $curtain_users = new curtain_users();
                                         $return_id = 0;
-                                        //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
                                             // The user has registered recently
@@ -72,7 +54,6 @@ if (!class_exists('line_webhook')) {
                                         $data['curtain_user_id']=$return_id;
                                         $where=array();
                                         $where['curtain_user_id']=$six_digit_random_number;
-                                        //$result = $curtain_service->update_serial_number($data, $where);
                                         $result = $serial_number->update_serial_number($data, $where);
 
                                         $client->replyMessage([
@@ -93,6 +74,21 @@ if (!class_exists('line_webhook')) {
                                             ]
                                         ]);
                                     } else {
+                                        // continue the process if the 6 digit number is incorrect
+                                        $client->replyMessage([
+                                            'replyToken' => $event['replyToken'],
+                                            'messages' => [
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => 'Hi, '.$profile['displayName'],
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => 'message '.$message['text'].' is wrong.',
+                                                ]
+                                            ]
+                                        ]);    
+/*
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
                                             $client->replyMessage([
@@ -128,15 +124,15 @@ if (!class_exists('line_webhook')) {
                                                 ]
                                             ]);    
                                         }
+*/                                        
                                     }
                                 } else {
                                     //send message to line_bot
-                                    $curtain_users = new curtain_users();
                                     $data=array();
                                     $data['from']=$line_user_id;
                                     $data['to']='line_bot';
                                     $data['message']=$message;
-                                    $result = $curtain_users->insert_curtain_model($data);
+                                    $result = self::insert_chat_mmessage($data);
                                 }
                                 break;
                             default:
@@ -150,6 +146,26 @@ if (!class_exists('line_webhook')) {
                         break;
                 }    
             }            
+        }
+
+        public function insert_chat_message($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat_messages';
+            $data = array(
+                'chat_from' => $data['from'],
+                'chat_to' => $data['to'],
+                'chat_message' => $data['message'],
+                'create_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
+        }
+
+        public function update_chat_messages($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat_messages';
+            //$data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
         }
 
         function insert_event_log($event) {
@@ -220,6 +236,16 @@ if (!class_exists('line_webhook')) {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+            $sql = "CREATE TABLE {$wpdb->prefix}chat_messages (
+                message_id int NOT NULL AUTO_INCREMENT,
+                chat_from varchar(255) NOT NULL DEFAULT '',
+                chat_to varchar(255) NOT NULL DEFAULT '',
+                chat_message TEXT NOT NULL,
+                create_timestamp int(10),
+                PRIMARY KEY (message_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         
             $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
                 event_id int NOT NULL AUTO_INCREMENT,
