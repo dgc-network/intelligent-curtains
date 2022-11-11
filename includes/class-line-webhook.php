@@ -127,12 +127,12 @@ if (!class_exists('line_webhook')) {
 */                                        
                                     }
                                 } else {
-                                    //send message to line_bot
+                                    //send message to line_bot if the message is not six digit 
                                     $data=array();
                                     $data['from']=$line_user_id;
                                     $data['to']='line_bot';
                                     $data['message']=$message;
-                                    $result = self::insert_chat_mmessage($data);
+                                    $result = self::insert_chat_message($data);
                                 }
                                 break;
                             default:
@@ -146,26 +146,6 @@ if (!class_exists('line_webhook')) {
                         break;
                 }    
             }            
-        }
-
-        public function insert_chat_message($data=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'chat_messages';
-            $data = array(
-                'chat_from' => $data['from'],
-                'chat_to' => $data['to'],
-                'chat_message' => $data['message'],
-                'create_timestamp' => time(),
-            );
-            $wpdb->insert($table, $data);
-            return $wpdb->insert_id;
-        }
-
-        public function update_chat_messages($data=[], $where=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'chat_messages';
-            //$data['update_timestamp'] = time();
-            $wpdb->update($table, $data, $where);
         }
 
         function insert_event_log($event) {
@@ -232,6 +212,26 @@ if (!class_exists('line_webhook')) {
             $insert_id = $wpdb->insert($table, $data);        
         }
     
+        public function insert_chat_message($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat_messages';
+            $data = array(
+                'chat_from' => $data['from'],
+                'chat_to' => $data['to'],
+                'chat_message' => $data['message'],
+                'create_timestamp' => time(),
+            );
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
+        }
+
+        public function update_chat_messages($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'chat_messages';
+            //$data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
