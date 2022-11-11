@@ -131,7 +131,7 @@ if (!class_exists('line_webhook')) {
                                     $data=array();
                                     $data['from']=$line_user_id;
                                     $data['to']='line_bot';
-                                    $data['message']=$message;
+                                    $data['message']=$message['text'];
                                     $result = self::insert_chat_message($data);
                                 }
                                 break;
