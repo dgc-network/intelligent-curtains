@@ -53,8 +53,8 @@ if (!function_exists('hash_equals')) {
      * @param string $userString
      * @return bool
      */
-    function hash_equals($knownString, $userString)
-    {
+    function hash_equals($knownString, $userString) {
+        
         $strlen = function ($string) {
             if (USE_MB_STRING) {
                 return mb_strlen($string, '8bit');
@@ -78,8 +78,8 @@ if (!function_exists('hash_equals')) {
     }
 }
 
-class LINEBotTiny
-{
+class LINEBotTiny {
+
     /** @var string */
     private $channelAccessToken;
     /** @var string */
@@ -96,8 +96,8 @@ class LINEBotTiny
         $this->channelSecret = $channelSecret;
     }
 */
-    public function __construct($channelAccessToken='', $channelSecret='')
-    {
+    public function __construct($channelAccessToken='', $channelSecret='') {
+
         if ($channelAccessToken==''||$channelSecret=='') {
             if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
                 $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
@@ -116,16 +116,11 @@ class LINEBotTiny
     /**
      * @return mixed
      */
-    public function parseEvents()
-    {
+    public function parseEvents() {
      
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             error_log('Method not allowed');
-            //exit();
-            //return;
-            //wp_die();
-            //exit;
         }
 
         $entityBody = file_get_contents('php://input');
@@ -133,17 +128,11 @@ class LINEBotTiny
         if ($entityBody === false || strlen($entityBody) === 0) {
             http_response_code(400);
             error_log('Missing request body');
-            //exit();
-            //return;
-            //wp_die();
         }
 /*
         if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
             http_response_code(400);
             error_log('Invalid signature value');
-            //exit();
-            //return;
-            //wp_die();
         }
 */
         $data = json_decode($entityBody, true);
@@ -151,13 +140,9 @@ class LINEBotTiny
         if (!isset($data['events'])) {
             http_response_code(400);
             error_log('Invalid request body: missing events property');
-            //exit();
-            //return;
-            //wp_die();
         }
 */
         return $data['events'];
-        //return $data;
    
     }
 
@@ -165,8 +150,8 @@ class LINEBotTiny
      * @param array<string, mixed> $message
      * @return void
      */
-    public function replyMessage($message)
-    {
+    public function replyMessage($message) {
+
         $header = array(
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -191,8 +176,8 @@ class LINEBotTiny
      * @param array<string, mixed> $message
      * @return void
      */
-    public function pushMessage($message)
-    {
+    public function pushMessage($message) {
+
         $header = array(
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -217,8 +202,8 @@ class LINEBotTiny
      * @param string $userId
      * @return object
      */
-    public function getProfile($userId)
-    {
+    public function getProfile($userId) {
+
         $header = array(
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -248,8 +233,8 @@ class LINEBotTiny
      * @param string $groupId
      * @return object
      */
-    public function getGroupSummary($groupId)
-    {
+    public function getGroupSummary($groupId) {
+
         $header = array(
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -278,8 +263,8 @@ class LINEBotTiny
      * @param string $groupId, $userId
      * @return object
      */
-    public function getGroupMemberProfile($groupId, $userId)
-    {
+    public function getGroupMemberProfile($groupId, $userId) {
+
         $header = array(
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -308,8 +293,8 @@ class LINEBotTiny
      * @param string $messageId
      * @return object
      */
-    public function getContent($messageId)
-    {
+    public function getContent($messageId) {
+
         $header = array(
             //'Content-Type: application/octet-stream',
             'Authorization: Bearer ' . $this->channelAccessToken,
@@ -332,16 +317,16 @@ class LINEBotTiny
 
     }
 
- /**
-  * Save the submitted image as a temporary file.
-  *
-  * @todo Revisit file handling.
-  *
-  * @param string $img Base64 encoded image.
-  * @return false|string File name on success, false on failure.
-  */
-    protected function save_temp_image($img)
-    {
+    /**
+     * Save the submitted image as a temporary file.
+     *
+     * @todo Revisit file handling.
+     *
+     * @param string $img Base64 encoded image.
+     * @return false|string File name on success, false on failure.
+     */
+    protected function save_temp_image($img) {
+
         // Strip the "data:image/png;base64," part and decode the image.
         $img = explode(',', $img);
         $img = isset($img[1]) ? base64_decode($img[1]) : base64_decode($img[0]);
@@ -384,8 +369,8 @@ class LINEBotTiny
      * @param string $body
      * @return string
      */
-    private function sign($body)
-    {
+    private function sign($body) {
+
         $hash = hash_hmac('sha256', $body, $this->channelSecret, true);
         $signature = base64_encode($hash);
         return $signature;

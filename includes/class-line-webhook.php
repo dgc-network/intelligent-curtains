@@ -37,6 +37,7 @@ if (!class_exists('line_webhook')) {
             //$data = $client->parseEvents();
             //$events = $data['events'];
             $client = new LINEBotTiny();
+/*
             $events = $client->parseEvents();
             //var_dump($events);
             //array_push($events,$client->parseEvents());
@@ -51,6 +52,7 @@ if (!class_exists('line_webhook')) {
 
             //$client = self::line_bot_sdk();
             $client = line_bot_sdk();
+*/            
             foreach ((array)$client->parseEvents() as $event) {
                 //self::insert_event_log($event);
 
