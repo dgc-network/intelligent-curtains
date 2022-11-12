@@ -54,14 +54,14 @@ jQuery(document).ready(function($) {
                         //    createChatBox(chatboxtitle,1);
                         //}
                         
-                        if (response.items.item.s == 1) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+response.items.item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+response.items.item.m+'</span></div>');
+                        if (item.s == 1) {
+                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
                             //alert(response.items.item.m);
                             alert('s:'+item.s+'f:'+item.f+', m:'+item.m);
                         }
         
-                        if (response.items.item.s == 2) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+response.items.item.m+'</span></div>');
+                        if (item.s == 2) {
+                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
                             //alert(response.items.item.m);
                         }
 /*
