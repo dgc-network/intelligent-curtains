@@ -45,6 +45,8 @@ jQuery(document).ready(function($) {
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
+                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
                         //    createChatBox(chatboxtitle,1);
@@ -113,12 +115,12 @@ jQuery(document).ready(function($) {
                     },
                     success: function (response) {
                         message = response.message;
-                        //username = response.username;
+                        username = response.username;
                         //chatboxtitle = response.chatboxtitle;                
                         //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
 
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+chatboxtitle+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     },
                     error: function(error){
