@@ -44,11 +44,7 @@ jQuery(document).ready(function($) {
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
         
                 $.each(response.items, function(i,item){
-                    //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
-                    //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
                     if (item)	{ // fix strange ie bug
-        
-
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
                         //    createChatBox(chatboxtitle,1);
@@ -56,13 +52,12 @@ jQuery(document).ready(function($) {
                         
                         if (item.s == 1) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                            //alert(response.items.item.m);
-                            alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
+                            //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
                         }
         
                         if (item.s == 2) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                            //alert(response.items.item.m);
+                            alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
                         }
 /*
                         if (item.s == 1) {
@@ -123,7 +118,7 @@ jQuery(document).ready(function($) {
                         //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
 
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+chatboxtitle+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     },
                     error: function(error){
