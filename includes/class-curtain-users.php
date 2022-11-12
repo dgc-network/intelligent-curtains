@@ -66,10 +66,10 @@ if (!class_exists('curtain_users')) {
                 $item = array();
                 if ($result->chat_from==$from) {
                     $item['s']=1;
-                    $item['f']=$result->chat_to;
+                    $item['f']=$result->chat_from;
                 } else {
                     $item['s']=2;
-                    $item['f']=$result->chat_from;
+                    $item['f']=$result->chat_to;
                 }
                 $item['m']=$result->chat_message;
                 //array_push($items,$item);
