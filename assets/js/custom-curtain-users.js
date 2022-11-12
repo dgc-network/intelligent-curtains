@@ -44,9 +44,9 @@ jQuery(document).ready(function($) {
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
         
                 $.each(response.items, function(i,item){
+                    $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
                     if (item)	{ // fix strange ie bug
         
-                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
 
                         chatboxtitle = item.f;
                         //if ($("#chatbox_"+chatboxtitle).length <= 0) {
