@@ -52,12 +52,12 @@ jQuery(document).ready(function($) {
                         
                         if (item.s == 1) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                            alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
+                            //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
                         }
         
                         if (item.s == 2) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                            alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
+                            //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
                         }
 /*
                         if (item.s == 1) {
