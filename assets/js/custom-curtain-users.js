@@ -42,6 +42,7 @@ jQuery(document).ready(function($) {
                 username = response.username;
                 //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
+                $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+response.items.item.m+'</span></div>');
         
                 $.each(response.items, function(i,item){
                     if (item)	{ // fix strange ie bug
