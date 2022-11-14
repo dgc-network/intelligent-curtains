@@ -49,7 +49,7 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
             $to = 'Uc12a5ff53a702d188e609709d6ef3edf';
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
+            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s", $to, $to ), OBJECT );            
             return var_dump($results);
         }
 
@@ -392,7 +392,7 @@ if (!class_exists('curtain_users')) {
 
                     $output .= '<div class="chatboxcontent">';
                     global $wpdb;
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $row->line_user_id, $row->line_user_id ), OBJECT );            
+                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s", $row->line_user_id, $row->line_user_id ), OBJECT );            
                     foreach ( $results as $index=>$result ) {
                         if ($result->chat_from==$row->line_user_id) {
                             $output .= '<div class="chatboxmessage"><span class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'.$result->chat_message.'</span></div>';
