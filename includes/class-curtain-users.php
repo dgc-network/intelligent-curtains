@@ -53,8 +53,6 @@ if (!class_exists('curtain_users')) {
             return var_dump($results);
         }
 
-        //add_action( 'wp_ajax_startChatSession', 'startChatSession' );
-        //add_action( 'wp_ajax_nopriv_startChatSession', 'startChatSession' );
         function startChatSession() {
             $from = get_option('_chat_from');
             $to = $_POST['to'];

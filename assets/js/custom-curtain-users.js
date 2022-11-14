@@ -39,6 +39,11 @@ jQuery(document).ready(function($) {
                 'to': chatboxtitle,
             },
             success: function (response) {
+                nextLink = response.username;
+                $("<div>").load(nextLink + ' article', function() {
+                    $(".chatboxcontent").append($(this).html());
+                });
+
                 username = response.username;
                 //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
