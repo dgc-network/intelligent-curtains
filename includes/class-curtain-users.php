@@ -392,7 +392,27 @@ if (!class_exists('curtain_users')) {
 
                     $output .= '<div class="chatboxcontent">';
                     global $wpdb;
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %1$s OR `chat_to` = %2$s", $row->line_user_id, $row->line_user_id ), OBJECT );            
+/*
+                    $user_query = $_GET['query1']; 
+                    $user_query2 = $_GET['query2']; 
+
+                    $user = $wpdb->prepare(' AND chat_from = %s ', $row->line_user_id); 
+                    $user2 = $wpdb->prepare('AND query2 = %s ', $row->line_user_id); 
+
+                    $results = $wpdb->get_results( $wpdb->prepare('SELECT * FROM test WHERE price != 0' . $user . $user2 . 'LIMIT 20') );
+                    
+                    $query = 'SELECT * FROM test 
+                    WHERE price != 0 
+                        AND query1 = %s 
+                        AND query1 = %s 
+                    LIMIT 20';
+                    $results = $wpdb->get_results( $wpdb->prepare($query, $user_query, $user_query2) ); 
+
+
+                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s", $row->line_user_id, $row->line_user_id ), OBJECT );            
+*/
+                    $query = 'SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s';
+                    $results = $wpdb->get_results( $wpdb->prepare($query, $row->line_user_id, $row->line_user_id) ); 
                     foreach ( $results as $index=>$result ) {
                         if ($result->chat_from==$row->line_user_id) {
                             $output .= '<div class="chatboxmessage"><span class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'.$result->chat_message.'</span></div>';
