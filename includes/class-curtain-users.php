@@ -413,6 +413,7 @@ if (!class_exists('curtain_users')) {
 */
                     $query = 'SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s';
                     $results = $wpdb->get_results( $wpdb->prepare($query, $row->line_user_id, $row->line_user_id) ); 
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
                         if ($result->chat_from==$row->line_user_id) {
                             $output .= '<div class="chatboxmessage"><span class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'.$result->chat_message.'</span></div>';
