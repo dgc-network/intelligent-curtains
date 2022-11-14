@@ -389,7 +389,19 @@ if (!class_exists('curtain_users')) {
                     //setcookie('chatboxtitle',  $row->line_user_id);
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
-                    $output .= '<div class="chatboxcontent"></div>';
+
+                    $output .= '<div class="chatboxcontent">';
+                    global $wpdb;
+                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $row->line_user_id, $row->line_user_id ), OBJECT );            
+                    foreach ( $results as $index=>$result ) {
+                        if ($result->chat_from==$row->line_user_id) {
+                            $output .= '<div class="chatboxmessage"><span class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'.$result->chat_message.'</span></div>';
+                        } else {
+                            $output .= '<div class="chatboxmessage"><span class="chatboxinfo">'.$result->chat_message.'</span></div>';
+                        }
+                    }
+                    $output .= '</div>';
+        
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
                     $output .= '</div>';
                 }
