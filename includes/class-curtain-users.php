@@ -346,7 +346,7 @@ if (!class_exists('curtain_users')) {
                 //setcookie('username',  'line_bot');
                 //setcookie('chatboxtitle',  $result->line_user_id);
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="hidden" value="'.$result->line_user_id.'" class="chatboxtitle">';
+                //$output .= '<input type="hidden" value="'.$result->line_user_id.'" class="chatboxtitle">';
                 $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" class="startChatSession">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
