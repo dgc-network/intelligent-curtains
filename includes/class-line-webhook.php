@@ -10,7 +10,14 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
+            add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
+        }
+
+        function init_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
         }
 
         public function init() {
@@ -21,6 +28,7 @@ if (!class_exists('line_webhook')) {
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
+                $_SESSION['line_user_id'] = $profile['userId'];
             
                 switch ($event['type']) {
                     case 'message':
@@ -82,7 +90,7 @@ if (!class_exists('line_webhook')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => 'message '.$message['text'].' is wrong.',
+                                                    'text' => 'message '.$message['text'].' is wrong or the QR Code has been registered.',
                                                 ]
                                             ]
                                         ]);    

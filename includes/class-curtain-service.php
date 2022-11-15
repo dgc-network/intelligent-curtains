@@ -97,8 +97,7 @@ if (!class_exists('curtain_service')) {
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     if (count($user) > 0) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['line_user_id'] = $user->line_user_id;
-                        //setcookie('line_user_id',  $user->line_user_id);
+                        //$_SESSION['line_user_id'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -148,8 +147,7 @@ if (!class_exists('curtain_service')) {
                         $result = $serial_number->update_serial_number($data, $where);    
                     }
     
-                } else {
-    
+                } else {    
                     global $wpdb;
                     $where='"%admin%"';
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
