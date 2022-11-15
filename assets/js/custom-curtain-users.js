@@ -24,10 +24,12 @@ jQuery(document).ready(function($) {
 	});
 
 	$(".startChatSession").click(function(){
+        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
         //startChatSession();
     });
 
     function startChatSession(){
+
         //chatboxtitle = $('.chatboxtitle').val();
 
         jQuery.ajax({
