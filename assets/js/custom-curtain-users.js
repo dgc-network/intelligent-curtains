@@ -25,6 +25,7 @@ jQuery(document).ready(function($) {
 
 	$(".startChatSession").click(function(){
         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+        setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 1000); // yet another strange ie bug
         //startChatSession();
     });
 
@@ -41,7 +42,7 @@ jQuery(document).ready(function($) {
                 //'to': chatboxtitle,
             },
             success: function (response) {
-/*
+
                 username = response.username;
                 //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
@@ -67,7 +68,7 @@ jQuery(document).ready(function($) {
                     }
                 });
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-*/
+
                 $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                 setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
                 setTimeout('chatHeartbeat();',chatHeartbeatTime);

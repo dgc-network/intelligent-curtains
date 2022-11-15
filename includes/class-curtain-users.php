@@ -86,7 +86,7 @@ if (!class_exists('curtain_users')) {
             $response['chatboxtitle'] = $to;
             $response['items'] = $items;
             echo json_encode( $response );
-            
+
             wp_die();        
         }
 /*        
@@ -103,10 +103,11 @@ if (!class_exists('curtain_users')) {
         }
 */                
         function sendChat() {
-            $from = get_option('_chat_from');
+            //$from = get_option('_chat_from');
+            $from = $_SESSION['line_user_id'];
             $to = $_POST['to'];
             $message = $_POST['message'];
-            $currenttime = wp_date( get_option('time_format'), time() );
+            //$currenttime = wp_date( get_option('time_format'), time() );
 
             $data=array();
             $data['from']= esc_sql($from);
@@ -116,10 +117,11 @@ if (!class_exists('curtain_users')) {
             $result = $line_webhook->insert_chat_message($data);
 
             $response = array();
-            $response['username'] = $from;
-            $response['chatboxtitle'] = $to;
-            $response['message'] = $message;
-            $response['currenttime'] = $currenttime;
+            //$response['username'] = $from;
+            //$response['chatboxtitle'] = $to;
+            //$response['message'] = $message;
+            //$response['currenttime'] = $currenttime;
+            $response['currenttime'] = wp_date( get_option('time_format'), time() );
             echo json_encode( $response );
             wp_die();
         }
@@ -390,7 +392,7 @@ if (!class_exists('curtain_users')) {
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
-                        if ($result->chat_to==$row->line_user_id) {
+                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['line_user_id']) {
                             $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
                         if ($result->chat_from==$row->line_user_id) {
