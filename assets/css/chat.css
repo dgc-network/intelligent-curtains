@@ -62,19 +62,21 @@
 }
 */
 .chatboxinfo {
-	margin-left:-1em;
-	color:#666666;
+	background-color: chartreuse;
+	color: #333333;
 	display: inline-block; 
-	border: 1px solid; 
 	border-radius: 5px; 
 	width:fit-content; 
-	max-width:200px;
+	max-width:190px;
+	padding: 5px;
+	margin: 2px;
 }
 
 .chatboxmessagetime {
 	color:#666666;
 	display: inline-block; 
 	width:fit-content; 
+	font-size: xx-small;
 }
 
 .chatboxmessagefrom {
@@ -82,12 +84,14 @@
 }
 
 .chatboxmessagecontent {
-	color:#666666;
+	background-color: #666666;
+	color: #eeeeee;
 	display: inline-block; 
-	border: 1px solid; 
 	border-radius: 5px; 
 	width:fit-content; 
-	max-width:500px;
+	max-width:190px;
+	padding: 5px;
+	margin: 2px;
 }
 
 .chatboxoptions {
