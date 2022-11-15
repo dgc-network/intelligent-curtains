@@ -395,7 +395,7 @@ if (!class_exists('curtain_users')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
                         if ($result->chat_to==$row->line_user_id) {
-                            $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">09:00</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
+                            $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">09:00</div><div class="chatboxmessagecontent" style="background-color: chartreuse;">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
                         if ($result->chat_from==$row->line_user_id) {
                             $output .= '<div class="chatboxmessage"><div class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div><div class="chatboxmessagetime">09:00</div></div>';
