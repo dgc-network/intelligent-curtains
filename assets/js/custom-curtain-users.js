@@ -105,8 +105,8 @@ jQuery(document).ready(function($) {
                         'message': message,
                     },
                     success: function (response) {
-                        message = response.message;
-                        username = response.username;
+                        //message = response.message;
+                        //username = response.username;
                         currenttime = response.currenttime;
                         //chatboxtitle = response.chatboxtitle;                
                         //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
