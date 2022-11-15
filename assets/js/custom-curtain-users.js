@@ -122,7 +122,8 @@ jQuery(document).ready(function($) {
                         //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
 
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                        $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
+                        $(".chatboxcontent").append('<div class="chatboxmessage" style="float: right;"><div class="chatboxinfo" style="width: fit-content; border: 1em">'+message+'</div></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     },
                     error: function(error){
