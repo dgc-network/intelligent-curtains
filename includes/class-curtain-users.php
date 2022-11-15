@@ -105,6 +105,7 @@ if (!class_exists('curtain_users')) {
             $from = get_option('_chat_from');
             $to = $_POST['to'];
             $message = $_POST['message'];
+            $currenttime = wp_date( get_option('time_format'), time() );
 
             $data=array();
             $data['from']= esc_sql($from);
@@ -117,6 +118,7 @@ if (!class_exists('curtain_users')) {
             $response['username'] = $from;
             $response['chatboxtitle'] = $to;
             $response['message'] = $message;
+            $response['currenttime'] = $currenttime;
             echo json_encode( $response );
             wp_die();
         }
