@@ -10,11 +10,8 @@ if (!class_exists('curtain_users')) {
          * Class constructor
          */
         public function __construct() {
-            //add_shortcode('curtain-user-list', __CLASS__ . '::list_curtain_users');
             add_shortcode('curtain-user-list', array( __CLASS__, 'list_curtain_users' ));
             add_shortcode('chat-message-list', array( __CLASS__, 'list_chat_messages' ));
-            //add_action( 'wp_ajax_startChatSession', array( __CLASS__, 'startChatSession' ) );
-            //add_action( 'wp_ajax_nopriv_startChatSession', array( __CLASS__, 'startChatSession' ) );
             add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
@@ -22,16 +19,6 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
             add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
-
-            if (!isset($_SESSION['chatHistory'])) {
-                //$_SESSION['chatHistory'] = array();	
-                //setcookie('chatHistory',  array());
-            }
-            
-            if (!isset($_SESSION['openChatBoxes'])) {
-                //$_SESSION['openChatBoxes'] = array();	
-                //setcookie('openChatBoxes',  array());
-            }            
         }
 
         function my_enqueue() {
@@ -47,67 +34,16 @@ if (!class_exists('curtain_users')) {
         function list_chat_messages() {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
-            $to = 'Uc12a5ff53a702d188e609709d6ef3edf';
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s", $to, $to ), OBJECT );            
+            //$to = 'Uc12a5ff53a702d188e609709d6ef3edf';
+            //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE `chat_from` = %s OR `chat_to` = %s", $to, $to ), OBJECT );            
             return var_dump($results);
         }
 
-        function startChatSession() {
-
-            $from = get_option('_chat_from');
-            $to = $_POST['to'];
-
-            $items = array();
-            global $wpdb;
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE chat_from = %s OR chat_to = %s", $to, $to ), OBJECT );            
-            foreach ( $results as $index=>$result ) {
-                $item = array();
-                if ($result->chat_from==$from) {
-                    $item['s']=1;
-                    $item['f']=$result->chat_from;
-                } else {
-                    $item['s']=2;
-                    $item['f']=$result->chat_to;
-                }
-                $item['m']=$result->chat_message;
-                //array_push($items,$item);
-                $items['item'] = $item;
-            }
-/*            
-            if (!empty($_SESSION['openChatBoxes'])) {
-                foreach ($_SESSION['openChatBoxes'] as $chatbox => $void) {
-                    //array_push($items, chatBoxSession($chatbox));
-                    array_push($items, $_SESSION['chatHistory'][$chatbox]);
-                }
-            }
-*/
-            $response = array();
-            $response['username'] = $from;
-            $response['chatboxtitle'] = $to;
-            $response['items'] = $items;
-            echo json_encode( $response );
-
-            wp_die();        
-        }
-/*        
-        function chatBoxSession($chatbox) {
-	
-            //$items = '';
-            
-            $items = array();
-            if (isset($_SESSION['chatHistory'][$chatbox])) {
-                $items = $_SESSION['chatHistory'][$chatbox];
-            }
-        
-            return $items;
-        }
-*/                
         function sendChat() {
             //$from = get_option('_chat_from');
             $from = $_SESSION['line_user_id'];
             $to = $_POST['to'];
             $message = $_POST['message'];
-            //$currenttime = wp_date( get_option('time_format'), time() );
 
             $data=array();
             $data['from']= esc_sql($from);
@@ -117,55 +53,11 @@ if (!class_exists('curtain_users')) {
             $result = $line_webhook->insert_chat_message($data);
 
             $response = array();
-            //$response['username'] = $from;
-            //$response['chatboxtitle'] = $to;
-            //$response['message'] = $message;
-            //$response['currenttime'] = $currenttime;
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
             echo json_encode( $response );
             wp_die();
         }
 
-        function sendChat_backup() {
-
-            $from = $_SESSION['username'];
-            $to = $_POST['to'];
-            $message = $_POST['message'];
-        
-            $_SESSION['openChatBoxes'][$_POST['to']] = date('Y-m-d H:i:s', time());
-            //setcookie('openChatBoxes',  array());
-
-            $messagesan = sanitize($message);
-        
-            if (!isset($_SESSION['chatHistory'][$_POST['to']])) {
-                //$_SESSION['chatHistory'][$_POST['to']] = '';
-                $_SESSION['chatHistory'][$_POST['to']] = array();
-                //setcookie('openChatBoxes',  array());
-            }
-            $_SESSION['chatHistory'][$_POST['to']]['s']=1;
-            $_SESSION['chatHistory'][$_POST['to']]['f']=$to;
-            $_SESSION['chatHistory'][$_POST['to']]['m']=$messagesan;
-
-/*        
-            $_SESSION['chatHistory'][$_POST['to']] .= <<<EOD
-                               {
-                    "s": "1",
-                    "f": "{$to}",
-                    "m": "{$messagesan}"
-               },
-        EOD;
-*/          
-            unset($_SESSION['tsChatBoxes'][$_POST['to']]);
-        
-            $sql = "insert into {$wpdb->prefix}chat ({$wpdb->prefix}chat.from,{$wpdb->prefix}chat.to,message,sent) values ('".mysql_real_escape_string($from)."', '".mysql_real_escape_string($to)."','".mysql_real_escape_string($message)."',NOW())";
-            $query = mysql_query($sql);            
-            //echo "1";
-          
-            wp_die();
-        }
-
-        //add_action( 'wp_ajax_chatHeartbeat', 'chatHeartbeat' );
-        //add_action( 'wp_ajax_nopriv_chatHeartbeat', 'chatHeartbeat' );
         function chatHeartbeat() {
             
             $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
@@ -384,7 +276,6 @@ if (!class_exists('curtain_users')) {
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
-                //} else {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 

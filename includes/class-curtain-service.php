@@ -12,12 +12,10 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
-            //add_action( 'init', array( __CLASS__, 'init_session' ) );
+            add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
-        // Start session on init hook.
-        //add_action( 'init', 'init_session' );
         function init_session() {
             if ( ! session_id() ) {
                 session_start();
@@ -25,9 +23,6 @@ if (!class_exists('curtain_service')) {
         }
 
         function push_text_message($text_message='', $line_user_id='') {
-            //$client = line_bot_sdk();
-            //$line_webhook = new line_webhook();
-            //$client = $line_webhook->line_bot_sdk();
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
@@ -47,26 +42,7 @@ if (!class_exists('curtain_service')) {
         }
 
         function init_curtain_service() {
-/*
-            if ( isset($_POST['_link_submit']) ) {
-                if ( $_POST['_link_submit']=='Agents' ) {
-                    $curtain_agents = new curtain_agents();
-                    return $curtain_agents->list_curtain_agents();
-                }
-                if ( $_POST['_link_submit']=='Models' ) {
-                    $curtain_models = new curtain_models();
-                    return $curtain_models->list_curtain_models();
-                }
-                if ( $_POST['_link_submit']=='Users' ) {
-                    $curtain_users = new curtain_users();
-                    return $curtain_users->list_curtain_users();
-                }
-                if ( $_POST['_link_submit']=='Serial Number' ) {
-                    $curtain_users = new serial_number();
-                    return $curtain_users->list_serial_number();
-                }
-            }
-*/
+
             if( isset($_POST['_submit_action']) ) {
                 if( $_POST['_submit_action']=='Resend' ) {
 
@@ -97,7 +73,7 @@ if (!class_exists('curtain_service')) {
                     $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     if (count($user) > 0) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        //$_SESSION['line_user_id'] = $user->line_user_id;
+                        $_SESSION['line_user_id'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );

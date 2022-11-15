@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
     var newMessagesWin = new Array();
     var chatBoxes = new Array();
     var chatboxtitle;
-    
+/*    
 	originalTitle = document.title;
 	$([window, document]).blur(function(){
 		windowFocus = false;
@@ -22,62 +22,11 @@ jQuery(document).ready(function($) {
 		windowFocus = true;
 		document.title = originalTitle;
 	});
-
+*/
 	$(".startChatSession").click(function(){
         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
         setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 1000); // yet another strange ie bug
-        //startChatSession();
     });
-
-    function startChatSession(){
-
-        //chatboxtitle = $('.chatboxtitle').val();
-
-        jQuery.ajax({
-            type: 'POST',
-            url: '/wp-admin/admin-ajax.php',
-            dataType: "json",
-            data: {
-                'action': 'startChatSession',
-                //'to': chatboxtitle,
-            },
-            success: function (response) {
-
-                username = response.username;
-                //chatboxtitle = response.chatboxtitle;                
-                //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-        
-                $.each(response.items, function(i,item){
-                    if (item)	{ // fix strange ie bug
-
-                        //username = username + ' s:'+item.s+', f:'+item.f+', m:'+item.m
-                        chatboxtitle = item.f;
-                        //if ($("#chatbox_"+chatboxtitle).length <= 0) {
-                        //    createChatBox(chatboxtitle,1);
-                        //}
-                        
-                        if (item.s == 1) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                            //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
-                        }
-        
-                        if (item.s == 2) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                            //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
-                        }
-                    }
-                });
-                //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-
-                $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-                setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
-                setTimeout('chatHeartbeat();',chatHeartbeatTime);
-            },
-            error: function(error){
-                alert(error);
-            }
-        });    
-    }
 
     $('.chatboxtextarea').on('keypress',function(e) {
         chatboxtitle = $('.chatboxtitle').val();
@@ -105,14 +54,8 @@ jQuery(document).ready(function($) {
                         'message': message,
                     },
                     success: function (response) {
-                        //message = response.message;
-                        //username = response.username;
                         currenttime = response.currenttime;
-                        //chatboxtitle = response.chatboxtitle;                
-                        //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-
                         message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                        //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+username+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+message+'</span></div>');
                         $(".chatboxcontent").append('<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'+currenttime+'</div><div class="chatboxinfo">'+message+'</div></div><div style="clear: right;"></div>');
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     },

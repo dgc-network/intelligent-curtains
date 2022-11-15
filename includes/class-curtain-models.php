@@ -11,22 +11,14 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', array( __CLASS__, 'list_curtain_models' ));
-            //add_shortcode('curtain-model-list', __CLASS__ . '::list_curtain_models');
-            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-            //add_action( 'wp_ajax_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
-            //add_action( 'wp_ajax_nopriv_insert_model', array( __CLASS__, 'ajax_insert_model' ) );
-            //add_action( 'wp_ajax_update_model', array( __CLASS__, 'ajax_update_model' ) );
-            //add_action( 'wp_ajax_nopriv_update_model', array( __CLASS__, 'ajax_update_model' ) );
-            //add_action( 'wp_ajax_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
-            //add_action( 'wp_ajax_nopriv_delete_model', array( __CLASS__, 'ajax_delete_model' ) );
             add_action( 'init', array( __CLASS__, 'init_session' ) );
             self::create_tables();
         }
 
         function enqueue_scripts() {		
             wp_enqueue_script( 'custom-curtain-models', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-models.js', array( 'jquery' ), time(), true );
-            wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), time(), true  );
-            wp_enqueue_script( 'jquery-ui-dialog' );
+            //wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), time(), true  );
+            //wp_enqueue_script( 'jquery-ui-dialog' );
         }    
 
         function init_session() {
@@ -35,55 +27,6 @@ if (!class_exists('curtain_models')) {
             }
         }
 
-        function ajax_insert_model() {
-            $args = array(
-                'taxonomy'   => "product_cat",
-                'number'     => $number,
-                'orderby'    => $orderby,
-                'order'      => $order,
-                'hide_empty' => $hide_empty,
-                'include'    => $ids
-            );
-            $product_categories = get_terms($args);
-    
-            $titles = array();
-            foreach( $product_categories as $cat ) {
-                if ($cat->name != 'Uncategorized') {
-                    array_push($titles, $cat->name);
-                }
-            }
-            $response = json_encode( $titles );
-            echo $response;
-            
-            die();
-        }
-            
-        function ajax_update_model() {
-
-            $product_category_slug = ( isset($_POST['term_chosen']) && !empty( $_POST['term_chosen']) ? $_POST['term_chosen'] : false );
-            
-            $query = new WC_Product_Query( array(
-                'category' => array( $product_category_slug ),
-                'limit' => 10,
-                'orderby' => 'date',
-                'order' => 'DESC'
-            ) );
-            
-            $products = $query->get_products();
-            
-            $titles = array();
-            foreach( $products as $product ) {
-                $title = array();
-                array_push($title, $product->get_id());
-                array_push($title, $product->get_title());
-                array_push($titles, $title);
-            }	
-            $response = json_encode( $titles );
-            echo $response;
-            
-            die();		
-        }
-            
         public function list_curtain_models() {
 
             if( isset($_SESSION['line_user_id']) ) {

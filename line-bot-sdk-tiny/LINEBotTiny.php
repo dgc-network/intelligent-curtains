@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright 2016 LINE Corporation
  *
@@ -19,25 +18,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-/*
-if (!function_exists('line_bot_sdk')) {
-    function line_bot_sdk() {
-        $channelAccessToken = '';
-        $channelSecret = '';
-        if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
-            $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
-            if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
-                error_log("config.ini uncompleted!", 0);
-            } else {
-                $channelAccessToken = $config['Channel']['Token'];
-                $channelSecret = $config['Channel']['Secret'];
-            }
-        }
-        $client = new LINEBotTiny($channelAccessToken, $channelSecret);
-        return $client;
-    }
-}
-*/
 /*
  * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
  *
