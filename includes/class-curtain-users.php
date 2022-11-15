@@ -35,7 +35,6 @@ if (!class_exists('curtain_users')) {
 
         function my_enqueue() {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
-            //wp_localize_script( 'custom-curtain-users', 'my_foobar_client', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
         }
 
         //add_action( 'init', array( __CLASS__, 'init_session' ) );
@@ -54,6 +53,7 @@ if (!class_exists('curtain_users')) {
         }
 
         function startChatSession() {
+
             $from = get_option('_chat_from');
             $to = $_POST['to'];
 
@@ -86,6 +86,7 @@ if (!class_exists('curtain_users')) {
             $response['chatboxtitle'] = $to;
             $response['items'] = $items;
             echo json_encode( $response );
+            
             wp_die();        
         }
 /*        
@@ -343,12 +344,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_update_user">';
                 $output .= '</form></td>';
                 $output .= '<td><form method="post">';
-                //$_SESSION['username'] = 'line_bot';
-                //$_SESSION['chatboxtitle'] = $result->line_user_id;
-                //setcookie('username',  'line_bot');
-                //setcookie('chatboxtitle',  $result->line_user_id);
                 $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                //$output .= '<input type="hidden" value="'.$result->line_user_id.'" class="chatboxtitle">';
                 $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" class="startChatSession">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
@@ -385,10 +381,8 @@ if (!class_exists('curtain_users')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                } else {
-                    //setcookie('username',  'line_bot');
-                    //setcookie('chatboxtitle',  $row->line_user_id);
+                if (!(is_null($row) || !empty($wpdb->last_error))) {
+                //} else {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 

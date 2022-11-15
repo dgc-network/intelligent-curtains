@@ -10,8 +10,6 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
-            //require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
-            //add_shortcode('event-list', __CLASS__ . '::list_mode');
             self::create_tables();
         }
 
@@ -88,43 +86,6 @@ if (!class_exists('line_webhook')) {
                                                 ]
                                             ]
                                         ]);    
-/*
-                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                                        if (count($user) > 0) {
-                                            $client->replyMessage([
-                                                'replyToken' => $event['replyToken'],
-                                                'messages' => [
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => 'Hi, '.$profile['displayName'],
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => '請點擊下方連結進入售後服務區:',
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => get_site_url().'/'.get_option('_service_page'),
-                                                    ]
-                                                ]
-                                            ]);
-                                        } else {
-                                            // return message for wrong 6 digit number
-                                            $client->replyMessage([
-                                                'replyToken' => $event['replyToken'],
-                                                'messages' => [
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => 'Hi, '.$profile['displayName'],
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => 'message '.$message['text'].' is wrong.',
-                                                    ]
-                                                ]
-                                            ]);    
-                                        }
-*/                                        
                                     }
                                 } else {
                                     //send message to line_bot if the message is not six digit 
@@ -224,14 +185,14 @@ if (!class_exists('line_webhook')) {
             $wpdb->insert($table, $data);
             return $wpdb->insert_id;
         }
-
+/*
         public function update_chat_messages($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';
             //$data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
-
+*/
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();

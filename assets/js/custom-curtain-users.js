@@ -24,11 +24,11 @@ jQuery(document).ready(function($) {
 	});
 
 	$(".startChatSession").click(function(){
-        startChatSession();
+        //startChatSession();
     });
 
     function startChatSession(){
-        chatboxtitle = $('.chatboxtitle').val();
+        //chatboxtitle = $('.chatboxtitle').val();
 
         jQuery.ajax({
             type: 'POST',
@@ -36,10 +36,10 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'startChatSession',
-                'to': chatboxtitle,
+                //'to': chatboxtitle,
             },
             success: function (response) {
-
+/*
                 username = response.username;
                 //chatboxtitle = response.chatboxtitle;                
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
@@ -62,24 +62,10 @@ jQuery(document).ready(function($) {
                             $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
                             //alert('s:'+item.s+', f:'+item.f+', m:'+item.m);
                         }
-/*
-                        if (item.s == 1) {
-                            item.f = username;
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                            //alert(response.items.item.m);
-                        }
-        
-                        if (item.s == 2) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                            //alert(response.items.item.m);
-                        } else {
-                            //$(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
-                        }
-*/                        
                     }
                 });
                 //alert('chatboxtitle:'+chatboxtitle+', username:'+username);
-
+*/
                 $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                 setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
                 setTimeout('chatHeartbeat();',chatHeartbeatTime);
