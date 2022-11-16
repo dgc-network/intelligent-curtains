@@ -1,6 +1,6 @@
 <?php
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+    exit;
 }
 if (!class_exists('line_webhook')) {
 
@@ -33,7 +33,8 @@ if (!class_exists('line_webhook')) {
             
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                if (!(count($user) > 0)) {
+                //if (!(count($user) > 0)) {
+                if (is_null($row) || !empty($wpdb->last_error)) {
                     $data=array();
                     $data['line_user_id']=$profile['userId'];
                     $data['display_name']=$profile['displayName'];                
@@ -50,10 +51,12 @@ if (!class_exists('line_webhook')) {
                                     global $wpdb;
                                     //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
-                                    if (count($row) > 0) {
+                                    //if (count($row) > 0) {
+                                    if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                                        if (count($user) > 0) {
+                                        //if (count($user) > 0) {
+                                        if (!(is_null($user) || !empty($wpdb->last_error))) {
                                             $data=array();
                                             $data['curtain_user_id']=$user->curtain_user_id;
                                             $where=array();
@@ -113,6 +116,10 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
+                                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
+                                    //if (count($user) > 0) {
+                                    if (!(is_null($row) || !empty($wpdb->last_error))) {
+                                    }
                                 }
                                 break;
                             default:

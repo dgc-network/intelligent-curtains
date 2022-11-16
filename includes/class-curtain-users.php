@@ -260,8 +260,7 @@ if (!class_exists('curtain_users')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                } else {
+                if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Curtain user update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
@@ -313,7 +312,8 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
-            if (count($row) > 0) {
+            //if (count($row) > 0) {
+            if (!(is_null($row) || !empty($wpdb->last_error))) {
                 return $row->curtain_user_id;
             } else {
                 $table = $wpdb->prefix.'curtain_users';

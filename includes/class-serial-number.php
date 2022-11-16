@@ -102,7 +102,8 @@ if (!class_exists('serial_number')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
-                if (count($row) > 0) {
+                //if (count($row) > 0) {
+                if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Curtain model update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
@@ -175,7 +176,8 @@ if (!class_exists('serial_number')) {
             global $wpdb;
             $curtain_model_id = $data['curtain_model_id'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
-            if ( count($model) > 0 ) {
+            //if ( count($model) > 0 ) {
+            if (!(is_null($model) || !empty($wpdb->last_error))) {
                 $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time();
                 $data['qr_code_serial_no'] = $qr_code_serial_no;
                 $data['create_timestamp'] = time();

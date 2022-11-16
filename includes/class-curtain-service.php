@@ -67,18 +67,21 @@ if (!class_exists('curtain_service')) {
                 $qr_code_serial_no = $_GET['serial_no'];
                 global $wpdb;
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                if ((count($row) > 0)) {
+                //if ((count($row) > 0)) {
+                if (!(is_null($row) || !empty($wpdb->last_error))) {
                     
                     $curtain_user_id=$row->curtain_user_id;
                     //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                    if (count($user) > 0) {
+                    //if (count($user) > 0) {
+                    if (!(is_null($user) || !empty($wpdb->last_error))) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
                         $_SESSION['username'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if ( count($model) > 0 ) {
+                    //if ( count($model) > 0 ) {
+                    if (!(is_null($model) || !empty($wpdb->last_error))) {
                         $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                     }
     
@@ -93,7 +96,8 @@ if (!class_exists('curtain_service')) {
                     }
                     $output .= '</div>';
     
-                    if (count($user) > 0) {
+                    //if (count($user) > 0) {
+                    if (!(is_null($user) || !empty($wpdb->last_error))) {
                         // login
                         $six_digit_random_number = random_int(100000, 999999);
                         $output .= '如需其他服務, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
@@ -140,7 +144,7 @@ if (!class_exists('curtain_service')) {
                 }
     
             } else {
-                
+
                 global $wpdb;
                 $where='"%view%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
