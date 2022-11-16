@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
     var newMessagesWin = new Array();
     var chatBoxes = new Array();
     var chatboxtitle;
-/*    
+    
 	originalTitle = document.title;
 	$([window, document]).blur(function(){
 		windowFocus = false;
@@ -22,7 +22,7 @@ jQuery(document).ready(function($) {
 		windowFocus = true;
 		document.title = originalTitle;
 	});
-*/
+
 	$(".startChatSession").click(function(){
         //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
         //setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
@@ -88,7 +88,7 @@ jQuery(document).ready(function($) {
 
     function chatHeartbeat(){
 
-        alert('I am here');
+        //alert('I am here');
 
         var itemsfound = 0;
         

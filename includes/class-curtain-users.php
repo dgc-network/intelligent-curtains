@@ -60,6 +60,14 @@ if (!class_exists('curtain_users')) {
 
         function chatHeartbeat() {
             
+            $response = array();
+            $response['items'] = $items;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function chatHeartbeat_backup() {
+            
             $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
             $query = mysql_query($sql);
             //$items = '';
