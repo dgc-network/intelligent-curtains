@@ -24,8 +24,9 @@ jQuery(document).ready(function($) {
 	});
 */
 	$(".startChatSession").click(function(){
-        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
-        setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 1000); // yet another strange ie bug
+        //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+        //setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
+        setTimeout('chatHeartbeat();',chatHeartbeatTime);
     });
 
     $('.chatboxtextarea').on('keypress',function(e) {
@@ -86,6 +87,8 @@ jQuery(document).ready(function($) {
 
     function chatHeartbeat(){
 
+        alert('I am here');
+        
         var itemsfound = 0;
         
         if (windowFocus == false) {
