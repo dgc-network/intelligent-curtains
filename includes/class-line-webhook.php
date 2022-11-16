@@ -30,9 +30,9 @@ if (!class_exists('line_webhook')) {
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
-                if ( ! session_id() ) {
-                    session_start();
-                }
+                //if ( ! session_id() ) {
+                //    session_start();
+                //}
                 $_SESSION['line_user_id'] = $profile['userId'];
             
                 global $wpdb;

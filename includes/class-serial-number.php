@@ -32,7 +32,7 @@ if (!class_exists('serial_number')) {
                 }
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You are not validated to read this page. Please check to the administrators.'.get_option('_check_permission');
+                    return 'You are not validated to read this page. Please check to the administrators.';
                 }
             }
 
