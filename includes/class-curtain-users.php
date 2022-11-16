@@ -286,7 +286,7 @@ if (!class_exists('curtain_users')) {
                         if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
                             $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
-                        if ($result->chat_from==$row->line_user_id) {
+                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['username']) {
                             $output .= '<div class="chatboxmessage"><div class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div></div>';
                         }
                     }
