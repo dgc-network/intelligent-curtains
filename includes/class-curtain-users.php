@@ -191,7 +191,7 @@ if (!class_exists('curtain_users')) {
                 }
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You are not validated to read this page. Please check to the administrators.';
+                    return 'You are not validated to read this page. Please check to the administrators or backdoor.';
                 }
             }
 
