@@ -75,7 +75,8 @@ if (!class_exists('line_webhook')) {
                                             $data=array();
                                             $data['curtain_user_id']=$user->curtain_user_id;
                                             $where=array();
-                                            $where['curtain_user_id']=$six_digit_random_number;
+                                            //$where['curtain_user_id']=$six_digit_random_number;
+                                            $where['one_time_password']=$six_digit_random_number;
                                             $result = $serial_number->update_serial_number($data, $where);
     
                                             $client->replyMessage([
@@ -127,9 +128,9 @@ if (!class_exists('line_webhook')) {
                                 } else {
                                     //send message to line_bot if the message is not six digit 
                                     $data=array();
-                                    $data['from']=$line_user_id;
-                                    $data['to']='line_bot';
-                                    $data['message']=$message['text'];
+                                    $data['chat_from']=$line_user_id;
+                                    $data['chat_to']='line_bot';
+                                    $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
                                 }
                                 break;
@@ -213,12 +214,16 @@ if (!class_exists('line_webhook')) {
         public function insert_chat_message($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';
+            $data['create_timestamp'] = time();
+/*
+            $data['update_timestamp'] = time();
             $data = array(
                 'chat_from' => $data['from'],
                 'chat_to' => $data['to'],
                 'chat_message' => $data['message'],
                 'create_timestamp' => time(),
             );
+*/            
             $wpdb->insert($table, $data);
             return $wpdb->insert_id;
         }

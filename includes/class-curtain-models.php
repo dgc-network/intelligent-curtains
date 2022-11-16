@@ -154,6 +154,9 @@ if (!class_exists('curtain_models')) {
         function insert_curtain_model($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_models';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+/*
             $data = array(
                 'curtain_model_name' => $data['curtain_model_name'],
                 'model_description' => $data['model_description'],
@@ -161,6 +164,7 @@ if (!class_exists('curtain_models')) {
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
+*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }

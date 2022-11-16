@@ -177,16 +177,21 @@ if (!class_exists('serial_number')) {
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
             if ( count($model) > 0 ) {
                 $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time();
+                $data['qr_code_serial_no'] = $qr_code_serial_no;
+                $data['create_timestamp'] = time();
+                $data['update_timestamp'] = time();
                 $table = $wpdb->prefix.'serial_number';
+/*
                 $data = array(
                     'qr_code_serial_no' => $qr_code_serial_no,
                     'curtain_model_id' => $data['curtain_model_id'],
                     'specification' => $data['specification'],
                     'curtain_agent_id' => $data['curtain_agent_id'],
-                    'curtain_user_id' => $data['curtain_user_id'],
+                    //'curtain_user_id' => $data['curtain_user_id'],
                     'create_timestamp' => time(),
                     'update_timestamp' => time(),
                 );
+*/                
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }
@@ -206,11 +211,12 @@ if (!class_exists('serial_number')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}serial_number` (
                 serial_number_id int NOT NULL AUTO_INCREMENT,
+                qr_code_serial_no varchar(50) UNIQUE,
                 curtain_model_id int(10),
                 specification varchar(10),
-                curtain_user_id int(10),
                 curtain_agent_id int(10),
-                qr_code_serial_no varchar(50) UNiQUE,
+                curtain_user_id int(10),
+                one_time_password int(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (serial_number_id)

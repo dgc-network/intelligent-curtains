@@ -46,9 +46,9 @@ if (!class_exists('curtain_users')) {
             $message = $_POST['message'];
 
             $data=array();
-            $data['from']= esc_sql($from);
-            $data['to']= esc_sql($to);
-            $data['message']= esc_sql($message);
+            $data['chat_from']= esc_sql($from);
+            $data['chat_to']= esc_sql($to);
+            $data['chat_message']= esc_sql($message);
             $line_webhook = new line_webhook();
             $result = $line_webhook->insert_chat_message($data);
 
@@ -308,6 +308,9 @@ if (!class_exists('curtain_users')) {
                 return $row->curtain_user_id;
             } else {
                 $table = $wpdb->prefix.'curtain_users';
+                $data['create_timestamp'] = time();
+                $data['update_timestamp'] = time();
+/*
                 $data = array(
                     'line_user_id' => $data['line_user_id'],
                     'display_name' => $data['display_name'],
@@ -316,6 +319,7 @@ if (!class_exists('curtain_users')) {
                     'create_timestamp' => time(),
                     'update_timestamp' => time(),
                 );
+*/                
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }

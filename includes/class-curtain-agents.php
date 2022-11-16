@@ -154,6 +154,9 @@ if (!class_exists('curtain_agents')) {
         function insert_curtain_agent($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+/*            
             $data = array(
                 'agent_number' => $data['agent_number'],
                 'agent_name' => $data['agent_name'],
@@ -165,6 +168,7 @@ if (!class_exists('curtain_agents')) {
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
+*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }

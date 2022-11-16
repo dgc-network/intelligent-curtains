@@ -117,7 +117,8 @@ if (!class_exists('curtain_service')) {
                         $output .= ' 完成註冊程序<br>';
                         // registration
                         $data=array();
-                        $data['curtain_user_id']=$six_digit_random_number;
+                        //$data['curtain_user_id']=$six_digit_random_number;
+                        $data['one_time_password']=$six_digit_random_number;
                         $where=array();
                         $where['qr_code_serial_no']=$qr_code_serial_no;
                         $serial_number = new serial_number();
@@ -272,6 +273,9 @@ if (!class_exists('curtain_service')) {
         function insert_service_option($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+/*
             $data = array(
                 'service_option_title' => $data['service_option_title'],
                 'service_option_link' => $data['service_option_link'],
@@ -279,6 +283,7 @@ if (!class_exists('curtain_service')) {
                 'create_timestamp' => time(),
                 'update_timestamp' => time(),
             );
+*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }
