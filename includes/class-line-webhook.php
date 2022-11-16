@@ -10,11 +10,11 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
-            add_action( 'init', array( __CLASS__, 'init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
-        function init_session() {
+        function register_session() {
             if ( ! session_id() ) {
                 session_start();
             }

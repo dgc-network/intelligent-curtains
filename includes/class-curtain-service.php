@@ -12,11 +12,11 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
             add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
-            add_action( 'init', array( __CLASS__, 'init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
-        function init_session() {
+        function register_session() {
             if ( ! session_id() ) {
                 session_start();
             }
@@ -70,7 +70,8 @@ if (!class_exists('curtain_service')) {
                 if ((count($row) > 0)) {
                     
                     $curtain_user_id=$row->curtain_user_id;
-                    $user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
+                    //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$curtain_user_id}", OBJECT );
+                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
                     if (count($user) > 0) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
                         $_SESSION['line_user_id'] = $user->line_user_id;

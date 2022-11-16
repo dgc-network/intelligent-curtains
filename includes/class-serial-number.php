@@ -11,11 +11,11 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             add_shortcode( 'serial-number-list', array( __CLASS__, 'list_serial_number' ) );
-            add_action( 'init', array( __CLASS__, 'init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
-        function init_session() {
+        function register_session() {
             if ( ! session_id() ) {
                 session_start();
             }

@@ -11,8 +11,14 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', array( __CLASS__, 'list_curtain_models' ));
-            add_action( 'init', array( __CLASS__, 'init_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
+        }
+
+        function register_session() {
+            if ( ! session_id() ) {
+                session_start();
+            }
         }
 
         function enqueue_scripts() {		
@@ -20,12 +26,6 @@ if (!class_exists('curtain_models')) {
             //wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array( 'jquery' ), time(), true  );
             //wp_enqueue_script( 'jquery-ui-dialog' );
         }    
-
-        function init_session() {
-            if ( ! session_id() ) {
-                session_start();
-            }
-        }
 
         public function list_curtain_models() {
 
