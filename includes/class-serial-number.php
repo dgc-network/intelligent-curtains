@@ -11,14 +11,7 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             add_shortcode( 'serial-number-list', array( __CLASS__, 'list_serial_number' ) );
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
-        }
-
-        function register_session() {
-            if ( ! session_id() ) {
-                session_start();
-            }
         }
 
         function list_serial_number() {
@@ -102,7 +95,6 @@ if (!class_exists('serial_number')) {
                 $_id = $_POST['_id'];
                 global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
-                //if (count($row) > 0) {
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Curtain model update">';
                     $output .= '<form method="post">';
@@ -142,7 +134,6 @@ if (!class_exists('serial_number')) {
             if( isset($_POST['_serial_no']) ) {
                 
                 $output .= '<div id="dialog" title="QR Code">';
-                //$output .= '<div id="qrcode" class="print-me-'.$_POST['_serial_no'].'">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
@@ -176,7 +167,6 @@ if (!class_exists('serial_number')) {
             global $wpdb;
             $curtain_model_id = $data['curtain_model_id'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
-            //if ( count($model) > 0 ) {
             if (!(is_null($model) || !empty($wpdb->last_error))) {
                 $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time();
                 $data['qr_code_serial_no'] = $qr_code_serial_no;

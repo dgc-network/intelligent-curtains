@@ -2,26 +2,36 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
 if (!class_exists('line_webhook')) {
-
     class line_webhook {
-
         /**
          * Class constructor
          */
         public function __construct() {
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
-        function register_session() {
-            if ( ! session_id() ) {
-                session_start();
-            }
+        function push_text_message($text_message='', $line_user_id='') {
+            $client = new LINEBotTiny();
+            $client->pushMessage([
+                'to' => $line_user_id,
+                'messages' => [
+                    [
+                        'type' => 'text',
+                        'text' => $text_message
+                    ]
+                ]
+            ]);
         }
-
+/*
+        function push_OTP_to($line_user_id='') {
+            $six_digit_random_number = random_int(100000, 999999);
+            $text_message = 'OTP code : '.$six_digit_random_number;
+            self::push_text_message($text_message, $line_user_id);
+        }
+*/
         public function init() {
-
             $serial_number = new serial_number();
             $curtain_users = new curtain_users();
             $client = new LINEBotTiny();
@@ -30,14 +40,14 @@ if (!class_exists('line_webhook')) {
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
+                $display_name = $profile['displayName'];
             
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                //if (!(count($user) > 0)) {
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $data=array();
                     $data['line_user_id']=$profile['userId'];
-                    $data['display_name']=$profile['displayName'];                
+                    $data['display_name']=$profile['displayName'];
                     $return_id = $curtain_users->insert_curtain_user($data);
                 }
 
@@ -116,9 +126,10 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
-                                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                                    //if (count($user) > 0) {
-                                    if (!(is_null($row) || !empty($wpdb->last_error))) {
+                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
+                                    foreach ( $results as $index=>$result ) {
+                                        $text_message = '['.$display_name.']:'.$message['text'];
+                                        self::push_text_message($text_message, $result->line_user_id);
                                     }
                                 }
                                 break;

@@ -17,18 +17,11 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
         function my_enqueue() {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
-        }
-
-        function register_session() {
-            if ( ! session_id() ) {
-                session_start();
-            }
         }
 
         function list_chat_messages() {
@@ -40,7 +33,6 @@ if (!class_exists('curtain_users')) {
         }
 
         function sendChat() {
-            //$from = get_option('_chat_from');
             $from = $_SESSION['username'];
             $to = $_POST['to'];
             $message = $_POST['message'];
@@ -200,7 +192,7 @@ if (!class_exists('curtain_users')) {
                 }
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You are not validated to read this page. Please check to the administrators or backdoor.';
+                    return 'You are not validated to read this page. Please check to the administrators.';
                 }
             }
 
@@ -312,7 +304,6 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
             $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
-            //if (count($row) > 0) {
             if (!(is_null($row) || !empty($wpdb->last_error))) {
                 return $row->curtain_user_id;
             } else {
