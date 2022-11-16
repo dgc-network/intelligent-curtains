@@ -22,12 +22,28 @@ if (!class_exists('line_webhook')) {
 
         public function init() {
 
+            $serial_number = new serial_number();
+            $curtain_users = new curtain_users();
             $client = new LINEBotTiny();
             foreach ((array)$client->parseEvents() as $event) {
                 //self::insert_event_log($event);
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
+                $return_id = 0;
+                global $wpdb;
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
+                if (count($user) > 0) {
+                    // The user has registered recently
+                    $return_id = $user->curtain_user_id;
+                } else {
+                    $data=array();
+                    $data['line_user_id']=$profile['userId'];
+                    $data['display_name']=$profile['displayName'];                
+                    //$data['last_otp']=$six_digit_random_number;        
+                    $return_id = $curtain_users->insert_curtain_user($data);
+                }
+
                 $_SESSION['line_user_id'] = $profile['userId'];
             
                 switch ($event['type']) {
@@ -40,45 +56,50 @@ if (!class_exists('line_webhook')) {
                                     global $wpdb;
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
-                                        // continue the process if the 6 digit number is correct
-                                        $serial_number = new serial_number();
-                                        $curtain_users = new curtain_users();
-                                        $return_id = 0;
+                                        // continue the process if the 6 digit number is correct, register the qr code
+                                        //$return_id = 0;
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
                                             // The user has registered recently
-                                            $return_id = $user->curtain_user_id;
-                                        } else {
-                                            $data=array();
-                                            $data['line_user_id']=$profile['userId'];
-                                            $data['display_name']=$profile['displayName'];                
-                                            $data['last_otp']=$six_digit_random_number;        
-                                            $return_id = $curtain_users->insert_curtain_user($data);
-                                        }
+                                            //$return_id = $user->curtain_user_id;
+                                        //} else {
+                                            //$data=array();
+                                            //$data['line_user_id']=$profile['userId'];
+                                            //$data['display_name']=$profile['displayName'];                
+                                            //$data['last_otp']=$six_digit_random_number;        
+                                            //$where=array();
+                                            //$where['curtain_user_id']=$user->curtain_user_id;
+                                            //$result = $curtain_users->update_curtain_user($data, $where);
+                                        //}
                                         
-                                        $data=array();
-                                        $data['curtain_user_id']=$return_id;
-                                        $where=array();
-                                        $where['curtain_user_id']=$six_digit_random_number;
-                                        $result = $serial_number->update_serial_number($data, $where);
-
-                                        $client->replyMessage([
-                                            'replyToken' => $event['replyToken'],
-                                            'messages' => [
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => 'Hi, '.$profile['displayName'],
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => '請點擊下方連結進入售後服務區:',
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => get_site_url().'/'.get_option('_service_page'),
+                                            $data=array();
+                                            $data['curtain_user_id']=$user->curtain_user_id;
+                                            $where=array();
+                                            $where['curtain_user_id']=$six_digit_random_number;
+                                            $result = $serial_number->update_serial_number($data, $where);
+    
+                                            $client->replyMessage([
+                                                'replyToken' => $event['replyToken'],
+                                                'messages' => [
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => 'Hi, '.$profile['displayName'],
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => 'This QR Code has been registered.',
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => '請點擊下方連結進入售後服務區:',
+                                                    ],
+                                                    [
+                                                        'type' => 'text',
+                                                        'text' => get_site_url().'/'.get_option('_service_page'),
+                                                    ]
                                                 ]
-                                            ]
-                                        ]);
+                                            ]);
+                                        }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
                                         $client->replyMessage([
@@ -91,6 +112,14 @@ if (!class_exists('line_webhook')) {
                                                 [
                                                     'type' => 'text',
                                                     'text' => 'message '.$message['text'].' is wrong or the QR Code has been registered.',
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => '請點擊下方連結進入售後服務區:',
+                                                ],
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => get_site_url().'/'.get_option('_service_page'),
                                                 ]
                                             ]
                                         ]);    
