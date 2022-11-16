@@ -26,7 +26,8 @@ jQuery(document).ready(function($) {
 	$(".startChatSession").click(function(){
         //$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
         //setTimeout('$(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);', 100); // yet another strange ie bug
-        setTimeout('chatHeartbeat();',chatHeartbeatTime);
+        //setTimeout('chatHeartbeat();',chatHeartbeatTime);
+        chatHeartbeat();
     });
 
     $('.chatboxtextarea').on('keypress',function(e) {
@@ -88,7 +89,7 @@ jQuery(document).ready(function($) {
     function chatHeartbeat(){
 
         alert('I am here');
-        
+
         var itemsfound = 0;
         
         if (windowFocus == false) {
