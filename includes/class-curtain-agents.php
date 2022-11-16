@@ -11,7 +11,7 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             add_shortcode('curtain-agent-list', array( __CLASS__, 'list_curtain_agents' ));
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
+            add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 

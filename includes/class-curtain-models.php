@@ -11,7 +11,7 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             add_shortcode('curtain-model-list', array( __CLASS__, 'list_curtain_models' ));
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
+            add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
