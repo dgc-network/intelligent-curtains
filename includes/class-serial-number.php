@@ -66,6 +66,7 @@ if (!class_exists('serial_number')) {
             $output .= '<th>serial_no</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
+            $output .= '<th>agent</th>';
             $output .= '<th>user</th>';
             $output .= '<th>update_time</th>';
             $output .= '</tr></thead>';
@@ -77,7 +78,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form>';
                 $output .= '</td>';
-                //$model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$result->curtain_model_id}", OBJECT );
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 if (is_null($model) || !empty($wpdb->last_error)) {
                     $output .= '<td></td>';
@@ -85,10 +85,10 @@ if (!class_exists('serial_number')) {
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
                 }
                 $output .= '<td>'.$result->specification.'</td>';
-                //$user = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = {$result->curtain_user_id}", OBJECT );
+                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
+                $output .= '<td>'.$agent->agent_name.'</td>';
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
                 $output .= '<td>'.$user->display_name.'</td>';
-                //$output .= '<td>'.$result->curtain_user_id.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
