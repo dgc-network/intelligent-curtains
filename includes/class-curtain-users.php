@@ -310,16 +310,6 @@ if (!class_exists('curtain_users')) {
                 $table = $wpdb->prefix.'curtain_users';
                 $data['create_timestamp'] = time();
                 $data['update_timestamp'] = time();
-/*
-                $data = array(
-                    'line_user_id' => $data['line_user_id'],
-                    'display_name' => $data['display_name'],
-                    'last_otp' => $data['last_otp'],
-                    'user_role' => $data['user_role'],
-                    'create_timestamp' => time(),
-                    'update_timestamp' => time(),
-                );
-*/                
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }

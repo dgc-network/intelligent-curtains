@@ -181,17 +181,6 @@ if (!class_exists('serial_number')) {
                 $data['create_timestamp'] = time();
                 $data['update_timestamp'] = time();
                 $table = $wpdb->prefix.'serial_number';
-/*
-                $data = array(
-                    'qr_code_serial_no' => $qr_code_serial_no,
-                    'curtain_model_id' => $data['curtain_model_id'],
-                    'specification' => $data['specification'],
-                    'curtain_agent_id' => $data['curtain_agent_id'],
-                    //'curtain_user_id' => $data['curtain_user_id'],
-                    'create_timestamp' => time(),
-                    'update_timestamp' => time(),
-                );
-*/                
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
             }

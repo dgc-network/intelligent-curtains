@@ -156,15 +156,6 @@ if (!class_exists('curtain_models')) {
             $table = $wpdb->prefix.'curtain_models';
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
-/*
-            $data = array(
-                'curtain_model_name' => $data['curtain_model_name'],
-                'model_description' => $data['model_description'],
-                'curtain_vendor_name' => $data['curtain_vendor_name'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }

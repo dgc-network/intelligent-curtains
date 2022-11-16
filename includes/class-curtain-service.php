@@ -275,15 +275,6 @@ if (!class_exists('curtain_service')) {
             $table = $wpdb->prefix.'service_options';
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
-/*
-            $data = array(
-                'service_option_title' => $data['service_option_title'],
-                'service_option_link' => $data['service_option_link'],
-                'service_option_category' => $data['service_option_category'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }

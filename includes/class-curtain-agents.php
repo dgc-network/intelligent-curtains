@@ -156,19 +156,6 @@ if (!class_exists('curtain_agents')) {
             $table = $wpdb->prefix.'curtain_agents';
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
-/*            
-            $data = array(
-                'agent_number' => $data['agent_number'],
-                'agent_name' => $data['agent_name'],
-                'agent_address' => $data['agent_address'],
-                'contact1' => $data['contact1'],
-                'phone1' => $data['phone1'],
-                'contact2' => $data['contact2'],
-                'phone2' => $data['phone2'],
-                'create_timestamp' => time(),
-                'update_timestamp' => time(),
-            );
-*/            
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }

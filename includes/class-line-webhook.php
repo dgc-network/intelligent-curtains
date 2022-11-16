@@ -30,22 +30,20 @@ if (!class_exists('line_webhook')) {
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
-                $return_id = 0;
+                if ( ! session_id() ) {
+                    session_start();
+                }
+                $_SESSION['line_user_id'] = $profile['userId'];
+            
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                if (count($user) > 0) {
-                    // The user has registered recently
-                    $return_id = $user->curtain_user_id;
-                } else {
+                if (!(count($user) > 0)) {
                     $data=array();
                     $data['line_user_id']=$profile['userId'];
                     $data['display_name']=$profile['displayName'];                
-                    //$data['last_otp']=$six_digit_random_number;        
                     $return_id = $curtain_users->insert_curtain_user($data);
                 }
 
-                $_SESSION['line_user_id'] = $profile['userId'];
-            
                 switch ($event['type']) {
                     case 'message':
                         $message = $event['message'];
@@ -54,28 +52,15 @@ if (!class_exists('line_webhook')) {
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
-                                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
+                                    //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
+                                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
                                     if (count($row) > 0) {
                                         // continue the process if the 6 digit number is correct, register the qr code
-                                        //$return_id = 0;
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                                         if (count($user) > 0) {
-                                            // The user has registered recently
-                                            //$return_id = $user->curtain_user_id;
-                                        //} else {
-                                            //$data=array();
-                                            //$data['line_user_id']=$profile['userId'];
-                                            //$data['display_name']=$profile['displayName'];                
-                                            //$data['last_otp']=$six_digit_random_number;        
-                                            //$where=array();
-                                            //$where['curtain_user_id']=$user->curtain_user_id;
-                                            //$result = $curtain_users->update_curtain_user($data, $where);
-                                        //}
-                                        
                                             $data=array();
                                             $data['curtain_user_id']=$user->curtain_user_id;
                                             $where=array();
-                                            //$where['curtain_user_id']=$six_digit_random_number;
                                             $where['one_time_password']=$six_digit_random_number;
                                             $result = $serial_number->update_serial_number($data, $where);
     
@@ -112,7 +97,7 @@ if (!class_exists('line_webhook')) {
                                                 ],
                                                 [
                                                     'type' => 'text',
-                                                    'text' => 'message '.$message['text'].' is wrong or the QR Code has been registered.',
+                                                    'text' => 'message '.$message['text'].' is wrong.',
                                                 ],
                                                 [
                                                     'type' => 'text',
@@ -215,26 +200,10 @@ if (!class_exists('line_webhook')) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';
             $data['create_timestamp'] = time();
-/*
-            $data['update_timestamp'] = time();
-            $data = array(
-                'chat_from' => $data['from'],
-                'chat_to' => $data['to'],
-                'chat_message' => $data['message'],
-                'create_timestamp' => time(),
-            );
-*/            
             $wpdb->insert($table, $data);
             return $wpdb->insert_id;
         }
-/*
-        public function update_chat_messages($data=[], $where=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'chat_messages';
-            //$data['update_timestamp'] = time();
-            $wpdb->update($table, $data, $where);
-        }
-*/
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
