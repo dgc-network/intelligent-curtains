@@ -12,7 +12,7 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             add_shortcode('curtain-service', array( __CLASS__, 'init_curtain_service' ));
             add_shortcode('service-option-list', array( __CLASS__, 'list_service_options' ));
-            add_action( 'init', array( __CLASS__, 'register_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
@@ -96,18 +96,19 @@ if (!class_exists('curtain_service')) {
                     if (count($user) > 0) {
                         // login
                         $six_digit_random_number = random_int(100000, 999999);
-                        $output .= '如需其他服服, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
+                        $output .= '如需其他服務, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
                         $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                        $output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
-    
+                        //$output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
+                        //$output .= '<br>密碼確認後, 請接著按下我們提供的連結來繼續後續的作業<br>';
+                        $output .= '<br>在我們的Line官方帳號聊天室中聯絡我們的客服人員<br>';
+/*
                         $data=array();
                         $data['last_otp']=$six_digit_random_number;
                         $where=array();
                         $where['curtain_user_id']=$user->curtain_user_id;
                         $curtain_users = new curtain_users();
                         $result = $curtain_users->update_curtain_users($data, $where);
-                        
+*/                        
                     } else {
 
                         $six_digit_random_number = random_int(100000, 999999);
@@ -117,7 +118,6 @@ if (!class_exists('curtain_service')) {
                         $output .= ' 完成註冊程序<br>';
                         // registration
                         $data=array();
-                        //$data['curtain_user_id']=$six_digit_random_number;
                         $data['one_time_password']=$six_digit_random_number;
                         $where=array();
                         $where['qr_code_serial_no']=$qr_code_serial_no;
@@ -125,7 +125,8 @@ if (!class_exists('curtain_service')) {
                         $result = $serial_number->update_serial_number($data, $where);    
                     }
     
-                } else {    
+                } else {
+
                     global $wpdb;
                     $where='"%admin%"';
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
@@ -139,6 +140,7 @@ if (!class_exists('curtain_service')) {
                 }
     
             } else {
+                
                 global $wpdb;
                 $where='"%view%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );

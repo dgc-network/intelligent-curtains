@@ -10,7 +10,7 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
-            add_action( 'init', array( __CLASS__, 'register_session' ) );
+            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
 
@@ -30,10 +30,6 @@ if (!class_exists('line_webhook')) {
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
-                //if ( ! session_id() ) {
-                //    session_start();
-                //}
-                $_SESSION['username'] = $profile['userId'];
             
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
