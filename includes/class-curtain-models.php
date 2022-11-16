@@ -29,8 +29,8 @@ if (!class_exists('curtain_models')) {
 
         public function list_curtain_models() {
 
-            if( isset($_SESSION['line_user_id']) ) {
-                $line_user_id = $_SESSION['line_user_id'];
+            if( isset($_SESSION['username']) ) {
+                $line_user_id = $_SESSION['username'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {

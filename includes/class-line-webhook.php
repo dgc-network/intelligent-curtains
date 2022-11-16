@@ -33,7 +33,7 @@ if (!class_exists('line_webhook')) {
                 //if ( ! session_id() ) {
                 //    session_start();
                 //}
-                $_SESSION['line_user_id'] = $profile['userId'];
+                $_SESSION['username'] = $profile['userId'];
             
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            

@@ -10,8 +10,8 @@ if (!class_exists('curtain_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-service', __CLASS__ . '::init_curtain_service');
-            add_shortcode('service-option-list', __CLASS__ . '::list_service_options');
+            add_shortcode('curtain-service', array( __CLASS__, 'init_curtain_service' ));
+            add_shortcode('service-option-list', array( __CLASS__, 'list_service_options' ));
             add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
         }
@@ -74,7 +74,7 @@ if (!class_exists('curtain_service')) {
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
                     if (count($user) > 0) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['line_user_id'] = $user->line_user_id;
+                        $_SESSION['username'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -156,8 +156,8 @@ if (!class_exists('curtain_service')) {
 
         function list_service_options() {
 
-            if( isset($_SESSION['line_user_id']) ) {
-                $line_user_id = $_SESSION['line_user_id'];
+            if( isset($_SESSION['username']) ) {
+                $line_user_id = $_SESSION['username'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {

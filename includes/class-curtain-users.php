@@ -41,7 +41,7 @@ if (!class_exists('curtain_users')) {
 
         function sendChat() {
             //$from = get_option('_chat_from');
-            $from = $_SESSION['line_user_id'];
+            $from = $_SESSION['username'];
             $to = $_POST['to'];
             $message = $_POST['message'];
 
@@ -181,9 +181,9 @@ if (!class_exists('curtain_users')) {
 
         public function list_curtain_users() {
             
-            //unset($_SESSION['line_user_id']);
-            if( isset($_SESSION['line_user_id']) ) {
-                $line_user_id = $_SESSION['line_user_id'];
+            //unset($_SESSION['username']);
+            if( isset($_SESSION['username']) ) {
+                $line_user_id = $_SESSION['username'];
                 global $wpdb;
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {
@@ -283,7 +283,7 @@ if (!class_exists('curtain_users')) {
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
-                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['line_user_id']) {
+                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
                             $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
                         if ($result->chat_from==$row->line_user_id) {
