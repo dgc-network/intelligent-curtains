@@ -59,7 +59,8 @@ if (!class_exists('curtain_users')) {
         }
 
         function chatHeartbeat() {
-            
+            $items = array();
+            $items['item']['t']=wp_date( get_option('time_format'), time() );
             $response = array();
             $response['items'] = $items;
             echo json_encode( $response );

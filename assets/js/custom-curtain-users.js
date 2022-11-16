@@ -150,15 +150,13 @@ jQuery(document).ready(function($) {
                         //}
            
                         if (item.s == 1) {
-                            item.f = username;
+                            $(".chatboxcontent").append('<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'+item.t+'</div><div class="chatboxinfo">'+item.m+'</div></div><div style="clear: right;"></div>');
                         }
         
                         if (item.s == 2) {
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxinfo">'+item.m+'</span></div>');
-                        } else {
                             newMessages[chatboxtitle] = true;
                             newMessagesWin[chatboxtitle] = true;
-                            $(".chatboxcontent").append('<div class="chatboxmessage"><span class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</span><span class="chatboxmessagecontent">'+item.m+'</span></div>');
+                            $(".chatboxcontent").append('<div class="chatboxmessage"><div class="chatboxmessagefrom">'+item.f+':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'+item.m+'</span></div><div class="chatboxmessagetime">'+item.t+'</div></div>');
                         }
         
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
