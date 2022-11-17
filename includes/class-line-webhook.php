@@ -106,7 +106,7 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => 'test message',
+                                        "text" => 'Hello world',
                                         "wrap" => true,
                                         "action" => [
                                             "type" => "uri",
@@ -185,7 +185,7 @@ if (!class_exists('line_webhook')) {
                                             $messages[] = 'QR Code 已經完成註冊';
                                             $messages[] = '請點擊連結進入售後服務區:';
                                             $flex_contents = array();
-                                            $flex_contents['line_user_id'] = $result->line_user_id;
+                                            $flex_contents['line_user_id'] = $line_user_id;
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                             $flex_contents['messages'] = $messages;
                                             self::reply_text_messages( $flex_contents );
@@ -221,7 +221,7 @@ if (!class_exists('line_webhook')) {
                                         $messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
                                         $messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
-                                        $flex_contents['line_user_id'] = $result->line_user_id;
+                                        $flex_contents['line_user_id'] = $line_user_id;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                         $flex_contents['messages'] = $messages;
                                         self::reply_text_messages( $flex_contents );
