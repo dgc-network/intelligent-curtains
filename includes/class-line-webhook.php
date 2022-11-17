@@ -12,6 +12,14 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
+        function push_message($message='', $line_user_id='') {
+            $client = new LINEBotTiny();
+            $client->pushMessage([
+                'to' => $line_user_id,
+                'messages' => $message
+            ]);
+        }
+
         function push_text_message($text_message='', $line_user_id='') {
             $client = new LINEBotTiny();
             $client->pushMessage([
@@ -129,7 +137,8 @@ if (!class_exists('line_webhook')) {
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $text_message = '['.$display_name.']:'.$message['text'];
-                                        $text_message = '[{
+                                        self::push_text_message($text_message, $result->line_user_id);
+                                        $rich_message = '[{
                                             "type": "bubble",
                                             "body": {
                                               "type": "box",
@@ -256,7 +265,7 @@ if (!class_exists('line_webhook')) {
                                               "paddingAll": "0px"
                                             }
                                           }]';                                        
-                                        self::push_text_message($text_message, $result->line_user_id);
+                                        self::push_message($rich_message, $result->line_user_id);
                                     }
                                 }
                                 break;
