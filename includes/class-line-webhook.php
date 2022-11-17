@@ -45,11 +45,11 @@ if (!class_exists('line_webhook')) {
                                     ],
                                     [
                                         "type" => "text",
-                                        "text" => $flex_content['chat_to'],
+                                        "text" => $flex_content['forward_name'],
                                         "action" => [
                                             "type" => "uri",
                                             "label" => "action",
-                                            "uri" => $flex_content['chat_to_uri']
+                                            "uri" => $flex_content['forward_to_uri']
                                         ]
                                     ]
                                 ]
@@ -60,7 +60,8 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $flex_content['message']
+                                        "text" => $flex_content['message'],
+                                        "wrap" => true
                                     ]
                                 ]
                             ],
@@ -198,8 +199,8 @@ if (!class_exists('line_webhook')) {
                                     foreach ( $results as $index=>$result ) {
                                         $flex_content = array();
                                         $flex_content['line_user_id'] = $result->line_user_id;
-                                        $flex_content['chat_to'] = $display_name;
-                                        $flex_content['chat_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                        $flex_content['forward_name'] = $display_name;
+                                        $flex_content['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                         $flex_content['message'] = $message['text'];
                                         self::forward_text_message( $flex_content );
 
