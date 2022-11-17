@@ -35,6 +35,8 @@ if (!class_exists('line_webhook')) {
                         "body" => [
                             "type" => "box",
                             "layout" => "vertical",
+                            "contents" => []
+/*                            
                             "contents" => [
                                 [
                                     "type" => "text",
@@ -50,6 +52,7 @@ if (!class_exists('line_webhook')) {
                                     "text" => $text_message
                                 ]
                             ]
+*/                            
                         ]    
                     ]
                 ]
