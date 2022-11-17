@@ -30,29 +30,31 @@ if (!class_exists('line_webhook')) {
             $client->pushMessage([
                 'to' => $line_user_id,
                 'messages' => [
-                    "type" => "flex",
-                    "altText" => "this is a flex message",
-                    "contents" => [
-                        "type" => "bubble",
-                        "body" => [
-                            "type" => "box",
-                            "layout" => "vertical",
-                            "contents" => [
-                                [
-                                    "type" => "text",
-                                    "text" => $chat_to,
-                                    "action" => [
-                                        "type" => "uri",
-                                        "label" => "action",
-                                        "uri" => $chat_to_uri
+                    [
+                        "type" => "flex",
+                        "altText" => "this is a flex message",
+                        "contents" => [
+                            "type" => "bubble",
+                            "body" => [
+                                "type" => "box",
+                                "layout" => "vertical",
+                                "contents" => [
+                                    [
+                                        "type" => "text",
+                                        "text" => $chat_to,
+                                        "action" => [
+                                            "type" => "uri",
+                                            "label" => "action",
+                                            "uri" => $chat_to_uri
+                                        ]
+                                    ],
+                                    [
+                                        "type" => "text",
+                                        "text" => $text_message
                                     ]
-                                ],
-                                [
-                                    "type" => "text",
-                                    "text" => $text_message
                                 ]
                             ]
-                        ]
+                        ]    
                     ]
                 ]
             ]);
