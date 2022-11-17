@@ -25,10 +25,10 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function forward_text_message( $flex_content=array() ) {
+        function forward_text_message( $flex_contents=array() ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
-                'to' => $flex_content['line_user_id'],
+                'to' => $flex_contents['line_user_id'],
                 'messages' => [
                     [
                         "type" => "flex",
@@ -45,11 +45,11 @@ if (!class_exists('line_webhook')) {
                                     ],
                                     [
                                         "type" => "text",
-                                        "text" => $flex_content['forward_name'],
+                                        "text" => $flex_contents['forward_title'],
                                         "action" => [
                                             "type" => "uri",
                                             "label" => "action",
-                                            "uri" => $flex_content['forward_to_uri']
+                                            "uri" => $flex_contents['forward_to_uri']
                                         ]
                                     ]
                                 ]
@@ -60,7 +60,7 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $flex_content['message'],
+                                        "text" => $flex_contents['message'],
                                         "wrap" => true
                                     ]
                                 ]
@@ -76,15 +76,53 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
+        function reply_text_messages( $flex_contents=array() ) {
+            $contents = array();
+            foreach ( $flex_contents['messages'] as $message ) {
+                $content = array();
+                $content['type'] = 'text';
+                $content['text'] = $message;
+                $content['wrap'] = true;
+                $content['action']['type'] = 'uri';
+                $content['action']['label'] = 'action';
+                $content['action']['uri'] = $flex_contents['forward_to_uri'];
+                $contents[] = $content;
+            }
+
+            $client = new LINEBotTiny();
+            $client->pushMessage([
+                'to' => $flex_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => "this is a flex message",
+                        "contents" => [
+                            "type" => "bubble",
+                            "body" => [
+                                "type" => "box",
+                                "layout" => "vertical",
+                                "contents" => $contents
+                                /*
+                                [
+                                    [
+                                        "type" => "text",
+                                        "text" => $flex_contents['message'],
+                                        "wrap" => true,
+                                        "action" => [
+                                            "type" => "uri",
+                                            "label" => "action",
+                                            "uri" => $flex_contents['forward_to_uri']
+                                        ]
+                                    ]
+                                ] */
+                            ]
+                        ]    
+                    ]
+                ]
+            ]);
+        }
+
         function push_text_message( $line_user_id='', $text_message='' ) {
-/*
-            $rich_message = array();
-            $text_type_message = array();
-            $text_type_message['type']='text';
-            $text_type_message['text']=$text_message;
-            $rich_message[]=$text_type_message;
-            self::line_push_message( $result->line_user_id, $rich_message );
-*/
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
@@ -142,6 +180,16 @@ if (!class_exists('line_webhook')) {
                                             $where['one_time_password']=$six_digit_random_number;
                                             $result = $serial_number->update_serial_number($data, $where);
     
+                                            $messages = array();
+                                            $messages[] = 'Hi, '.$profile['displayName'];
+                                            $messages[] = 'QR Code 已經完成註冊';
+                                            $messages[] = '請點擊連結進入售後服務區:';
+                                            $flex_contents = array();
+                                            $flex_contents['line_user_id'] = $result->line_user_id;
+                                            $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                            $flex_contents['messages'] = $messages;
+                                            self::reply_text_messages( $flex_contents );
+/*    
                                             $client->replyMessage([
                                                 'replyToken' => $event['replyToken'],
                                                 'messages' => [
@@ -163,9 +211,21 @@ if (!class_exists('line_webhook')) {
                                                     ]
                                                 ]
                                             ]);
+*/                                            
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
+
+                                        $messages = array();
+                                        $messages[] = 'Hi, '.$profile['displayName'];
+                                        $messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
+                                        $messages[] = '請重新輸入已完成 QR Code 註冊';
+                                        $flex_contents = array();
+                                        $flex_contents['line_user_id'] = $result->line_user_id;
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                        $flex_contents['messages'] = $messages;
+                                        self::reply_text_messages( $flex_contents );
+/*
                                         $client->replyMessage([
                                             'replyToken' => $event['replyToken'],
                                             'messages' => [
@@ -186,7 +246,8 @@ if (!class_exists('line_webhook')) {
                                                     'text' => get_site_url().'/'.get_option('_service_page'),
                                                 ]
                                             ]
-                                        ]);    
+                                        ]);
+*/                                        
                                     }
                                 } else {
                                     //send message to line_bot if the message is not six digit 
@@ -197,12 +258,12 @@ if (!class_exists('line_webhook')) {
                                     $result = self::insert_chat_message($data);
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
-                                        $flex_content = array();
-                                        $flex_content['line_user_id'] = $result->line_user_id;
-                                        $flex_content['forward_name'] = $display_name;
-                                        $flex_content['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
-                                        $flex_content['message'] = $message['text'];
-                                        self::forward_text_message( $flex_content );
+                                        $flex_contents = array();
+                                        $flex_contents['line_user_id'] = $result->line_user_id;
+                                        $flex_contents['forward_title'] = $display_name;
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                        $flex_contents['message'] = $message['text'];
+                                        self::forward_text_message( $flex_contents );
 
                                         //$text_message = '['.$display_name.']:'.$message['text'];
                                         //self::push_text_message( $result->line_user_id, $text_message );
