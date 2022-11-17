@@ -101,12 +101,12 @@ if (!class_exists('line_webhook')) {
                             "body" => [
                                 "type" => "box",
                                 "layout" => "vertical",
-                                "contents" => $contents
-                                /*
-                                [
+                                //"contents" => $contents
+                                
+                                "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $flex_contents['message'],
+                                        "text" => 'test message',
                                         "wrap" => true,
                                         "action" => [
                                             "type" => "uri",
@@ -114,7 +114,7 @@ if (!class_exists('line_webhook')) {
                                             "uri" => $flex_contents['forward_to_uri']
                                         ]
                                     ]
-                                ] */
+                                ]
                             ]
                         ]    
                     ]
@@ -219,7 +219,7 @@ if (!class_exists('line_webhook')) {
                                         $messages = array();
                                         $messages[] = 'Hi, '.$profile['displayName'];
                                         $messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
-                                        $messages[] = '請重新輸入已完成 QR Code 註冊';
+                                        $messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $result->line_user_id;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
