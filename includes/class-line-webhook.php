@@ -182,9 +182,10 @@ if (!class_exists('line_webhook')) {
                                     foreach ( $results as $index=>$result ) {
                                         $chat_to_uri = get_site_url().'/'.get_option('_service_page');
                                         self::push_bubble_message( $line_user_id, $display_name, $chat_to_uri, $message['text'] );
-/*
+
                                         $text_message = '['.$display_name.']:'.$message['text'];
                                         self::push_text_message( $result->line_user_id, $text_message );
+/*                                        
                                         $rich_message = array();
                                         $text_type_message = array();
                                         $text_type_message['type']='text';
