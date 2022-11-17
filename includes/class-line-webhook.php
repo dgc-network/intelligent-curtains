@@ -25,10 +25,10 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function push_bubble_message( $line_user_id='', $chat_to='', $chat_to_uri='', $text_message='' ) {
+        function forward_text_message( $flex_content=array() ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
-                'to' => $line_user_id,
+                'to' => $flex_content['line_user_id'],
                 'messages' => [
                     [
                         "type" => "flex",
@@ -45,11 +45,11 @@ if (!class_exists('line_webhook')) {
                                     ],
                                     [
                                         "type" => "text",
-                                        "text" => $chat_to,
+                                        "text" => $flex_content['chat_to'],
                                         "action" => [
                                             "type" => "uri",
                                             "label" => "action",
-                                            "uri" => $chat_to_uri
+                                            "uri" => $flex_content['chat_to_uri']
                                         ]
                                     ]
                                 ]
@@ -60,15 +60,15 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $text_message
+                                        "text" => $flex_content['message']
                                     ]
                                 ]
-                            ],/*
+                            ],
                             "styles" => [
                                 "hero" => [
                                     "backgroundColor" => "#00b900"
                                 ]
-                            ] */
+                            ]
                         ]    
                     ]
                 ]
@@ -196,44 +196,15 @@ if (!class_exists('line_webhook')) {
                                     $result = self::insert_chat_message($data);
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
-                                        $chat_to_uri = get_site_url().'/'.get_option('_service_page');
-                                        self::push_bubble_message( $line_user_id, $display_name, $chat_to_uri, $message['text'] );
+                                        $flex_content = array();
+                                        $flex_content['line_user_id'] = $result->line_user_id;
+                                        $flex_content['chat_to'] = $display_name;
+                                        $flex_content['chat_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                        $flex_content['message'] = $message['text'];
+                                        self::forward_text_message( $flex_content );
 
                                         //$text_message = '['.$display_name.']:'.$message['text'];
                                         //self::push_text_message( $result->line_user_id, $text_message );
-/*                                        
-                                        $rich_message = array();
-                                        $text_type_message = array();
-                                        $text_type_message['type']='text';
-                                        $text_type_message['text']=$text_message;
-                                        $rich_message[]=$text_type_message;
-
-                                        '[
-                                            {
-                                                "type": "bubble",
-                                                "body": {
-                                                  "type": "box",
-                                                  "layout": "vertical",
-                                                  "contents": [
-                                                    {
-                                                      "type": "text",
-                                                      "text": "hello, world",
-                                                      "action": {
-                                                        "type": "uri",
-                                                        "label": "action",
-                                                        "uri": "http://linecorp.com/"
-                                                      }
-                                                    },
-                                                    {
-                                                      "type": "text",
-                                                      "text": "hello, world"
-                                                    }
-                                                  ]
-                                                }
-                                            }
-                                        ]';
-                                        self::line_push_message( $result->line_user_id, $rich_message );
-*/                                        
                                     }
                                 }
                                 break;
