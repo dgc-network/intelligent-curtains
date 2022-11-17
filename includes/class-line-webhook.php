@@ -63,12 +63,12 @@ if (!class_exists('line_webhook')) {
                                         "text" => $text_message
                                     ]
                                 ]
-                            ],
+                            ],/*
                             "styles" => [
                                 "hero" => [
                                     "backgroundColor" => "#00b900"
                                 ]
-                            ] 
+                            ] */
                         ]    
                     ]
                 ]
