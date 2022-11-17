@@ -12,15 +12,15 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
-        function push_message($message='', $line_user_id='') {
+        function push_message( $line_user_id='', $rich_message='' ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
-                'messages' => $message
+                'messages' => $rich_message
             ]);
         }
 
-        function push_text_message($text_message='', $line_user_id='') {
+        function push_text_message( $line_user_id='', $text_message='' ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
@@ -139,27 +139,10 @@ if (!class_exists('line_webhook')) {
                                         $text_message = '['.$display_name.']:'.$message['text'];
                                         self::push_text_message($text_message, $result->line_user_id);
                                         $rich_message = '[
-                                            {
-                                                "type": "flex",
-                                                "altText": "This is a Flex Message",
-                                                "contents": {
-                                                  "type": "bubble",
-                                                  "body": {
-                                                    "type": "box",
-                                                    "layout": "horizontal",
-                                                    "contents": [
-                                                      {
-                                                        "type": "text",
-                                                        "text": "Hello,"
-                                                      },
-                                                      {
-                                                        "type": "text",
-                                                        "text": "World!"
-                                                      }
-                                                    ]
-                                                  }
-                                                }
-                                            }
+                                            [
+                                                "type" => "text",
+                                                "text" => "message"
+                                            ]
                                         ]';                                        
                                         self::push_message($rich_message, $result->line_user_id);
                                     }
