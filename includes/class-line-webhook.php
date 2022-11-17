@@ -35,10 +35,14 @@ if (!class_exists('line_webhook')) {
                         "altText" => "this is a flex message",
                         "contents" => [
                             "type" => "bubble",
-                            "body" => [
+                            "hero" => [
                                 "type" => "box",
-                                "layout" => "vertical",
+                                "layout" => "horizontal",
                                 "contents" => [
+                                    [
+                                        "type" => "separator",
+                                        "margin" => "15px"
+                                    ],
                                     [
                                         "type" => "text",
                                         "text" => $chat_to,
@@ -47,7 +51,13 @@ if (!class_exists('line_webhook')) {
                                             "label" => "action",
                                             "uri" => $chat_to_uri
                                         ]
-                                    ],
+                                    ]
+                                ]
+                            ],
+                            "body" => [
+                                "type" => "box",
+                                "layout" => "vertical",
+                                "contents" => [
                                     [
                                         "type" => "text",
                                         "text" => $text_message
