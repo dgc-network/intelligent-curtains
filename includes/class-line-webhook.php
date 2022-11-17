@@ -138,7 +138,13 @@ if (!class_exists('line_webhook')) {
                                     foreach ( $results as $index=>$result ) {
                                         $text_message = '['.$display_name.']:'.$message['text'];
                                         self::push_text_message( $result->line_user_id, $text_message );
-                                        $rich_message = '[
+                                        $rich_message = array();
+                                        $text_type_message = array();
+                                        $text_type_message['type']='text';
+                                        $text_type_message['text']=$text_message;
+                                        $rich_message[]=$text_type_message;
+                                        
+                                        '[
                                             [
                                                 "type" => "text",
                                                 "text" => "message"
