@@ -137,14 +137,14 @@ if (!class_exists('line_webhook')) {
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $text_message = '['.$display_name.']:'.$message['text'];
-                                        self::push_text_message($text_message, $result->line_user_id);
+                                        self::push_text_message( $result->line_user_id, $text_message );
                                         $rich_message = '[
                                             [
                                                 "type" => "text",
                                                 "text" => "message"
                                             ]
                                         ]';                                        
-                                        self::push_message($rich_message, $result->line_user_id);
+                                        self::push_message( $result->line_user_id, $rich_message );
                                     }
                                 }
                                 break;
