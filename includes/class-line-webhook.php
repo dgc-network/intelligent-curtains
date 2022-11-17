@@ -30,7 +30,7 @@ if (!class_exists('line_webhook')) {
             $client->pushMessage([
                 'to' => $line_user_id,
                 'messages' => [
-                    [
+                    //[
                         "type" => "bubble",
                         "body" => [
                             "type" => "box",
@@ -54,7 +54,7 @@ if (!class_exists('line_webhook')) {
                             ]
 */                            
                         ]    
-                    ]
+                    //]
                 ]
             ]);
         }
