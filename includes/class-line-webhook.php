@@ -12,7 +12,12 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
-        function push_message( $line_user_id='', $rich_message='' ) {
+        function line_rich_menu( $rich_menu_content='' ) {
+            $client = new LINEBotTiny();
+            $client->richMenu($rich_menu_content);
+        }
+
+        function line_push_message( $line_user_id='', $rich_message='' ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
@@ -20,7 +25,44 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
+        function push_bubble_message( $line_user_id='', $chat_to='', $chat_to_uri='', $text_message='' ) {
+            $client = new LINEBotTiny();
+            $client->pushMessage([
+                'to' => $line_user_id,
+                'messages' => [
+                    "type" => "bubble",
+                    "body" => [
+                        "type" => "box",
+                        "layout" => "vertical",
+                        "contents" => [
+                            [
+                                "type" => "text",
+                                "text" => $chat_to,
+                                "action" => [
+                                    "type" => "uri",
+                                    "label" => "action",
+                                    "uri" => $chat_to_uri
+                                ]
+                            ],
+                            [
+                                "type" => "text",
+                                "text" => $text_message
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+        }
+
         function push_text_message( $line_user_id='', $text_message='' ) {
+/*
+            $rich_message = array();
+            $text_type_message = array();
+            $text_type_message['type']='text';
+            $text_type_message['text']=$text_message;
+            $rich_message[]=$text_type_message;
+            self::line_push_message( $result->line_user_id, $rich_message );
+*/
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $line_user_id,
@@ -67,13 +109,10 @@ if (!class_exists('line_webhook')) {
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     global $wpdb;
-                                    //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_user_id = {$six_digit_random_number}", OBJECT );
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
-                                    //if (count($row) > 0) {
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
-                                        //if (count($user) > 0) {
                                         if (!(is_null($user) || !empty($wpdb->last_error))) {
                                             $data=array();
                                             $data['curtain_user_id']=$user->curtain_user_id;
@@ -136,6 +175,9 @@ if (!class_exists('line_webhook')) {
                                     $result = self::insert_chat_message($data);
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
+                                        $chat_to_uri = get_site_url().'/'.get_option('_service_page');
+                                        self::push_bubble_message( $line_user_id, $display_name, $chat_to_uri, $message['text'] );
+/*
                                         $text_message = '['.$display_name.']:'.$message['text'];
                                         self::push_text_message( $result->line_user_id, $text_message );
                                         $rich_message = array();
@@ -143,14 +185,33 @@ if (!class_exists('line_webhook')) {
                                         $text_type_message['type']='text';
                                         $text_type_message['text']=$text_message;
                                         $rich_message[]=$text_type_message;
-                                        
+
                                         '[
-                                            [
-                                                "type" => "text",
-                                                "text" => "message"
-                                            ]
-                                        ]';                                        
-                                        self::push_message( $result->line_user_id, $rich_message );
+                                            {
+                                                "type": "bubble",
+                                                "body": {
+                                                  "type": "box",
+                                                  "layout": "vertical",
+                                                  "contents": [
+                                                    {
+                                                      "type": "text",
+                                                      "text": "hello, world",
+                                                      "action": {
+                                                        "type": "uri",
+                                                        "label": "action",
+                                                        "uri": "http://linecorp.com/"
+                                                      }
+                                                    },
+                                                    {
+                                                      "type": "text",
+                                                      "text": "hello, world"
+                                                    }
+                                                  ]
+                                                }
+                                            }
+                                        ]';
+                                        self::line_push_message( $result->line_user_id, $rich_message );
+*/                                        
                                     }
                                 }
                                 break;
