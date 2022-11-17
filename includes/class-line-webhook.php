@@ -101,8 +101,8 @@ if (!class_exists('line_webhook')) {
                             "body" => [
                                 "type" => "box",
                                 "layout" => "vertical",
-                                //"contents" => $contents
-                                
+                                "contents" => $contents
+                                /*
                                 "contents" => [
                                     [
                                         "type" => "text",
@@ -114,7 +114,7 @@ if (!class_exists('line_webhook')) {
                                             "uri" => $flex_contents['forward_to_uri']
                                         ]
                                     ]
-                                ]
+                                ] */
                             ]
                         ]    
                     ]
