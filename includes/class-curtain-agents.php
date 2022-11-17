@@ -1,24 +1,16 @@
 <?php
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+    exit;
 }
+
 if (!class_exists('curtain_agents')) {
-
     class curtain_agents {
-
         /**
          * Class constructor
          */
         public function __construct() {
             add_shortcode('curtain-agent-list', array( __CLASS__, 'list_curtain_agents' ));
-            //add_action( 'init', array( __CLASS__, 'register_session' ) );
             self::create_tables();
-        }
-
-        function register_session() {
-            if ( ! session_id() ) {
-                session_start();
-            }
         }
 
         public function list_curtain_agents() {

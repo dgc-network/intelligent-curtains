@@ -1,11 +1,10 @@
 <?php
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+    exit;
 }
+
 if (!class_exists('curtain_service')) {
-
     class curtain_service {
-
         /**
          * Class constructor
          */
@@ -16,26 +15,6 @@ if (!class_exists('curtain_service')) {
         }
 
         function init_curtain_service() {
-/*
-            if( isset($_POST['_submit_action']) ) {
-                if( $_POST['_submit_action']=='Resend' ) {
-
-                    $line_user_id = $_POST['_line_user_id'];
-                    self::push_OTP_to($line_user_id);
-
-                    global $wpdb;
-                    $table = $wpdb->prefix.'curtain_users';
-                    $data = array(
-                        'last_otp' => $six_digit_random_number,
-                    );
-                    $where = array(
-                        'curtain_user_id' => $curtain_user_id,
-                    );
-                    $wpdb->update( $table, $data, $where );                
-                }
-                unset($_POST['submit_action']);
-            }
-*/
             global $wpdb;
             $output = '<div style="text-align:center;">';
             if( isset($_GET['serial_no']) ) {

@@ -1,11 +1,10 @@
 <?php
 if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly.
+    exit;
 }
+
 if (!class_exists('curtain_users')) {
-
     class curtain_users {
-
         /**
          * Class constructor
          */
@@ -16,11 +15,11 @@ if (!class_exists('curtain_users')) {
             add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'my_enqueue' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
             self::create_tables();
         }
 
-        function my_enqueue() {
+        function enqueue_scripts() {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
         }
 

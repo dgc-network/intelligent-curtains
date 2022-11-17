@@ -32,6 +32,7 @@ require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-agents.php';
+require_once MY_PLUGIN_DIR . 'includes/class-curtain-orders.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
