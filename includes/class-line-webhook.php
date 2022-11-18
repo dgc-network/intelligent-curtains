@@ -39,20 +39,22 @@ if (!class_exists('line_webhook')) {
                                 "type" => "box",
                                 "layout" => "horizontal",
                                 "contents" => [
-                                    [
+/*                                    [
                                         "type" => "separator",
                                         "margin" => "15px"
-                                    ],
+                                    ], */
                                     [
                                         "type" => "text",
                                         "text" => $flex_contents['forward_title'],
+                                        "margin" => "20px",
                                         "action" => [
                                             "type" => "uri",
                                             "label" => "action",
                                             "uri" => $flex_contents['forward_to_uri']
                                         ]
                                     ]
-                                ]
+                                ],
+                                "backgroundColor" => "#00b900"
                             ],
                             "body" => [
                                 "type" => "box",
@@ -64,11 +66,11 @@ if (!class_exists('line_webhook')) {
                                         "wrap" => true
                                     ]
                                 ]
-                            ],
+/*                            ],
                             "styles" => [
                                 "hero" => [
                                     "backgroundColor" => "#00b900"
-                                ]
+                                ] */
                             ]
                         ]    
                     ]
@@ -77,16 +79,16 @@ if (!class_exists('line_webhook')) {
         }
 
         function reply_text_messages( $flex_contents=array() ) {
-            $contents = array();
+            $body_contents = array();
             foreach ( $flex_contents['messages'] as $message ) {
-                $content = array();
-                $content['type'] = 'text';
-                $content['text'] = $message;
-                $content['wrap'] = true;
-                $content['action']['type'] = 'uri';
-                $content['action']['label'] = 'action';
-                $content['action']['uri'] = $flex_contents['forward_to_uri'];
-                $contents[] = $content;
+                $body_content = array();
+                $body_content['type'] = 'text';
+                $body_content['text'] = $message;
+                $body_content['wrap'] = true;
+                $body_content['action']['type'] = 'uri';
+                $body_content['action']['label'] = 'action';
+                $body_content['action']['uri'] = $flex_contents['forward_to_uri'];
+                $body_contents[] = $body_content;
             }
 
             $client = new LINEBotTiny();
@@ -98,10 +100,15 @@ if (!class_exists('line_webhook')) {
                         "altText" => "this is a flex message",
                         "contents" => [
                             "type" => "bubble",
+                            "hero" => [
+                                "type" => "box",
+                                "layout" => "horizontal",
+                                "contents" => $hero_contents
+                            ],
                             "body" => [
                                 "type" => "box",
                                 "layout" => "vertical",
-                                "contents" => $contents
+                                "contents" => $body_contents
                             ]
                         ]    
                     ]
@@ -209,7 +216,7 @@ if (!class_exists('line_webhook')) {
                                         $messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $line_user_id;
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
                                         $flex_contents['messages'] = $messages;
                                         self::reply_text_messages( $flex_contents );
 /*
