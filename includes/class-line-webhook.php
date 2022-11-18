@@ -59,7 +59,8 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $flex_contents['message'],
+                                        //"text" => $flex_contents['message'],
+                                        "text" => $flex_contents['body_messages'][0],
                                         "wrap" => true
                                     ]
                                 ]
