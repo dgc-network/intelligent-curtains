@@ -85,7 +85,7 @@ if (!class_exists('line_webhook')) {
                 $hero_content['action']['uri'] = $flex_contents['forward_to_uri'];
                 $hero_contents[] = $hero_content;
             }
-            $body_contents = array();
+            $body_contents = array();/*
             foreach ( $flex_contents['body_messages'] as $body_message ) {
                 $body_content = array();
                 $body_content['type'] = 'text';
@@ -95,7 +95,7 @@ if (!class_exists('line_webhook')) {
                 $body_content['action']['label'] = 'action';
                 $body_content['action']['uri'] = $flex_contents['forward_to_uri'];
                 $body_contents[] = $body_content;
-            }
+            }*/
 
             $client = new LINEBotTiny();
             $client->pushMessage([
@@ -213,7 +213,7 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = $message['text'];
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $result->line_user_id;
-                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
                                         $flex_contents['forward_title'] = $display_name;
