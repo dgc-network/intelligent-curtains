@@ -39,10 +39,6 @@ if (!class_exists('line_webhook')) {
                                 "type" => "box",
                                 "layout" => "horizontal",
                                 "contents" => [
-/*                                    [
-                                        "type" => "separator",
-                                        "margin" => "15px"
-                                    ], */
                                     [
                                         "type" => "text",
                                         "text" => $flex_contents['forward_title'],
@@ -85,7 +81,7 @@ if (!class_exists('line_webhook')) {
                 $hero_content['action']['uri'] = $flex_contents['forward_to_uri'];
                 $hero_contents[] = $hero_content;
             }
-            $body_contents = array();/*
+            $body_contents = array();
             foreach ( $flex_contents['body_messages'] as $body_message ) {
                 $body_content = array();
                 $body_content['type'] = 'text';
@@ -95,7 +91,7 @@ if (!class_exists('line_webhook')) {
                 $body_content['action']['label'] = 'action';
                 $body_content['action']['uri'] = $flex_contents['forward_to_uri'];
                 $body_contents[] = $body_content;
-            }*/
+            }
 
             $client = new LINEBotTiny();
             $client->pushMessage([
@@ -218,8 +214,8 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['body_messages'] = $body_messages;
                                         $flex_contents['forward_title'] = $display_name;
                                         $flex_contents['message'] = $message['text'];
-                                        //self::forward_text_message( $flex_contents );
-                                        self::reply_text_message( $flex_contents );
+                                        self::forward_text_message( $flex_contents );
+                                        //self::reply_text_message( $flex_contents );
                                     }
                                 }
                                 break;
