@@ -114,8 +114,8 @@ if (!class_exists('line_webhook')) {
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
-                                "contents" => $hero_contents,
-                                "backgroundColor" => "#00b900"
+                                "backgroundColor" => "#00b900",
+                                "contents" => $hero_contents
                             ],
                             "body" => [
                                 "type" => "box",
@@ -209,6 +209,7 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
+                                    
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
@@ -217,13 +218,13 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = $message['text'];
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $result->line_user_id;
-                                        //$flex_contents['forward_title'] = $display_name;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
-                                        //$flex_contents['message'] = $message['text'];
-                                        //self::forward_text_message( $flex_contents );
-                                        self::reply_text_message( $flex_contents );
+                                        $flex_contents['forward_title'] = $display_name;
+                                        $flex_contents['message'] = $message['text'];
+                                        self::forward_text_message( $flex_contents );
+                                        //self::reply_text_message( $flex_contents );
                                     }
                                 }
                                 break;
