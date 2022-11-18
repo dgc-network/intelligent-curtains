@@ -114,7 +114,8 @@ if (!class_exists('line_webhook')) {
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
-                                "contents" => $hero_contents
+                                "contents" => $hero_contents,
+                                "backgroundColor" => "#00b900"
                             ],
                             "body" => [
                                 "type" => "box",
@@ -218,6 +219,8 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['line_user_id'] = $result->line_user_id;
                                         //$flex_contents['forward_title'] = $display_name;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
+                                        $flex_contents['hero_messages'] = $hero_messages;
+                                        $flex_contents['body_messages'] = $body_messages;
                                         //$flex_contents['message'] = $message['text'];
                                         //self::forward_text_message( $flex_contents );
                                         self::reply_text_message( $flex_contents );
