@@ -66,7 +66,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>id</th>';
-            $output .= '<th>order_no</th>';
+            //$output .= '<th>order_no</th>';
             $output .= '<th>date</th>';
             $output .= '<th>agent</th>';
             $output .= '<th>model</th>';
@@ -78,10 +78,12 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_order_id.'</td>';
                 $output .= '<td style="display: flex;"><form method="post">';
-                $output .= '<input type="submit" value="'.$result->order_number.'" name="_order_number">';
+                //$output .= '<input type="submit" value="'.$result->order_number.'" name="_order_number">';
+                $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
+                $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).'">';
                 $output .= '</form>';
                 $output .= '</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
+                //$output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
                 $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
                 $output .= '<td>'.$agent->agent_name.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
