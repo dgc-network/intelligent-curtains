@@ -101,7 +101,6 @@ if (!class_exists('curtain_orders')) {
                 $_id = $_POST['_id'];
                 $curtain_agents = new curtain_agents();
                 $curtain_models = new curtain_models();
-                //global $wpdb;
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_orders WHERE curtain_order_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output .= '<div id="dialog" title="Create new order">';
@@ -140,36 +139,6 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</div>';
                 }
             }
-/*
-            if( isset($_POST['_serial_no']) ) {
-                
-                $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $print_me = do_shortcode('[print-me target=".print-me-'.$_POST['_serial_no'].'"/]');
-                $output .= $print_me;
-                $output .= '</div>';
-                
-                $output .= '<div class="print-me-'.$_POST['_serial_no'].'">';
-                $output .= '<div id="qrcode1">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p>QR Code: '.$_POST['_serial_no'].'</p>';
-                $output .= '<div id="qrcode2">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p>QR Code: '.$_POST['_serial_no'].'</p>';
-                $output .= '</div>';
-                
-            }
-*/
             return $output;
         }
 
