@@ -80,11 +80,21 @@ if (!class_exists('line_webhook')) {
 
         function reply_text_messages( $flex_contents=array() ) {
             $hero_contents = array();
+            foreach ( $flex_contents['hero_messages'] as $hero_message ) {
+                $hero_content = array();
+                $hero_content['type'] = 'text';
+                $hero_content['text'] = $hero_message;
+                $hero_content['margin'] = '20px';
+                $hero_content['action']['type'] = 'uri';
+                $hero_content['action']['label'] = 'action';
+                $hero_content['action']['uri'] = $flex_contents['forward_to_uri'];
+                $hero_contents[] = $hero_content;
+            }
             $body_contents = array();
-            foreach ( $flex_contents['messages'] as $message ) {
+            foreach ( $flex_contents['body_messages'] as $body_message ) {
                 $body_content = array();
                 $body_content['type'] = 'text';
-                $body_content['text'] = $message;
+                $body_content['text'] = $body_message;
                 $body_content['wrap'] = true;
                 $body_content['action']['type'] = 'uri';
                 $body_content['action']['label'] = 'action';
@@ -169,26 +179,26 @@ if (!class_exists('line_webhook')) {
                                             $where['one_time_password']=$six_digit_random_number;
                                             $result = $serial_number->update_serial_number($data, $where);
     
-                                            $messages = array();
-                                            $messages[] = 'Hi, '.$profile['displayName'];
-                                            $messages[] = 'QR Code 已經完成註冊';
-                                            $messages[] = '請點擊連結進入售後服務區:';
+                                            $body_messages = array();
+                                            $body_messages[] = 'Hi, '.$profile['displayName'];
+                                            $body_messages[] = 'QR Code 已經完成註冊';
+                                            $body_messages[] = '請點擊連結進入售後服務區:';
                                             $flex_contents = array();
                                             $flex_contents['line_user_id'] = $line_user_id;
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
-                                            $flex_contents['messages'] = $messages;
+                                            $flex_contents['body_messages'] = $body_messages;
                                             self::reply_text_messages( $flex_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
-                                        $messages = array();
-                                        $messages[] = 'Hi, '.$profile['displayName'];
-                                        $messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
-                                        $messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
+                                        $body_messages = array();
+                                        $body_messages[] = 'Hi, '.$profile['displayName'];
+                                        $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
+                                        $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $line_user_id;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
-                                        $flex_contents['messages'] = $messages;
+                                        $flex_contents['body_messages'] = $body_messages;
                                         self::reply_text_messages( $flex_contents );
                                     }
                                 } else {
@@ -200,12 +210,17 @@ if (!class_exists('line_webhook')) {
                                     $result = self::insert_chat_message($data);
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     foreach ( $results as $index=>$result ) {
+                                        $hero_messages = array();
+                                        $hero_messages[] = $profile['displayName'];
+                                        $body_messages = array();
+                                        $body_messages[] = $message['text'];
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $result->line_user_id;
-                                        $flex_contents['forward_title'] = $display_name;
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
-                                        $flex_contents['message'] = $message['text'];
-                                        self::forward_text_message( $flex_contents );
+                                        //$flex_contents['forward_title'] = $display_name;
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
+                                        //$flex_contents['message'] = $message['text'];
+                                        //self::forward_text_message( $flex_contents );
+                                        self::reply_text_message( $flex_contents );
                                     }
                                 }
                                 break;

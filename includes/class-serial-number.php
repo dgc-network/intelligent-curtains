@@ -123,7 +123,7 @@ if (!class_exists('serial_number')) {
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
                 $output .= '</div>';
-                $output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'<br></h1></p>';
+                $output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 $output .= '<div id="qrcode2">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];

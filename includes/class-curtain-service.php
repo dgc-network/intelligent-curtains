@@ -100,9 +100,8 @@ if (!class_exists('curtain_service')) {
         function list_service_options() {
 
             if( isset($_SESSION['username']) ) {
-                $line_user_id = $_SESSION['username'];
                 global $wpdb;
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $line_user_id, 'admin' ), OBJECT );            
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $_SESSION['username'], 'admin' ), OBJECT );            
                 if (count($user) == 0 && $_GET['_check_permission'] != 'false') {
                     return 'You are not validated to read this page. Please check to the administrators.';
                 }

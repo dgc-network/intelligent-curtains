@@ -37,6 +37,7 @@ require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');
+add_option('_users_page', 'users');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 add_option('_chat_from', 'line-bot');
 
