@@ -79,6 +79,7 @@ if (!class_exists('line_webhook')) {
         }
 
         function reply_text_messages( $flex_contents=array() ) {
+            $hero_contents = array();
             $body_contents = array();
             foreach ( $flex_contents['messages'] as $message ) {
                 $body_content = array();
@@ -128,13 +129,7 @@ if (!class_exists('line_webhook')) {
                 ]
             ]);
         }
-/*
-        function push_OTP_to($line_user_id='') {
-            $six_digit_random_number = random_int(100000, 999999);
-            $text_message = 'OTP code : '.$six_digit_random_number;
-            self::push_text_message($text_message, $line_user_id);
-        }
-*/
+
         public function init() {
             $serial_number = new serial_number();
             $curtain_users = new curtain_users();
@@ -183,33 +178,9 @@ if (!class_exists('line_webhook')) {
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                             $flex_contents['messages'] = $messages;
                                             self::reply_text_messages( $flex_contents );
-/*    
-                                            $client->replyMessage([
-                                                'replyToken' => $event['replyToken'],
-                                                'messages' => [
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => 'Hi, '.$profile['displayName'],
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => 'This QR Code has been registered.',
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => '請點擊下方連結進入售後服務區:',
-                                                    ],
-                                                    [
-                                                        'type' => 'text',
-                                                        'text' => get_site_url().'/'.get_option('_service_page'),
-                                                    ]
-                                                ]
-                                            ]);
-*/                                            
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
-
                                         $messages = array();
                                         $messages[] = 'Hi, '.$profile['displayName'];
                                         $messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
@@ -219,29 +190,6 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
                                         $flex_contents['messages'] = $messages;
                                         self::reply_text_messages( $flex_contents );
-/*
-                                        $client->replyMessage([
-                                            'replyToken' => $event['replyToken'],
-                                            'messages' => [
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => 'Hi, '.$profile['displayName'],
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => 'message '.$message['text'].' is wrong.',
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => '請點擊下方連結進入售後服務區:',
-                                                ],
-                                                [
-                                                    'type' => 'text',
-                                                    'text' => get_site_url().'/'.get_option('_service_page'),
-                                                ]
-                                            ]
-                                        ]);
-*/                                        
                                     }
                                 } else {
                                     //send message to line_bot if the message is not six digit 
@@ -258,9 +206,6 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                         $flex_contents['message'] = $message['text'];
                                         self::forward_text_message( $flex_contents );
-
-                                        //$text_message = '['.$display_name.']:'.$message['text'];
-                                        //self::push_text_message( $result->line_user_id, $text_message );
                                     }
                                 }
                                 break;
