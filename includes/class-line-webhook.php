@@ -41,7 +41,8 @@ if (!class_exists('line_webhook')) {
                                 "contents" => [
                                     [
                                         "type" => "text",
-                                        "text" => $flex_contents['forward_title'],
+                                        //"text" => $flex_contents['forward_title'],
+                                        "text" => $flex_contents['hero_messages'][0],
                                         "margin" => "20px",
                                         "action" => [
                                             "type" => "uri",
