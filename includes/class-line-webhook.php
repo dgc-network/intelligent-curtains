@@ -79,7 +79,7 @@ if (!class_exists('line_webhook')) {
         }
 
         function reply_text_messages( $flex_contents=array() ) {
-            $hero_contents = array();
+            $hero_contents = array();/*
             foreach ( $flex_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
                 $hero_content['type'] = 'text';
@@ -89,7 +89,7 @@ if (!class_exists('line_webhook')) {
                 $hero_content['action']['label'] = 'action';
                 $hero_content['action']['uri'] = $flex_contents['forward_to_uri'];
                 $hero_contents[] = $hero_content;
-            }
+            } */
             $body_contents = array();
             foreach ( $flex_contents['body_messages'] as $body_message ) {
                 $body_content = array();
