@@ -114,7 +114,7 @@ if (!class_exists('line_webhook')) {
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
-                                "backgroundColor" => "#00b900",
+                                //"backgroundColor" => "#00b900",
                                 "contents" => $hero_contents
                             ],
                             "body" => [
