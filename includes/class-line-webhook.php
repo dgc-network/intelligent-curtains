@@ -223,8 +223,8 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['body_messages'] = $body_messages;
                                         $flex_contents['forward_title'] = $display_name;
                                         $flex_contents['message'] = $message['text'];
-                                        self::forward_text_message( $flex_contents );
-                                        //self::reply_text_message( $flex_contents );
+                                        //self::forward_text_message( $flex_contents );
+                                        self::reply_text_message( $flex_contents );
                                     }
                                 }
                                 break;
