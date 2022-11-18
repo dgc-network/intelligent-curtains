@@ -61,7 +61,12 @@ if (!class_exists('line_webhook')) {
                                         "type" => "text",
                                         //"text" => $flex_contents['message'],
                                         "text" => $flex_contents['body_messages'][0],
-                                        "wrap" => true
+                                        "wrap" => true,
+                                        "action" => [
+                                            "type" => "uri",
+                                            "label" => "action",
+                                            "uri" => $flex_contents['forward_to_uri']
+                                        ]
                                     ]
                                 ]
                             ]
@@ -214,10 +219,10 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
-                                        $flex_contents['forward_title'] = $display_name;
-                                        $flex_contents['message'] = $message['text'];
-                                        self::forward_text_message( $flex_contents );
-                                        //self::reply_text_message( $flex_contents );
+                                        //$flex_contents['forward_title'] = $display_name;
+                                        //$flex_contents['message'] = $message['text'];
+                                        //self::forward_text_message( $flex_contents );
+                                        self::reply_text_messages( $flex_contents );
                                     }
                                 }
                                 break;
