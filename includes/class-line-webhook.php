@@ -25,58 +25,7 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function forward_text_message( $flex_contents=array() ) {
-            $client = new LINEBotTiny();
-            $client->pushMessage([
-                'to' => $flex_contents['line_user_id'],
-                'messages' => [
-                    [
-                        "type" => "flex",
-                        "altText" => "this is a flex message",
-                        "contents" => [
-                            "type" => "bubble",
-                            "hero" => [
-                                "type" => "box",
-                                "layout" => "horizontal",
-                                "contents" => [
-                                    [
-                                        "type" => "text",
-                                        //"text" => $flex_contents['forward_title'],
-                                        "text" => $flex_contents['hero_messages'][0],
-                                        "margin" => "20px",
-                                        "action" => [
-                                            "type" => "uri",
-                                            "label" => "action",
-                                            "uri" => $flex_contents['forward_to_uri']
-                                        ]
-                                    ]
-                                ],
-                                "backgroundColor" => "#00b900"
-                            ],
-                            "body" => [
-                                "type" => "box",
-                                "layout" => "vertical",
-                                "contents" => [
-                                    [
-                                        "type" => "text",
-                                        //"text" => $flex_contents['message'],
-                                        "text" => $flex_contents['body_messages'][0],
-                                        "wrap" => true,
-                                        "action" => [
-                                            "type" => "uri",
-                                            "label" => "action",
-                                            "uri" => $flex_contents['forward_to_uri']
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]    
-                    ]
-                ]
-            ]);
-        }
-
-        function reply_text_messages( $flex_contents=array() ) {
+        function forward_text_messages( $flex_contents=array() ) {
             $hero_contents = array();
             foreach ( $flex_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -121,19 +70,6 @@ if (!class_exists('line_webhook')) {
                                 "contents" => $body_contents
                             ]
                         ]    
-                    ]
-                ]
-            ]);
-        }
-
-        function push_text_message( $line_user_id='', $text_message='' ) {
-            $client = new LINEBotTiny();
-            $client->pushMessage([
-                'to' => $line_user_id,
-                'messages' => [
-                    [
-                        'type' => 'text',
-                        'text' => $text_message
                     ]
                 ]
             ]);
@@ -186,7 +122,7 @@ if (!class_exists('line_webhook')) {
                                             $flex_contents['line_user_id'] = $line_user_id;
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                             $flex_contents['body_messages'] = $body_messages;
-                                            self::reply_text_messages( $flex_contents );
+                                            self::forward_text_messages( $flex_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
@@ -198,7 +134,7 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['line_user_id'] = $line_user_id;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
-                                        self::reply_text_messages( $flex_contents );
+                                        self::forward_text_messages( $flex_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not six digit 
@@ -219,10 +155,7 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
-                                        //$flex_contents['forward_title'] = $display_name;
-                                        //$flex_contents['message'] = $message['text'];
-                                        //self::forward_text_message( $flex_contents );
-                                        self::reply_text_messages( $flex_contents );
+                                        self::forward_text_messages( $flex_contents );
                                     }
                                 }
                                 break;
