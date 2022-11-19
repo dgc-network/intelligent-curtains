@@ -72,6 +72,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>QTY</th>';
+            $output .= '<th>remark</th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
@@ -90,6 +91,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->order_qty.'</td>';
+                $output .= '<td>'.'</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
@@ -106,13 +108,13 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<div id="dialog" title="Create new order">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
-                    $output .= '<label for="_curtain_agent_id">Agent Name</label>';
-                    $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options().'</select>';
-                    $output .= '<label for="_curtain_model_id">Model Name</label>';                    
-                    $output .= '<select name="_curtain_model_id">'.$curtain_models->select_options().'</select>';
-                    $output .= '<label for="_specification">Specification</label>';
+                    $output .= '<label for="curtain_agent_id">Agent</label>';
+                    $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
+                    $output .= '<label for="curtain_model_id">Model</label>';                    
+                    $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
+                    $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" id="specification" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_order_qty">QTY</label>';
+                    $output .= '<label for="order_qty">QTY</label>';
                     $output .= '<input type="text" name="_order_qty" id="order_qty" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
@@ -124,13 +126,13 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                    $output .= '<label for="_curtain_agent_id">Agent Name</label>';
-                    $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-                    $output .= '<label for="_curtain_model_id">Model Name</label>';                    
-                    $output .= '<select name="_curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
-                    $output .= '<label for="_specification">Specification</label>';
+                    $output .= '<label for="curtain_agent_id">Agent</label>';
+                    $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+                    $output .= '<label for="curtain_model_id">Model</label>';                    
+                    $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
+                    $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" value="'.$row->specification.'" id="specification" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_order_qty">QTY</label>';
+                    $output .= '<label for="order_qty">QTY</label>';
                     $output .= '<input type="text" name="_order_qty" value="'.$row->order_qty.'" id="order_qty" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';

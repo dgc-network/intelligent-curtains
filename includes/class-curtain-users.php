@@ -198,6 +198,7 @@ if (!class_exists('curtain_users')) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
+                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $data['user_role']=$_POST['_user_role'];
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
@@ -248,17 +249,20 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_POST['_update_user']) && isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
+                $curtain_agents = new curtain_agents();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Curtain user update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
-                    $output .= '<label for="_display_name">Display Name</label>';
+                    $output .= '<label for="display_name">Display Name</label>';
                     $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
-                    $output .= '<label for="_mobile_phone">Mobile Phone</label>';
+                    $output .= '<label for="mobile_phone">Mobile Phone</label>';
                     $output .= '<input type="text" name="_mobile_phone" id="mobile_phone" class="text ui-widget-content ui-corner-all" value="'.$row->mobile_phone.'">';
-                    $output .= '<label for="_user_role">User Role</label>';
+                    $output .= '<label for="curtain_agent_id">Agent</label>';
+                    $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+                    $output .= '<label for="user_role">User Role</label>';
                     $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
@@ -328,8 +332,8 @@ if (!class_exists('curtain_users')) {
                 line_user_id varchar(50) UNIQUE,
                 display_name varchar(50),
                 mobile_phone varchar(20),
+                curtain_agent_id int(10),
                 user_role varchar(20),
-                last_otp varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)

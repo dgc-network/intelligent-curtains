@@ -116,6 +116,7 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
+                $data['service_option_page']=$_POST['_service_option_page'];
                 $result = self::insert_service_option($data);
             }
         
@@ -124,6 +125,7 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
+                $data['service_option_page']=$_POST['_service_option_page'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $result = self::update_service_options($data, $where);
@@ -151,6 +153,7 @@ if (!class_exists('curtain_service')) {
             $output .= '<th>title</th>';
             $output .= '<th>link</th>';
             $output .= '<th>category</th>';
+            $output .= '<th>page</th>';
             $output .= '<th>update_time</th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
@@ -163,6 +166,7 @@ if (!class_exists('curtain_service')) {
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->service_option_link.'</td>';
                 $output .= '<td>'.$result->service_option_category.'</td>';
+                $output .= '<td>'.$result->service_option_page.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
@@ -179,12 +183,14 @@ if (!class_exists('curtain_service')) {
                     $output .= '<div id="dialog" title="Create new option">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
-                    $output .= '<label for="_service_option_title">Option Title</label>';
+                    $output .= '<label for="service_option_title">Option Title</label>';
                     $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_service_option_link">Option Link</label>';
+                    $output .= '<label for="service_option_link">Option Link</label>';
                     $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="_service_option_category">Category</label>';
+                    $output .= '<label for="service_option_category">Category</label>';
                     $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="service_option_page">Page</label>';
+                    $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
@@ -195,12 +201,14 @@ if (!class_exists('curtain_service')) {
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
-                    $output .= '<label for="_service_option_title">Option Title</label>';
+                    $output .= '<label for="service_option_title">Option Title</label>';
                     $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_title.'">';
-                    $output .= '<label for="_service_option_link">Option Link</label>';
+                    $output .= '<label for="service_option_link">Option Link</label>';
                     $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_link.'">';
-                    $output .= '<label for="_service_option_category">Category</label>';
+                    $output .= '<label for="service_option_category">Category</label>';
                     $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_category.'">';
+                    $output .= '<label for="service_option_page">Page</label>';
+                    $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_page.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
@@ -237,11 +245,22 @@ if (!class_exists('curtain_service')) {
                 service_option_title varchar(20),
                 service_option_link varchar(255),
                 service_option_category varchar(10),
+                service_option_page varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (service_option_id)
             ) $charset_collate;";
             dbDelta($sql);            
+
+            $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
+                user_permission_id int NOT NULL AUTO_INCREMENT,
+                curtain_user_id int NOT NULL,
+                service_options_id int NOT NULL,
+                create_timestamp int(10),
+                update_timestamp int(10),
+                PRIMARY KEY (user_permission_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         }
     }
     new curtain_service();

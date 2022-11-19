@@ -160,7 +160,6 @@ if (!class_exists('line_webhook')) {
                                 }
                                 break;
                             default:
-                                //send notification to administrators
                                 error_log('Unsupported message type: ' . $message['type']);
                                 break;
                         }

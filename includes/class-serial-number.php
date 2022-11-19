@@ -91,12 +91,12 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="Create new serial_no">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="_curtain_model_id">Model Name</label>';                    
-                $output .= '<select name="_curtain_model_id">'.$curtain_models->select_options().'</select>';
-                $output .= '<label for="_specification">Specification</label>';
+                $output .= '<label for="curtain_model_id">Model</label>';                    
+                $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
+                $output .= '<label for="specification">Specification</label>';
                 $output .= '<input type="text" name="_specification" id="specification" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="_curtain_agent_id">Agent Name</label>';
-                $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options().'</select>';
+                $output .= '<label for="curtain_agent_id">Agent</label>';
+                $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
