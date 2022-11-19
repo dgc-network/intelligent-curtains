@@ -181,7 +181,6 @@ if (!class_exists('curtain_users')) {
 
         public function list_curtain_users() {
             
-            //unset($_SESSION['username']);
             global $wpdb;
             if( isset($_SESSION['username']) ) {
                 $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
@@ -203,7 +202,7 @@ if (!class_exists('curtain_users')) {
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $data['user_role']=$_POST['_user_role'];
+                //$data['user_role']=$_POST['_user_role'];
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
                 $result = self::update_curtain_users($data, $where);
@@ -288,10 +287,11 @@ if (!class_exists('curtain_users')) {
                     $output .= '<input type="text" name="_mobile_phone" id="mobile_phone" class="text ui-widget-content ui-corner-all" value="'.$row->mobile_phone.'">';
                     $output .= '<label for="curtain_agent_id">Agent</label>';
                     $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-                    $output .= '<label for="user_role">User Role</label>';
-                    $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
+                    //$output .= '<label for="user_role">User Role</label>';
+                    //$output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
 
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
+                    $output .= '<label for="user_permissions">Permissions</label>';
                     $output .= '<div style="border: 1px solid; padding: 10px;">';
                     foreach ($results as $index => $result) {
                         $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';

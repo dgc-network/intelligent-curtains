@@ -144,14 +144,17 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
                                     
-                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
+                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
+                                    $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $option->service_option_id", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
                                         $hero_messages[] = $profile['displayName'];
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
                                         $flex_contents = array();
-                                        $flex_contents['line_user_id'] = $result->line_user_id;
+                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
+                                        $flex_contents['line_user_id'] = $user->line_user_id;
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
