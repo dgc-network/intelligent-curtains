@@ -19,15 +19,19 @@ if (!class_exists('curtain_models')) {
 
         public function list_curtain_models() {
 
+            global $wpdb;
             if( isset($_SESSION['username']) ) {
-                global $wpdb;
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s AND user_role= %s", $_SESSION['username'], 'admin' ), OBJECT );            
-                if (count($user) == 0 && $_GET['_check_permission'] != 'false') {
-                    return 'You are not validated to read this page. Please check to the administrators.';
+                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_models_page' ), OBJECT );
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                if (is_null($permission) || !empty($wpdb->last_error)) {
+                    if ( $_GET['_check_permission'] != 'false' ) {
+                        return 'You have not permission to access this page. Please check to the administrators.';
+                    }
                 }
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You are not validated to read this page. Please check to the administrators.';
+                    return 'You have not permission to access this page. Please check to the administrators.';
                 }
             }
 
