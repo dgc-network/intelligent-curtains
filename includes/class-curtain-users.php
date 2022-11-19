@@ -266,10 +266,10 @@ if (!class_exists('curtain_users')) {
                     $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
 
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
-                    $output .= '<div style="border: 1px solid">';
+                    $output .= '<div style="border: 1px solid; padding: 10px;">';
                     foreach ($results as $index => $result) {
-                        $output .= '<input type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'">';
-                        $output .= '<label for="vehicle1"> '.$result->service_option_title.'</label><br>';          
+                        $output .= '<input style="display: inline-block;" type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'">';
+                        $output .= '<label style="display: inline-block;" for="vehicle1"> '.$result->service_option_title.'</label><br>';          
                     }
                     $output .= '</div>';
         
