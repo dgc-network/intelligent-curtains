@@ -120,7 +120,9 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = '請點擊連結進入售後服務區:';
                                             $flex_contents = array();
                                             $flex_contents['line_user_id'] = $line_user_id;
-                                            $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                            //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
+                                            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                            $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
                                             $flex_contents['body_messages'] = $body_messages;
                                             self::forward_text_messages( $flex_contents );
                                         }
@@ -132,7 +134,9 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $line_user_id;
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
+                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
+                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
                                         self::forward_text_messages( $flex_contents );
                                     }
@@ -144,7 +148,6 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
                                     
-                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE user_role = 'admin'", OBJECT );
                                     $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $option->service_option_id", OBJECT );
                                     foreach ( $results as $index=>$result ) {
@@ -155,7 +158,9 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents = array();
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
                                         $flex_contents['line_user_id'] = $user->line_user_id;
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
+                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
+                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
                                         self::forward_text_messages( $flex_contents );
