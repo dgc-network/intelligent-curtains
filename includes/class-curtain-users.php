@@ -205,13 +205,14 @@ if (!class_exists('curtain_users')) {
                 $result = self::update_curtain_users($data, $where);
                 global $wpdb;
 
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions", OBJECT );
-                return var_dump($results);
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions", OBJECT );
+                //return var_dump($results);
 
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
+                        return var_dump($_POST[$_checkbox]);
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             $data=array();
