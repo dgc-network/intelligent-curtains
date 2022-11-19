@@ -212,7 +212,7 @@ if (!class_exists('curtain_users')) {
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
-                        return var_dump($_POST[$_checkbox]);
+                        //return var_dump($_POST[$_checkbox]);
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             $data=array();
@@ -367,6 +367,7 @@ if (!class_exists('curtain_users')) {
         public function insert_user_permission($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'user_permissions';
+            $data['create_timestamp'] = time();
             $wpdb->insert($table, $data);
         }
 
@@ -397,7 +398,7 @@ if (!class_exists('curtain_users')) {
             $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
                 user_permission_id int NOT NULL AUTO_INCREMENT,
                 curtain_user_id int NOT NULL,
-                service_options_id int NOT NULL,
+                service_option_id int NOT NULL,
                 create_timestamp int(10),
                 PRIMARY KEY (user_permission_id)
             ) $charset_collate;";
