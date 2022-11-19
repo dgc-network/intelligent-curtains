@@ -264,6 +264,16 @@ if (!class_exists('curtain_users')) {
                     $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
                     $output .= '<label for="user_role">User Role</label>';
                     $output .= '<input type="text" name="_user_role" id="user_role" class="text ui-widget-content ui-corner-all" value="'.$row->user_role.'">';
+
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
+                    $output .= '<div style="border: 1px solid">';
+                    foreach ($results as $index => $result) {
+                        $output .= '<input type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'">';
+                        $output .= '<label for="vehicle1"> '.$result->service_option_title.'</label><br>';          
+                    }
+                    $output .= '</div>';
+        
+
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';

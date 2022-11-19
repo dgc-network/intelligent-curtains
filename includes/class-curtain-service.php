@@ -235,6 +235,18 @@ if (!class_exists('curtain_service')) {
             $wpdb->update($table, $data, $where);
         }
 
+        public function check_box_admin_options( $default_id=array() ) {
+            global $wpdb;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
+            $output = '<div style="border: 1px solid">';
+            foreach ($results as $index => $result) {
+                $output .= '<input type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'">';
+                $output .= '<label for="vehicle1"> '.$result->service_option_title.'</label><br>';          
+            }
+            $output .= '</div>';
+            return $output;    
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
