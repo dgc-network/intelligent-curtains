@@ -235,18 +235,6 @@ if (!class_exists('curtain_service')) {
             $wpdb->update($table, $data, $where);
         }
 
-        public function check_box_admin_options( $default_id=array() ) {
-            global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
-            $output = '<div style="border: 1px solid">';
-            foreach ($results as $index => $result) {
-                $output .= '<input type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'">';
-                $output .= '<label for="vehicle1"> '.$result->service_option_title.'</label><br>';          
-            }
-            $output .= '</div>';
-            return $output;    
-        }
-
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
@@ -263,16 +251,6 @@ if (!class_exists('curtain_service')) {
                 PRIMARY KEY (service_option_id)
             ) $charset_collate;";
             dbDelta($sql);            
-
-            $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
-                user_permission_id int NOT NULL AUTO_INCREMENT,
-                curtain_user_id int NOT NULL,
-                service_options_id int NOT NULL,
-                create_timestamp int(10),
-                update_timestamp int(10),
-                PRIMARY KEY (user_permission_id)
-            ) $charset_collate;";
-            dbDelta($sql);
         }
     }
     new curtain_service();

@@ -203,6 +203,28 @@ if (!class_exists('curtain_users')) {
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
                 $result = self::update_curtain_users($data, $where);
+                global $wpdb;
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
+                foreach ($results as $index => $result) {
+                    $_checkbox = '_checkbox'.$index;
+                    if (isset($_POST[$_checkbox])) {
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
+                        if (is_null($permission) || !empty($wpdb->last_error)) {
+                            $data=array();
+                            $data['curtain_user_id']=$_POST['_curtain_user_id'];
+                            $data['service_option_id']=$result->service_option_id;
+                            self::insert_user_permission($data);
+                        }    
+                    } else {
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
+                        if (!(is_null($permission) || !empty($wpdb->last_error))) {
+                            $where=array();
+                            $where['curtain_user_id']=$_POST['_curtain_user_id'];
+                            $where['service_option_id']=$result->service_option_id;
+                            self::delete_user_permissions($where);
+                        }    
+                    }
+                }
             }
         
             global $wpdb;
@@ -268,17 +290,16 @@ if (!class_exists('curtain_users')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
                     $output .= '<div style="border: 1px solid; padding: 10px;">';
                     foreach ($results as $index => $result) {
-                        $output .= '<input style="display: inline-block;" type="checkbox" id="vehicle1" name="vehicle1" value="'.$result->service_option_id.'"';
+                        $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $row->curtain_user_id, $result->service_option_id ), OBJECT );            
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             $output .= '>';
                         } else {
                             $output .= ' checked>';
                         }
-                        $output .= '<label style="display: inline-block; margin-left: 8px;" for="vehicle1"> '.$result->service_option_title.'</label><br>';          
+                        $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title.'</label><br>';          
                     }
-                    $output .= '</div>';
-        
+                    $output .= '</div>';        
 
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
@@ -338,6 +359,18 @@ if (!class_exists('curtain_users')) {
             $wpdb->update($table, $data, $where);
         }
 
+        public function insert_user_permission($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'user_permissions';
+            $wpdb->insert($table, $data);
+        }
+
+        public function delete_user_permissions($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'user_permissions';
+            $wpdb->delete($table, $where);
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
@@ -353,6 +386,15 @@ if (!class_exists('curtain_users')) {
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)
+            ) $charset_collate;";
+            dbDelta($sql);
+
+            $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
+                user_permission_id int NOT NULL AUTO_INCREMENT,
+                curtain_user_id int NOT NULL,
+                service_options_id int NOT NULL,
+                create_timestamp int(10),
+                PRIMARY KEY (user_permission_id)
             ) $charset_collate;";
             dbDelta($sql);
         }
