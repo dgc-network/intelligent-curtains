@@ -55,7 +55,8 @@ if (!class_exists('line_webhook')) {
                 'messages' => [
                     [
                         "type" => "flex",
-                        "altText" => "this is a flex message",
+                        //"altText" => "this is a flex message",
+                        "altText" => $flex_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
                             "hero" => [

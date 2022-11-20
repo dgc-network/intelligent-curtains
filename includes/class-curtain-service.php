@@ -34,24 +34,17 @@ if (!class_exists('curtain_service')) {
                         $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                     }
     
-                    global $wpdb;
                     $where='"%view%"';
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button">';
+                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
                         $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                         $output .= '</div>';
                     }
                     $output .= '</div>';
     
-                    if (!(is_null($user) || !empty($wpdb->last_error))) {
-                        // login
-                        $six_digit_random_number = random_int(100000, 999999);
-                        $output .= '如需其他服務, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                        $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中聯絡我們的客服人員<br>';
-                    } else {
+                    if (is_null($user) || !empty($wpdb->last_error)) {
                         // registration
                         $six_digit_random_number = random_int(100000, 999999);
                         $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
@@ -64,17 +57,25 @@ if (!class_exists('curtain_service')) {
                         $where['qr_code_serial_no']=$qr_code_serial_no;
                         $serial_number = new serial_number();
                         $result = $serial_number->update_serial_number($data, $where);    
+                    } else {
+                        // login
+                        $six_digit_random_number = random_int(100000, 999999);
+                        $output .= '如需其他服務, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
+                        $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
+                        $output .= '<br>在我們的Line官方帳號聊天室中聯絡我們的客服人員<br>';
                     }
     
                 } else {
 
-                    global $wpdb;
-                    $where='"%admin%"';
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
+                    //$where='"%admin%"';
+                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
+                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );            
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button">';
-                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
+                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
+                        $output .= '<a class="wp-block-button__link" href="'.$option->service_option_link.'">'.$option->service_option_title.'</a>';
                         $output .= '</div>';
                     }
                     $output .= '</div>';
@@ -87,7 +88,7 @@ if (!class_exists('curtain_service')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
                 foreach ( $results as $index=>$result ) {
-                    $output .= '<div class="wp-block-button">';
+                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
                     $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
                     $output .= '</div>';
                 }
