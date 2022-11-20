@@ -165,17 +165,19 @@ if (!class_exists('curtain_agents')) {
         function select_options( $default_id=null ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
-            $output = '<option value="no_select">-- Select an option --</option>';
-            foreach ($results as $index => $result) {
-                if ( $results[$index]->curtain_agent_id == $default_id ) {
-                    $output .= '<option value="'.$results[$index]->curtain_agent_id.'" selected>';
+            //$output = '<option value="no_select">-- Select an option --</option>';
+            $output = '<option value="">-- Select an option --</option>';
+            foreach ($results as $result) {
+                if ( $result->curtain_agent_id == $default_id ) {
+                    $output .= '<option value="'.$result->curtain_agent_id.'" selected>';
                 } else {
-                    $output .= '<option value="'.$results[$index]->curtain_agent_id.'">';
+                    $output .= '<option value="'.$result->curtain_agent_id.'">';
                 }
-                $output .= $results[$index]->agent_number.'/'.$results[$index]->agent_name;
+                $output .= $result->agent_number.'/'.$result->agent_name;
                 $output .= '</option>';        
             }
-            $output .= '<option value="delete_select">-- Remove this --</option>';
+            //$output .= '<option value="delete_select">-- Remove this --</option>';
+            $output .= '<option value="">-- Remove this --</option>';
             return $output;    
         }
 
