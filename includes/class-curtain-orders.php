@@ -16,37 +16,37 @@ if (!class_exists('curtain_orders')) {
         function list_curtain_orders() {
 
             global $wpdb;
+            $curtain_agent_id = 0;
             if( isset($_SESSION['username']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_orders_page' ), OBJECT );
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-                //if (is_null($permission) || !empty($wpdb->last_error)) {
+                $curtain_agent_id = $user->curtain_agent_id;
                 if (is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
                     }
-                }
+                } /*
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
                     return 'You are not validated to read this page. Please check to the administrators.';
-                }
+                } */
             }
 
             if( isset($_POST['_create']) ) {
                 $data=array();
-                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                //$data['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                $data['curtain_agent_id']=$curtain_agent_id;
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
-                $data['order_qty']=$_POST['_order_qty'];
+                $data['order_item_qty']=$_POST['_order_qty'];
                 $result = self::insert_curtain_order($data);
             }
 
             if( isset($_POST['_update']) ) {
                 $data=array();
-                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                //$data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
-                $data['order_qty']=$_POST['_order_qty'];
+                $data['order_item_qty']=$_POST['_order_qty'];
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_curtain_orders($data, $where);
@@ -71,8 +71,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>id</th>';
-            //$output .= '<th>order_no</th>';
-            $output .= '<th>date</th>';
+            $output .= '<th>date/time</th>';
             $output .= '<th>agent</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
@@ -84,18 +83,16 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_order_id.'</td>';
                 $output .= '<td style="display: flex;"><form method="post">';
-                //$output .= '<input type="submit" value="'.$result->order_number.'" name="_order_number">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).'">';
+                $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
                 $output .= '</form>';
                 $output .= '</td>';
-                //$output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
                 $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
                 $output .= '<td>'.$agent->agent_name.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
-                $output .= '<td>'.$result->order_qty.'</td>';
+                $output .= '<td>'.$result->order_item_qty.'</td>';
                 $output .= '<td>'.'</td>';
                 $output .= '</tr>';
             }
@@ -106,21 +103,23 @@ if (!class_exists('curtain_orders')) {
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
-                $curtain_agents = new curtain_agents();
+                //$curtain_agents = new curtain_agents();
                 $curtain_models = new curtain_models();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_orders WHERE curtain_order_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output .= '<div id="dialog" title="Create new order">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
+                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
                     $output .= '<label for="curtain_agent_id">Agent</label>';
-                    $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
-                    $output .= '<label for="curtain_model_id">Model</label>';                    
+                    $output .= '<input type="text" disabled value="'.$agent->agent_name.'" id="curtain_agent_id" class="text ui-widget-content ui-corner-all">';
+                    //$output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
+                    $output .= '<label for="curtain_model_id">Model</label>';
                     $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
                     $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" id="specification" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="order_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_qty" id="order_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="order_item_qty">QTY</label>';
+                    $output .= '<input type="text" name="_order_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
@@ -131,14 +130,16 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
+                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $row->curtain_agent_id ), OBJECT );
                     $output .= '<label for="curtain_agent_id">Agent</label>';
-                    $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-                    $output .= '<label for="curtain_model_id">Model</label>';                    
+                    $output .= '<input type="text" disabled value="'.$agent->agent_name.'" id="curtain_agent_id" class="text ui-widget-content ui-corner-all">';
+                    //$output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+                    $output .= '<label for="curtain_model_id">Model</label>';
                     $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
                     $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" value="'.$row->specification.'" id="specification" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="order_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_qty" value="'.$row->order_qty.'" id="order_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="order_item_qty">QTY</label>';
+                    $output .= '<input type="text" name="_order_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
@@ -177,7 +178,8 @@ if (!class_exists('curtain_orders')) {
                 curtain_agent_id int(10),
                 curtain_model_id int(10),
                 specification varchar(10),
-                order_qty int(10),
+                order_item_qty int(10),
+                order_item_amount decimal(10,2),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_order_id)

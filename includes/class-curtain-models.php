@@ -171,7 +171,8 @@ if (!class_exists('curtain_models')) {
         public function select_options( $default_id=null ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
-            $output = '<option value="no_select">-- Select an option --</option>';
+            //$output = '<option value="no_select">-- Select an option --</option>';
+            $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
                 if ( $result->curtain_model_id == $default_id ) {
                     $output .= '<option value="'.$result->curtain_model_id.'" selected>';
@@ -181,8 +182,9 @@ if (!class_exists('curtain_models')) {
                 $output .= $result->curtain_model_name;
                 $output .= '</option>';        
             }
-            $output .= '<option value="delete_select">-- Remove this --</option>';
-            return $output;    
+            //$output .= '<option value="delete_select">-- Remove this --</option>';
+            $output .= '<option value="0">-- Remove this --</option>';
+            return $output;
         }
 
         function create_tables() {
