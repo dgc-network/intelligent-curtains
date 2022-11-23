@@ -27,6 +27,20 @@ if (!class_exists('order_items')) {
                 }
             }
 
+            if( isset($_POST['_checkout']) ) {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $_is_check = '_is_check_'.$index;
+                    if ( $_POST[$_is_check]==1 ) {
+                        $data=array();
+                        $data['is_checkout']=1;
+                        $where=array();
+                        $where['curtain_order_id']=$result->curtain_order_id;
+                        self::update_order_items($data, $where);        
+                    }
+                }
+            }
+            
             if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
@@ -102,20 +116,6 @@ if (!class_exists('order_items')) {
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout">';
             $output .= '</form>';
 
-            if( isset($_POST['_checkout']) ) {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $_is_check = '_is_check_'.$index;
-                    if ( $_POST[$_is_check]==1 ) {
-                        $data=array();
-                        $data['is_checkout']=1;
-                        $where=array();
-                        $where['curtain_order_id']=$_POST['_curtain_order_id'];
-                        self::update_order_items($data, $where);        
-                    }
-                }
-            }
-            
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 $curtain_models = new curtain_models();
