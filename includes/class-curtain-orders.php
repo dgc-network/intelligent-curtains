@@ -130,14 +130,11 @@ if (!class_exists('order_items')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                //$output .= '<td>'.$result->curtain_order_id.'</td>';
-                //$output .= '<td>';
                 $output .= '<td><input type="checkbox"';
                 if ( $result->is_checkout==1 ) {
                     $output .= ' checked';
                 }
-                $output .= '></td>';
-                //$output .= '<td style="display: flex;">';
+                $output .= ' disabled></td>';
                 $output .= '<td>';
                 $output .= '<form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
