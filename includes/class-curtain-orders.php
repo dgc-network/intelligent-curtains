@@ -37,8 +37,8 @@ if (!class_exists('order_items')) {
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
                         self::update_order_items($data, $where);        
+                        return $_is_checkout;
                     }
-                    return $_is_checkout;
                 }
             }
             
