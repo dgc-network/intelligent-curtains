@@ -38,6 +38,7 @@ if (!class_exists('order_items')) {
                         $where['curtain_order_id']=$result->curtain_order_id;
                         self::update_order_items($data, $where);        
                     }
+                    return $_is_check;
                 }
             }
             
@@ -49,7 +50,7 @@ if (!class_exists('order_items')) {
                 $data['order_item_qty']=$_POST['_order_item_qty'];
                 $data['order_item_amount']=$_POST['_order_item_amount'];
                 $data['is_checkout']=0;
-                $result = self::insert_curtain_order($data);
+                $result = self::insert_order_item($data);
             }
 
             if( isset($_POST['_update']) ) {
@@ -166,7 +167,7 @@ if (!class_exists('order_items')) {
             return $output;
         }
 
-        function insert_curtain_order($data=[]) {
+        function insert_order_item($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['create_timestamp'] = time();
