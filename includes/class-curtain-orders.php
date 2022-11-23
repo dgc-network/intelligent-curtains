@@ -94,9 +94,10 @@ if (!class_exists('order_items')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 //$output .= '<td>'.$result->curtain_order_id.'</td>';
-                $output .= '<td><form method="post">';
+                $output .= '<td>';
                 $output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
-                $output .= '<td style="display: flex;">';
+                //$output .= '<td style="display: flex;">';
+                $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
                 $output .= '</form>';
