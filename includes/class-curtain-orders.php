@@ -30,15 +30,15 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_checkout']) ) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
                 foreach ( $results as $index=>$result ) {
-                    $_is_check = '_is_check_'.$index;
-                    if ( $_POST[$_is_check]==1 ) {
+                    $_is_checkout = '_is_checkout_'.$index;
+                    if ( $_POST[$_is_checkout]==1 ) {
                         $data=array();
                         $data['is_checkout']=1;
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
                         self::update_order_items($data, $where);        
                     }
-                    return $_is_check;
+                    return $_is_checkout;
                 }
             }
             
@@ -95,7 +95,7 @@ if (!class_exists('order_items')) {
                 $output .= '<tr>';
                 //$output .= '<td>'.$result->curtain_order_id.'</td>';
                 $output .= '<td><form method="post">';
-                $output .= '<input type="checkbox" value="1" name="_is_check_'.$index.'"></td>';
+                $output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                 $output .= '<td style="display: flex;">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
