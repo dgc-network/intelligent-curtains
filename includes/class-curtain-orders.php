@@ -118,7 +118,7 @@ if (!class_exists('order_items')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th></th>';
+            //$output .= '<th></th>';
             $output .= '<th>date/time</th>';
             $output .= '<th>agent</th>';
             $output .= '<th>model</th>';
@@ -130,11 +130,11 @@ if (!class_exists('order_items')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td><input type="checkbox"';
-                if ( $result->is_checkout==1 ) {
-                    $output .= ' checked';
-                }
-                $output .= ' disabled></td>';
+                //$output .= '<td><input type="checkbox"';
+                //if ( $result->is_checkout==1 ) {
+                  //  $output .= ' checked';
+                //}
+                //$output .= ' disabled></td>';
                 $output .= '<td>';
                 $output .= '<form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
@@ -148,7 +148,11 @@ if (!class_exists('order_items')) {
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->order_item_qty.'</td>';
                 $output .= '<td>'.$result->order_item_amount.'</td>';
-                $output .= '<td>'.'</td>';
+                if ( $result->is_checkout==1 ) {
+                    $output .= '<td>checkout</td>';
+                } else {
+                    $output .= '<td></td>';
+                }
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
