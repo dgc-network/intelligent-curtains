@@ -32,7 +32,7 @@ if (!class_exists('order_items')) {
                 $output  = '<h2>Order Items Checkout</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
-                $output .= '<table id="users" class="ui-widget ui-widget-content">';
+                $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th></th>';
                 $output .= '<th>date/time</th>';
@@ -46,11 +46,8 @@ if (!class_exists('order_items')) {
                 $output .= '<tbody>';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
-                    $output .= '<td>';
-                    $output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
-                    $output .= '<td>';
+                    $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
-                    $output .= '</td>';
                     $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
                     $output .= '<td>'.$agent->agent_name.'</td>';
                     $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
@@ -65,14 +62,11 @@ if (!class_exists('order_items')) {
                 $output .= '<form method="post">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
                 $output .= '</form>';
-    
-
                 return $output;
             }
 
             if( isset($_POST['_checkout_submit']) ) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-
                 foreach ( $results as $index=>$result ) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
@@ -81,10 +75,8 @@ if (!class_exists('order_items')) {
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
                         self::update_order_items($data, $where);        
-                        //return $_is_checkout;
                     }
-                }
-                
+                }                
             }
             
             if( isset($_POST['_create']) ) {
@@ -111,7 +103,7 @@ if (!class_exists('order_items')) {
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE order_number LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items", OBJECT );
                 unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
@@ -124,7 +116,7 @@ if (!class_exists('order_items')) {
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div class="ui-widget">';
-            $output .= '<table id="users" class="ui-widget ui-widget-content">';
+            $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>date/time</th>';
@@ -138,9 +130,13 @@ if (!class_exists('order_items')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-                $output .= '<td>'.$result->curtain_order_id.'</td>';
+                //$output .= '<td>'.$result->curtain_order_id.'</td>';
                 //$output .= '<td>';
-                //$output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
+                $output .= '<td><input type="checkbox"';
+                if ( $result->is_checkout==1 ) {
+                    $output .= ' checked';
+                }
+                $output .= '></td>';
                 //$output .= '<td style="display: flex;">';
                 $output .= '<td>';
                 $output .= '<form method="post">';
