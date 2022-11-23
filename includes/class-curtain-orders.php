@@ -37,7 +37,8 @@ if (!class_exists('curtain_orders')) {
                 $data['curtain_agent_id']=$curtain_agent_id;
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
-                $data['order_item_qty']=$_POST['_order_qty'];
+                $data['order_item_qty']=$_POST['_order_item_qty'];
+                $data['order_item_amount']=$_POST['_order_item_amount'];
                 $result = self::insert_curtain_order($data);
             }
 
@@ -46,7 +47,8 @@ if (!class_exists('curtain_orders')) {
                 //$data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
-                $data['order_item_qty']=$_POST['_order_qty'];
+                $data['order_item_qty']=$_POST['_order_item_qty'];
+                $data['order_item_amount']=$_POST['_order_item_amount'];
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_curtain_orders($data, $where);
@@ -76,6 +78,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>QTY</th>';
+            $output .= '<th>amount</th>';
             $output .= '<th>remark</th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
@@ -93,6 +96,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$result->order_item_qty.'</td>';
+                $output .= '<td>'.$result->order_item_amount.'</td>';
                 $output .= '<td>'.'</td>';
                 $output .= '</tr>';
             }
@@ -119,7 +123,9 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" id="specification" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="order_item_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="order_item_amount">Amount</label>';
+                    $output .= '<input type="text" name="_order_item_amount" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
@@ -139,7 +145,9 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<label for="specification">Specification</label>';
                     $output .= '<input type="text" name="_specification" value="'.$row->specification.'" id="specification" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="order_item_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="order_item_amount">Amount</label>';
+                    $output .= '<input type="text" name="_order_item_amount" value="'.$row->order_item_amount.'" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
