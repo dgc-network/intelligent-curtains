@@ -9,11 +9,11 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode( 'order-item-list', array( __CLASS__, 'list_curtain_orders' ) );
+            add_shortcode( 'order-item-list', array( __CLASS__, 'list_order_items' ) );
             self::create_tables();
         }
 
-        function list_curtain_orders() {
+        function list_order_items() {
 
             global $wpdb;
             $curtain_agent_id = 0;
@@ -34,6 +34,7 @@ if (!class_exists('order_items')) {
                 $data['specification']=$_POST['_specification'];
                 $data['order_item_qty']=$_POST['_order_item_qty'];
                 $data['order_item_amount']=$_POST['_order_item_amount'];
+                $data['is_checkout']=0;
                 $result = self::insert_curtain_order($data);
             }
 
@@ -45,18 +46,17 @@ if (!class_exists('order_items')) {
                 $data['order_item_amount']=$_POST['_order_item_amount'];
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
-                $result = self::update_curtain_orders($data, $where);
+                $result = self::update_order_items($data, $where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE order_number LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
-            $output  = '<h2>Curtain Orders</h2>';
+            $output  = '<h2>Order Items</h2>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
@@ -98,16 +98,30 @@ if (!class_exists('order_items')) {
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create Item" name="_mode">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout">';
             $output .= '</form>';
 
+            if( isset($_POST['_checkout']) ) {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $_is_check = '_is_check_'.$index;
+                    if ( $_POST[$_is_check]==1 ) {
+                        $data=array();
+                        $data['is_checkout']=1;
+                        $where=array();
+                        $where['curtain_order_id']=$_POST['_curtain_order_id'];
+                        self::update_order_items($data, $where);        
+                    }
+                }
+            }
+            
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 $curtain_models = new curtain_models();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
-                    $output .= '<div id="dialog" title="Create new order">';
+                    $output .= '<div id="dialog" title="Create new item">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
@@ -127,7 +141,7 @@ if (!class_exists('order_items')) {
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {
-                    $output .= '<div id="dialog" title="Curtain order update">';
+                    $output .= '<div id="dialog" title="Order item update">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
@@ -161,7 +175,7 @@ if (!class_exists('order_items')) {
             return $wpdb->insert_id;
         }
 
-        public function update_curtain_orders($data=[], $where=[]) {
+        public function update_order_items($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['update_timestamp'] = time();
