@@ -39,6 +39,7 @@ if (!class_exists('curtain_models')) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
+                $data['model_price']=$_POST['_model_price'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $result = self::insert_curtain_model($data);
             }
@@ -47,6 +48,7 @@ if (!class_exists('curtain_models')) {
                 $data=array();
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
+                $data['model_price']=$_POST['_model_price'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $where=array();
                 $where['curtain_model_id']=$_POST['_curtain_model_id'];
@@ -74,6 +76,7 @@ if (!class_exists('curtain_models')) {
             $output .= '<th>id</th>';
             $output .= '<th>model</th>';
             $output .= '<th>description</th>';
+            $output .= '<th>price</th>';
             $output .= '<th>vendor</th>';
             $output .= '<th>update_time</th>';
             $output .= '</tr></thead>';
@@ -86,6 +89,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="submit" value="'.$result->curtain_model_name.'">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->model_description.'</td>';
+                $output .= '<td>'.$result->model_price.'</td>';
                 $output .= '<td>'.$result->curtain_vendor_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
@@ -107,6 +111,8 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="model-description">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="model-price">Price</label>';
+                    $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
@@ -123,6 +129,8 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
                     $output .= '<label for="model-description">Description</label>';
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
+                    $output .= '<label for="model-price">Price</label>';
+                    $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all" value="'.$row->model_price.'">';
                     $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
                     $output .= '</fieldset>';
@@ -132,7 +140,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '</div>';
                 }
             }
-
+/*
             if( isset($_POST['_serial_no']) ) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode"><div id="qrcode_content">';
@@ -140,7 +148,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</div></div>';
                 $output .= '</div>';
             }
-
+*/
             return $output;
         }
 
@@ -165,12 +173,12 @@ if (!class_exists('curtain_models')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             $output = '<option value="no_select">-- Select an option --</option>';
             foreach ($results as $index => $result) {
-                if ( $results[$index]->curtain_model_id == $default_id ) {
-                    $output .= '<option value="'.$results[$index]->curtain_model_id.'" selected>';
+                if ( $result->curtain_model_id == $default_id ) {
+                    $output .= '<option value="'.$result->curtain_model_id.'" selected>';
                 } else {
-                    $output .= '<option value="'.$results[$index]->curtain_model_id.'">';
+                    $output .= '<option value="'.$result->curtain_model_id.'">';
                 }
-                $output .= $results[$index]->curtain_model_name;
+                $output .= $result->curtain_model_name;
                 $output .= '</option>';        
             }
             $output .= '<option value="delete_select">-- Remove this --</option>';
@@ -186,6 +194,7 @@ if (!class_exists('curtain_models')) {
                 curtain_model_id int NOT NULL AUTO_INCREMENT,
                 curtain_model_name varchar(5) UNIQUE,
                 model_description varchar(50),
+                model_price decimal(10,2),
                 curtain_vendor_name varchar(50),
                 create_timestamp int(10),
                 update_timestamp int(10),
