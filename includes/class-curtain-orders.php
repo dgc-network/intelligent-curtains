@@ -149,7 +149,7 @@ if (!class_exists('order_items')) {
                 $output .= '<td>'.$result->order_item_qty.'</td>';
                 $output .= '<td>'.$result->order_item_amount.'</td>';
                 if ( $result->is_checkout==1 ) {
-                    $output .= '<td>checkout</td>';
+                    $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td></td>';
                 }
