@@ -37,7 +37,6 @@ if (!class_exists('order_items')) {
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th></th>';
                 $output .= '<th>date/time</th>';
-                //$output .= '<th>agent</th>';
                 $output .= '<th>model</th>';
                 $output .= '<th>spec</th>';
                 $output .= '<th>QTY</th>';
@@ -49,8 +48,6 @@ if (!class_exists('order_items')) {
                     $output .= '<tr>';
                     $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
-                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                    //$output .= '<td>'.$agent->agent_name.'</td>';
                     $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
                     $output .= '<td>'.$result->specification.'</td>';
@@ -133,7 +130,6 @@ if (!class_exists('order_items')) {
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th>date/time</th>';
-            //$output .= '<th>agent</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>QTY</th>';
@@ -147,14 +143,12 @@ if (!class_exists('order_items')) {
                 $output .= '<form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
                 if ( $result->is_checkout==1) {
-                    $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'" disabled>';
+                    $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 } else {
                     $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
                 }
                 $output .= '</form>';
                 $output .= '</td>';
-                //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                //$output .= '<td>'.$agent->agent_name.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
