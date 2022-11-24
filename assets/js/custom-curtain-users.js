@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
     
             $(chatboxtextarea).val('');
             $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','44px');
+            $(chatboxtextarea).css('height','24px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',
@@ -68,7 +68,6 @@ jQuery(document).ready(function($) {
             }
             chatHeartbeatTime = minChatHeartbeat;
             chatHeartbeatCount = 1;
-            $(chatboxtextarea).val('');
     
             return false;
         }
