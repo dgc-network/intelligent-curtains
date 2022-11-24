@@ -81,7 +81,7 @@ if (!class_exists('order_items')) {
                             $data['curtain_model_id']=$result->curtain_model_id;
                             $data['specification']=$result->specification;
                             $data['curtain_agent_id']=$result->curtain_agent_id;
-                            //$data['x']=$x;
+                            $data['x']=$x;
                             $serial_number::insert_serial_number($data);
                             $x = $x + 1;
                         }
