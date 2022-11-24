@@ -103,7 +103,7 @@ if (!class_exists('order_items')) {
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
@@ -111,8 +111,8 @@ if (!class_exists('order_items')) {
             $output  = '<h2>Order Items</h2>';            
             $output .= '<div>';
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-            $output .= '<div>'.$agent->agent_name.'</div>';
-            $output .= '<div style="text-align: right">';
+            $output .= '<div style="display: inline-box;">'.$agent->agent_name.'</div>';
+            $output .= '<div style="display: inline-box; text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
