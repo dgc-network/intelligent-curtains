@@ -29,14 +29,15 @@ if (!class_exists('order_items')) {
 
             if( isset($_POST['_checkout_list']) ) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                $output  = '<h2>Order Items Checkout</h2>';
+                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
+                $output  = '<h2>'.$agent->agent_name.' Order Items Checkout</h2>';            
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th></th>';
                 $output .= '<th>date/time</th>';
-                $output .= '<th>agent</th>';
+                //$output .= '<th>agent</th>';
                 $output .= '<th>model</th>';
                 $output .= '<th>spec</th>';
                 $output .= '<th>QTY</th>';
@@ -48,8 +49,8 @@ if (!class_exists('order_items')) {
                     $output .= '<tr>';
                     $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
-                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                    $output .= '<td>'.$agent->agent_name.'</td>';
+                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
+                    //$output .= '<td>'.$agent->agent_name.'</td>';
                     $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
                     $output .= '<td>'.$result->specification.'</td>';
@@ -74,7 +75,20 @@ if (!class_exists('order_items')) {
                         $data['is_checkout']=1;
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
-                        self::update_order_items($data, $where);        
+                        self::update_order_items($data, $where);
+
+                        $serial_number = new serial_number();
+                        $x = 0;
+                        while ($x < $result->order_item_qty) {
+
+                            $data=array();
+                            $data['curtain_model_id']=$result->curtain_model_id;
+                            $data['specification']=$result->specification;
+                            $data['curtain_agent_id']=$result->curtain_agent_id;
+                            $serial_number::insert_serial_number($data);
+
+                            $x = $x + 1;
+                        }
                     }
                 }                
             }
@@ -108,16 +122,13 @@ if (!class_exists('order_items')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
-            $output  = '<h2>Order Items</h2>';            
-            $output .= '<div>';
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-            $output .= '<div style="display: inline-box;">'.$agent->agent_name.'</div>';
-            $output .= '<div style="display: inline-box; text-align: right;">';
+            $output  = '<h2>'.$agent->agent_name.' Order Items</h2>';            
+            $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
-            $output .= '</div>';
             $output .= '</div>';
             $output .= '<div class="ui-widget">';
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
