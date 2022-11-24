@@ -67,14 +67,15 @@ if (!class_exists('curtain_service')) {
     
                 } else {
 
-                    //$where='"%admin%"';
+                    $where='"%admin%"';
                     //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );            
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
+                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
+                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d AND service_option_category LIKE {$where}", $result->service_option_id ), OBJECT );            
                         $output .= '<a class="wp-block-button__link" href="'.$option->service_option_link.'">'.$option->service_option_title.'</a>';
                         $output .= '</div>';
                     }
