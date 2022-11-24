@@ -340,6 +340,7 @@ if (!class_exists('curtain_users')) {
 
         public function curtain_chat_form() {
 
+            global $wpdb;
             if( isset($_GET['_id']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
