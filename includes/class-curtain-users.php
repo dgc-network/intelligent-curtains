@@ -10,6 +10,7 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             add_shortcode('curtain-user-list', array( __CLASS__, 'list_curtain_users' ));
+            add_shortcode('curtain-chat-form', array( __CLASS__, 'curtain_chat_form' ));
             add_shortcode('chat-message-list', array( __CLASS__, 'list_chat_messages' ));
             add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
             add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
@@ -334,6 +335,36 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
+            return $output;
+        }
+
+        public function curtain_chat_form() {
+
+            if( isset($_GET['_id']) ) {
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
+                if (!(is_null($row) || !empty($wpdb->last_error))) {
+                    $output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
+                    $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
+
+                    $output .= '<div class="chatboxcontent">';
+                    global $wpdb;
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
+                    foreach ( $results as $index=>$result ) {
+                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
+                            $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
+                        }
+                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['username']) {
+                            $output .= '<div class="chatboxmessage"><div class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div></div>';
+                        }
+                    }
+                    $output .= '</div>';
+        
+                    $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
+                    $output .= '</div>';
+                }
+            } else {
+                $output = 'LINE USER ID cannot be found!';
+            }
             return $output;
         }
 

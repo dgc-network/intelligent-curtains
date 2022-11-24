@@ -159,9 +159,10 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents = array();
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
                                         $flex_contents['line_user_id'] = $user->line_user_id;
-                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_users_page');
-                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
+                                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
+                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
+                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
+                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
                                         self::forward_text_messages( $flex_contents );
