@@ -147,7 +147,7 @@ if (!class_exists('order_items')) {
                 $output .= '<form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
                 if ( $result->is_checkout==1) {
-                    $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).' disabled">';
+                    $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'" disabled>';
                 } else {
                     $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
                 }
