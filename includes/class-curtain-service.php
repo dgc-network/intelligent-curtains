@@ -73,11 +73,13 @@ if (!class_exists('curtain_service')) {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
                         //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d AND service_option_category LIKE {$where}", $result->service_option_id ), OBJECT );            
-                        $output .= '<a class="wp-block-button__link" href="'.$option->service_option_link.'">'.$option->service_option_title.'</a>';
-                        $output .= '</div>';
+                        if (!(is_null($option) || !empty($wpdb->last_error))) {
+                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                            $output .= '<a class="wp-block-button__link" href="'.$option->service_option_link.'">'.$option->service_option_title.'</a>';
+                            $output .= '</div>';
+                        }
                     }
                     $output .= '</div>';
                 }
