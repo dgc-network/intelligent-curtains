@@ -24,7 +24,7 @@
 	font-family: arial,sans-serif;
 	font-size: 13px;
 	color: #333333;
-	height:200px;
+	height:400px;
 	width:259px;
 	overflow-y:auto;
 	overflow-x:auto;
@@ -45,8 +45,9 @@
 }
 
 .chatboxtextarea {
-	width: 247px;
-	height:44px;
+	font-size: 13px;
+	width: 248px;
+	height:24px;
 	padding:3px 0pt 3px 3px;
 	border: 1px solid #eeeeee;
 	margin: 1px;
