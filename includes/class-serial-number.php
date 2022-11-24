@@ -129,14 +129,14 @@ if (!class_exists('serial_number')) {
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
                 $output .= '</div>';
-                $output .= '<p style="margin-left: 25px;"><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
                 $output .= '</div>';
-                $output .= '<p style="margin-left: 25px;"><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
                 $output .= '</div>';
                 
             }

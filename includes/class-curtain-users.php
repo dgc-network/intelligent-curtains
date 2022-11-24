@@ -206,7 +206,7 @@ if (!class_exists('curtain_users')) {
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
                 $result = self::update_curtain_users($data, $where);
 
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%'", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
