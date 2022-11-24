@@ -29,8 +29,8 @@ if (!class_exists('order_items')) {
 
             if( isset($_POST['_checkout_list']) ) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                $output  = '<h2>'.$agent->agent_name.' Order Items Checkout</h2>';            
+                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
+                $output  = '<h2>Order Items Checkout - '.$agent->agent_name.'</h2>';            
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -80,13 +80,12 @@ if (!class_exists('order_items')) {
                         $serial_number = new serial_number();
                         $x = 0;
                         while ($x < $result->order_item_qty) {
-
                             $data=array();
                             $data['curtain_model_id']=$result->curtain_model_id;
                             $data['specification']=$result->specification;
                             $data['curtain_agent_id']=$result->curtain_agent_id;
+                            $data['x']=$x;
                             $serial_number::insert_serial_number($data);
-
                             $x = $x + 1;
                         }
                     }
@@ -122,8 +121,8 @@ if (!class_exists('order_items')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
-            $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-            $output  = '<h2>'.$agent->agent_name.' Order Items</h2>';            
+            $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
+            $output  = '<h2>Order Items - '.$agent->agent_name.'</h2>';            
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
