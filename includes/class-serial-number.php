@@ -119,21 +119,22 @@ if (!class_exists('serial_number')) {
                 $print_me = do_shortcode('[print-me target=".print-me-'.$_POST['_serial_no'].'"/]');
                 $output .= $print_me;
                 $output .= '</div>';
+                $output .= '<br><br><br><br><br>';
                 
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_POST['_serial_no'] ), OBJECT );            
                 $output .= '<div class="print-me-'.$_POST['_serial_no'].'">';
-                $output .= '<div id="qrcode1">';
+                $output .= '<div id="qrcode1" style="display: inline-block;">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
                 $output .= '</div>';
-                $output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
-                $output .= '<div id="qrcode2">';
+                //$output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                $output .= '<div id="qrcode2" style="display: inline-block;">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
                 $output .= '</div>';
                 $output .= '</div>';
-                $output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                //$output .= '<p><h1>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
                 $output .= '</div>';
                 
             }
