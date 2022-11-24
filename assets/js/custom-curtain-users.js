@@ -44,7 +44,7 @@ jQuery(document).ready(function($) {
     
             $(chatboxtextarea).val('');
             $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','24px');
+            $(chatboxtextarea).css('height','44px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',
