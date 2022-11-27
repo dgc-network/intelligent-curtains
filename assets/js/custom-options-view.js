@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
     function askConfirm() {
         if (needToConfirm) {
             // Put your custom message here 
-            return "Your unsaved data will be lost."; 
+            return "Your data will be changed."; 
         }
     }
      
