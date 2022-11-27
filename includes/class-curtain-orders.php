@@ -114,7 +114,7 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_delete']) ) {
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
-                $result = self::delete_curtain_orders($where);
+                $result = self::delete_order_items($where);
             }
 
             if( isset($_POST['_where']) ) {
