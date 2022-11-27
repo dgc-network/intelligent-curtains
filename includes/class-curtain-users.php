@@ -298,7 +298,8 @@ if (!class_exists('curtain_users')) {
                         } else {
                             $output .= ' checked>';
                         }
-                        $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title.'</label><br>';          
+                        $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title;
+                        $output .= '('.$result->service_option_category.')</label><br>';
                     }
                     $output .= '</div>';        
 
@@ -358,12 +359,13 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_GET['_id']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
-                if (!(is_null($row) || !empty($wpdb->last_error))) {
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                    $output = 'LINE USER ID cannot be found!';
+                } else {
                     $output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 
                     $output .= '<div class="chatboxcontent">';
-                    global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
                         if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
@@ -404,6 +406,12 @@ if (!class_exists('curtain_users')) {
             $table = $wpdb->prefix.'curtain_users';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_curtain_users($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_users';
+            $wpdb->delete($table, $where);
         }
 
         public function insert_user_permission($data=[]) {

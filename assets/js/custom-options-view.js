@@ -1,5 +1,21 @@
 jQuery(document).ready(function($) {
 
+    $(document).ready(function() {
+        needToConfirm = false; 
+        window.onbeforeunload = askConfirm;
+    });
+     
+    function askConfirm() {
+        if (needToConfirm) {
+            // Put your custom message here 
+            return "Your unsaved data will be lost."; 
+        }
+    }
+     
+    $("#dialog,#commentform,#wpforms-form-170").change(function() {
+        needToConfirm = true;
+    });
+    
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
