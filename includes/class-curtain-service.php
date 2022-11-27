@@ -139,6 +139,12 @@ if (!class_exists('curtain_service')) {
                 $result = self::update_service_options($data, $where);
             }
 
+            if( isset($_POST['_delete']) ) {
+                $where=array();
+                $where['service_option_id']=$_POST['_service_option_id'];
+                $result = self::delete_service_options($where);
+            }
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -241,6 +247,12 @@ if (!class_exists('curtain_service')) {
             $table = $wpdb->prefix.'service_options';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_service_options($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'service_options';
+            $wpdb->delete($table, $where);
         }
 
         function create_tables() {

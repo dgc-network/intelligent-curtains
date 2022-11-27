@@ -55,6 +55,12 @@ if (!class_exists('curtain_models')) {
                 $result = self::update_curtain_models($data, $where);
             }
 
+            if( isset($_POST['_delete']) ) {
+                $where=array();
+                $where['curtain_model_id']=$_POST['_curtain_model_id'];
+                $result = self::delete_curtain_models($where);
+            }
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -140,15 +146,6 @@ if (!class_exists('curtain_models')) {
                     $output .= '</div>';
                 }
             }
-/*
-            if( isset($_POST['_serial_no']) ) {
-                $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode"><div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div></div>';
-                $output .= '</div>';
-            }
-*/
             return $output;
         }
 
@@ -166,6 +163,12 @@ if (!class_exists('curtain_models')) {
             $table = $wpdb->prefix.'curtain_models';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_curtain_models($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_models';
+            $wpdb->delete($table, $where);
         }
 
         public function select_options( $default_id=null ) {

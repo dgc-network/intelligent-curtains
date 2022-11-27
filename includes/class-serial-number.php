@@ -137,10 +137,8 @@ if (!class_exists('serial_number')) {
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
-                $output .= '</div>';
-                
+                $output .= '</div>';                
             }
-
             return $output;
         }
 
@@ -166,6 +164,12 @@ if (!class_exists('serial_number')) {
             $table = $wpdb->prefix.'serial_number';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_serial_number($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'serial_number';
+            $wpdb->delete($table, $where);
         }
 
         function create_tables() {

@@ -111,6 +111,12 @@ if (!class_exists('order_items')) {
                 $result = self::update_order_items($data, $where);
             }
 
+            if( isset($_POST['_delete']) ) {
+                $where=array();
+                $where['curtain_order_id']=$_POST['_curtain_order_id'];
+                $result = self::delete_curtain_orders($where);
+            }
+
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
@@ -217,7 +223,7 @@ if (!class_exists('order_items')) {
             return $output;
         }
 
-        function insert_order_item($data=[]) {
+        public function insert_order_item($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['create_timestamp'] = time();
@@ -231,6 +237,12 @@ if (!class_exists('order_items')) {
             $table = $wpdb->prefix.'order_items';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_order_items($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'order_items';
+            $wpdb->delete($table, $where);
         }
 
         function create_tables() {

@@ -57,6 +57,12 @@ if (!class_exists('curtain_agents')) {
                 $result = self::update_curtain_agents($data, $where);
             }
 
+            if( isset($_POST['_delete']) ) {
+                $where=array();
+                $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                $result = self::delete_curtain_agents($where);
+            }
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -160,6 +166,12 @@ if (!class_exists('curtain_agents')) {
             $table = $wpdb->prefix.'curtain_agents';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_curtain_agents($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'curtain_agents';
+            $wpdb->delete($table, $where);
         }
 
         function select_options( $default_id=null ) {

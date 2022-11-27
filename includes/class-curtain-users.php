@@ -198,6 +198,12 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
+            if( isset($_POST['_delete']) ) {
+                $where=array();
+                $where['curtain_user_id']=$_POST['_curtain_user_id'];
+                $result = self::delete_curtain_users($where);
+            }
+
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
@@ -412,6 +418,7 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_users';
             $wpdb->delete($table, $where);
+            delete_user_permissions($where);
         }
 
         public function insert_user_permission($data=[]) {
