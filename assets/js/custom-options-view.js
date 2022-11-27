@@ -1,5 +1,27 @@
 jQuery(document).ready(function($) {
 
+    // Row/Record Edit Click
+    jQuery('[id^="edit-btn-"]').on( "click", function() {
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(9);
+        window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
+    });
+
+    jQuery('[id^="delete-btn-"]').on( "click", function() {
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(11);
+        //window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
+        
+        if (window.confirm("Are you sure you want to delete this record?")) {
+            window.location.replace("https://somesite.com/index.php?action=delete&id=" + id);
+        } else {
+            window.location.replace("https://somesite.com/index.php");
+        }
+        
+    });
+
     $(document).ready(function() {
         needToConfirm = false; 
         window.onbeforeunload = askConfirm;

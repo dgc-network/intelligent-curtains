@@ -215,7 +215,7 @@ if (!class_exists('order_items')) {
                     $output .= '<input type="text" name="_order_item_amount" value="'.$row->order_item_amount.'" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete" id="delete-btn-">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
