@@ -218,7 +218,9 @@ if (!class_exists('order_items')) {
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-                    $output .= '<a class="wp-block-button__link" href="https://aihome.tw/orders/?_delete='.$result->curtain_order_id.'">Delete</a>';
+                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                    $output .= '<a class="wp-block-button__link" href="https://aihome.tw/orders/?_delete='.$result->curtain_order_id.'">Delete</a> id="del-btn"';
+                    $output .= '</div>';
                     $output .= '</form>';
                     $output .= '<form method="get">';
                     $output .= '<input class="wp-block-button__link" type="button" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
