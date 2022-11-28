@@ -10,16 +10,13 @@ jQuery(document).ready(function($) {
 
     jQuery('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
-        //del = $("#del-id").val();
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(8);
-        //window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
         
         if (window.confirm("Are you sure you want to delete this record?")) {
             window.location.replace("?_delete=" + id);
-            //window.location.replace("?_delete=" + del);
-        } else {
-            window.location.replace("https://somesite.com/index.php");
+        //} else {
+        //    window.location.replace("");
         }
         
     });
