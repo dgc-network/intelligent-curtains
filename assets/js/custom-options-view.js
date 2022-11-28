@@ -20,7 +20,7 @@ jQuery(document).ready(function($) {
         }
         
     });
-
+/*
     jQuery('["#del-btn"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
@@ -33,6 +33,7 @@ jQuery(document).ready(function($) {
         }
         
     });
+*/    
 /*
     $(document).ready(function() {
         needToConfirm = false; 
