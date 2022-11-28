@@ -111,9 +111,11 @@ if (!class_exists('order_items')) {
                 $result = self::update_order_items($data, $where);
             }
 
-            if( isset($_POST['_delete']) ) {
+            //if( isset($_POST['_delete']) ) {
+            if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['curtain_order_id']=$_POST['_curtain_order_id'];
+                //$where['curtain_order_id']=$_POST['_curtain_order_id'];
+                $where['curtain_order_id']=$_GET['_delete'];
                 $result = self::delete_order_items($where);
             }
 
@@ -215,7 +217,9 @@ if (!class_exists('order_items')) {
                     $output .= '<input type="text" name="_order_item_amount" value="'.$row->order_item_amount.'" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete" id="delete-btn-">';
+                    $output .= '</form>';
+                    $output .= '<form method="get">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }

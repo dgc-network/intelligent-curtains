@@ -5,23 +5,23 @@ jQuery(document).ready(function($) {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
-        window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
+        window.location.replace("?action=edit&id=" + id);
     });
 
-    jQuery('[id^="delete-btn-"]').on( "click", function() {
+    jQuery('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
-        id = id.substring(11);
+        id = id.substring(8);
         //window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
         
         if (window.confirm("Are you sure you want to delete this record?")) {
-            window.location.replace("https://somesite.com/index.php?action=delete&id=" + id);
+            window.location.replace("?_delete=" + id);
         } else {
             window.location.replace("https://somesite.com/index.php");
         }
         
     });
-
+/*
     $(document).ready(function() {
         needToConfirm = false; 
         window.onbeforeunload = askConfirm;
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
     $("#dialog,#commentform,#wpforms-form-170").change(function() {
         needToConfirm = true;
     });
-    
+*/    
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
