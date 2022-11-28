@@ -10,6 +10,7 @@ jQuery(document).ready(function($) {
 
     jQuery('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
+        id = $("#del-id").val();
         // strip the first part of the element id to leave the numeric ID
         //id = id.substring(8);
         //window.location.replace("https://somesite.com/index.php?action=edit&id=" + id);
