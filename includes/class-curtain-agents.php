@@ -57,9 +57,9 @@ if (!class_exists('curtain_agents')) {
                 $result = self::update_curtain_agents($data, $where);
             }
 
-            if( isset($_POST['_delete']) ) {
+            if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
+                $where['curtain_agent_id']=$_GET['_delete'];
                 $result = self::delete_curtain_agents($where);
             }
 

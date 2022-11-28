@@ -198,9 +198,9 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
-            if( isset($_POST['_delete']) ) {
+            if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['curtain_user_id']=$_POST['_curtain_user_id'];
+                $where['curtain_user_id']=$_GET['_delete'];
                 $result = self::delete_curtain_users($where);
             }
 

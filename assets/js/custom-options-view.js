@@ -5,52 +5,20 @@ jQuery(document).ready(function($) {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
-        window.location.replace("?action=edit&id=" + id);
+        if (window.confirm("Are you sure you want to update this record?")) {
+            window.location.replace("?_update=" + id);
+        }        
     });
 
     jQuery('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
-        id = id.substring(8);
-        
+        id = id.substring(8);        
         if (window.confirm("Are you sure you want to delete this record?")) {
             window.location.replace("?_delete=" + id);
-        //} else {
-        //    window.location.replace("");
-        }
-        
+        }        
     });
-/*
-    jQuery('["#del-btn"]').on( "click", function() {
-        id = this.id;
-        // strip the first part of the element id to leave the numeric ID
-        id = id.substring(8);
-        
-        if (window.confirm("Are you sure you want to delete this record?")) {
-            window.location.replace("?_delete=" + id);
-        //} else {
-        //    window.location.replace("");
-        }
-        
-    });
-*/    
-/*
-    $(document).ready(function() {
-        needToConfirm = false; 
-        window.onbeforeunload = askConfirm;
-    });
-     
-    function askConfirm() {
-        if (needToConfirm) {
-            // Put your custom message here 
-            return "Your data will be changed."; 
-        }
-    }
-     
-    $("#dialog,#commentform,#wpforms-form-170").change(function() {
-        needToConfirm = true;
-    });
-*/    
+
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });

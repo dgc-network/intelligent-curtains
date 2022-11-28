@@ -111,10 +111,8 @@ if (!class_exists('order_items')) {
                 $result = self::update_order_items($data, $where);
             }
 
-            //if( isset($_POST['_delete']) ) {
             if( isset($_GET['_delete']) ) {
                 $where=array();
-                //$where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $where['curtain_order_id']=$_GET['_delete'];
                 $result = self::delete_order_items($where);
             }
@@ -218,9 +216,6 @@ if (!class_exists('order_items')) {
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
-                    //$output .= '<div class="wp-block-button" style="margin: 10px;">';
-                    //$output .= '<a class="wp-block-button__link" id="del-btn" href="https://aihome.tw/orders/?_delete='.$result->curtain_order_id.'">Delete</a>';
-                    //$output .= '</div>';
                     $output .= '</form>';
                     $output .= '<form method="get">';
                     $output .= '<input class="wp-block-button__link" type="button" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';

@@ -55,9 +55,9 @@ if (!class_exists('curtain_models')) {
                 $result = self::update_curtain_models($data, $where);
             }
 
-            if( isset($_POST['_delete']) ) {
+            if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['curtain_model_id']=$_POST['_curtain_model_id'];
+                $where['curtain_model_id']=$_GET['_delete'];
                 $result = self::delete_curtain_models($where);
             }
 

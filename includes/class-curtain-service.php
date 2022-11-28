@@ -139,9 +139,9 @@ if (!class_exists('curtain_service')) {
                 $result = self::update_service_options($data, $where);
             }
 
-            if( isset($_POST['_delete']) ) {
+            if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['service_option_id']=$_POST['_service_option_id'];
+                $where['curtain_option_id']=$_GET['_delete'];
                 $result = self::delete_service_options($where);
             }
 
