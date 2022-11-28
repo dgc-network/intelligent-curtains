@@ -219,8 +219,8 @@ if (!class_exists('order_items')) {
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '</form>';
                     $output .= '<form method="get">';
-                    $output .= '<input type="hidden" id="del-id" value="'.$row->curtain_order_id.'">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
+                    //$output .= '<input type="hidden" id="del-id" value="'.$row->curtain_order_id.'">';
+                    $output .= '<input class="wp-block-button__link" type="button" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
