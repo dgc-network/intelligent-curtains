@@ -311,7 +311,7 @@ if (!class_exists('curtain_users')) {
 
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }

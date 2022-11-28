@@ -103,7 +103,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                 $output .= '</form>';
                 $output .= '</div>';
             }

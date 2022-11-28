@@ -123,7 +123,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {                    
@@ -141,7 +141,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }

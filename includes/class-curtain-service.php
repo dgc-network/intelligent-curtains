@@ -207,7 +207,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {                    
@@ -225,7 +225,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_page.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
+                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
