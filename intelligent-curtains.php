@@ -25,7 +25,7 @@ function register_session() {
     }
 }
 add_action( 'init', 'register_session' );
-
+/*
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
 require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
@@ -43,5 +43,5 @@ add_option('_chat_from', 'line-bot');
 
 $line_webhook = new line_webhook();
 $line_webhook->init();
-
+*/
 ?>
