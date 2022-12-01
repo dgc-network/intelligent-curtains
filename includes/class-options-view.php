@@ -30,23 +30,24 @@ class Options_View {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 	}
 
 	public function run() {
 		
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 	}
 
 	function enqueue_scripts() {
-/*		
+		
 		wp_enqueue_script( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 
 		wp_enqueue_style( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/css/custom-options-view.css', '', time() );
 		wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'assets/css/chat.css', '', time() );
-*/
+
 		// Load the datepicker script (pre-registered in WordPress).
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( 'jquery-ui-dialog' );
