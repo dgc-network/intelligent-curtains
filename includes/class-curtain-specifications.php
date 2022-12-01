@@ -37,7 +37,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_price']=$_POST['_specification_price'];
                 $data['specification_unit']=$_POST['_specification_unit'];
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
-                $result = self::insert_curtain_model($data);
+                $result = self::insert_curtain_specification($data);
             }
             
             if( isset($_POST['_update']) ) {
@@ -49,13 +49,13 @@ if (!class_exists('curtain_specifications')) {
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $where=array();
                 $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
-                $result = self::update_curtain_models($data, $where);
+                $result = self::update_curtain_specifications($data, $where);
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_specification_id']=$_GET['_delete'];
-                $result = self::delete_curtain_models($where);
+                $result = self::delete_curtain_specifications($where);
             }
 
             global $wpdb;
@@ -93,7 +93,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
                 $output .= '<td>'.$result->specification_price.'</td>';
-                $output .= '<td>'.$result->specification_uniy.'</td>';
+                $output .= '<td>'.$result->specification_unit.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
