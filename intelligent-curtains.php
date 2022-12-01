@@ -46,14 +46,14 @@ $line_webhook->init();
 */
 function enqueue_scripts() {
 		
-    wp_enqueue_script( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
-    wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
+    wp_enqueue_script( 'custom-options-view', MY_PLUGIN_DIR . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
+    wp_enqueue_script( 'qrcode-js', MY_PLUGIN_DIR . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
     wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
     wp_enqueue_script( 'jquery-ui-dialog' );
 
-    wp_enqueue_style( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/css/custom-options-view.css', '', time() );
-    wp_enqueue_style( 'chat-css', plugin_dir_url( __DIR__ ) . 'assets/css/chat.css', '', time() );
+    wp_enqueue_style( 'custom-options-view', MY_PLUGIN_DIR . 'assets/css/custom-options-view.css', '', time() );
+    wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . 'assets/css/chat.css', '', time() );
     wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 /*
@@ -97,7 +97,7 @@ function create_tables() {
 }
 add_action( 'init', 'create_tables' );
 
-//add_shortcode( 'order-item-list', 'list_order_items' );
+add_shortcode( 'order-item-list', 'list_order_items' );
 function list_order_items() {
     return 'I am here';
 }
