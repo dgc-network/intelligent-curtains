@@ -30,7 +30,7 @@ define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 //require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
 //require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 //require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
-require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
+//require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-agents.php';
 //require_once MY_PLUGIN_DIR . 'includes/class-curtain-orders.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
