@@ -30,7 +30,6 @@ class Options_View {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 	}
 
