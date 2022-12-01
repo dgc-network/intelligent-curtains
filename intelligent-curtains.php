@@ -66,5 +66,6 @@ function enqueue_scripts() {
     wp_enqueue_style( 'demos-style-css' );
 */    
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+//add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+
 ?>
