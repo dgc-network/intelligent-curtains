@@ -39,7 +39,7 @@ class Options_View {
 
 	}
 
-	private function enqueue_scripts() {
+	public function enqueue_scripts() {
 		
 		wp_enqueue_script( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
