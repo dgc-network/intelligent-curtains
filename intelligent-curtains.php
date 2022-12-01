@@ -88,10 +88,10 @@ function create_tables() {
     dbDelta($sql);
 }
 add_action( 'init', 'create_tables' );
-*/
+
 add_shortcode( 'order-item-list', 'list_order_items' );
 function list_order_items() {
     return 'I am here';
 }
-
+*/
 ?>
