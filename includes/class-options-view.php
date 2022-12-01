@@ -35,12 +35,12 @@ class Options_View {
 
 	public function run() {
 		
-		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 	}
 
 	function enqueue_scripts() {
-		
+/*		
 		wp_enqueue_script( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 
@@ -58,6 +58,6 @@ class Options_View {
 		wp_enqueue_script( 'jquery-ui-js' );
 		wp_enqueue_style( 'jquery-ui-css' );  
 		wp_enqueue_style( 'demos-style-css' );  
-
+*/
 	}
 }
