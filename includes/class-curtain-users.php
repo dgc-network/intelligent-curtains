@@ -12,11 +12,11 @@ if (!class_exists('curtain_users')) {
             //add_shortcode('curtain-user-list', array( __CLASS__, 'list_curtain_users' ));
             //add_shortcode('curtain-chat-form', array( __CLASS__, 'curtain_chat_form' ));
             //add_shortcode('chat-message-list', array( __CLASS__, 'list_chat_messages' ));
-            add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
-            add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
-            add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-            add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+            //add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
+            //add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
+            //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+            //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
+            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
             self::create_tables();
         }
 
