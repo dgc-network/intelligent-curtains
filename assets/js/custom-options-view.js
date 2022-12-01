@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+/*
     // Row/Record Edit Click
     jQuery('[id^="edit-btn-"]').on( "click", function() {
         id = this.id;
@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
             window.location.replace("?_delete=" + id);
         }        
     });
-
+*/
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
