@@ -35,7 +35,7 @@ class Options_View {
 
 	public function run() {
 		
-		//add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 	}
 
