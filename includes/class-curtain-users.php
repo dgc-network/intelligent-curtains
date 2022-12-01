@@ -16,7 +16,7 @@ if (!class_exists('curtain_users')) {
             //add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
             //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-            //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+            add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
             self::create_tables();
         }
 
