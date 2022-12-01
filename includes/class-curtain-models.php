@@ -39,6 +39,7 @@ if (!class_exists('curtain_models')) {
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
                 $data['model_price']=$_POST['_model_price'];
+                $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $result = self::insert_curtain_model($data);
             }
@@ -48,6 +49,7 @@ if (!class_exists('curtain_models')) {
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
                 $data['model_price']=$_POST['_model_price'];
+                $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $where=array();
                 $where['curtain_model_id']=$_POST['_curtain_model_id'];
