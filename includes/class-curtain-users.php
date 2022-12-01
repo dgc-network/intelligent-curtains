@@ -197,13 +197,14 @@ if (!class_exists('curtain_users')) {
                     return 'You have not permission to access this page. Please check to the administrators.';
                 }
             }
-
+/*
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_user_id']=$_GET['_delete'];
                 $result = self::delete_curtain_users($where);
+                $result = self::delete_user_permissions($where);
             }
-
+*/
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
@@ -418,7 +419,6 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_users';
             $wpdb->delete($table, $where);
-            self::delete_user_permissions($where);
         }
 
         public function insert_user_permission($data=[]) {
