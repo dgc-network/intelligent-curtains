@@ -134,7 +134,8 @@ if (!class_exists('order_items')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
-            $output  = '<h2>Order Items - '.$agent->agent_name.'</h2>';            
+            //$output  = '<h2>Order Items - '.$agent->agent_name.'</h2>';
+            $output  = '<h2>Order Items</h2>';
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
@@ -150,7 +151,7 @@ if (!class_exists('order_items')) {
             $output .= '<th>spec</th>';
             $output .= '<th>QTY</th>';
             $output .= '<th>amount</th>';
-            $output .= '<th>remark</th>';
+            $output .= '<th></th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
@@ -176,7 +177,7 @@ if (!class_exists('order_items')) {
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
                 } else {
-                    $output .= '<td></td>';
+                    $output .= '<td><i class="fa-regular fa-trash-can"></i></td>';
                 }
                 $output .= '</tr>';
             }
