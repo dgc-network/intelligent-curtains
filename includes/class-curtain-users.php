@@ -464,5 +464,5 @@ if (!class_exists('curtain_users')) {
     }
     $curtain_users = new curtain_users();
     add_shortcode( 'curtain-user-list', array( $curtain_users, 'list_curtain_users' ) );
-    add_shortcode( 'curtain-chat-form', array( $curtain_users, 'curtain_chat_form' ) );
+    //add_shortcode( 'curtain-chat-form', array( $curtain_users, 'curtain_chat_form' ) );
 }
