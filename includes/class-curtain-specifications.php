@@ -92,8 +92,8 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="submit" value="'.$result->curtain_specification_name.'">';
                 $output .= '</form></td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
-                $output .= '<td>'.$result->specification_price.'</td>';
                 $output .= '<td>'.$result->specification_unit.'</td>';
+                $output .= '<td>'.$result->specification_price.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '</tr>';
             }
