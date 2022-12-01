@@ -25,7 +25,7 @@ function register_session() {
     }
 }
 add_action( 'init', 'register_session' );
-
+/*
 function enqueue_scripts() {		
     wp_enqueue_script( 'custom-options-view', plugin_dir_path( __FILE__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
     wp_enqueue_script( 'qrcode-js', plugin_dir_path( __FILE__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
@@ -39,9 +39,10 @@ function enqueue_scripts() {
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+*/
 
 define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
-//require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
+require_once MY_PLUGIN_DIR . 'includes/class-options-loader.php';
 require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';

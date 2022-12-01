@@ -75,7 +75,7 @@ if ( ! class_exists( 'Options_Loader' ) ) {
 			$this->load_dependencies();
 			//$this->set_locale();
 			//$this->run_options_admin();
-			$this->run_options_view();
+			//$this->run_options_view();
 		}
 
 		/**
