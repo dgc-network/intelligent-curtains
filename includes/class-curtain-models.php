@@ -106,7 +106,7 @@ if (!class_exists('curtain_models')) {
 
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
-                global $wpdb;
+                $curtain_products = new curtain_products();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output .= '<div id="dialog" title="Create new model">';
@@ -118,11 +118,12 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="model-price">Price</label>';
                     $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all">';
+                    $output .= '<label for="curtain_product_id">Product</label>';
+                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
                     $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {                    
@@ -136,11 +137,12 @@ if (!class_exists('curtain_models')) {
                     $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
                     $output .= '<label for="model-price">Price</label>';
                     $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all" value="'.$row->model_price.'">';
+                    $output .= '<label for="curtain_product_id">Product</label>';
+                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
                     $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                     $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
@@ -173,7 +175,6 @@ if (!class_exists('curtain_models')) {
         public function select_options( $default_id=null ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
-            //$output = '<option value="no_select">-- Select an option --</option>';
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
                 if ( $result->curtain_model_id == $default_id ) {
@@ -184,7 +185,6 @@ if (!class_exists('curtain_models')) {
                 $output .= $result->curtain_model_name;
                 $output .= '</option>';        
             }
-            //$output .= '<option value="delete_select">-- Remove this --</option>';
             $output .= '<option value="0">-- Remove this --</option>';
             return $output;
         }
@@ -200,18 +200,10 @@ if (!class_exists('curtain_models')) {
                 model_description varchar(50),
                 model_price decimal(10,2),
                 curtain_vendor_name varchar(50),
+                curtain_product_id int(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_model_id)
-            ) $charset_collate;";
-            dbDelta($sql);
-        
-            $sql = "CREATE TABLE `{$wpdb->prefix}curtain_products` (
-                curtain_product_id int NOT NULL AUTO_INCREMENT,
-                curtain_product_name varchar(50),
-                create_timestamp int(10),
-                update_timestamp int(10),
-                PRIMARY KEY (curtain_product_id)
             ) $charset_collate;";
             dbDelta($sql);
         }
