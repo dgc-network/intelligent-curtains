@@ -9,7 +9,7 @@ if (!class_exists('curtain_users')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-user-list', array( __CLASS__, 'list_curtain_users' ));
+            //add_shortcode('curtain-user-list', array( __CLASS__, 'list_curtain_users' ));
             //add_shortcode('curtain-chat-form', array( __CLASS__, 'curtain_chat_form' ));
             //add_shortcode('chat-message-list', array( __CLASS__, 'list_chat_messages' ));
             //add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
@@ -463,5 +463,5 @@ if (!class_exists('curtain_users')) {
         }
     }
     $curtain_users = new curtain_users();
-    add_shortcode('curtain-user-list', $curtain_users->list_curtain_users());    
+    add_shortcode( 'curtain-user-list', array( $curtain_users, 'list_curtain_users' ) );
 }
