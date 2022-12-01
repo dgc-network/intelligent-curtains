@@ -44,6 +44,7 @@ add_option('_chat_from', 'line-bot');
 $line_webhook = new line_webhook();
 $line_webhook->init();
 */
+/*
 function enqueue_scripts() {
 		
     wp_enqueue_script( 'custom-options-view', MY_PLUGIN_DIR . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
@@ -56,15 +57,6 @@ function enqueue_scripts() {
     wp_enqueue_style( 'chat-css', MY_PLUGIN_DIR . 'assets/css/chat.css', '', time() );
     wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
-/*
-    // You need styling for the datepicker. For simplicity I've linked to the jQuery UI CSS on a CDN.
-    wp_register_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
-    wp_register_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
-    wp_register_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
-    wp_enqueue_script( 'jquery-ui-js' );
-    wp_enqueue_style( 'jquery-ui-css' );  
-    wp_enqueue_style( 'demos-style-css' );
-*/    
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
@@ -96,7 +88,7 @@ function create_tables() {
     dbDelta($sql);
 }
 add_action( 'init', 'create_tables' );
-
+*/
 add_shortcode( 'order-item-list', 'list_order_items' );
 function list_order_items() {
     return 'I am here';
