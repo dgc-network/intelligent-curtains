@@ -20,6 +20,7 @@ if (!class_exists('curtain_service')) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
                     
+                    // registration for QR-code
                     $curtain_user_id=$row->curtain_user_id;
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
                     if (!(is_null($user) || !empty($wpdb->last_error))) {
@@ -31,7 +32,19 @@ if (!class_exists('curtain_service')) {
                     if (!(is_null($model) || !empty($wpdb->last_error))) {
                         $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                     }
-    
+                    $six_digit_random_number = random_int(100000, 999999);
+                    $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
+                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
+                    $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
+                    $output .= ' 完成註冊程序<br>';
+                    $data=array();
+                    $data['one_time_password']=$six_digit_random_number;
+                    $where=array();
+                    $where['qr_code_serial_no']=$qr_code_serial_no;
+                    $serial_number = new serial_number();
+                    $result = $serial_number->update_serial_number($data, $where);    
+
+/*    
                     $where='"%view%"';
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
@@ -41,7 +54,7 @@ if (!class_exists('curtain_service')) {
                         $output .= '</div>';
                     }
                     $output .= '</div>';
-    
+
                     if (is_null($user) || !empty($wpdb->last_error)) {
                         // registration
                         $six_digit_random_number = random_int(100000, 999999);
@@ -62,7 +75,7 @@ if (!class_exists('curtain_service')) {
                         $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
                         $output .= '<br>在我們的Line官方帳號聊天室中聯絡我們的客服人員<br>';
                     }
-    
+*/    
                 } else {
 
                     $where='"%admin%"';

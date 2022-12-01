@@ -47,6 +47,7 @@ define('MY_PLUGIN_DIR', plugin_dir_path( __FILE__ ));
 require_once MY_PLUGIN_DIR . 'line-bot-sdk-tiny/LINEBotTiny.php';
 require_once MY_PLUGIN_DIR . 'includes/class-line-webhook.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
+require_once MY_PLUGIN_DIR . 'includes/class-curtain-products.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-agents.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-orders.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
@@ -60,34 +61,4 @@ add_option('_chat_from', 'line-bot');
 $line_webhook = new line_webhook();
 $line_webhook->init();
 
-/*
-function create_tables() {
-    global $wpdb;
-    $charset_collate = $wpdb->get_charset_collate();
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
-    $sql = "CREATE TABLE {$wpdb->prefix}curtain_users (
-        curtain_user_id int NOT NULL AUTO_INCREMENT,
-        line_user_id varchar(50) UNIQUE,
-        display_name varchar(50),
-        mobile_phone varchar(20),
-        curtain_agent_id int(10),
-        user_role varchar(20),
-        create_timestamp int(10),
-        update_timestamp int(10),
-        PRIMARY KEY (curtain_user_id)
-    ) $charset_collate;";
-    dbDelta($sql);
-
-    $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
-        user_permission_id int NOT NULL AUTO_INCREMENT,
-        curtain_user_id int NOT NULL,
-        service_option_id int NOT NULL,
-        create_timestamp int(10),
-        PRIMARY KEY (user_permission_id)
-    ) $charset_collate;";
-    dbDelta($sql);
-}
-add_action( 'init', 'create_tables' );
-*/
 ?>

@@ -205,6 +205,15 @@ if (!class_exists('curtain_models')) {
                 PRIMARY KEY (curtain_model_id)
             ) $charset_collate;";
             dbDelta($sql);
+        
+            $sql = "CREATE TABLE `{$wpdb->prefix}curtain_products` (
+                curtain_product_id int NOT NULL AUTO_INCREMENT,
+                curtain_product_name varchar(50),
+                create_timestamp int(10),
+                update_timestamp int(10),
+                PRIMARY KEY (curtain_product_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         }
     }
     $curtain_models = new curtain_models();

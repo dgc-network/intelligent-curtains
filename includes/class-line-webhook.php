@@ -114,7 +114,7 @@ if (!class_exists('line_webhook')) {
                                             $where=array();
                                             $where['one_time_password']=$six_digit_random_number;
                                             $result = $serial_number->update_serial_number($data, $where);
-    
+                                            
                                             $body_messages = array();
                                             $body_messages[] = 'Hi, '.$profile['displayName'];
                                             $body_messages[] = 'QR Code 已經完成註冊';
