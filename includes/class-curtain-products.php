@@ -12,10 +12,6 @@ if (!class_exists('curtain_products')) {
             self::create_tables();
         }
 
-        function enqueue_scripts() {		
-            wp_enqueue_script( 'custom-curtain-models', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-models.js', array( 'jquery' ), time(), true );
-        }    
-
         public function list_curtain_products() {
 
             global $wpdb;
