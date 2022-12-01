@@ -9,7 +9,6 @@ if (!class_exists('serial_number')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode( 'serial-number-list', array( __CLASS__, 'list_serial_number' ) );
             self::create_tables();
         }
 
@@ -192,5 +191,6 @@ if (!class_exists('serial_number')) {
             dbDelta($sql);
         }
     }
-    new serial_number();
+    $serial_number = new serial_number();
+    add_shortcode( 'serial-number-list', array( $serial_number, 'list_serial_number' ) );
 }

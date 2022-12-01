@@ -9,7 +9,6 @@ if (!class_exists('curtain_agents')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-agent-list', array( __CLASS__, 'list_curtain_agents' ));
             self::create_tables();
         }
 
@@ -214,5 +213,6 @@ if (!class_exists('curtain_agents')) {
             dbDelta($sql);            
         }
     }
-    new curtain_agents();
+    $curtain_agents = new curtain_agents();
+    add_shortcode( 'curtain-agent-list', array( $curtain_agents, 'list_curtain_agents' ) );
 }

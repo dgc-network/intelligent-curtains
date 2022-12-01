@@ -9,7 +9,6 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode( 'order-item-list', array( __CLASS__, 'list_order_items' ) );
             self::create_tables();
         }
 
@@ -270,5 +269,6 @@ if (!class_exists('order_items')) {
             dbDelta($sql);
         }
     }
-    new order_items();
+    $order_items = new order_items();
+    add_shortcode( 'order-item-list', array( $order_items, 'list_order_items' ) );
 }

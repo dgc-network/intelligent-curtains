@@ -9,8 +9,6 @@ if (!class_exists('curtain_service')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-service', array( __CLASS__, 'init_curtain_service' ));
-            add_shortcode('service-option-list', array( __CLASS__, 'list_service_options' ));
             self::create_tables();
         }
 
@@ -273,6 +271,8 @@ if (!class_exists('curtain_service')) {
             dbDelta($sql);            
         }
     }
-    new curtain_service();
+    $curtain_service = new curtain_service();
+    add_shortcode( 'curtain-service', array( $curtain_service, 'init_curtain_service' ) );
+    add_shortcode( 'service-option-list', array( $curtain_service, 'list_service_options' ) );
 }
 ?>

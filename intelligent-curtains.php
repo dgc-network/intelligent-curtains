@@ -44,7 +44,6 @@ add_option('_chat_from', 'line-bot');
 $line_webhook = new line_webhook();
 $line_webhook->init();
 
-/*
 function enqueue_scripts() {
 		
     wp_enqueue_script( 'custom-options-view', MY_PLUGIN_DIR . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
@@ -59,7 +58,7 @@ function enqueue_scripts() {
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
-
+/*
 function create_tables() {
     global $wpdb;
     $charset_collate = $wpdb->get_charset_collate();
@@ -88,11 +87,5 @@ function create_tables() {
     dbDelta($sql);
 }
 add_action( 'init', 'create_tables' );
-*/
-/*
-add_shortcode( 'order-item-list', 'list_order_items' );
-function list_order_items() {
-    return 'I am here';
-}
 */
 ?>

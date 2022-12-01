@@ -9,7 +9,6 @@ if (!class_exists('curtain_models')) {
          * Class constructor
          */
         public function __construct() {
-            add_shortcode('curtain-model-list', array( __CLASS__, 'list_curtain_models' ));
             self::create_tables();
         }
 
@@ -208,5 +207,6 @@ if (!class_exists('curtain_models')) {
             dbDelta($sql);
         }
     }
-    new curtain_models();
+    $curtain_models = new curtain_models();
+    add_shortcode( 'curtain-model-list', array( $curtain_models, 'list_curtain_models' ) );
 }
