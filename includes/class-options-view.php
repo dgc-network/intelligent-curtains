@@ -39,8 +39,8 @@ class Options_View {
 
 	}
 
-	function enqueue_scripts() {
-/*		
+	private function enqueue_scripts() {
+		
 		wp_enqueue_script( 'custom-options-view', plugin_dir_url( __DIR__ ) . 'assets/js/custom-options-view.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'qrcode-js', plugin_dir_url( __DIR__ ) . 'assets/js/jquery.qrcode.min.js', array( 'jquery' ), time(), true );
 
@@ -58,6 +58,6 @@ class Options_View {
 		wp_enqueue_script( 'jquery-ui-js' );
 		wp_enqueue_style( 'jquery-ui-css' );  
 		wp_enqueue_style( 'demos-style-css' );  
-*/
+
 	}
 }
