@@ -112,7 +112,7 @@ if (!class_exists('curtain_products')) {
                     $output .= '<fieldset>';
                     $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_curtain_product_id">';
                     $output .= '<label for="curtain-product-name">Product Name</label>';
-                    $output .= '<input type="text" name="_curtain_product_name" id="curtain-product-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
+                    $output .= '<input type="text" name="_curtain_product_name" id="curtain-product-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_product_name.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                     $output .= '</form>';
