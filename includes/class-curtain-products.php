@@ -177,5 +177,5 @@ if (!class_exists('curtain_products')) {
         }
     }
     $curtain_products = new curtain_products();
-    add_shortcode( 'curtain-product-list', array( $curtain_models, 'list_curtain_products' ) );
+    add_shortcode( 'curtain-product-list', array( $curtain_products, 'list_curtain_products' ) );
 }
