@@ -34,7 +34,7 @@ require_once MY_PLUGIN_DIR . 'includes/class-curtain-service.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-agents.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-orders.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
-//require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
+require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');
 add_option('_users_page', 'users');
@@ -66,6 +66,40 @@ function enqueue_scripts() {
     wp_enqueue_style( 'demos-style-css' );
 */    
 }
-//add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+
+function create_tables() {
+    global $wpdb;
+    $charset_collate = $wpdb->get_charset_collate();
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+    $sql = "CREATE TABLE {$wpdb->prefix}curtain_users (
+        curtain_user_id int NOT NULL AUTO_INCREMENT,
+        line_user_id varchar(50) UNIQUE,
+        display_name varchar(50),
+        mobile_phone varchar(20),
+        curtain_agent_id int(10),
+        user_role varchar(20),
+        create_timestamp int(10),
+        update_timestamp int(10),
+        PRIMARY KEY (curtain_user_id)
+    ) $charset_collate;";
+    dbDelta($sql);
+
+    $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
+        user_permission_id int NOT NULL AUTO_INCREMENT,
+        curtain_user_id int NOT NULL,
+        service_option_id int NOT NULL,
+        create_timestamp int(10),
+        PRIMARY KEY (user_permission_id)
+    ) $charset_collate;";
+    dbDelta($sql);
+}
+add_action( 'init', 'create_tables' );
+
+add_shortcode( 'order-item-list', 'list_order_items' );
+function list_order_items() {
+    return 'I am here';
+}
 
 ?>
