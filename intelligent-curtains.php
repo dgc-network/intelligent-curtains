@@ -40,8 +40,8 @@ add_option('_service_page', 'service');
 add_option('_users_page', 'users');
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 add_option('_chat_from', 'line-bot');
-/*
+
 $line_webhook = new line_webhook();
 $line_webhook->init();
-*/
+
 ?>
