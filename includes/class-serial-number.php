@@ -117,11 +117,15 @@ if (!class_exists('serial_number')) {
                 $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
+                $output .= '<div style="display: flex;">';
                 $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
                 $output .= $print_me;
+                $output .= '<span> </span>';
+                $output .= '<span>'.$_id.'</span>';
                 $output .= '</div>';
-                $output .= '<br><br><br><br><br>';
+                $output .= '</div>';
                 
+                $output .= '<br><br><br><br><br>';                
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
                 $output .= '<div class="print-me-'.$_id.'">';
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
