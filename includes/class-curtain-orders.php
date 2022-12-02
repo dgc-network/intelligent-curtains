@@ -189,31 +189,28 @@ if (!class_exists('order_items')) {
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    $output .= '<div id="dialog" title="Order item update">';
-                    $output .= 'Wrong id!';
-                    $output .= '</div>';
-                } else {
-                    $output .= '<div id="dialog" title="Order item update">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                    $output .= '<label for="curtain_product_id">Product</label>';
-                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
-                    $output .= '<label for="curtain_model_id">Model</label>';
-                    $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
-                    $output .= '<label for="curtain_specification_id">Specification</label>';
-                    $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options($row->curtain_specification_id).'</select>';
-                    $output .= '<label for="curtain-dimension">Width</label>';
-                    $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="order_item_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                }
+                $output .= '<div id="dialog" title="Order item update">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
+                $output .= '<label for="curtain_product_id">Product</label>';
+                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<label for="curtain_model_id">Model</label>';
+                $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
+                $output .= '<label for="curtain_specification_id">Specification</label>';
+                $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options($row->curtain_specification_id).'</select>';
+                $output .= '<label for="curtain-dimension">Dimension</label>';
+                $output .= '<div>';
+                $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
+                $output .= '<span> x </span>';
+                $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
+                $output .= '</div>';
+                $output .= '<label for="order_item_qty">QTY</label>';
+                $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
+                $output .= '</form>';
+                $output .= '</div>';
             }
 
             if( isset($_POST['_add']) ) {
@@ -229,9 +226,12 @@ if (!class_exists('order_items')) {
                 $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
                 $output .= '<label for="curtain_specification_id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options().'</select>';
-                $output .= '<label for="curtain-width">Width</label>';
+                $output .= '<label for="curtain-dimension">Dimension</label>';
+                $output .= '<div>';
                 $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<span> x </span>';
                 $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
+                $output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
