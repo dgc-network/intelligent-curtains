@@ -143,6 +143,12 @@ if (!class_exists('curtain_products')) {
             $wpdb->delete($table, $where);
         }
 
+        public function get_name( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $_id ), OBJECT );
+            return $row->curtain_product_name;
+        }
+
         public function select_options( $_id=0 ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );

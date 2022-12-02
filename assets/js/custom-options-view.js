@@ -1,5 +1,10 @@
 jQuery(document).ready(function($) {
 
+    jQuery("#select-product-id").change(function() {
+        var val = jQuery(this).val();
+        jQuery("#select-3-field").val(val);
+    });
+    
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
     });
