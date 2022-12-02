@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     // Row/Record Edit Click
-    jQuery('[id^="edit-btn-"]').on( "click", function() {
+    $('[id^="edit-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
