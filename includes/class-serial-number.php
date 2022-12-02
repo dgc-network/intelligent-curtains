@@ -67,13 +67,6 @@ if (!class_exists('serial_number')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-/*                
-                $output .= '<td>'.$result->serial_number_id.'</td>';
-                $output .= '<td style="display: flex;"><form method="post">';
-                $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
-                $output .= '</form>';
-                $output .= '</td>';
-*/                
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
@@ -84,7 +77,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-qrcode"></i></span>';
+                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-light fa-qrcode"></i></span>';
                 $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
@@ -145,49 +138,14 @@ if (!class_exists('serial_number')) {
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
                 $output .= '</div>';                
             }
-/*
-            if( isset($_POST['_serial_no']) ) {
-                
-                $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $print_me = do_shortcode('[print-me target=".print-me-'.$_POST['_serial_no'].'"/]');
-                $output .= $print_me;
-                $output .= '</div>';
-                $output .= '<br><br><br><br><br>';
-                
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_POST['_serial_no'] ), OBJECT );            
-                $output .= '<div class="print-me-'.$_POST['_serial_no'].'">';
-                //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
-                $output .= '<div id="qrcode1">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
-                //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
-                $output .= '<div id="qrcode2" style="margin-top: 100px;">';
-                $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_POST['_serial_no'];
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
-                $output .= '</div>';                
-            }
-*/            
             return $output;
         }
 
-        function insert_serial_number($data=[], $_x='') {
+        public function insert_serial_number($data=[], $_x='') {
             global $wpdb;
             $curtain_model_id = $data['curtain_model_id'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
             if (!(is_null($model) || !empty($wpdb->last_error))) {
-                //$qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time();
-                //$qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time() . $data['x'];
                 $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time() . $_x;
                 $data['qr_code_serial_no'] = $qr_code_serial_no;
                 $data['create_timestamp'] = time();
