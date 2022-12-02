@@ -1,18 +1,19 @@
 jQuery(document).ready(function($) {
 
-    jQuery("#select-product-id").change(function() {
+    $("#select-product-id").change(function() {
+        alert('I am here');
         var val = jQuery(this).val();
         jQuery("#select-3-field").val(val);
     });
     
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
-        $(this).css('color', 'blue');
+        $(this).css('color', 'black');
     });
         
     $('[id^="cart-btn"]').mouseout(function() {
         $(this).css('cursor', 'default');
-        $(this).css('color', 'defaultcolor');
+        $(this).css('color', 'lightblue');
     });
         
     $('[id^="cart-btn"]').on( "click", function() {
