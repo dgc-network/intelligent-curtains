@@ -5,12 +5,10 @@ jQuery(document).ready(function($) {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
-        //if (window.confirm("Are you sure you want to update this record?")) {
-            window.location.replace("?_edit=" + id);
-        //}        
+        window.location.replace("?_edit=" + id);
     });
 
-    jQuery('[id^="del-btn-"]').on( "click", function() {
+    $('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(8);        

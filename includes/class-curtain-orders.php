@@ -157,6 +157,7 @@ if (!class_exists('order_items')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>';
+/*                
                 $output .= '<form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
                 if ( $result->is_checkout==1) {
@@ -165,6 +166,8 @@ if (!class_exists('order_items')) {
                     $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
                 }
                 $output .= '</form>';
+*/
+                $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 $output .= '</td>';
                 $product = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $result->curtain_product_id ), OBJECT );            
                 $output .= '<td>'.$product->curtain_product_name.'</td>';
@@ -187,17 +190,21 @@ if (!class_exists('order_items')) {
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create Item" name="_mode">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
             $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
+                unset($_GET['_edit']);
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
+                    $output .= '<div id="dialog" title="Order item update">';
+                    $output .= 'Wrong id!';
+                    $output .= '</div>';
                 } else {
                     $output .= '<div id="dialog" title="Order item update">';
                     $output .= '<form method="post">';
@@ -221,17 +228,36 @@ if (!class_exists('order_items')) {
                 }
             }
 
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                $_id = $_POST['_id'];
+            if( isset($_POST['_add']) ) {
+                //$_id = $_POST['_id'];
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
+                $output .= '<div id="dialog" title="Create new item">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<label for="curtain_product_id">Product</label>';
+                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
+                $output .= '<label for="curtain_model_id">Model</label>';
+                $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
+                $output .= '<label for="curtain_specification_id">Specification</label>';
+                $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options().'</select>';
+                $output .= '<label for="curtain-width">Width</label>';
+                $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="order_item_qty">QTY</label>';
+                $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                $output .= '</form>';
+                $output .= '</div>';
+/*
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output .= '<div id="dialog" title="Create new item">';
                     $output .= '<form method="post">';
                     $output .= '<fieldset>';
-                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
+                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
                     //$output .= '<label for="curtain_agent_id">Agent</label>';
                     //$output .= '<input type="text" disabled value="'.$agent->agent_name.'" id="curtain_agent_id" class="text ui-widget-content ui-corner-all">';
                     $output .= '<label for="curtain_product_id">Product</label>';
@@ -278,8 +304,9 @@ if (!class_exists('order_items')) {
                     //$output .= '<form method="get">';
                     //$output .= '<input class="wp-block-button__link" type="button" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
                     //$output .= '</form>';
-                    $output .= '</div>';
+                    $output .= '</div>';                    
                 }
+*/                
             }
             return $output;
         }
