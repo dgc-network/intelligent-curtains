@@ -3,12 +3,12 @@ jQuery(document).ready(function($) {
     // Row/Record Edit Click
     $('[id^="edit-btn-"]').mouseover(function() {
         //$('selector').css('cursor', 'pointer');
-        this.css('cursor', 'pointer');
+        $(this).css('cursor', 'pointer');
     });
         
     $('[id^="edit-btn-"]').mouseout(function() {
         //$('selector').css('cursor', 'pointer');
-        this.css('cursor', 'default');
+        $(this).css('cursor', 'default');
     });
         
     $('[id^="edit-btn-"]').on( "click", function() {
