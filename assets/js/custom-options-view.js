@@ -4,6 +4,8 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").val('');
         $("#select-model-id").append('<option value="0">-- Select an option --</option>');
+        $("#select-specification-id").val('');
+        $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
         jQuery.ajax({
             type: 'POST',
             url: '/wp-admin/admin-ajax.php',
@@ -13,8 +15,8 @@ jQuery(document).ready(function($) {
                 'id': val,
             },
             success: function (response) {
-                currenttime = response.currenttime;
-                message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                //currenttime = response.currenttime;
+                //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                 $("#select-model-id").append('<option value="0">-- Select an option --</option>');
             },
             error: function(error){
@@ -23,6 +25,7 @@ jQuery(document).ready(function($) {
         });
         //alert(val);
         $("#select-model-id").append('<option value="0">-- Remove this --</option>');
+        $("#select-specification-id").append('<option value="0">-- Remove this --</option>');
 
         //jQuery("#select-3-field").val(val);
     });
