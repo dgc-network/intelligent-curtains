@@ -56,22 +56,25 @@ if (!class_exists('serial_number')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th>id</th>';
             $output .= '<th>serial_no</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>agent</th>';
             $output .= '<th>user</th>';
             $output .= '<th>update_time</th>';
+            $output .= '<th></th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+/*                
                 $output .= '<td>'.$result->serial_number_id.'</td>';
                 $output .= '<td style="display: flex;"><form method="post">';
                 $output .= '<input type="submit" value="'.$result->qr_code_serial_no.'" name="_serial_no">';
                 $output .= '</form>';
                 $output .= '</td>';
+*/                
+                $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
@@ -80,15 +83,20 @@ if (!class_exists('serial_number')) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-qrcode"></i></span>';
+                $output .= '<span>  </span>';
+                $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             echo do_shortcode('[print-me target="body"/]');
 
-            if( isset($_POST['_mode']) ) {
+            if( isset($_POST['_add']) ) {
                 $curtain_models = new curtain_models();
                 $curtain_agents = new curtain_agents();
                 $output .= '<div id="dialog" title="Create new serial_no">';
@@ -102,11 +110,42 @@ if (!class_exists('serial_number')) {
                 $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                 $output .= '</form>';
                 $output .= '</div>';
             }
 
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
+                $output .= '<div id="dialog" title="QR Code">';
+                $output .= '<div id="qrcode">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+                $output .= $print_me;
+                $output .= '</div>';
+                $output .= '<br><br><br><br><br>';
+                
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
+                $output .= '<div class="print-me-'.$_id.'">';
+                //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
+                $output .= '<div id="qrcode1">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
+                $output .= '<div id="qrcode2" style="margin-top: 100px;">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                $output .= '</div>';                
+            }
+/*
             if( isset($_POST['_serial_no']) ) {
                 
                 $output .= '<div id="dialog" title="QR Code">';
@@ -138,6 +177,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
                 $output .= '</div>';                
             }
+*/            
             return $output;
         }
 

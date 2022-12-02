@@ -90,7 +90,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<tr>';
                 $output .= '<td>'.$result->curtain_specification_name.'</td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$result->curtain_product_id}", OBJECT );
                 $output .= '<td>'.$row->curtain_product_name.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->specification_unit.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->specification_price.'</td>';
