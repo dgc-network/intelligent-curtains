@@ -112,7 +112,8 @@ if (!class_exists('curtain_specifications')) {
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $curtain_products = new curtain_products();
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+                //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
                 $output .= '<div id="dialog" title="Curtain specification update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -192,12 +193,12 @@ if (!class_exists('curtain_specifications')) {
         }
 
         public function get_name( $_id=0 ) {
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
             return $row->curtain_specifiction_name;
         }
 
         public function get_price( $_id=0 ) {
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
             return $row->specifiction_price;
         }
 
