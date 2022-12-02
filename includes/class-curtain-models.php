@@ -50,6 +50,7 @@ if (!class_exists('curtain_models')) {
                 $where=array();
                 $where['curtain_model_id']=$_POST['_curtain_model_id'];
                 $result = self::update_curtain_models($data, $where);
+                ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
@@ -76,32 +77,86 @@ if (!class_exists('curtain_models')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th>id</th>';
+            //$output .= '<th>id</th>';
             $output .= '<th>model</th>';
             $output .= '<th>description</th>';
             $output .= '<th>price</th>';
             $output .= '<th>vendor</th>';
             $output .= '<th>update_time</th>';
+            $output .= '<th></th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+/*
                 $output .= '<td>'.$result->curtain_model_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_model_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->curtain_model_name.'">';
                 $output .= '</form></td>';
+*/
+                $output .= '<td>'.$result->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->model_description.'</td>';
                 $output .= '<td>'.$result->model_price.'</td>';
                 $output .= '<td>'.$result->curtain_vendor_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span>  </span>';
+                $output .= '<span id="del-btn-'.$result->curtain_model_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
 
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
+                $curtain_products = new curtain_products();
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id={$_id}", OBJECT );
+                $output .= '<div id="dialog" title="Curtain model update">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<input type="hidden" value="'.$row->curtain_model_id.'" name="_curtain_model_id">';
+                $output .= '<label for="curtain-model-name">Model Name</label>';
+                $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_model_name.'">';
+                $output .= '<label for="model-description">Description</label>';
+                $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all" value="'.$row->model_description.'">';
+                $output .= '<label for="model-price">Price</label>';
+                $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all" value="'.$row->model_price.'">';
+                $output .= '<label for="curtain_product_id">Product</label>';
+                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
+                $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_vendor_name.'">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+
+            if( isset($_GET['_edit']) ) {
+                $curtain_products = new curtain_products();
+                $output .= '<div id="dialog" title="Create new model">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<label for="curtain-model-name">Model Name</label>';
+                $output .= '<input type="text" name="_curtain_model_name" id="curtain-model-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="model-description">Description</label>';
+                $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="model-price">Price</label>';
+                $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain_product_id">Product</label>';
+                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
+                $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
+                $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 $curtain_products = new curtain_products();
@@ -145,6 +200,7 @@ if (!class_exists('curtain_models')) {
                     $output .= '</div>';
                 }
             }
+*/            
             return $output;
         }
 
