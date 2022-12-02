@@ -94,13 +94,17 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
+                $qty = 1;
                 if (is_numeric($_POST['_curtain_width'])) {
                     $width = $_POST['_curtain_width'];
                 }
                 if (is_numeric($_POST['_curtain_height'])) {
                     $height = $_POST['_curtain_height'];
                 }
-                $amount = $width/100 * $height/100 ;
+                if (is_numeric($_POST['_order_item_qty'])) {
+                    $qty = $_POST['_order_item_qty'];
+                }
+                $amount = $width/100 * $height/100 * $qty;
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
@@ -118,13 +122,17 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_update']) ) {
                 $width = 1;
                 $height = 1;
+                $qty = 1;
                 if (is_numeric($_POST['_curtain_width'])) {
                     $width = $_POST['_curtain_width'];
                 }
                 if (is_numeric($_POST['_curtain_height'])) {
                     $height = $_POST['_curtain_height'];
                 }
-                $amount = $width/100 * $height/100 ;
+                if (is_numeric($_POST['_order_item_qty'])) {
+                    $qty = $_POST['_order_item_qty'];
+                }
+                $amount = $width/100 * $height/100 * $qty;
 
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
