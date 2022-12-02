@@ -77,7 +77,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-light fa-qrcode"></i></span>';
+                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-print"></i></span>';
                 $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';

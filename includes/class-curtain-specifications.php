@@ -37,6 +37,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_price']=$_POST['_specification_price'];
                 $data['specification_unit']=$_POST['_specification_unit'];
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['length_only']=$_POST['_length_only'];
                 $result = self::insert_curtain_specification($data);
             }
             
@@ -47,6 +48,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_price']=$_POST['_specification_price'];
                 $data['specification_unit']=$_POST['_specification_unit'];
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['length_only']=$_POST['_length_only'];
                 $where=array();
                 $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
                 $result = self::update_curtain_specifications($data, $where);
@@ -125,6 +127,11 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all" value="'.$row->specification_unit.'">';
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"';
+                if ($row->length_only==1) {
+                    $output .= ' checked';    
+                }
+                $output .= '><label for="length-only">Length Only</label></td>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -146,56 +153,12 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
+                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"><label for="length-only">Length Only</label></td>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
-/*
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                $_id = $_POST['_id'];
-                $curtain_products = new curtain_products();
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    $output .= '<div id="dialog" title="Create new specification">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<label for="curtain-specification-name">Specification Name</label>';
-                    $output .= '<input type="text" name="_curtain_specification_name" id="curtain-specification-name" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="specification-description">Description</label>';
-                    $output .= '<input type="text" name="_specification_description" id="specification-description" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="specification-price">Price</label>';
-                    $output .= '<input type="text" name="_specification_price" id="specification-price" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="specification-unit">Unit</label>';
-                    $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="curtain_product_id">Product</label>';
-                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                } else {                    
-                    $output .= '<div id="dialog" title="Curtain specification update">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<input type="hidden" value="'.$row->curtain_specification_id.'" name="_curtain_specification_id">';
-                    $output .= '<label for="curtain-specification-name">Specification Name</label>';
-                    $output .= '<input type="text" name="_curtain_specification_name" id="curtain-specification-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_specification_name.'">';
-                    $output .= '<label for="specification-description">Description</label>';
-                    $output .= '<input type="text" name="_specification_description" id="specification-description" class="text ui-widget-content ui-corner-all" value="'.$row->specification_description.'">';
-                    $output .= '<label for="specification-price">Price</label>';
-                    $output .= '<input type="text" name="_specification_price" id="specification-price" class="text ui-widget-content ui-corner-all" value="'.$row->specification_price.'">';
-                    $output .= '<label for="specification-unit">Unit</label>';
-                    $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all" value="'.$row->specification_unit.'">';
-                    $output .= '<label for="curtain_product_id">Product</label>';
-                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                }
-            }
-*/            
             return $output;
         }
 
@@ -250,6 +213,7 @@ if (!class_exists('curtain_specifications')) {
                 specification_price decimal(10,2),
                 specification_unit varchar(10),
                 curtain_product_id int(10),
+                length_only int(1),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_specification_id)
