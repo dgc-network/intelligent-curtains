@@ -1,13 +1,13 @@
 jQuery(document).ready(function($) {
-/*
+
     // Row/Record Edit Click
     jQuery('[id^="edit-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
-        if (window.confirm("Are you sure you want to update this record?")) {
-            window.location.replace("?_update=" + id);
-        }        
+        //if (window.confirm("Are you sure you want to update this record?")) {
+            window.location.replace("?_edit=" + id);
+        //}        
     });
 
     jQuery('[id^="del-btn-"]').on( "click", function() {
@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
             window.location.replace("?_delete=" + id);
         }        
     });
-*/
+
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });

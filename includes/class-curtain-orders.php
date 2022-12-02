@@ -177,7 +177,8 @@ if (!class_exists('order_items')) {
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
                 } else {
-                    $output .= '<td><i class="fa-regular fa-trash-can"></i></td>';
+                    $output .= '<td><i class="fa-light fa-pen-to-square" id="edit-btn-'.$result->curtain_order_id.'">';
+                    $output .= '<i class="fa-regular fa-trash-can" id="del-btn-'.$result->curtain_order_id.'"></i></td>';
                 }
                 $output .= '</tr>';
             }
