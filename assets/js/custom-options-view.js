@@ -5,6 +5,18 @@ jQuery(document).ready(function($) {
         jQuery("#select-3-field").val(val);
     });
     
+    $('[id^="cart-btn"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+    });
+        
+    $('[id^="cart-btn"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+    });
+        
+    $('[id^="cart-btn"]').on( "click", function() {
+        window.location.assign("orders")
+    });
+
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
     });
