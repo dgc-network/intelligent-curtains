@@ -1,7 +1,10 @@
 jQuery(document).ready(function($) {
 
     $('[id^="update-btn-"]').on( "click", function() {
-        window.location.replace("?");
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(11);
+        window.location.replace("?_update=" + id);
     });
 
     $('[id^="edit-btn-"]').mouseover(function() {
