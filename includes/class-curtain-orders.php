@@ -188,6 +188,7 @@ if (!class_exists('order_items')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
             $output .= '<th>date/time</th>';
             $output .= '<th>product</th>';
             $output .= '<th>model</th>';
@@ -199,6 +200,13 @@ if (!class_exists('order_items')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                if ( $result->is_checkout==1 ) {
+                    $output .= '<td></td>';
+                } else {
+                    $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '</td>';
+                }
                 $output .= '<td>';
                 $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 $output .= '</td>';
