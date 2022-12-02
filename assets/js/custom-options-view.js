@@ -1,7 +1,7 @@
 jQuery(document).ready(function($) {
 
     $('[id^="update-btn-"]').on( "click", function() {
-        window.location.replace("");
+        window.location.replace("?");
     });
 
     $('[id^="edit-btn-"]').mouseover(function() {
