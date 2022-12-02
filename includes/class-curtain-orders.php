@@ -118,6 +118,7 @@ if (!class_exists('order_items')) {
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_order_items($data, $where);
+                return;
             }
 
             if( isset($_GET['_delete']) ) {
@@ -172,15 +173,15 @@ if (!class_exists('order_items')) {
                 $product = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $result->curtain_product_id ), OBJECT );            
                 $output .= '<td>'.$product->curtain_product_name.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                $output .= '<td>'.$model->curtain_model_name.'</td>';
+                $output .= '<td style="text-align: center;">'.$model->curtain_model_name.'</td>';
                 $specification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $result->curtain_specification_id ), OBJECT );            
-                $output .= '<td>'.$specification->curtain_specification_name.$result->curtain_width.'</td>';
-                $output .= '<td>'.$result->order_item_qty.'</td>';
-                $output .= '<td>'.$result->order_item_amount.'</td>';
+                $output .= '<td style="text-align: center;">'.$specification->curtain_specification_name.$result->curtain_width.'</td>';
+                $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
+                $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
                 } else {
-                    $output .= '<td>';
+                    $output .= '<td style="text-align: center;">';
                     $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '<span>  </span>';
                     $output .= '<span id="del-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
