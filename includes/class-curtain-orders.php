@@ -191,8 +191,8 @@ if (!class_exists('order_items')) {
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
             $output .= '</form>';
 
-            if( isset($_POST['_edit']) ) {
-                $_id = $_POST['_edit'];
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
