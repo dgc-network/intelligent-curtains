@@ -3,8 +3,8 @@ jQuery(document).ready(function($) {
     $("#select-product-id").change(function() {
         var val = $(this).val();
         $("#select-model-id").empty();
-        $("#select-model-id").append('<option value="0">-- Select an option --</option>');
         $("#select-specification-id").empty();
+        $("#select-model-id").append('<option value="0">-- Select an option --</option>');
         $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
         jQuery.ajax({
             type: 'POST',
@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'select_product_id',
-                'id': val,
+                //'id': val,
             },
             success: function (response) {
                 //currenttime = response.currenttime;
