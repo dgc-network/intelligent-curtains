@@ -196,7 +196,9 @@ if (!class_exists('order_items')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                unset($_GET['_edit']);
+                ?><script>
+                    window.location.replace("");
+                </script><?php
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
