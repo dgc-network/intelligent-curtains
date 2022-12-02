@@ -108,8 +108,9 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_order_item_qty'])) {
                     $qty = $_POST['_order_item_qty'];
                 }
+                $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-                $amount = $width/100 * $height/100 * $s_price * $qty;
+                $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
@@ -137,8 +138,9 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_order_item_qty'])) {
                     $qty = $_POST['_order_item_qty'];
                 }
+                $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-                $amount = $width/100 * $height/100 * $s_price * $qty;
+                $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
 
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
