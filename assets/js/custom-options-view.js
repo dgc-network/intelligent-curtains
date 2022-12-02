@@ -4,16 +4,14 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-model-id").append('<option value="0">-- Select an option --</option>');
-        //$("#select-model-id").val('<option value="0">-- Select an option --</option>');
         $("#select-specification-id").empty();
         $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
-        //$("#select-specification-id").val('<option value="0">-- Select an option --</option>');
         jQuery.ajax({
             type: 'POST',
             url: '/wp-admin/admin-ajax.php',
             dataType: "json",
             data: {
-                'action': 'select-product-id',
+                'action': 'select_product_id',
                 'id': val,
             },
             success: function (response) {

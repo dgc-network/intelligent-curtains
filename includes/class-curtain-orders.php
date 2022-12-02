@@ -9,11 +9,32 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
+            add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
+            add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
             self::create_tables();
         }
 
-        function list_order_items() {
+        function select_product_id() {
+/*            
+            $from = $_SESSION['username'];
+            $to = $_POST['to'];
+            $message = $_POST['message'];
 
+            $data=array();
+            $data['chat_from']= esc_sql($from);
+            $data['chat_to']= esc_sql($to);
+            $data['chat_message']= esc_sql($message);
+            $line_webhook = new line_webhook();
+            $result = $line_webhook->insert_chat_message($data);
+
+            $response = array();
+            $response['currenttime'] = wp_date( get_option('time_format'), time() );
+            echo json_encode( $response );
+*/            
+            wp_die();
+        }
+
+        function list_order_items() {
             global $wpdb;
             $curtain_products = new curtain_products();
             $curtain_models = new curtain_models();
