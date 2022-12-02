@@ -92,6 +92,16 @@ if (!class_exists('order_items')) {
             }
             
             if( isset($_POST['_create']) ) {
+                $width = 1;
+                $height = 1;
+                if (isset($_POST['_curtain_width'])) {
+                    $width = $_POST['_curtain_width'];
+                }
+                if (isset($_POST['_curtain_height'])) {
+                    $height = $_POST['_curtain_height'];
+                }
+                $amount = $width/100 * $height/100 ;
+
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
@@ -100,12 +110,22 @@ if (!class_exists('order_items')) {
                 $data['curtain_width']=$_POST['_curtain_width'];
                 $data['curtain_height']=$_POST['_curtain_height'];
                 $data['order_item_qty']=$_POST['_order_item_qty'];
-                $data['order_item_amount']=$_POST['_order_item_amount'];
+                $data['order_item_amount']=$amount;
                 $data['is_checkout']=0;
                 $result = self::insert_order_item($data);
             }
 
             if( isset($_POST['_update']) ) {
+                $width = 1;
+                $height = 1;
+                if (isset($_POST['_curtain_width'])) {
+                    $width = $_POST['_curtain_width'];
+                }
+                if (isset($_POST['_curtain_height'])) {
+                    $height = $_POST['_curtain_height'];
+                }
+                $amount = $width/100 * $height/100 ;
+
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
@@ -113,7 +133,7 @@ if (!class_exists('order_items')) {
                 $data['curtain_width']=$_POST['_curtain_width'];
                 $data['curtain_height']=$_POST['_curtain_height'];
                 $data['order_item_qty']=$_POST['_order_item_qty'];
-                $data['order_item_amount']=$_POST['_order_item_amount'];
+                $data['order_item_amount']=$amount;
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_order_items($data, $where);
