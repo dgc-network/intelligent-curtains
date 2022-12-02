@@ -110,7 +110,11 @@ if (!class_exists('order_items')) {
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-                $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
+                    $amount = $m_price + $width/100 * $s_price * $qty;
+                } else {
+                    $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                }
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
@@ -140,7 +144,11 @@ if (!class_exists('order_items')) {
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-                $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
+                    $amount = $m_price + $width/100 * $s_price * $qty;
+                } else {
+                    $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                }
 
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
