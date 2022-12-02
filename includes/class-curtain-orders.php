@@ -15,6 +15,10 @@ if (!class_exists('order_items')) {
         function list_order_items() {
 
             global $wpdb;
+            $curtain_products = new curtain_products();
+            $curtain_models = new curtain_models();
+            $curtain_specifications = new curtain_specifications();
+
             $curtain_agent_id = 0;
             if( isset($_SESSION['username']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
@@ -104,7 +108,8 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_order_item_qty'])) {
                     $qty = $_POST['_order_item_qty'];
                 }
-                $amount = $width/100 * $height/100 * $qty;
+                $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
+                $amount = $width/100 * $height/100 * $s_price * $qty;
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
@@ -132,7 +137,8 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_order_item_qty'])) {
                     $qty = $_POST['_order_item_qty'];
                 }
-                $amount = $width/100 * $height/100 * $qty;
+                $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
+                $amount = $width/100 * $height/100 * $s_price * $qty;
 
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];

@@ -171,12 +171,12 @@ if (!class_exists('curtain_agents')) {
             $wpdb->delete($table, $where);
         }
 
-        function select_options( $default_id=null ) {
+        function select_options( $_id=0 ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $result) {
-                if ( $result->curtain_agent_id == $default_id ) {
+                if ( $result->curtain_agent_id == $_id ) {
                     $output .= '<option value="'.$result->curtain_agent_id.'" selected>';
                 } else {
                     $output .= '<option value="'.$result->curtain_agent_id.'">';

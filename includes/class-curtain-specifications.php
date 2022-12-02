@@ -132,7 +132,8 @@ if (!class_exists('curtain_specifications')) {
                 if ($row->length_only==1) {
                     $output .= ' checked';    
                 }
-                $output .= '><label for="length-only">Length Only</label></td>';
+                $output .= '><span>  </span>';
+                $output .= '<label for="length-only">Length Only</label>';
                 $output .= '</div>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
@@ -156,8 +157,9 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
                 $output .= '<div style="display: flex;">';
-                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"></td>';
-                $output .= '<label for="length-only">Length Only</label></td>';
+                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only">';
+                $output .= '<span>  </span>';
+                $output .= '<label for="length-only">Length Only</label>';
                 $output .= '</div>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
@@ -189,12 +191,22 @@ if (!class_exists('curtain_specifications')) {
             $wpdb->delete($table, $where);
         }
 
-        public function select_options( $default_id=null ) {
+        public function get_name( $_id=0 ) {
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+            return $row->curtain_specifiction_name;
+        }
+
+        public function get_price( $_id=0 ) {
+            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
+            return $row->specifiction_price;
+        }
+
+        public function select_options( $_id=0 ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
-                if ( $result->curtain_specification_id == $default_id ) {
+                if ( $result->curtain_specification_id == $_id ) {
                     $output .= '<option value="'.$result->curtain_specification_id.'" selected>';
                 } else {
                     $output .= '<option value="'.$result->curtain_specification_id.'">';
