@@ -42,7 +42,8 @@ jQuery(document).ready(function($) {
             message = message.replace(/^\s+|\s+$/g,"");
             //alert('chatboxtitle:'+chatboxtitle+', message:'+message);
     
-            $(chatboxtextarea).val('');
+            //$(chatboxtextarea).val('');
+            $(chatboxtextarea).empty();
             $(chatboxtextarea).focus();
             $(chatboxtextarea).css('height','24px');
             if (message != '') {

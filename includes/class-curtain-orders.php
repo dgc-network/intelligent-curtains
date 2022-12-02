@@ -26,11 +26,11 @@ if (!class_exists('order_items')) {
             $data['chat_message']= esc_sql($message);
             $line_webhook = new line_webhook();
             $result = $line_webhook->insert_chat_message($data);
-
+*/
             $response = array();
-            $response['currenttime'] = wp_date( get_option('time_format'), time() );
+            $response['currenttime'] = wp_date( get_option('time_format'), time() );            
             echo json_encode( $response );
-*/            
+            
             wp_die();
         }
 

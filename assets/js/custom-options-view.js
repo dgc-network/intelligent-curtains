@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
                 //'id': val,
             },
             success: function (response) {
-                //currenttime = response.currenttime;
+                currenttime = response.currenttime;
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                 $("#select-model-id").append('<option value="0">-- Select an option --</option>');
             },
