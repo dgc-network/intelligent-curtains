@@ -1,13 +1,14 @@
 jQuery(document).ready(function($) {
 
-    // Row/Record Edit Click
+    $('[id^="update-btn-"]').on( "click", function() {
+        window.location.replace("");
+    });
+
     $('[id^="edit-btn-"]').mouseover(function() {
-        //$('selector').css('cursor', 'pointer');
         $(this).css('cursor', 'pointer');
     });
         
     $('[id^="edit-btn-"]').mouseout(function() {
-        //$('selector').css('cursor', 'pointer');
         $(this).css('cursor', 'default');
     });
         
@@ -18,6 +19,14 @@ jQuery(document).ready(function($) {
         window.location.replace("?_edit=" + id);
     });
 
+    $('[id^="sel-btn-"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+    });
+        
+    $('[id^="del-btn-"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+    });
+        
     $('[id^="del-btn-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID

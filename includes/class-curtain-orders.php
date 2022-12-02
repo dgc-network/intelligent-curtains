@@ -181,7 +181,7 @@ if (!class_exists('order_items')) {
                     $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td>';
-                    $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"<i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '<span>  </span>';
                     $output .= '<span id="del-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
@@ -196,7 +196,7 @@ if (!class_exists('order_items')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                esc_url( remove_query_arg( '_edit' ) );
+                //esc_url( remove_query_arg( '_edit' ) );
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
@@ -222,7 +222,7 @@ if (!class_exists('order_items')) {
                     $output .= '<label for="order_item_qty">QTY</label>';
                     $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                     $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
