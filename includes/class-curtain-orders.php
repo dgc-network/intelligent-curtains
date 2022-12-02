@@ -118,7 +118,7 @@ if (!class_exists('order_items')) {
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_order_items($data, $where);
-                return;
+                ?><script>window.location.replace("");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
