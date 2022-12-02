@@ -118,8 +118,6 @@ if (!class_exists('order_items')) {
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $result = self::update_order_items($data, $where);
-                //esc_url( remove_query_arg( '_edit' ) );
-
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
@@ -137,7 +135,6 @@ if (!class_exists('order_items')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
-            //$output  = '<h2>Order Items - '.$agent->agent_name.'</h2>';
             $output  = '<h2>Order Items</h2>';
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
@@ -160,16 +157,6 @@ if (!class_exists('order_items')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td>';
-/*                
-                $output .= '<form method="post">';
-                $output .= '<input type="hidden" value="'.$result->curtain_order_id.'" name="_id">';
-                if ( $result->is_checkout==1) {
-                    $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
-                } else {
-                    $output .= '<input type="submit" value="'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'">';
-                }
-                $output .= '</form>';
-*/
                 $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 $output .= '</td>';
                 $product = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $result->curtain_product_id ), OBJECT );            
@@ -199,7 +186,6 @@ if (!class_exists('order_items')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                //esc_url( remove_query_arg( '_edit' ) );
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
@@ -232,7 +218,6 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_add']) ) {
-                //$_id = $_POST['_id'];
                 $curtain_products = new curtain_products();
                 $curtain_models = new curtain_models();
                 $curtain_specifications = new curtain_specifications();
@@ -254,62 +239,6 @@ if (!class_exists('order_items')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
                 $output .= '</div>';
-/*
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    $output .= '<div id="dialog" title="Create new item">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
-                    //$output .= '<label for="curtain_agent_id">Agent</label>';
-                    //$output .= '<input type="text" disabled value="'.$agent->agent_name.'" id="curtain_agent_id" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="curtain_product_id">Product</label>';
-                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
-                    $output .= '<label for="curtain_model_id">Model</label>';
-                    $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options().'</select>';
-                    $output .= '<label for="curtain_specification_id">Specification</label>';
-                    $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options().'</select>';
-                    $output .= '<label for="curtain-width">Width</label>';
-                    $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="order_item_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
-                    //$output .= '<label for="order_item_amount">Amount</label>';
-                    //$output .= '<input type="text" name="_order_item_amount" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                } else {
-                    $output .= '<div id="dialog" title="Order item update">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $row->curtain_agent_id ), OBJECT );
-                    //$output .= '<label for="curtain_agent_id">Agent</label>';
-                    //$output .= '<input type="text" disabled value="'.$agent->agent_name.'" id="curtain_agent_id" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="curtain_product_id">Product</label>';
-                    $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
-                    $output .= '<label for="curtain_model_id">Model</label>';
-                    $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
-                    $output .= '<label for="curtain_specification_id">Specification</label>';
-                    $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options($row->curtain_specification_id).'</select>';
-                    $output .= '<label for="curtain-dimension">Width</label>';
-                    $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
-                    $output .= '<label for="order_item_qty">QTY</label>';
-                    $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
-                    //$output .= '<label for="order_item_amount">Amount</label>';
-                    //$output .= '<input type="text" name="_order_item_amount" value="'.$row->order_item_amount.'" id="order_item_amount" class="text ui-widget-content ui-corner-all">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '</form>';
-                    //$output .= '<form method="get">';
-                    //$output .= '<input class="wp-block-button__link" type="button" value="Delete" name="_delete" id="del-btn-'.$row->curtain_order_id.'">';
-                    //$output .= '</form>';
-                    $output .= '</div>';                    
-                }
-*/                
             }
             return $output;
         }

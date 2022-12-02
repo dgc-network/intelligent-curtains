@@ -54,6 +54,7 @@ if (!class_exists('curtain_agents')) {
                 $where=array();
                 $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $result = self::update_curtain_agents($data, $where);
+                ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
@@ -80,32 +81,80 @@ if (!class_exists('curtain_agents')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th>id</th>';
+            //$output .= '<th>id</th>';
             $output .= '<th>agent</th>';
             $output .= '<th>name</th>';
             $output .= '<th>contact</th>';
             $output .= '<th>phone</th>';
             $output .= '<th>update_time</th>';
+            $output .= '<th></th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+/*                
                 $output .= '<td>'.$result->curtain_agent_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->curtain_agent_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->agent_number.'">';
                 $output .= '</form></td>';
+*/                
+                $output .= '<td>'.$result->agent_number.'</td>';
                 $output .= '<td>'.$result->agent_name.'</td>';
                 $output .= '<td>'.$result->contact1.'</td>';
                 $output .= '<td>'.$result->phone1.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '</tr>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span>  </span>';
+                $output .= '<span id="del-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '</td>';
+            $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
 
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id={$_id}", OBJECT );
+                $output .= '<div id="dialog" title="Curtain agent update">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
+                $output .= '<label for="agent_number">Agent Number</label>';
+                $output .= '<input type="text" name="_agent_number" id="agent_number" class="text ui-widget-content ui-corner-all" value="'.$row->agent_number.'">';
+                $output .= '<label for="agent_name">Agent Name</label>';
+                $output .= '<input type="text" name="_agent_name" id="agent_name" class="text ui-widget-content ui-corner-all" value="'.$row->agent_name.'">';
+                $output .= '<label for="contact1">Contact</label>';
+                $output .= '<input type="text" name="_contact1" id="contact1" class="text ui-widget-content ui-corner-all" value="'.$row->contact1.'">';
+                $output .= '<label for="phone1">Phone</label>';
+                $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all" value="'.$row->phone1.'">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+
+            if( isset($_POST['_add']) ) {
+                $output .= '<div id="dialog" title="Create new agent">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<label for="agent_number">Agent Number</label>';
+                $output .= '<input type="text" name="_agent_number" id="agent_number" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="agent_name">Agent Name</label>';
+                $output .= '<input type="text" name="_agent_name" id="agent_name" class="text ui-widget-content ui-corner-all"';
+                $output .= '<label for="contact1">Contact</label>';
+                $output .= '<input type="text" name="_contact1" id="contact1" class="text ui-widget-content ui-corner-all"';
+                $output .= '<label for="phone1">Phone</label>';
+                $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all"';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
@@ -124,7 +173,6 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all"';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Cancel"';
                     $output .= '</form>';
                     $output .= '</div>';
                 } else {                    
@@ -142,12 +190,11 @@ if (!class_exists('curtain_agents')) {
                     $output .= '<input type="text" name="_phone1" id="phone1" class="text ui-widget-content ui-corner-all" value="'.$row->phone1.'">';
                     $output .= '</fieldset>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
                     $output .= '</form>';
                     $output .= '</div>';
                 }
             }
-
+*/
             return $output;
         }
 
@@ -176,7 +223,6 @@ if (!class_exists('curtain_agents')) {
         function select_options( $default_id=null ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
-            //$output = '<option value="no_select">-- Select an option --</option>';
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $result) {
                 if ( $result->curtain_agent_id == $default_id ) {
@@ -187,7 +233,6 @@ if (!class_exists('curtain_agents')) {
                 $output .= $result->agent_number.'/'.$result->agent_name;
                 $output .= '</option>';        
             }
-            //$output .= '<option value="delete_select">-- Remove this --</option>';
             $output .= '<option value="0">-- Remove this --</option>';
             return $output;    
         }

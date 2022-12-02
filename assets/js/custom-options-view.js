@@ -1,15 +1,5 @@
 jQuery(document).ready(function($) {
-/*
-    $('[id^="update-btn-"]').on( "click", function() {
-        id = this.id;
-        // strip the first part of the element id to leave the numeric ID
-        id = id.substring(11);
-        if (window.confirm("Are you sure you want to update this record?")) {
-            //window.location.replace("?_update=" + id);
-        }        
-        window.location.replace("?_update=" + id);
-    });
-*/
+
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
     });
