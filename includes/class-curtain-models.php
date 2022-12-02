@@ -128,7 +128,7 @@ if (!class_exists('curtain_models')) {
                 $output .= '</div>';
             }
 
-            if( isset($_GET['_add']) ) {
+            if( isset($_POST['_add']) ) {
                 $curtain_products = new curtain_products();
                 $output .= '<div id="dialog" title="Create new model">';
                 $output .= '<form method="post">';

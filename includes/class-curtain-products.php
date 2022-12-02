@@ -76,13 +76,6 @@ if (!class_exists('curtain_products')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-/*                
-                $output .= '<td>'.$result->curtain_product_id.'</a></td>';
-                $output .= '<td><form method="post">';
-                $output .= '<input type="hidden" value="'.$result->curtain_product_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->curtain_product_name.'">';
-                $output .= '</form></td>';
-*/                
                 $output .= '<td>'.$result->curtain_product_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
@@ -112,7 +105,7 @@ if (!class_exists('curtain_products')) {
                 $output .= '</div>';
             }
 
-            if( isset($_GET['_add']) ) {
+            if( isset($_POST['_add']) ) {
                 $output .= '<div id="dialog" title="Create new product">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -123,35 +116,6 @@ if (!class_exists('curtain_products')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-/*
-            if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
-                $_id = $_POST['_id'];
-                global $wpdb;
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$_id}", OBJECT );
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    $output .= '<div id="dialog" title="Create new product">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<label for="curtain-product-name">Product Name</label>';
-                    $output .= '<input type="text" name="_curtain_product_name" id="curtain-product-name" class="text ui-widget-content ui-corner-all">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                } else {                    
-                    $output .= '<div id="dialog" title="Curtain product update">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<input type="hidden" value="'.$row->curtain_product_id.'" name="_curtain_product_id">';
-                    $output .= '<label for="curtain-product-name">Product Name</label>';
-                    $output .= '<input type="text" name="_curtain_product_name" id="curtain-product-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_product_name.'">';
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                }
-            }
-*/            
             return $output;
         }
 

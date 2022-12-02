@@ -148,6 +148,7 @@ if (!class_exists('curtain_service')) {
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $result = self::update_service_options($data, $where);
+                ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
@@ -174,32 +175,79 @@ if (!class_exists('curtain_service')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
-            $output .= '<th>id</th>';
             $output .= '<th>title</th>';
             $output .= '<th>link</th>';
             $output .= '<th>category</th>';
             $output .= '<th>page</th>';
             $output .= '<th>update_time</th>';
+            $output .= '<th></th>';
             $output .= '</tr></thead>';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+/*                
                 $output .= '<td>'.$result->service_option_id.'</a></td>';
                 $output .= '<td><form method="post">';
                 $output .= '<input type="hidden" value="'.$result->service_option_id.'" name="_id">';
                 $output .= '<input type="submit" value="'.$result->service_option_title.'">';
                 $output .= '</form></td>';
+*/                
+                $output .= '<td>'.$result->service_option_title.'</td>';
                 $output .= '<td>'.$result->service_option_link.'</td>';
                 $output .= '<td>'.$result->service_option_category.'</td>';
                 $output .= '<td>'.$result->service_option_page.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->service_option_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span>  </span>';
+                $output .= '<span id="del-btn-'.$result->service_option_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '</td>';
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_mode">';
+            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
 
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id={$_id}", OBJECT );
+                $output .= '<div id="dialog" title="Service Option update">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
+                $output .= '<label for="service_option_title">Option Title</label>';
+                $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_title.'">';
+                $output .= '<label for="service_option_link">Option Link</label>';
+                $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_link.'">';
+                $output .= '<label for="service_option_category">Category</label>';
+                $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_category.'">';
+                $output .= '<label for="service_option_page">Page</label>';
+                $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_page.'">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+
+            if( isset($_POST['_add']) ) {
+                $output .= '<div id="dialog" title="Create new option">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<label for="service_option_title">Option Title</label>';
+                $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_option_link">Option Link</label>';
+                $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_option_category">Category</label>';
+                $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_option_page">Page</label>';
+                $output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all">';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+/*
             if( isset($_POST['_mode']) || isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 global $wpdb;
@@ -241,6 +289,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                 }
             }
+*/            
             return $output;
         }
 
