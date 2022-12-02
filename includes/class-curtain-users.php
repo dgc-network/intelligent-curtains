@@ -256,6 +256,7 @@ if (!class_exists('curtain_users')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
             $output .= '<th>line_user_id</th>';
             $output .= '<th>name</th>';
             $output .= '<th>mobile</th>';
@@ -265,23 +266,15 @@ if (!class_exists('curtain_users')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
-/*                
-                $output .= '<td>'.$result->curtain_user_id.'</a></td>';
-                $output .= '<td><form method="post">';
-                $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->line_user_id.'" name="_update_user">';
-                $output .= '</form></td>';
-                $output .= '<td><form method="post">';
-                $output .= '<input type="hidden" value="'.$result->curtain_user_id.'" name="_id">';
-                $output .= '<input type="submit" value="'.$result->display_name.'" name="_chat_user" class="startChatSession">';
-                $output .= '</form></td>';
-*/                
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '</td>';
                 $output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="edit-btn-'.$result->curtain_user_id.'"><i class="fa-solid fa-user-tie"></i></span>';
                 $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
@@ -324,46 +317,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-/*
-            if( isset($_POST['_update_user']) && isset($_POST['_id']) ) {
-                $_id = $_POST['_id'];
-                $curtain_agents = new curtain_agents();
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
-                if (!(is_null($row) || !empty($wpdb->last_error))) {
-                    $output .= '<div id="dialog" title="Curtain user update">';
-                    $output .= '<form method="post">';
-                    $output .= '<fieldset>';
-                    $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
-                    $output .= '<label for="display_name">Display Name</label>';
-                    $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
-                    $output .= '<label for="mobile_phone">Mobile Phone</label>';
-                    $output .= '<input type="text" name="_mobile_phone" id="mobile_phone" class="text ui-widget-content ui-corner-all" value="'.$row->mobile_phone.'">';
-                    $output .= '<label for="curtain_agent_id">Agent</label>';
-                    $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
-                    $output .= '<label for="user_permissions">Permissions</label>';
-                    $output .= '<div style="border: 1px solid; padding: 10px;">';
-                    foreach ($results as $index => $result) {
-                        $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
-                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $row->curtain_user_id, $result->service_option_id ), OBJECT );            
-                        if (is_null($permission) || !empty($wpdb->last_error)) {
-                            $output .= '>';
-                        } else {
-                            $output .= ' checked>';
-                        }
-                        $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title;
-                        $output .= '('.$result->service_option_category.')</label><br>';
-                    }
-                    $output .= '</div>';        
 
-                    $output .= '</fieldset>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                    //$output .= '<input class="wp-block-button__link" type="submit" value="Delete" name="_delete">';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                }
-            }
-*/
             if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {
                 $_id = $_POST['_id'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );

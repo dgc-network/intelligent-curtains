@@ -77,6 +77,7 @@ if (!class_exists('curtain_models')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
             $output .= '<th>model</th>';
             $output .= '<th>description</th>';
             $output .= '<th>price</th>';
@@ -87,14 +88,15 @@ if (!class_exists('curtain_models')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '</td>';
                 $output .= '<td style="text-align: center;">'.$result->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->model_description.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->model_price.'</td>';
                 $output .= '<td>'.$result->curtain_vendor_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
-                $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_model_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';

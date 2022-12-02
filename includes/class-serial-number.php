@@ -56,6 +56,7 @@ if (!class_exists('serial_number')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
             $output .= '<th>serial_no</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
@@ -67,6 +68,9 @@ if (!class_exists('serial_number')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-solid fa-qrcode"></i></span>';
+                $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                 $output .= '<td>'.$model->curtain_model_name.'</td>';
@@ -77,8 +81,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-solid fa-qrcode"></i></span>';
-                $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';

@@ -79,6 +79,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<div class="ui-widget">';
             $output .= '<table id="specifications" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
             $output .= '<th>name</th>';
             $output .= '<th>description</th>';
             $output .= '<th>product</th>';
@@ -90,6 +91,9 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="edit-btn-'.$result->curtain_specification_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '</td>';
                 $output .= '<td>'.$result->curtain_specification_name.'</td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$result->curtain_product_id}", OBJECT );
@@ -98,8 +102,6 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<td style="text-align: center;">'.$result->specification_price.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->curtain_specification_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
-                $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_specification_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';

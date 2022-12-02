@@ -222,8 +222,6 @@ if (!class_exists('order_items')) {
                     $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
-                    $output .= '<span>  </span>';
                     $output .= '<span id="del-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                 }
