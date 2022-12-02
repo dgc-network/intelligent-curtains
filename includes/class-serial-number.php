@@ -69,7 +69,7 @@ if (!class_exists('serial_number')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->serial_number_id.'"><i class="fa-solid fa-qrcode"></i></span>';
+                $output .= '<span id="edit-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
