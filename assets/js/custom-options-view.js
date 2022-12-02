@@ -7,10 +7,12 @@ jQuery(document).ready(function($) {
     
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
+        $(this).css('color', 'blue');
     });
         
     $('[id^="cart-btn"]').mouseout(function() {
         $(this).css('cursor', 'default');
+        $(this).css('color', 'defaultcolor');
     });
         
     $('[id^="cart-btn"]').on( "click", function() {
