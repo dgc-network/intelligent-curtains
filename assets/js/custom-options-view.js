@@ -1,19 +1,40 @@
 jQuery(document).ready(function($) {
 
     $("#select-product-id").change(function() {
-        alert('I am here');
-        var val = jQuery(this).val();
-        jQuery("#select-3-field").val(val);
+        var val = $(this).val();
+        $("#select-model-id").val('');
+        $("#select-model-id").append('<option value="0">-- Select an option --</option>');
+        jQuery.ajax({
+            type: 'POST',
+            url: '/wp-admin/admin-ajax.php',
+            dataType: "json",
+            data: {
+                'action': 'select-product-id',
+                'id': val,
+            },
+            success: function (response) {
+                currenttime = response.currenttime;
+                message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                $("#select-model-id").append('<option value="0">-- Select an option --</option>');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+        //alert(val);
+        $("#select-model-id").append('<option value="0">-- Remove this --</option>');
+
+        //jQuery("#select-3-field").val(val);
     });
     
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
-        $(this).css('color', 'black');
+        $(this).css('color', 'cornflowerblue');
     });
         
     $('[id^="cart-btn"]').mouseout(function() {
         $(this).css('cursor', 'default');
-        $(this).css('color', 'lightblue');
+        $(this).css('color', 'black');
     });
         
     $('[id^="cart-btn"]').on( "click", function() {
