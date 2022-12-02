@@ -117,7 +117,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->curtain_specification_id.'" name="_curtain_specification_id">';
-                $output .= '<label for="curtain-specification-name">Specification Name</label>';
+                $output .= '<label for="curtain-specification-name">Specification</label>';
                 $output .= '<input type="text" name="_curtain_specification_name" id="curtain-specification-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_specification_name.'">';
                 $output .= '<label for="specification-description">Description</label>';
                 $output .= '<input type="text" name="_specification_description" id="specification-description" class="text ui-widget-content ui-corner-all" value="'.$row->specification_description.'">';
@@ -127,11 +127,13 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all" value="'.$row->specification_unit.'">';
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<div style="display: flex;">';
                 $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"';
                 if ($row->length_only==1) {
                     $output .= ' checked';    
                 }
                 $output .= '><label for="length-only">Length Only</label></td>';
+                $output .= '</div>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -143,7 +145,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<div id="dialog" title="Create new specification">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="curtain-specification-name">Specification Name</label>';
+                $output .= '<label for="curtain-specification-name">Specification</label>';
                 $output .= '<input type="text" name="_curtain_specification_name" id="curtain-specification-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-description">Description</label>';
                 $output .= '<input type="text" name="_specification_description" id="specification-description" class="text ui-widget-content ui-corner-all">';
@@ -153,7 +155,10 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
-                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"><label for="length-only">Length Only</label></td>';
+                $output .= '<div style="display: flex;">';
+                $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"></td>';
+                $output .= '<label for="length-only">Length Only</label></td>';
+                $output .= '</div>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
