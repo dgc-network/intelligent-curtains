@@ -200,7 +200,7 @@ if (!class_exists('order_items')) {
                 $output .= '<label for="curtain_specification_id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options($row->curtain_specification_id).'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
-                $output .= '<div>';
+                $output .= '<div style="display: flex;">';
                 $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
                 $output .= '<span> x </span>';
                 $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
@@ -227,7 +227,7 @@ if (!class_exists('order_items')) {
                 $output .= '<label for="curtain_specification_id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="curtain_specification_id">'.$curtain_specifications->select_options().'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
-                $output .= '<div>';
+                $output .= '<div style="display: flex;">';
                 $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
                 $output .= '<span> x </span>';
                 $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
