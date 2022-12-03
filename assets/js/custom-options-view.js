@@ -57,8 +57,8 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
-        $("#select-model-id").append('<option value="0">-- Select an option --</option>');
-        $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
+        //$("#select-model-id").append('<option value="0">-- Select an option --</option>');
+        //$("#select-specification-id").append('<option value="0">-- Select an option --</option>');
 
         jQuery.ajax({
             type: 'POST',
@@ -67,14 +67,19 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'select_product_id',
-                //'id': val,
+                'id': val,
             },
             success: function (response) {
                 current_time = response.currenttime;
                 models = response.models;
+                specifications = response.specifications;
 
                 for (let x in models) {
                     $("#select-model-id").append(models[x]);
+                }
+    
+                for (let x in specifications) {
+                    $("#select-specification-id").append(specifications[x]);
                 }
     
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
@@ -87,8 +92,8 @@ jQuery(document).ready(function($) {
         });
       
         //alert(val);
-        $("#select-model-id").append('<option value="0">-- Remove this --</option>');
-        $("#select-specification-id").append('<option value="0">-- Remove this --</option>');
+        //$("#select-model-id").append('<option value="0">-- Remove this --</option>');
+        //$("#select-specification-id").append('<option value="0">-- Remove this --</option>');
 
         //jQuery("#select-3-field").val(val);
     });
