@@ -4,12 +4,12 @@ jQuery(document).ready(function($) {
         chatboxtitle = $('.chatboxtitle').val();
         //checkChatBoxInputKey(e,this,chatboxtitle);
         if(e.keyCode == 13 && e.shiftKey == 0)  {
-            message = $(chatboxtextarea).val();
+            message = $(this).val();
             message = message.replace(/^\s+|\s+$/g,"");
             //$(chatboxtextarea).val('');
-            $(chatboxtextarea).empty();
-            $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','44px');
+            $(this).empty();
+            $(this).focus();
+            $(this).css('height','44px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',
@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
     
             return false;
         }
-
+/*
         var adjustedHeight = chatboxtextarea.clientHeight;
         var maxHeight = 94;
     
@@ -49,7 +49,8 @@ jQuery(document).ready(function($) {
                 $(chatboxtextarea).css('height',adjustedHeight+8 +'px');
         } else {
             $(chatboxtextarea).css('overflow','auto');
-        }         
+        }     
+*/            
     });
 
     $("#select-product-id").change(function() {
