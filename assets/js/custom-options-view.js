@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
         jQuery.ajax({
             type: 'POST',
             //url: '/wp-admin/admin-ajax.php',
-            url: ajaxurl,
+            url: ajax_object.ajax_url,
             dataType: "json",
             data: {
                 'action': 'select_product_id',
