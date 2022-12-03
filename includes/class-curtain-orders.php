@@ -35,13 +35,13 @@ if (!class_exists('order_items')) {
                 $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'</option>';
             }
             $specifications[] = '<option value="0">-- Remove this --</option>';
-
+*/
             $response = array();
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
             $response['models'] = $models;;
             $response['specifications'] = $specifications;;
             echo json_encode( $response );
-*/            
+            
             wp_die();
         }
 
