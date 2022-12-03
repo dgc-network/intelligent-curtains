@@ -9,8 +9,8 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
-            add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
+            //add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
+            //add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
             self::create_tables();
         }
 
@@ -376,6 +376,6 @@ if (!class_exists('order_items')) {
     }
     $order_items = new order_items();
     add_shortcode( 'order-item-list', array( $order_items, 'list_order_items' ) );
-    //add_action( 'wp_ajax_select_product_id', array( $order_items, 'select_product_id' ) );
-    //add_action( 'wp_ajax_nopriv_select_product_id', array( $order_items, 'select_product_id' ) );
+    add_action( 'wp_ajax_select_product_id', array( $order_items, 'select_product_id' ) );
+    add_action( 'wp_ajax_nopriv_select_product_id', array( $order_items, 'select_product_id' ) );
 }
