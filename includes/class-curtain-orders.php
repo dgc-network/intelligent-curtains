@@ -31,7 +31,7 @@ if (!class_exists('order_items')) {
             $response['currenttime'] = wp_date( get_option('time_format'), time() );            
             echo json_encode( $response );
             
-            //wp_die();
+            wp_die();
         }
 
         function list_order_items() {
