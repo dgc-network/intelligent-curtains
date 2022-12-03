@@ -2,14 +2,13 @@ jQuery(document).ready(function($) {
 
     $('.chatboxtextarea').on('keypress',function(e) {
         chatboxtitle = $('.chatboxtitle').val();
-        //checkChatBoxInputKey(e,this,chatboxtitle);
         if(e.keyCode == 13 && e.shiftKey == 0)  {
             message = $(this).val();
             message = message.replace(/^\s+|\s+$/g,"");
             $(this).val('');
             //$(this).empty();
             $(this).focus();
-            $(this).css('height','34px');
+            $(this).css('height','28px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',

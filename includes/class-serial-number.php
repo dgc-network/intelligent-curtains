@@ -38,6 +38,12 @@ if (!class_exists('serial_number')) {
                 $result = self::insert_serial_number($data);
             }
 
+            if( isset($_GET['_delete']) ) {
+                $where=array();
+                $where['serial_number_id']=$_GET['_delete'];
+                $result = self::delete_serial_number($where);
+            }
+
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
