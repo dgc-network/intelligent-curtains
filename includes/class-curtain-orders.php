@@ -77,22 +77,27 @@ if (!class_exists('order_items')) {
                 $output .= '<th>spec</th>';
                 $output .= '<th>QTY</th>';
                 $output .= '<th>amount</th>';
-                $output .= '<th>remark</th>';
+                //$output .= '<th>remark</th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
+                    $output .= '<td>'.$curtain_products->get_name($result->curtain_product_id).'</td>';
+                    $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                    $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
+/*
                     $product = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $result->curtain_product_id ), OBJECT );            
                     $output .= '<td>'.$product->curtain_product_name.'</td>';
                     $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
                     $output .= '<td>'.$model->curtain_model_name.'</td>';
                     $specification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $result->curtain_specification_id ), OBJECT );            
                     $output .= '<td>'.$specification->curtain_specification_name.$result->curtain_width.'</td>';
-                    $output .= '<td>'.$result->order_item_qty.'</td>';
-                    $output .= '<td>'.$result->order_item_amount.'</td>';
-                    $output .= '<td>'.'</td>';
+*/
+                    $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
+                    $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
+                    //$output .= '<td>'.'</td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
@@ -118,7 +123,7 @@ if (!class_exists('order_items')) {
                         while ($x < $result->order_item_qty) {
                             $data=array();
                             $data['curtain_model_id']=$result->curtain_model_id;
-                            $data['specification']=$result->curtain_width;
+                            $data['specification']=$result->curtain_specification_name.$result->curtain_width;
                             $data['curtain_agent_id']=$result->curtain_agent_id;
                             $serial_number->insert_serial_number($data, $x);
                             $x = $x + 1;
@@ -242,14 +247,8 @@ if (!class_exists('order_items')) {
                 $output .= '<td>';
                 $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 $output .= '</td>';
-                //$product = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id = %d", $result->curtain_product_id ), OBJECT );            
-                //$output .= '<td>'.$product->curtain_product_name.'</td>';
                 $output .= '<td>'.$curtain_products->get_name($result->curtain_product_id).'</td>';
-                //$model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                //$output .= '<td style="text-align: center;">'.$model->curtain_model_name.'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                //$specification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $result->curtain_specification_id ), OBJECT );            
-                //$output .= '<td style="text-align: center;">'.$specification->curtain_specification_name.$result->curtain_width.'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
