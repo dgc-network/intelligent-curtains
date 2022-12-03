@@ -38,8 +38,8 @@ if (!class_exists('order_items')) {
 */
             $response = array();
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
-            $response['models'] = $models;;
-            $response['specifications'] = $specifications;;
+            //$response['models'] = $models;;
+            //$response['specifications'] = $specifications;;
             echo json_encode( $response );
             
             wp_die();
