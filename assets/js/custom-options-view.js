@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
             $(this).val('');
             //$(this).empty();
             $(this).focus();
-            $(this).css('height','44px');
+            $(this).css('height','34px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',
@@ -57,12 +57,9 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
-        //$("#select-model-id").append('<option value="0">-- Select an option --</option>');
-        //$("#select-specification-id").append('<option value="0">-- Select an option --</option>');
 
         jQuery.ajax({
             type: 'POST',
-            //url: '/wp-admin/admin-ajax.php',
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
@@ -81,21 +78,11 @@ jQuery(document).ready(function($) {
                 for (let x in specifications) {
                     $("#select-specification-id").append(specifications[x]);
                 }
-    
-                //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                //$("#select-model-id").append('<option value="0">'+models[0]+'</option>');
-                //$("#select-model-id").append('<option value="0">'+current_time+'</option>');
             },
             error: function(error){
                 alert(error);
             }
         });
-      
-        //alert(val);
-        //$("#select-model-id").append('<option value="0">-- Remove this --</option>');
-        //$("#select-specification-id").append('<option value="0">-- Remove this --</option>');
-
-        //jQuery("#select-3-field").val(val);
     });
     
     $('[id^="cart-btn"]').mouseover(function() {
@@ -114,10 +101,12 @@ jQuery(document).ready(function($) {
 
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
     });
         
     $('[id^="edit-btn-"]').mouseout(function() {
         $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
     });
         
     $('[id^="edit-btn-"]').on( "click", function() {
@@ -129,10 +118,12 @@ jQuery(document).ready(function($) {
 
     $('[id^="del-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
     });
         
     $('[id^="del-btn-"]').mouseout(function() {
         $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
     });
         
     $('[id^="del-btn-"]').on( "click", function() {
