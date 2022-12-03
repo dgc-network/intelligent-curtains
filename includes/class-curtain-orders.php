@@ -32,7 +32,7 @@ if (!class_exists('order_items')) {
             $specifications[] = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_id}" , OBJECT );
             foreach ($results as $index => $result) {
-                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'</option>';
+                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
             }
             $specifications[] = '<option value="0">-- Remove this --</option>';
 
