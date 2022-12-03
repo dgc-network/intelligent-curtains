@@ -6,7 +6,7 @@ jQuery(document).ready(function($) {
         $("#select-specification-id").empty();
         $("#select-model-id").append('<option value="0">-- Select an option --</option>');
         $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
-        
+/*        
         jQuery.ajax({
             type: "post",
             url: "admin-ajax.php",
@@ -23,10 +23,11 @@ jQuery(document).ready(function($) {
                 $("#select-model-id").append('<option value="0">-- Select an option --</option>');
             }
         }); //close jQuery.ajax(
-/*
+*/
         jQuery.ajax({
             type: 'POST',
-            url: '/wp-admin/admin-ajax.php',
+            //url: '/wp-admin/admin-ajax.php',
+            url: admin_url( 'admin-ajax.php' ),
             dataType: "json",
             data: {
                 'action': 'select_product_id',
@@ -41,7 +42,7 @@ jQuery(document).ready(function($) {
                 alert(error);
             }
         });
-*/        
+      
         //alert(val);
         $("#select-model-id").append('<option value="0">-- Remove this --</option>');
         $("#select-specification-id").append('<option value="0">-- Remove this --</option>');
