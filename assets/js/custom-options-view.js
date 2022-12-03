@@ -1,5 +1,57 @@
 jQuery(document).ready(function($) {
 
+    $('.chatboxtextarea').on('keypress',function(e) {
+        chatboxtitle = $('.chatboxtitle').val();
+        //checkChatBoxInputKey(e,this,chatboxtitle);
+        if(e.keyCode == 13 && e.shiftKey == 0)  {
+            message = $(chatboxtextarea).val();
+            message = message.replace(/^\s+|\s+$/g,"");
+            //$(chatboxtextarea).val('');
+            $(chatboxtextarea).empty();
+            $(chatboxtextarea).focus();
+            $(chatboxtextarea).css('height','44px');
+            if (message != '') {
+                jQuery.ajax({
+                    type: 'POST',
+                    //url: '/wp-admin/admin-ajax.php',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'sendChat',
+                        'to': chatboxtitle,
+                        'message': message,
+                    },
+                    success: function (response) {
+                        currenttime = response.currenttime;
+                        message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
+                        $(".chatboxcontent").append('<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'+currenttime+'</div><div class="chatboxinfo">'+message+'</div></div><div style="clear: right;"></div>');
+                        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            }
+            chatHeartbeatTime = minChatHeartbeat;
+            chatHeartbeatCount = 1;
+    
+            return false;
+        }
+
+        var adjustedHeight = chatboxtextarea.clientHeight;
+        var maxHeight = 94;
+    
+        if (maxHeight > adjustedHeight) {
+            adjustedHeight = Math.max(chatboxtextarea.scrollHeight, adjustedHeight);
+            if (maxHeight)
+                adjustedHeight = Math.min(maxHeight, adjustedHeight);
+            if (adjustedHeight > chatboxtextarea.clientHeight)
+                $(chatboxtextarea).css('height',adjustedHeight+8 +'px');
+        } else {
+            $(chatboxtextarea).css('overflow','auto');
+        }         
+    });
+
     $("#select-product-id").change(function() {
         var val = $(this).val();
         $("#select-model-id").empty();

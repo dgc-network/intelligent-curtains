@@ -27,7 +27,7 @@ function register_session() {
 add_action( 'init', 'register_session' );
 
 function enqueue_scripts() {		
-    wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-curtain-users.js' , __FILE__ ), array( 'jquery' ), time() );
+    //wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-curtain-users.js' , __FILE__ ), array( 'jquery' ), time() );
     //wp_enqueue_script( 'custom-options-view', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
