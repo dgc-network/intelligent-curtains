@@ -72,14 +72,14 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 current_time = response.currenttime;
                 models = response.models;
-/*
-                for (x in models) {
+
+                for (let x in models) {
                     $("#select-model-id").append(model[x]);
                 }
-*/    
+    
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                $("#select-model-id").append('<option value="0">'+models[0]+'</option>');
-                $("#select-model-id").append('<option value="0">'+current_time+'</option>');
+                //$("#select-model-id").append('<option value="0">'+models[0]+'</option>');
+                //$("#select-model-id").append('<option value="0">'+current_time+'</option>');
             },
             error: function(error){
                 alert(error);
