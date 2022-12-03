@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'select_product_id',
-                'id': val,
+                //'id': val,
             },
             success: function (response) {
                 currenttime = response.currenttime;
