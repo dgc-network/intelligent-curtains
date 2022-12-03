@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
                 //'id': val,
             },
             success: function (response) {
-                currenttime = response.currenttime;
+                current_time = response.currenttime;
                 models = response.models;
 /*
                 for (x in models) {
@@ -78,7 +78,8 @@ jQuery(document).ready(function($) {
                 }
 */    
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                $("#select-model-id").append('<option value="0">'+currenttime+'</option>');
+                $("#select-model-id").append('<option value="0">'+models[0]+'</option>');
+                $("#select-model-id").append('<option value="0">'+current_time+'</option>');
             },
             error: function(error){
                 alert(error);
