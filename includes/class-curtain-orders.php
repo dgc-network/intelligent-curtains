@@ -9,26 +9,37 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            //add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
-            //add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
+            add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
+            add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
             self::create_tables();
         }
 
         function select_product_id() {
-/*            
-            $from = $_SESSION['username'];
-            $to = $_POST['to'];
-            $message = $_POST['message'];
 
-            $data=array();
-            $data['chat_from']= esc_sql($from);
-            $data['chat_to']= esc_sql($to);
-            $data['chat_message']= esc_sql($message);
-            $line_webhook = new line_webhook();
-            $result = $line_webhook->insert_chat_message($data);
-*/
+            //$from = $_SESSION['username'];
+            $_id = $_POST['id'];
+
+            global $wpdb;
+            $models = array();
+            $models[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'</option>';
+            }
+            $models[] = '<option value="0">-- Remove this --</option>';
+
+            $specifications = array();
+            $specifications[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'</option>';
+            }
+            $specifications[] = '<option value="0">-- Remove this --</option>';
+
             $response = array();
-            $response['currenttime'] = wp_date( get_option('time_format'), time() );            
+            $response['currenttime'] = wp_date( get_option('time_format'), time() );
+            $response['models'] = $models;;
+            $response['specifications'] = $specifications;;
             echo json_encode( $response );
             
             wp_die();

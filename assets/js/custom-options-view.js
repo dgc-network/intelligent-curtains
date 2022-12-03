@@ -6,24 +6,7 @@ jQuery(document).ready(function($) {
         $("#select-specification-id").empty();
         $("#select-model-id").append('<option value="0">-- Select an option --</option>');
         $("#select-specification-id").append('<option value="0">-- Select an option --</option>');
-/*        
-        jQuery.ajax({
-            type: "post",
-            url: "admin-ajax.php",
-            data: { 
-                //action: 'gethello', 
-                action: 'select_product_id', 
-                _ajax_nonce: '<?php echo $nonce; ?>' 
-            },
-            beforeSend: function() {jQuery("#loading").show("slow");}, //show loading just when link is clicked
-            complete: function() { jQuery("#loading").hide("fast");}, //stop showing loading when the process is complete
-            success: function(html){ //so, if data is retrieved, store it in html
-                jQuery("#helloworld").html(html); //show the html inside helloworld div
-                jQuery("#helloworld").show("slow"); //animation
-                $("#select-model-id").append('<option value="0">-- Select an option --</option>');
-            }
-        }); //close jQuery.ajax(
-*/
+
         jQuery.ajax({
             type: 'POST',
             //url: '/wp-admin/admin-ajax.php',
@@ -31,10 +14,14 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'select_product_id',
-                //'id': val,
+                'id': val,
             },
             success: function (response) {
                 currenttime = response.currenttime;
+                for (model in response.models) {
+                    $("#select-model-id").append(model);
+                }
+    
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                 $("#select-model-id").append('<option value="0">-- Select an option --</option>');
             },

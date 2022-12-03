@@ -45,11 +45,12 @@ jQuery(document).ready(function($) {
             //$(chatboxtextarea).val('');
             $(chatboxtextarea).empty();
             $(chatboxtextarea).focus();
-            $(chatboxtextarea).css('height','24px');
+            $(chatboxtextarea).css('height','44px');
             if (message != '') {
                 jQuery.ajax({
                     type: 'POST',
-                    url: '/wp-admin/admin-ajax.php',
+                    //url: '/wp-admin/admin-ajax.php',
+                    url: ajax_object.ajax_url,
                     dataType: "json",
                     data: {
                         'action': 'sendChat',

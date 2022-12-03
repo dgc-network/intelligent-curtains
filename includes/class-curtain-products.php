@@ -151,8 +151,8 @@ if (!class_exists('curtain_products')) {
 
         public function select_options( $_id=0 ) {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_products", OBJECT );
             foreach ($results as $index => $result) {
                 if ( $result->curtain_product_id == $_id ) {
                     $output .= '<option value="'.$result->curtain_product_id.'" selected>';
