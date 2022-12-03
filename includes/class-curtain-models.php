@@ -59,7 +59,6 @@ if (!class_exists('curtain_models')) {
                 $result = self::delete_curtain_models($where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE model_description LIKE {$where}", OBJECT );
@@ -68,14 +67,22 @@ if (!class_exists('curtain_models')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
             }
             $output  = '<h2>Curtain Models</h2>';
+            $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
+            $output .= '<div>';
+            $output .= '<form method="post">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            $output .= '</form>';
+            $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
+            $output .= '</div>';
+
             $output .= '<div class="ui-widget">';
-            $output .= '<table id="users" class="ui-widget ui-widget-content">';
+            $output .= '<table id="models" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>model</th>';
@@ -102,9 +109,6 @@ if (!class_exists('curtain_models')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
-            $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];

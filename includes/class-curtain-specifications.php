@@ -61,7 +61,6 @@ if (!class_exists('curtain_specifications')) {
                 $result = self::delete_curtain_specifications($where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE specification_description LIKE {$where}", OBJECT );
@@ -115,14 +114,10 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
-            $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $curtain_products = new curtain_products();
-                //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}", OBJECT );
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
                 $output .= '<div id="dialog" title="Curtain specification update">';
                 $output .= '<form method="post">';

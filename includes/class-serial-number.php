@@ -53,14 +53,22 @@ if (!class_exists('serial_number')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number", OBJECT );
             }
             $output  = '<h2>Serial Number</h2>';
+            $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
+            $output .= '<div>';
+            $output .= '<form method="post">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            $output .= '</form>';
+            $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
+            $output .= '</div>';
+
             $output .= '<div class="ui-widget">';
-            $output .= '<table id="users" class="ui-widget ui-widget-content">';
+            $output .= '<table class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>serial_no</th>';
@@ -92,10 +100,7 @@ if (!class_exists('serial_number')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
-            $output .= '</form>';
-            echo do_shortcode('[print-me target="body"/]');
+            //echo do_shortcode('[print-me target="body"/]');
 
             if( isset($_POST['_add']) ) {
                 $curtain_models = new curtain_models();

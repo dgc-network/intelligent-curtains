@@ -247,12 +247,13 @@ if (!class_exists('curtain_users')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
             }
             $output  = '<h2>Curtain Users</h2>';
-            $output .= '<div style="text-align: right">';
+            $output .= '<div style="text-align: right; margin: 5px;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
+
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
