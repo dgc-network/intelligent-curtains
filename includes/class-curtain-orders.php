@@ -18,7 +18,7 @@ if (!class_exists('order_items')) {
 
             //$from = $_SESSION['username'];
             $_id = $_POST['id'];
-
+/*
             global $wpdb;
             $models = array();
             $models[] = '<option value="0">-- Select an option --</option>';
@@ -41,7 +41,7 @@ if (!class_exists('order_items')) {
             $response['models'] = $models;;
             $response['specifications'] = $specifications;;
             echo json_encode( $response );
-            
+*/            
             wp_die();
         }
 
