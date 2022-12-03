@@ -216,12 +216,21 @@ if (!class_exists('order_items')) {
             }
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
             $output  = '<h2>Order Items</h2>';
+            $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
+            $output .= '<div>';
+            $output .= '<form method="post">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create Item" name="_add">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
+            $output .= '</form>';
+            $output .= '</div>';
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
+            $output .= '</div>';
+
             $output .= '<div class="ui-widget">';
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';

@@ -70,10 +70,10 @@ if (!class_exists('curtain_specifications')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications", OBJECT );
             }
             $output  = '<h2>Curtain Specifications</h2>';
-            $output .= '<div style="display: flex;">';
+            $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -83,6 +83,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
+
             $output .= '<div class="ui-widget">';
             $output .= '<table id="specifications" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
@@ -115,7 +116,7 @@ if (!class_exists('curtain_specifications')) {
             }
             $output .= '</tbody></table></div>';
             $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
