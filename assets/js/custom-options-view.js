@@ -19,11 +19,11 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 currenttime = response.currenttime;
                 models = response.models;
-
+/*
                 for (x in models) {
                     $("#select-model-id").append(model[x]);
                 }
-    
+*/    
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
                 $("#select-model-id").append('<option value="0">'+currenttime+'</option>');
             },
