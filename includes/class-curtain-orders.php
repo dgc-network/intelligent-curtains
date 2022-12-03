@@ -24,7 +24,7 @@ if (!class_exists('order_items')) {
             $models[] = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
             foreach ($results as $index => $result) {
-                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'</option>';
+                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
             }
             $models[] = '<option value="0">-- Remove this --</option>';
 
