@@ -30,7 +30,7 @@ if (!class_exists('order_items')) {
 
             $specifications = array();
             $specifications[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id={$_id}" , OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_id}" , OBJECT );
             foreach ($results as $index => $result) {
                 $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'</option>';
             }
@@ -376,6 +376,6 @@ if (!class_exists('order_items')) {
     }
     $order_items = new order_items();
     add_shortcode( 'order-item-list', array( $order_items, 'list_order_items' ) );
-    add_action( 'wp_ajax_select_product_id', array( $order_items, 'select_product_id' ) );
-    add_action( 'wp_ajax_nopriv_select_product_id', array( $order_items, 'select_product_id' ) );
+    //add_action( 'wp_ajax_select_product_id', array( $order_items, 'select_product_id' ) );
+    //add_action( 'wp_ajax_nopriv_select_product_id', array( $order_items, 'select_product_id' ) );
 }

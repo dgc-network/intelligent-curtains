@@ -18,12 +18,14 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
                 currenttime = response.currenttime;
-                for (model in response.models) {
-                    $("#select-model-id").append(model);
+                models = response.models;
+
+                for (x in models) {
+                    $("#select-model-id").append(model[x]);
                 }
     
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
-                $("#select-model-id").append('<option value="0">-- Select an option --</option>');
+                $("#select-model-id").append('<option value="0">'+currenttime+'</option>');
             },
             error: function(error){
                 alert(error);
