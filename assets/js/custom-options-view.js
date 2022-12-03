@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
                 models = response.models;
 
                 for (let x in models) {
-                    $("#select-model-id").append(model[x]);
+                    $("#select-model-id").append(models[x]);
                 }
     
                 //message = message.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;");
