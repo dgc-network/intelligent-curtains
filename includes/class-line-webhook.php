@@ -173,8 +173,8 @@ if (!class_exists('line_webhook')) {
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
-                                        self::push_flex_messages( $flex_contents );
-                                        //self::push_imagemap_messages( $flex_contents );
+                                        //self::push_flex_messages( $flex_contents );
+                                        self::push_imagemap_messages( $flex_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
