@@ -17,14 +17,6 @@ if (!class_exists('line_webhook')) {
             $client->richMenu($rich_menu_content);
         }
 
-        function line_push_message( $line_user_id='', $rich_message='' ) {
-            $client = new LINEBotTiny();
-            $client->pushMessage([
-                'to' => $line_user_id,
-                'messages' => $rich_message
-            ]);
-        }
-
         function push_imagemap_messages( $_contents=array() ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
@@ -41,13 +33,16 @@ if (!class_exists('line_webhook')) {
                             "height" => 1040,
                         ],
                         "actions" => [
-                            "type" => "uri",
-                            "linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
-                            "area" => [
-                                "x" => 0,
-                                "y" => 586,
-                                "width" => 520,
-                                "height" => 454  
+                            [
+                                "type" => "uri",
+                                "linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
+                                "area" => [
+                                    "x" => 0,
+                                    "y" => 586,
+                                    "width" => 520,
+                                    "height" => 454  
+    
+                                ]
                             ],
                         ],
                     ]
