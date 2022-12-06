@@ -32,8 +32,8 @@ if (!class_exists('line_webhook')) {
                 'messages' => [
                     [
                         "type" => "imagemap",
-                        "baseUrl" => "https://example.com/bot/images/rm001",
-                        //"baseUrl" => "https://lh3.googleusercontent.com/pw/AL9nZEW4qqKBh0Fa7HrrjtHhXeg9vIjF_Rg6WZc4zH8ATf8Kmk8dndgTWCzE8N3L43cBny0Lj7NrYwMhAe_0fKTPXyB_SHS0Sj9TxI-bsGIQoiOoY-DbNfh8chLoe9ccf3WG0Nl72Vv6PLzGtq8qJGk5oIA_pg=w1892-h1418-no?authuser=0",
+                        //"baseUrl" => "https://example.com/bot/images/rm001",
+                        "baseUrl" => "https://drive.google.com/drive/folders/1BDuWFEkoLyKSevL6ZZ8tVsTgSOyn5Yc8",
                         "altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
                         "baseSize" => [
@@ -173,8 +173,8 @@ if (!class_exists('line_webhook')) {
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
-                                        //self::push_flex_messages( $flex_contents );
-                                        self::push_imagemap_messages( $flex_contents );
+                                        self::push_flex_messages( $flex_contents );
+                                        //self::push_imagemap_messages( $flex_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
