@@ -32,8 +32,8 @@ if (!class_exists('line_webhook')) {
                 'messages' => [
                     [
                         "type" => "imagemap",
-                        //"baseUrl" => "https://example.com/bot/images/rm001",
-                        "baseUrl" => "https://lh3.googleusercontent.com/pw/AL9nZEW4qqKBh0Fa7HrrjtHhXeg9vIjF_Rg6WZc4zH8ATf8Kmk8dndgTWCzE8N3L43cBny0Lj7NrYwMhAe_0fKTPXyB_SHS0Sj9TxI-bsGIQoiOoY-DbNfh8chLoe9ccf3WG0Nl72Vv6PLzGtq8qJGk5oIA_pg=w1892-h1418-no?authuser=0",
+                        "baseUrl" => "https://example.com/bot/images/rm001",
+                        //"baseUrl" => "https://lh3.googleusercontent.com/pw/AL9nZEW4qqKBh0Fa7HrrjtHhXeg9vIjF_Rg6WZc4zH8ATf8Kmk8dndgTWCzE8N3L43cBny0Lj7NrYwMhAe_0fKTPXyB_SHS0Sj9TxI-bsGIQoiOoY-DbNfh8chLoe9ccf3WG0Nl72Vv6PLzGtq8qJGk5oIA_pg=w1892-h1418-no?authuser=0",
                         "altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
                         "baseSize" => [
@@ -107,17 +107,23 @@ if (!class_exists('line_webhook')) {
         }
 
         public function init() {
+            global $wpdb;
             $serial_number = new serial_number();
             $curtain_users = new curtain_users();
             $client = new LINEBotTiny();
+
             foreach ((array)$client->parseEvents() as $event) {
                 //self::insert_event_log($event);
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
                 $display_name = $profile['displayName'];
-            
-                global $wpdb;
+
+                $data=array();
+                $data['line_user_id']=$profile['userId'];
+                $data['display_name']=$profile['displayName'];
+                $return_id = $curtain_users->insert_curtain_user($data);
+/*        
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $data=array();
@@ -125,7 +131,7 @@ if (!class_exists('line_webhook')) {
                     $data['display_name']=$profile['displayName'];
                     $return_id = $curtain_users->insert_curtain_user($data);
                 }
-
+*/
                 switch ($event['type']) {
                     case 'message':
                         $message = $event['message'];
@@ -151,7 +157,6 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = '請點擊連結進入售後服務區:';
                                             $flex_contents = array();
                                             $flex_contents['line_user_id'] = $line_user_id;
-                                            //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page');
                                             $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
                                             $flex_contents['body_messages'] = $body_messages;
@@ -165,7 +170,6 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
                                         $flex_contents = array();
                                         $flex_contents['line_user_id'] = $line_user_id;
-                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.get_option('_service_page').'/?serial_no=';
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
@@ -173,7 +177,7 @@ if (!class_exists('line_webhook')) {
                                         self::push_imagemap_messages( $flex_contents );
                                     }
                                 } else {
-                                    //send message to line_bot if the message is not six digit 
+                                    //send message to line_bot if the message is not the six digit message 
                                     $data=array();
                                     $data['chat_from']=$line_user_id;
                                     $data['chat_to']='line_bot';
@@ -190,8 +194,6 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents = array();
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
                                         $flex_contents['line_user_id'] = $user->line_user_id;
-                                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
-                                        //$flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
                                         $flex_contents['hero_messages'] = $hero_messages;

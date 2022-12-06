@@ -397,15 +397,16 @@ if (!class_exists('curtain_users')) {
         public function insert_curtain_user($data=[]) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
-            $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
-            if (!(is_null($row) || !empty($wpdb->last_error))) {
-                return $row->curtain_user_id;
-            } else {
+            //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
+            if ( is_null($row) || !empty($wpdb->last_error) ) {
                 $table = $wpdb->prefix.'curtain_users';
                 $data['create_timestamp'] = time();
                 $data['update_timestamp'] = time();
                 $wpdb->insert($table, $data);
                 return $wpdb->insert_id;
+            } else {
+                return $row->curtain_user_id;
             }
         }
 
@@ -437,14 +438,29 @@ if (!class_exists('curtain_users')) {
 
         public function check_user_permissions($params=[]) {
             global $wpdb;
-            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_serials_page' ), OBJECT );
-            $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", $params['service_option_page'] ), OBJECT );
+            $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['username'] ), OBJECT );
             $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
             if (is_null($permission) || !empty($wpdb->last_error)) {
-                if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You have not permission to access this page. Please check to the administrators.';
-                }
+                //if ( $params['_check_permission'] != 'false' ) {
+                //    return 'You have not permission to access this page. Please check to the administrators.';
+                //}
+                return null;
+            } else {
+                return true;
             }
+        }
+
+        public function get_id( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $_id ), OBJECT );
+            return $row->line_user_id;
+        }
+
+        public function get_name( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $_id ), OBJECT );
+            return $row->display_name;
         }
 
         function create_tables() {
