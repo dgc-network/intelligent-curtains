@@ -33,7 +33,7 @@ if (!class_exists('line_webhook')) {
                     [
                         "type" => "imagemap",
                         //"baseUrl" => "https://example.com/bot/images/rm001",
-                        "baseUrl" => "https://drive.google.com/drive/folders/1BDuWFEkoLyKSevL6ZZ8tVsTgSOyn5Yc8",
+                        "baseUrl" => "https://drive.google.com/drive/folders/1yDgdlZT9G8y2053fHs3d5d3plEib6AT1",
                         "altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
                         "baseSize" => [
