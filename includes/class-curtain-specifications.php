@@ -15,6 +15,8 @@ if (!class_exists('curtain_specifications')) {
         public function list_curtain_specifications() {
 
             global $wpdb;
+            $curtain_products = new curtain_products();
+
             if( isset($_SESSION['username']) ) {
                 $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_specifications_page' ), OBJECT );
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
@@ -117,7 +119,7 @@ if (!class_exists('curtain_specifications')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $curtain_products = new curtain_products();
+                //$curtain_products = new curtain_products();
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
                 $output .= '<div id="dialog" title="Curtain specification update">';
                 $output .= '<form method="post">';
@@ -148,7 +150,7 @@ if (!class_exists('curtain_specifications')) {
             }
 
             if( isset($_POST['_add']) ) {
-                $curtain_products = new curtain_products();
+                //$curtain_products = new curtain_products();
                 $output .= '<div id="dialog" title="Create new specification">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -175,7 +177,7 @@ if (!class_exists('curtain_specifications')) {
             return $output;
         }
 
-        function insert_curtain_specification($data=[]) {
+        public function insert_curtain_specification($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_specifications';
             $data['create_timestamp'] = time();
@@ -184,7 +186,7 @@ if (!class_exists('curtain_specifications')) {
             return $wpdb->insert_id;
         }
 
-        function update_curtain_specifications($data=[], $where=[]) {
+        public function update_curtain_specifications($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_specifications';
             $data['update_timestamp'] = time();

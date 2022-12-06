@@ -25,7 +25,37 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function forward_text_messages( $flex_contents=array() ) {
+        function push_imagemap_messages( $_contents=array() ) {
+            $client = new LINEBotTiny();
+            $client->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "imagemap",
+                        //"baseUrl" => "https://example.com/bot/images/rm001",
+                        "baseUrl" => "https://lh3.googleusercontent.com/pw/AL9nZEW4qqKBh0Fa7HrrjtHhXeg9vIjF_Rg6WZc4zH8ATf8Kmk8dndgTWCzE8N3L43cBny0Lj7NrYwMhAe_0fKTPXyB_SHS0Sj9TxI-bsGIQoiOoY-DbNfh8chLoe9ccf3WG0Nl72Vv6PLzGtq8qJGk5oIA_pg=w1892-h1418-no?authuser=0",
+                        "altText" => "this is an imagemap",
+                        //"altText" => $_contents['body_messages'][0],
+                        "baseSize" => [
+                            "width" => 1040,
+                            "height" => 1040,
+                        ],
+                        "actions" => [
+                            "type" => "uri",
+                            "linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
+                            "area" => [
+                                "x" => 0,
+                                "y" => 586,
+                                "width" => 520,
+                                "height" => 454  
+                            ],
+                        ],
+                    ]
+                ]
+            ]);
+        }
+
+        function push_flex_messages( $flex_contents=array() ) {
             $hero_contents = array();
             foreach ( $flex_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -125,7 +155,7 @@ if (!class_exists('line_webhook')) {
                                             $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                             $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
                                             $flex_contents['body_messages'] = $body_messages;
-                                            self::forward_text_messages( $flex_contents );
+                                            self::push_flex_messages( $flex_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
@@ -139,7 +169,8 @@ if (!class_exists('line_webhook')) {
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
                                         $flex_contents['body_messages'] = $body_messages;
-                                        self::forward_text_messages( $flex_contents );
+                                        //self::push_flex_messages( $flex_contents );
+                                        self::push_imagemap_messages( $flex_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not six digit 
@@ -165,7 +196,7 @@ if (!class_exists('line_webhook')) {
                                         $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
                                         $flex_contents['hero_messages'] = $hero_messages;
                                         $flex_contents['body_messages'] = $body_messages;
-                                        self::forward_text_messages( $flex_contents );
+                                        self::push_flex_messages( $flex_contents );
                                     }
                                 }
                                 break;

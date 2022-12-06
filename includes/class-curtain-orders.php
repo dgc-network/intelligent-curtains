@@ -66,8 +66,8 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register the system before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                //$output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
-                $output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'('.$curtain_agent_id.')</h2>';
+                $output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                //$output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'('.$curtain_agent_id.')</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';

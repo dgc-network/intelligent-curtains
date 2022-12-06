@@ -435,6 +435,18 @@ if (!class_exists('curtain_users')) {
             $wpdb->delete($table, $where);
         }
 
+        public function check_user_permissions($params=[]) {
+            global $wpdb;
+            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_serials_page' ), OBJECT );
+            $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+            $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+            if (is_null($permission) || !empty($wpdb->last_error)) {
+                if ( $_GET['_check_permission'] != 'false' ) {
+                    return 'You have not permission to access this page. Please check to the administrators.';
+                }
+            }
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
