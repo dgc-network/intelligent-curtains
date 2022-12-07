@@ -192,7 +192,7 @@ if (!class_exists('line_webhook')) {
                                         $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
                                         //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
                                         //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$user->line_user_id;
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
                                         self::push_flex_messages( $_contents );
