@@ -183,10 +183,17 @@ if (!class_exists('curtain_users')) {
         public function list_curtain_users() {
             
             global $wpdb;
+            $curtain_users = new curtain_users();
+            $curtain_agents = new curtain_agents();
+
             if( isset($_SESSION['username']) ) {
-                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                $params = array();
+                $params['username'] = $_SESSION['username'];
+                $params['service_option_page'] = '_users_page';
+                $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -238,7 +245,6 @@ if (!class_exists('curtain_users')) {
                 ?><script>window.location.replace("?_update=");</script><?php
             }
         
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
@@ -275,7 +281,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->curtain_user_id.'"><i class="fa-solid fa-user-tie"></i></span>';
+                $output .= '<span id="chat-btn-'.$result->line_user_id.'"><i class="fa-solid fa-user-tie"></i></span>';
                 $output .= '<span>  </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
@@ -285,7 +291,6 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $curtain_agents = new curtain_agents();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Curtain user update">';
                 $output .= '<form method="post">';
@@ -317,6 +322,10 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
                 $output .= '</div>';
+            }
+
+            if( isset($_GET['_id']) ) {
+                $curtain_users->curtain_chat_form();
             }
 
             if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {

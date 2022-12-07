@@ -98,6 +98,23 @@ jQuery(document).ready(function($) {
         window.location.assign("orders")
     });
 
+    $('[id^="chat-btn-"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
+    });
+        
+    $('[id^="chat-btn-"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
+    });
+        
+    $('[id^="chat-btn-"]').on( "click", function() {
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(9);
+        window.location.replace("?_id=" + id);
+    });
+
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
