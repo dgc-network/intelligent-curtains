@@ -376,7 +376,7 @@ if (!class_exists('curtain_users')) {
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output = 'LINE USER ID cannot be found!';
                 } else {
-                    //$output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
+                    $output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 
                     $output .= '<div class="chatboxcontent">';
@@ -392,7 +392,7 @@ if (!class_exists('curtain_users')) {
                     $output .= '</div>';
         
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
-                    //$output .= '</div>';
+                    $output .= '</div>';
                 }
             } else {
                 $output = 'LINE USER ID cannot be found!';
