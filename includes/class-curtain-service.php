@@ -207,10 +207,6 @@ if (!class_exists('curtain_service')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
-            $output .= '</tbody></table></div>';
-            $output .= '<form method="post">';
-            $output .= '<input id="create-model" class="wp-block-button__link" type="submit" value="Create" name="_add">';
-            $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -289,7 +285,8 @@ if (!class_exists('curtain_service')) {
 
         public function get_link( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            //return get_site_url().'/'.$row->service_option_link;
             return $row->service_option_link;
         }
 

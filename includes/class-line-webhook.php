@@ -25,9 +25,11 @@ if (!class_exists('line_webhook')) {
                     [
                         "type" => "imagemap",
                         //"baseUrl" => "https://example.com/bot/images/rm001",
-                        "baseUrl" => "https://disabused-shop.000webhostapp.com/images/image002",
-                        "altText" => "this is an imagemap",
+                        //"baseUrl" => "https://disabused-shop.000webhostapp.com/images/image002",
+                        //"altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
+                        "baseUrl" => $_contents["base_url"],
+                        "altText" => $_contents["alt_text"],
                         "baseSize" => [
                             "width" => 1040,
                             "height" => 1040,
@@ -35,7 +37,8 @@ if (!class_exists('line_webhook')) {
                         "actions" => [
                             [
                                 "type" => "uri",
-                                "linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
+                                //"linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
+                                "linkUri" => $_contents["link_uri"],
                                 "area" => [
                                     "x" => 0,
                                     "y" => 0,
@@ -49,38 +52,38 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function push_flex_messages( $flex_contents=array() ) {
+        function push_flex_messages( $_contents=array() ) {
             $hero_contents = array();
-            foreach ( $flex_contents['hero_messages'] as $hero_message ) {
+            foreach ( $_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
                 $hero_content['type'] = 'text';
                 $hero_content['text'] = $hero_message;
                 $hero_content['margin'] = '20px';
                 $hero_content['action']['type'] = 'uri';
                 $hero_content['action']['label'] = 'action';
-                $hero_content['action']['uri'] = $flex_contents['forward_to_uri'];
+                $hero_content['action']['uri'] = $_contents['link_uri'];
                 $hero_contents[] = $hero_content;
             }
             $body_contents = array();
-            foreach ( $flex_contents['body_messages'] as $body_message ) {
+            foreach ( $_contents['body_messages'] as $body_message ) {
                 $body_content = array();
                 $body_content['type'] = 'text';
                 $body_content['text'] = $body_message;
                 $body_content['wrap'] = true;
                 $body_content['action']['type'] = 'uri';
                 $body_content['action']['label'] = 'action';
-                $body_content['action']['uri'] = $flex_contents['forward_to_uri'];
+                $body_content['action']['uri'] = $_contents['link_uri'];
                 $body_contents[] = $body_content;
             }
 
             $client = new LINEBotTiny();
             $client->pushMessage([
-                'to' => $flex_contents['line_user_id'],
+                'to' => $_contents['line_user_id'],
                 'messages' => [
                     [
                         "type" => "flex",
                         //"altText" => "this is a flex message",
-                        "altText" => $flex_contents['body_messages'][0],
+                        "altText" => $_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
                             "hero" => [
@@ -103,6 +106,7 @@ if (!class_exists('line_webhook')) {
         public function init() {
             global $wpdb;
             $serial_number = new serial_number();
+            $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
             $client = new LINEBotTiny();
 
@@ -149,12 +153,16 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = 'Hi, '.$profile['displayName'];
                                             $body_messages[] = 'QR Code 已經完成註冊';
                                             $body_messages[] = '請點擊連結進入售後服務區:';
-                                            $flex_contents = array();
-                                            $flex_contents['line_user_id'] = $line_user_id;
-                                            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
-                                            $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link;
-                                            $flex_contents['body_messages'] = $body_messages;
-                                            self::push_flex_messages( $flex_contents );
+                                            $_contents = array();
+                                            $_contents['line_user_id'] = $line_user_id;
+                                            //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                            //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link;
+                                            $_contents['base_url'] = $curtain_service->get_link('_image003');
+                                            $_contents['alt_text'] = 'Hi, '.$profile['displayName'];
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page');
+                                            $_contents['body_messages'] = $body_messages;
+                                            //self::push_flex_messages( $_contents );
+                                            self::push_imagemap_messages( $_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
@@ -162,13 +170,16 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = 'Hi, '.$profile['displayName'];
                                         $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
-                                        $flex_contents = array();
-                                        $flex_contents['line_user_id'] = $line_user_id;
-                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
-                                        $flex_contents['body_messages'] = $body_messages;
-                                        //self::push_flex_messages( $flex_contents );
-                                        self::push_imagemap_messages( $flex_contents );
+                                        $_contents = array();
+                                        $_contents['line_user_id'] = $line_user_id;
+                                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                        //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
+                                        $_contents['base_url'] = $curtain_service->get_link('_image003');
+                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'];
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page').'/?serial_no=';
+                                        $_contents['body_messages'] = $body_messages;
+                                        //self::push_flex_messages( $_contents );
+                                        self::push_imagemap_messages( $_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
@@ -185,14 +196,14 @@ if (!class_exists('line_webhook')) {
                                         $hero_messages[] = $profile['displayName'];
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
-                                        $flex_contents = array();
+                                        $_contents = array();
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
-                                        $flex_contents['line_user_id'] = $user->line_user_id;
+                                        $_contents['line_user_id'] = $user->line_user_id;
                                         $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
-                                        $flex_contents['forward_to_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
-                                        $flex_contents['hero_messages'] = $hero_messages;
-                                        $flex_contents['body_messages'] = $body_messages;
-                                        self::push_flex_messages( $flex_contents );
+                                        $_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
+                                        $_contents['hero_messages'] = $hero_messages;
+                                        $_contents['body_messages'] = $body_messages;
+                                        self::push_flex_messages( $_contents );
                                     }
                                 }
                                 break;
