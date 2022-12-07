@@ -25,7 +25,7 @@ if (!class_exists('line_webhook')) {
                     [
                         "type" => "imagemap",
                         //"baseUrl" => "https://example.com/bot/images/rm001",
-                        "baseUrl" => "https://github.com/dgc-network/intelligent-curtains/tree/main/assets/images/image001",
+                        "baseUrl" => "https://disabused-shop.000webhostapp.com/images",
                         "altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
                         "baseSize" => [
