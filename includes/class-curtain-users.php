@@ -350,10 +350,16 @@ if (!class_exists('curtain_users')) {
         public function curtain_chat_form() {
 
             global $wpdb;
+            $curtain_users = new curtain_users();
+
             if( isset($_SESSION['username']) ) {
-                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                $params = array();
+                $params['username'] = $_SESSION['username'];
+                $params['service_option_page'] = '_chat_form';
+                $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -370,7 +376,7 @@ if (!class_exists('curtain_users')) {
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output = 'LINE USER ID cannot be found!';
                 } else {
-                    $output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
+                    //$output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 
                     $output .= '<div class="chatboxcontent">';
@@ -386,7 +392,7 @@ if (!class_exists('curtain_users')) {
                     $output .= '</div>';
         
                     $output .= '<div class="chatboxinput"><textarea class="chatboxtextarea"></textarea></div>';
-                    $output .= '</div>';
+                    //$output .= '</div>';
                 }
             } else {
                 $output = 'LINE USER ID cannot be found!';
@@ -397,7 +403,6 @@ if (!class_exists('curtain_users')) {
         public function insert_curtain_user($data=[]) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
-            //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = {$line_user_id}", OBJECT );
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
             if ( is_null($row) || !empty($wpdb->last_error) ) {
                 $table = $wpdb->prefix.'curtain_users';
@@ -438,13 +443,13 @@ if (!class_exists('curtain_users')) {
 
         public function check_user_permissions($params=[]) {
             global $wpdb;
+            if (!isset($params['username'])) {
+                $params['username'] = $_SESSION['username'];
+            }
             $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", $params['service_option_page'] ), OBJECT );
             $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['username'] ), OBJECT );
             $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
             if (is_null($permission) || !empty($wpdb->last_error)) {
-                //if ( $params['_check_permission'] != 'false' ) {
-                //    return 'You have not permission to access this page. Please check to the administrators.';
-                //}
                 return null;
             } else {
                 return true;
