@@ -174,7 +174,7 @@ if (!class_exists('line_webhook')) {
                                         $_contents['line_user_id'] = $line_user_id;
                                         //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
                                         //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?serial_no=';
-                                        $_contents['base_url'] = $curtain_service->get_link('_image003');
+                                        $_contents['base_url'] = $curtain_service->get_link('_image002');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'];
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page').'/?serial_no=';
                                         $_contents['body_messages'] = $body_messages;
@@ -189,18 +189,21 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_message']=$message['text'];
                                     $result = self::insert_chat_message($data);
                                     
-                                    $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
-                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $option->service_option_id", OBJECT );
+                                    //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
+                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $option->service_option_id", OBJECT );
+                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $curtain_service->get_id('_service_page')", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
                                         $hero_messages[] = $profile['displayName'];
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
                                         $_contents = array();
-                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
-                                        $_contents['line_user_id'] = $user->line_user_id;
-                                        $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
-                                        $_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
+                                        //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
+                                        //$_contents['line_user_id'] = $user->line_user_id;
+                                        $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
+                                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
+                                        //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$user->line_user_id;
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
                                         self::push_flex_messages( $_contents );

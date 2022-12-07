@@ -207,6 +207,7 @@ if (!class_exists('curtain_service')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '</tbody></table></div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
