@@ -325,11 +325,12 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_GET['_id']) ) {
-                $curtain_users->curtain_chat_form();
-            }
+                //$curtain_users->curtain_chat_form();
+            //}
 
-            if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {
-                $_id = $_POST['_id'];
+            //if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {
+                //$_id = $_POST['_id'];
+                $_id = $_GET['_id'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
