@@ -275,6 +275,24 @@ if (!class_exists('curtain_service')) {
             $wpdb->delete($table, $where);
         }
 
+        public function get_id( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $_id ), OBJECT );
+            return $row->line_user_id;
+        }
+
+        public function get_name( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $_id ), OBJECT );
+            return $row->service_option_title;
+        }
+
+        public function get_link( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $_id ), OBJECT );
+            return $row->service_option_link;
+        }
+
         function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();

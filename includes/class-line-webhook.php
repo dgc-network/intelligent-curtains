@@ -25,7 +25,7 @@ if (!class_exists('line_webhook')) {
                     [
                         "type" => "imagemap",
                         //"baseUrl" => "https://example.com/bot/images/rm001",
-                        "baseUrl" => "https://disabused-shop.000webhostapp.com/images",
+                        "baseUrl" => "https://disabused-shop.000webhostapp.com/images/image002",
                         "altText" => "this is an imagemap",
                         //"altText" => $_contents['body_messages'][0],
                         "baseSize" => [
@@ -38,10 +38,9 @@ if (!class_exists('line_webhook')) {
                                 "linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
                                 "area" => [
                                     "x" => 0,
-                                    "y" => 586,
-                                    "width" => 520,
-                                    "height" => 454  
-    
+                                    "y" => 0,
+                                    "width" => 1040,
+                                    "height" => 1040
                                 ]
                             ],
                         ],
