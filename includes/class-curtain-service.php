@@ -153,7 +153,7 @@ if (!class_exists('curtain_service')) {
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
-                $where['curtain_option_id']=$_GET['_delete'];
+                $where['service_option_id']=$_GET['_delete'];
                 $result = self::delete_service_options($where);
             }
 
