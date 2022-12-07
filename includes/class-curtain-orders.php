@@ -16,10 +16,9 @@ if (!class_exists('order_items')) {
 
         function select_product_id() {
 
-            //$from = $_SESSION['username'];
+            global $wpdb;
             $_id = $_POST['id'];
 
-            global $wpdb;
             $models = array();
             $models[] = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
@@ -51,6 +50,7 @@ if (!class_exists('order_items')) {
             $curtain_products = new curtain_products();
             $curtain_models = new curtain_models();
             $curtain_specifications = new curtain_specifications();
+            $serial_number = new serial_number();
 
             $curtain_agent_id = 0;
             if( isset($_SESSION['username']) ) {
@@ -67,7 +67,6 @@ if (!class_exists('order_items')) {
                 if ($curtain_agent_id==0) {return 'You have to register the system before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
                 $output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
-                //$output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'('.$curtain_agent_id.')</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -110,12 +109,11 @@ if (!class_exists('order_items')) {
                         $where['curtain_order_id']=$result->curtain_order_id;
                         self::update_order_items($data, $where);
 
-                        $serial_number = new serial_number();
                         $x = 0;
                         while ($x < $result->order_item_qty) {
                             $data=array();
                             $data['curtain_model_id']=$result->curtain_model_id;
-                            $data['specification']=$result->curtain_specification_name.$result->curtain_width;
+                            $data['specification']=$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width;
                             $data['curtain_agent_id']=$result->curtain_agent_id;
                             $serial_number->insert_serial_number($data, $x);
                             $x = $x + 1;
@@ -266,9 +264,6 @@ if (!class_exists('order_items')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $curtain_products = new curtain_products();
-                $curtain_models = new curtain_models();
-                $curtain_specifications = new curtain_specifications();
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Order item update">';
                 $output .= '<form method="post">';
@@ -295,9 +290,6 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_add']) ) {
-                $curtain_products = new curtain_products();
-                $curtain_models = new curtain_models();
-                $curtain_specifications = new curtain_specifications();
                 $output .= '<div id="dialog" title="Create new item">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
