@@ -271,9 +271,9 @@ if (!class_exists('order_items')) {
                 $output .= '<label for="select-product-id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="select-product-id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
-                $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
+                $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id, $row->curtain_product_id).'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
-                $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id).'</select>';
+                $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_product_id).'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
