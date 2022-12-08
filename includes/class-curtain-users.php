@@ -452,7 +452,7 @@ if (!class_exists('curtain_users')) {
             if (!isset($params['username'])) {
                 $params['username'] = $_SESSION['username'];
             }
-            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", $params['service_option_page'] ), OBJECT );
+            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $params['service_option_title'], $params['service_option_page'] ), OBJECT );
             $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['username'] ), OBJECT );
             $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
             if (is_null($permission) || !empty($wpdb->last_error)) {

@@ -14,6 +14,8 @@ if (!class_exists('curtain_service')) {
 
         function init_curtain_service() {
             global $wpdb;
+            $serial_number = new serial_number();
+
             $output = '<div style="text-align:center;">';
             if( isset($_GET['serial_no']) ) {
                 $qr_code_serial_no = $_GET['serial_no'];
@@ -41,41 +43,9 @@ if (!class_exists('curtain_service')) {
                     $data['one_time_password']=$six_digit_random_number;
                     $where=array();
                     $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $serial_number = new serial_number();
                     $result = $serial_number->update_serial_number($data, $where);    
 
-/*    
-                    $where='"%view%"';
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                    $output .= '<div class="wp-block-buttons">';
-                    foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                        $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                        $output .= '</div>';
-                    }
-                    $output .= '</div>';
 
-                    if (is_null($user) || !empty($wpdb->last_error)) {
-                        // registration
-                        $six_digit_random_number = random_int(100000, 999999);
-                        $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                        $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                        $output .= ' 完成註冊程序<br>';
-                        $data=array();
-                        $data['one_time_password']=$six_digit_random_number;
-                        $where=array();
-                        $where['qr_code_serial_no']=$qr_code_serial_no;
-                        $serial_number = new serial_number();
-                        $result = $serial_number->update_serial_number($data, $where);    
-                    } else {
-                        // login
-                        $six_digit_random_number = random_int(100000, 999999);
-                        $output .= '如需其他服務, 請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                        $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16" border="0"></a>';
-                        $output .= '<br>在我們的Line官方帳號聊天室中聯絡我們的客服人員<br>';
-                    }
-*/    
                 } else {
 
                     $where='"%admin%"';
@@ -97,7 +67,6 @@ if (!class_exists('curtain_service')) {
     
             } else {
 
-                global $wpdb;
                 $where='"%view%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
@@ -113,12 +82,18 @@ if (!class_exists('curtain_service')) {
         }
 
         function list_service_options() {
-
             global $wpdb;
+            $curtain_service = new curtain_service();
+            $curtain_users = new curtain_users();
+
             if( isset($_SESSION['username']) ) {
-                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_options_page' ), OBJECT );
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_options_page' ), OBJECT );
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                $params = array();
+                $params['username'] = $_SESSION['username'];
+                $params['service_option_title'] = 'Service Options';
+                $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -136,7 +111,8 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
                 $data['service_option_page']=$_POST['_service_option_page'];
-                $result = self::insert_service_option($data);
+                //$result = self::insert_service_option($data);
+                $curtain_service->insert_service_option($data);
             }
         
             if( isset($_POST['_update']) ) {
@@ -147,17 +123,19 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_page']=$_POST['_service_option_page'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
-                $result = self::update_service_options($data, $where);
+                //$result = self::update_service_options($data, $where);
+                $curtain_service->update_service_options($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['service_option_id']=$_GET['_delete'];
-                $result = self::delete_service_options($where);
+                //$result = self::delete_service_options($where);
+                $curtain_service->delete_service_options($where);
+                $curtain_users->delete_user_permissions($where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title LIKE {$where}", OBJECT );
@@ -250,7 +228,7 @@ if (!class_exists('curtain_service')) {
             return $output;
         }
 
-        function insert_service_option($data=[]) {
+        public function insert_service_option($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
             $data['create_timestamp'] = time();
@@ -259,7 +237,7 @@ if (!class_exists('curtain_service')) {
             return $wpdb->insert_id;
         }
 
-        function update_service_options($data=[], $where=[]) {
+        public function update_service_options($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'service_options';
             $data['update_timestamp'] = time();
@@ -286,7 +264,7 @@ if (!class_exists('curtain_service')) {
 
         public function get_link( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_id, $_id, $_id ), OBJECT );
             //return get_site_url().'/'.$row->service_option_link;
             return $row->service_option_link;
         }

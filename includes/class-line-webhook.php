@@ -184,7 +184,8 @@ if (!class_exists('line_webhook')) {
                                             $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page');
                                             $_contents['body_messages'] = $body_messages;
                                             //self::push_flex_messages( $_contents );
-                                            self::push_imagemap_messages( $_contents );
+                                            //self::push_imagemap_messages( $_contents );
+                                            $line_webhook->push_imagemap_messages( $_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
@@ -199,7 +200,8 @@ if (!class_exists('line_webhook')) {
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page').'/?serial_no=';
                                         $_contents['body_messages'] = $body_messages;
                                         //self::push_flex_messages( $_contents );
-                                        self::push_imagemap_messages( $_contents );
+                                        //self::push_imagemap_messages( $_contents );
+                                        $line_webhook->push_imagemap_messages( $_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
@@ -208,7 +210,7 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
                                     //$result = self::insert_chat_message($data);
-                                    $result = $line_webhook->insert_chat_message($data);
+                                    $line_webhook->insert_chat_message($data);
                                                             
                                     $service_option_id = $curtain_service->get_id('_service_page');
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$service_option_id}", OBJECT );
