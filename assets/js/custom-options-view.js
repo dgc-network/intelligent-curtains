@@ -175,14 +175,15 @@ jQuery(document).ready(function($) {
     $( "#dialog-form" ).dialog({
         //autoOpen: false,
         //autoOpen: true,
-        height: 400,
+        height: 450,
         width: 500,
         //modal: true,
 
         buttons: {
             //"Create": addUser,
             Cancel: function() {
-                dialog.dialog( "close" );
+                //dialog.dialog( "close" );
+                $(this).dialog("close");
             }
         },
         
@@ -193,6 +194,30 @@ jQuery(document).ready(function($) {
     
     });
 
-    // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+    ///on class click
+    $(".delete").click(function (e) {
+        e.preventDefault(); ///first, prevent the action
+        var targetUrl = $(this).attr("href"); ///the original delete call
+
+        ///construct the dialog
+        $("#dialog_id").dialog({
+            autoOpen: false,
+            title: 'Confirmation',
+            modal: true,
+            buttons: {
+                "OK" : function () {
+                    ///if the user confirms, proceed with the original action
+                    window.location.href = targetUrl;
+                },
+                "Cancel" : function () {
+                    ///otherwise, just close the dialog; the delete event was already interrupted
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        ///open the dialog window
+        $("#dialog_id").dialog("open");
+    });
 
 });
