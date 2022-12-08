@@ -178,13 +178,14 @@ jQuery(document).ready(function($) {
         height: 400,
         width: 500,
         //modal: true,
-/*
+
         buttons: {
             "Create": addUser,
             Cancel: function() {
                 dialog.dialog( "close" );
             }
         },
+/*        
         close: function() {
             form[ 0 ].reset();
             allFields.removeClass( "ui-state-error" );
