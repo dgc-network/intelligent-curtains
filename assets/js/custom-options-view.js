@@ -180,7 +180,7 @@ jQuery(document).ready(function($) {
         //modal: true,
 
         buttons: {
-            "Create": addUser,
+            //"Create": addUser,
             Cancel: function() {
                 dialog.dialog( "close" );
             }
