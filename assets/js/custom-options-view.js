@@ -84,6 +84,7 @@ jQuery(document).ready(function($) {
         });
     });
     
+    /* Cart Button */
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
@@ -98,6 +99,7 @@ jQuery(document).ready(function($) {
         window.location.assign("orders")
     });
 
+    /* Chat Button */
     $('[id^="chat-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
@@ -115,6 +117,7 @@ jQuery(document).ready(function($) {
         window.location.replace("?_id=" + id);
     });
 
+    /* Update Button */
     $('[id^="edit-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
@@ -132,6 +135,7 @@ jQuery(document).ready(function($) {
         window.location.replace("?_edit=" + id);
     });
 
+    /* Delete Button */
     $('[id^="del-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
@@ -151,6 +155,7 @@ jQuery(document).ready(function($) {
         }        
     });
 
+    /* QR Code */
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
     });
@@ -164,16 +169,14 @@ jQuery(document).ready(function($) {
     });
 
     /* jQuery UI Dialog - Basic dialog */
-
     $( "#dialog" ).dialog();
 
     /* jQuery UI Dialog - Modal form */
-/*
-    $( "#dialog-form-1" ).dialog({
+    $( "#dialog-form" ).dialog({
         //autoOpen: false,
         autoOpen: true,
         height: 400,
-        width: 350,
+        width: 500,
         //modal: true,
         buttons: {
             "Create": addUser,
@@ -186,7 +189,7 @@ jQuery(document).ready(function($) {
             allFields.removeClass( "ui-state-error" );
         }
     });
-*/    
+
     // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
 
 });

@@ -194,16 +194,12 @@ if (!class_exists('curtain_users')) {
         
         
 
-        public function list_curtain_users() {
-            
+        public function list_curtain_users() {            
             global $wpdb;
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['username']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_users_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
                 $params = array();
                 $params['username'] = $_SESSION['username'];
                 $params['service_option_page'] = '_users_page';
@@ -218,14 +214,7 @@ if (!class_exists('curtain_users')) {
                     return 'You have not permission to access this page. Please check to the administrators.';
                 }
             }
-/*
-            if( isset($_GET['_delete']) ) {
-                $where=array();
-                $where['curtain_user_id']=$_GET['_delete'];
-                $result = self::delete_curtain_users($where);
-                $result = self::delete_user_permissions($where);
-            }
-*/
+
             if( isset($_POST['_update']) ) {
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
@@ -259,6 +248,7 @@ if (!class_exists('curtain_users')) {
                 ?><script>window.location.replace("?_update=");</script><?php
             }
         
+            /** Curtain User List */
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
@@ -338,8 +328,8 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div>';
             }
 
-            if( isset($_GET['_id']) ) {
-                
+            /** Chat Form with Curtain User List*/
+            if( isset($_GET['_id']) ) {                
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
                     $output .= '<div id="dialog" title="Chat with '.$row->display_name.'">';
@@ -386,12 +376,14 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
+            /** Curtain Chat Form */
             if( isset($_GET['_id']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     $output = 'LINE USER ID cannot be found!';
                 } else {
-                    $output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
+                    //$output = '<div id="dialog" title="Chat with '.$row->display_name.'">';
+                    $output = '<div id="dialog-form" title="Chat with '.$row->display_name.'">';
                     $output .= '<input type="hidden" value="'.$row->line_user_id.'" class="chatboxtitle">';
 
                     $output .= '<div class="chatboxcontent">';

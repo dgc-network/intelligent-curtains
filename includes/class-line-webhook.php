@@ -12,9 +12,47 @@ if (!class_exists('line_webhook')) {
             self::create_tables();
         }
 
-        function line_rich_menu( $rich_menu_content='' ) {
+        function create_rich_menu( $_content=array() ) {
             $client = new LINEBotTiny();
-            $client->richMenu($rich_menu_content);
+            $rick_menu_id = $client->createRichMenu([
+                "size" => [
+                    "width" => 2500,
+                    "height" => 1686    
+                ],
+                "selected" => false,
+                "name" => "richmenu-a",
+                "chatBarText" => $_contents["chat_bar_text"],
+                "areas" => [
+                    [
+                        "bounds" => [
+                            "x" => 0,
+                            "y" => 0,
+                            "width" => 1250,
+                            "height" => 1686    
+                        ],
+                        "action" => [
+                            "type" => "uri",
+                            "uri" => "https://developers.line.biz/"    
+                        ]
+                    ],
+                    [
+                        "bounds" => [
+                            "x" => 1251,
+                            "y" => 0,
+                            "width" => 1250,
+                            "height" => 1686    
+                        ],
+                        "action" => [
+                            "type" => "richmenuswitch",
+                            "richMenuAliasId" => "richmenu-alias-b",
+                            "data" => "richmenu-changed-to-b"
+                        ]
+                    ]
+                ]
+            ]);
+
+            $image_path = '/path/to/image.jpeg';
+            $client->uploadImageToRichMenu($rick_menu_id, $image_path);
         }
 
         function push_imagemap_messages( $_contents=array() ) {
@@ -24,10 +62,6 @@ if (!class_exists('line_webhook')) {
                 'messages' => [
                     [
                         "type" => "imagemap",
-                        //"baseUrl" => "https://example.com/bot/images/rm001",
-                        //"baseUrl" => "https://disabused-shop.000webhostapp.com/images/image002",
-                        //"altText" => "this is an imagemap",
-                        //"altText" => $_contents['body_messages'][0],
                         "baseUrl" => $_contents["base_url"],
                         "altText" => $_contents["alt_text"],
                         "baseSize" => [
@@ -37,7 +71,6 @@ if (!class_exists('line_webhook')) {
                         "actions" => [
                             [
                                 "type" => "uri",
-                                //"linkUri" => "https://photos.app.goo.gl/o7kmoFQ2ApzDnw7f6",
                                 "linkUri" => $_contents["link_uri"],
                                 "area" => [
                                     "x" => 0,

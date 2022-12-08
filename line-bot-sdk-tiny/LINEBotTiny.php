@@ -182,7 +182,7 @@ class LINEBotTiny {
      * @param array<string, mixed> $content
      * @return void
      */
-    public function richMenu($content) {
+    public function createRichMenu($content) {
 
         $header = array(
             'Content-Type: application/json',
@@ -199,6 +199,66 @@ class LINEBotTiny {
         ]);
 
         $response = file_get_contents('https://api.line.me/v2/bot/richmenu', false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
+    }
+
+    /**
+     * @param string $richMenuId
+     * @return void
+     */
+    public function uploadImageToRichMenu($richMenuId, $imagePath, $content) {
+
+        $header = array(
+            'Content-Type: image/png',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'POST',
+                'header' => implode("\r\n", $header),
+                //'content' => json_encode($content),
+                'content' => $imagePath,
+            ],
+        ]);
+
+        $response = file_get_contents('https://api-data.line.me/v2/bot/richmenu/'.$richMenuId.'/content', false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $content
+     * $content['richMenuId']
+     * $content['userIds']
+     * @return void
+     */
+    public function setDefaultRichMenu($content) {
+
+        $header = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'POST',
+                'header' => implode("\r\n", $header),
+                'content' => json_encode($content),
+            ],
+        ]);
+
+        if (is_null($content['userIds'])) {
+            $response = file_get_contents('https://api.line.me/v2/bot/user/all/richmenu/'.$content['richMenuId'], false, $context);
+        } else {
+            $response = file_get_contents('https://api.line.me/v2/bot/richmenu/bulk/link', false, $context);
+        }
+        
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
