@@ -173,12 +173,12 @@ jQuery(document).ready(function($) {
 
     /* jQuery UI Dialog - Modal form */
     $( "#dialog-form" ).dialog({
-/*        
         //autoOpen: false,
-        autoOpen: true,
+        //autoOpen: true,
         height: 400,
         width: 500,
         //modal: true,
+/*
         buttons: {
             "Create": addUser,
             Cancel: function() {
