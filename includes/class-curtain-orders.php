@@ -9,13 +9,10 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            //add_action( 'wp_ajax_select_product_id', array( __CLASS__, 'select_product_id' ) );
-            //add_action( 'wp_ajax_nopriv_select_product_id', array( __CLASS__, 'select_product_id' ) );
             self::create_tables();
         }
 
         function select_product_id() {
-
             global $wpdb;
             $_id = $_POST['id'];
 
@@ -67,7 +64,7 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register the system before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                $output  = '<h2>Order Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                $output  = '<h2>Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -211,7 +208,7 @@ if (!class_exists('order_items')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create Item" name="_add">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
             $output .= '</form>';
             $output .= '</div>';
@@ -267,7 +264,7 @@ if (!class_exists('order_items')) {
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
-                $output .= '<div id="dialog" title="Order item update">';
+                $output .= '<div id="dialog" title="Items update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';

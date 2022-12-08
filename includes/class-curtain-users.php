@@ -352,7 +352,6 @@ if (!class_exists('curtain_users')) {
                     $output .= '</div>';
                 }
             }
-
             return $output;
         }
 
