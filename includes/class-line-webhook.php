@@ -219,7 +219,8 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = $message['text'];
                                         $_contents = array();
                                         $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
+                                        //$_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_users_page').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
                                         //self::push_flex_messages( $_contents );
