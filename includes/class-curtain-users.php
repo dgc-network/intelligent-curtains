@@ -37,9 +37,9 @@ if (!class_exists('curtain_users')) {
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
 
-            $from = $_SESSION['username'];
-            $to = $_POST['to'];
-            $message = $_POST['message'];
+            //$from = $_SESSION['username'];
+            //$to = $_POST['to'];
+            //$message = $_POST['message'];
 
             $data=array();
             $data['chat_from']= $_SESSION['username'];
