@@ -50,8 +50,8 @@ if (!class_exists('order_items')) {
             $serial_number = new serial_number();
 
             $curtain_agent_id = 0;
-            if( isset($_SESSION['username']) ) {
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+            if( isset($_SESSION['line_user_id']) ) {
+                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                 $curtain_agent_id = $user->curtain_agent_id;
                 if (is_null($user->curtain_agent_id) || $curtain_agent_id==0 || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {

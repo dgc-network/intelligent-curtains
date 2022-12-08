@@ -37,12 +37,12 @@ if (!class_exists('curtain_users')) {
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
 
-            //$from = $_SESSION['username'];
+            //$from = $_SESSION['line_user_id'];
             //$to = $_POST['to'];
             //$message = $_POST['message'];
 
             $data=array();
-            $data['chat_from']= $_SESSION['username'];
+            $data['chat_from']= $_SESSION['line_user_id'];
             $data['chat_to']= $_POST['to'];
             $data['chat_message']= $_POST['message'];
             $line_webhook->insert_chat_message($data);
@@ -75,7 +75,7 @@ if (!class_exists('curtain_users')) {
 
         function chatHeartbeat_backup() {
             
-            $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' AND recd = 0) order by id ASC";
+            $sql = "select * from {$wpdb->prefix}chat where ({$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['line_user_id'])."' AND recd = 0) order by id ASC";
             $query = mysql_query($sql);
             //$items = '';
             $items = array();
@@ -168,7 +168,7 @@ if (!class_exists('curtain_users')) {
                 }
             }
         
-            $sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['username'])."' and recd = 0";
+            $sql = "update {$wpdb->prefix}chat set recd = 1 where {$wpdb->prefix}chat.to = '".mysql_real_escape_string($_SESSION['line_user_id'])."' and recd = 0";
             $query = mysql_query($sql);
         /*
             if ($items != '') {
@@ -199,10 +199,11 @@ if (!class_exists('curtain_users')) {
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
 
-            if( isset($_SESSION['username']) ) {
+            if( isset($_SESSION['line_user_id']) ) {
                 $params = array();
-                $params['username'] = $_SESSION['username'];
-                $params['service_option_page'] = '_users_page';
+                $params['line_user_id'] = $_SESSION['line_user_id'];
+                //$params['service_option_page'] = '_users_page';
+                $params['service_option_title'] = 'Users';
                 $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -222,7 +223,8 @@ if (!class_exists('curtain_users')) {
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
-                $result = self::update_curtain_users($data, $where);
+                //$result = self::update_curtain_users($data, $where);
+                $result = $curtain_users->update_curtain_users($data, $where);
 
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
@@ -339,10 +341,10 @@ if (!class_exists('curtain_users')) {
                     global $wpdb;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
-                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
+                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['line_user_id']) {
                             $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
-                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['username']) {
+                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['line_user_id']) {
                             $output .= '<div class="chatboxmessage"><div class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div></div>';
                         }
                     }
@@ -359,9 +361,9 @@ if (!class_exists('curtain_users')) {
             global $wpdb;
             $curtain_users = new curtain_users();
 
-            if( isset($_SESSION['username']) ) {
+            if( isset($_SESSION['line_user_id']) ) {
                 $params = array();
-                $params['username'] = $_SESSION['username'];
+                $params['line_user_id'] = $_SESSION['line_user_id'];
                 $params['service_option_page'] = '_chat_form';
                 $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -388,10 +390,10 @@ if (!class_exists('curtain_users')) {
                     $output .= '<div class="chatboxcontent">';
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}chat_messages", OBJECT );
                     foreach ( $results as $index=>$result ) {
-                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['username']) {
+                        if ($result->chat_to==$row->line_user_id && $result->chat_from==$_SESSION['line_user_id']) {
                             $output .= '<div class="chatboxmessage" style="float: right;"><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div><div class="chatboxinfo">'.$result->chat_message.'</div></div><div style="clear: right;"></div>';
                         }
-                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['username']) {
+                        if ($result->chat_from==$row->line_user_id && $result->chat_to!=$_SESSION['line_user_id']) {
                             $output .= '<div class="chatboxmessage"><div class="chatboxmessagefrom">'.$row->display_name.':&nbsp;&nbsp;</div><div class="chatboxmessagecontent">'.$result->chat_message.'</div><div class="chatboxmessagetime">'.wp_date( get_option('time_format'), $result->create_timestamp ).'</div></div>';
                         }
                     }
@@ -449,12 +451,13 @@ if (!class_exists('curtain_users')) {
 
         public function check_user_permissions($params=[]) {
             global $wpdb;
-            if (!isset($params['username'])) {
-                $params['username'] = $_SESSION['username'];
+            if (!isset($params['line_user_id'])) {
+                $params['line_user_id'] = $_SESSION['line_user_id'];
             }
             $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $params['service_option_title'], $params['service_option_page'] ), OBJECT );
-            $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['username'] ), OBJECT );
-            $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+            //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['line_user_id'] ), OBJECT );
+            //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+            $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $params['line_user_id'], $option->service_option_id ), OBJECT );            
             if (is_null($permission) || !empty($wpdb->last_error)) {
                 return null;
             } else {
@@ -495,6 +498,7 @@ if (!class_exists('curtain_users')) {
             $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
                 user_permission_id int NOT NULL AUTO_INCREMENT,
                 curtain_user_id int NOT NULL,
+                line_user_id varchar(50) NOT NULL,
                 service_option_id int NOT NULL,
                 create_timestamp int(10),
                 PRIMARY KEY (user_permission_id)

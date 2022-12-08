@@ -12,7 +12,7 @@ if (!class_exists('curtain_service')) {
             self::create_tables();
         }
 
-        function init_curtain_service() {
+        public function init_curtain_service() {
             global $wpdb;
             $serial_number = new serial_number();
 
@@ -27,7 +27,7 @@ if (!class_exists('curtain_service')) {
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
                     if (!(is_null($user) || !empty($wpdb->last_error))) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['username'] = $user->line_user_id;
+                        $_SESSION['line_user_id'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -50,7 +50,7 @@ if (!class_exists('curtain_service')) {
 
                     $where='"%admin%"';
                     //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );            
+                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );            
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
@@ -81,17 +81,17 @@ if (!class_exists('curtain_service')) {
             return $output;
         }
 
-        function list_service_options() {
+        public function list_service_options() {
             global $wpdb;
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
 
-            if( isset($_SESSION['username']) ) {
+            if( isset($_SESSION['line_user_id']) ) {
                 //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_options_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                 //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
                 $params = array();
-                $params['username'] = $_SESSION['username'];
+                $params['line_user_id'] = $_SESSION['line_user_id'];
                 $params['service_option_title'] = 'Service Options';
                 $permission = $curtain_users->check_user_permissions($params);
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -269,7 +269,7 @@ if (!class_exists('curtain_service')) {
             return $row->service_option_link;
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
