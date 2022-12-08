@@ -33,16 +33,30 @@ if (!class_exists('curtain_users')) {
         }
 
         function send_chat() {
+            $line_webhook = new line_webhook();
+            $curtain_service = new curtain_service();
+            $curtain_users = new curtain_users();
+
             $from = $_SESSION['username'];
             $to = $_POST['to'];
             $message = $_POST['message'];
 
             $data=array();
-            $data['chat_from']= esc_sql($from);
-            $data['chat_to']= esc_sql($to);
-            $data['chat_message']= esc_sql($message);
-            $line_webhook = new line_webhook();
-            $result = $line_webhook->insert_chat_message($data);
+            $data['chat_from']= $_SESSION['username'];
+            $data['chat_to']= $_POST['to'];
+            $data['chat_message']= $_POST['message'];
+            $line_webhook->insert_chat_message($data);
+
+            $hero_messages = array();
+            $hero_messages[] = $curtain_users->get_name($_POST['to']);
+            $body_messages = array();
+            $body_messages[] = $_POST['message'];
+            $_contents = array();
+            $_contents['line_user_id'] = $_POST['to'];
+            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$_POST['to'];
+            $_contents['hero_messages'] = $hero_messages;
+            $_contents['body_messages'] = $body_messages;
+            $line_webhook->push_flex_messages( $_contents );
 
             $response = array();
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
@@ -325,12 +339,6 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_GET['_id']) ) {
-                //$curtain_users->curtain_chat_form();
-            //}
-
-            //if( isset($_POST['_chat_user']) && isset($_POST['_id']) ) {
-                //$_id = $_POST['_id'];
-                //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
                 
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
@@ -359,14 +367,10 @@ if (!class_exists('curtain_users')) {
         }
 
         public function curtain_chat_form() {
-
             global $wpdb;
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['username']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['username'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
                 $params = array();
                 $params['username'] = $_SESSION['username'];
                 $params['service_option_page'] = '_chat_form';
@@ -475,7 +479,7 @@ if (!class_exists('curtain_users')) {
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d OR line_user_id = %s", $_id, $_id ), OBJECT );
             return $row->display_name;
         }
 

@@ -105,13 +105,13 @@ if (!class_exists('line_webhook')) {
 
         public function init() {
             global $wpdb;
+            $line_webhook = new line_webhook();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
             $client = new LINEBotTiny();
 
             foreach ((array)$client->parseEvents() as $event) {
-                //self::insert_event_log($event);
 
                 $profile = $client->getProfile($event['source']['userId']);
                 $line_user_id = $profile['userId'];
@@ -129,7 +129,6 @@ if (!class_exists('line_webhook')) {
                             case 'text':
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
-                                    global $wpdb;
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
@@ -175,10 +174,9 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_from']=$line_user_id;
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
-                                    $result = self::insert_chat_message($data);
-                                    
-                                    //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_service_page' ), OBJECT );
-                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = $option->service_option_id", OBJECT );
+                                    //$result = self::insert_chat_message($data);
+                                    $result = $line_webhook->insert_chat_message($data);
+                                                            
                                     $service_option_id = $curtain_service->get_id('_service_page');
                                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$service_option_id}", OBJECT );
                                     foreach ( $results as $index=>$result ) {
@@ -187,15 +185,12 @@ if (!class_exists('line_webhook')) {
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
                                         $_contents = array();
-                                        //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );
-                                        //$_contents['line_user_id'] = $user->line_user_id;
                                         $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
-                                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_chat_form' ), OBJECT );
-                                        //$_contents['link_uri'] = get_site_url().'/'.$option->service_option_link.'/?_id='.$user->line_user_id;
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
-                                        self::push_flex_messages( $_contents );
+                                        //self::push_flex_messages( $_contents );
+                                        $line_webhook->push_flex_messages( $_contents );
                                     }
                                 }
                                 break;
