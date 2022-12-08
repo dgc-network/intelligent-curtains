@@ -217,7 +217,7 @@ if (!class_exists('curtain_specifications')) {
             return $row->length_only;
         }
 
-        public function select_options( $_id=0 ) {
+        public function select_options( $_id=0, $_product_id=0 ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_product_id}", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
