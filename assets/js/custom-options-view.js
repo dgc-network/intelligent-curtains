@@ -99,6 +99,24 @@ jQuery(document).ready(function($) {
         window.location.assign("orders")
     });
 
+    /* QR Code Button */
+    $('[id^="qrcode-btn-"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
+    });
+        
+    $('[id^="qrcode-btn-"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
+    });
+        
+    $('[id^="qrcode-btn-"]').on( "click", function() {
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(11);
+        window.location.replace("?_qrcode=" + id);
+    });
+
     /* Chat Button */
     $('[id^="chat-btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');

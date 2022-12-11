@@ -9,7 +9,7 @@ if (!class_exists('order_items')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
         function select_product_id() {
@@ -53,11 +53,12 @@ if (!class_exists('order_items')) {
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                $curtain_agent_id = $user->curtain_agent_id;
-                if (is_null($user->curtain_agent_id) || $curtain_agent_id==0 || !empty($wpdb->last_error)) {
+                if (is_null($user->curtain_agent_id) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
                     }
+                } else {
+                    $curtain_agent_id = $user->curtain_agent_id;
                 }
             }
 
@@ -283,7 +284,7 @@ if (!class_exists('order_items')) {
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_product_id).'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
-                $output .= '<span>width</span>';
+                $output .= '<span>Width</span>';
                 $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
                 $output .= '<span>x</span>';
                 $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
@@ -311,9 +312,11 @@ if (!class_exists('order_items')) {
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options().'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
+                $output .= '<span>Width</span>';
                 $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
-                $output .= '<span> x </span>';
+                $output .= '<span>x</span>';
                 $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
+                $output .= '<span>Height</span>';
                 $output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
@@ -347,7 +350,7 @@ if (!class_exists('order_items')) {
             $wpdb->delete($table, $where);
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -373,8 +376,8 @@ if (!class_exists('order_items')) {
             dbDelta($sql);
         }
     }
-    $order_items = new order_items();
-    add_shortcode( 'order-item-list', array( $order_items, 'list_order_items' ) );
-    add_action( 'wp_ajax_select_product_id', array( $order_items, 'select_product_id' ) );
-    add_action( 'wp_ajax_nopriv_select_product_id', array( $order_items, 'select_product_id' ) );
+    $my_class = new order_items();
+    add_shortcode( 'order-item-list', array( $my_class, 'list_order_items' ) );
+    add_action( 'wp_ajax_select_product_id', array( $my_class, 'select_product_id' ) );
+    add_action( 'wp_ajax_nopriv_select_product_id', array( $my_class, 'select_product_id' ) );
 }

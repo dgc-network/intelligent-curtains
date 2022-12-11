@@ -9,16 +9,20 @@ if (!class_exists('curtain_agents')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
         public function list_curtain_agents() {
-
             global $wpdb;
+            $curtain_service = new curtain_service();
+
             if( isset($_SESSION['line_user_id']) ) {
-                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_agents_page' ), OBJECT );
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_agents_page' ), OBJECT );
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+
+                $_option_title = 'Agents';
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -39,7 +43,7 @@ if (!class_exists('curtain_agents')) {
                 $data['phone1']=$_POST['_phone1'];
                 $data['contact2']=$_POST['_contact2'];
                 $data['phone2']=$_POST['_phone2'];
-                $result = self::insert_curtain_agent($data);
+                $this->insert_curtain_agent($data);
             }
         
             if( isset($_POST['_update']) ) {
@@ -53,14 +57,14 @@ if (!class_exists('curtain_agents')) {
                 $data['phone2']=$_POST['_phone2'];
                 $where=array();
                 $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $result = self::update_curtain_agents($data, $where);
+                $this->update_curtain_agents($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_agent_id']=$_GET['_delete'];
-                $result = self::delete_curtain_agents($where);
+                $this->delete_curtain_agents($where);
             }
 
             if( isset($_POST['_where']) ) {
@@ -108,11 +112,49 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<td style="text-align: center;">'.$result->phone1.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
+                $output .= '<span id="qrcode-btn-'.$result->qr_code_agent_no.'"><i class="fa-solid fa-qrcode"></i></span>';
+                $output .= '<span> </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
             $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
+
+            if( isset($_GET['_qrcode']) ) {
+                $_id = $_GET['_qrcode'];
+                $output .= '<div id="dialog" title="QR Code">';
+                $output .= '<div id="qrcode">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<div style="display: flex;">';
+                $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+                $output .= $print_me;
+                $output .= '<span> </span>';
+                $output .= '<span>'.$_id.'</span>';
+                $output .= '</div>';
+                $output .= '</div>';
+                
+                $output .= '<br><br><br><br><br>';                
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE qr_code_agent_no = %s", $_id ), OBJECT );            
+                $output .= '<div class="print-me-'.$_id.'">';
+                //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
+                $output .= '<div id="qrcode1">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
+                $output .= '<div id="qrcode2" style="margin-top: 100px;">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                $output .= '</div>';                
+            }
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -155,7 +197,7 @@ if (!class_exists('curtain_agents')) {
             return $output;
         }
 
-        function insert_curtain_agent($data=[]) {
+        public function insert_curtain_agent($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
             $data['create_timestamp'] = time();
@@ -164,7 +206,7 @@ if (!class_exists('curtain_agents')) {
             return $wpdb->insert_id;
         }
 
-        function update_curtain_agents($data=[], $where=[]) {
+        public function update_curtain_agents($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
             $data['update_timestamp'] = time();
@@ -183,7 +225,7 @@ if (!class_exists('curtain_agents')) {
             return $row->agent_name.'('.$row->agent_number.')';
         }
 
-        function select_options( $_id=0 ) {
+        public function select_options( $_id=0 ) {
             global $wpdb;
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
@@ -200,7 +242,7 @@ if (!class_exists('curtain_agents')) {
             return $output;    
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -221,6 +263,6 @@ if (!class_exists('curtain_agents')) {
             dbDelta($sql);            
         }
     }
-    $curtain_agents = new curtain_agents();
-    add_shortcode( 'curtain-agent-list', array( $curtain_agents, 'list_curtain_agents' ) );
+    $my_class = new curtain_agents();
+    add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
 }

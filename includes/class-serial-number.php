@@ -49,13 +49,13 @@ if (!class_exists('serial_number')) {
                 $data['specification']=$_POST['_specification'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 //$result = self::insert_serial_number($data);
-                $serial_number->insert_serial_number($data);
+                $this->insert_serial_number($data);
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['serial_number_id']=$_GET['_delete'];
-                $serial_number->delete_serial_number($where);
+                $this->delete_serial_number($where);
             }
 
             global $wpdb;
@@ -97,7 +97,7 @@ if (!class_exists('serial_number')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
+                $output .= '<span id="qrcode-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
@@ -131,8 +131,8 @@ if (!class_exists('serial_number')) {
                 $output .= '</div>';
             }
 
-            if( isset($_GET['_edit']) ) {
-                $_id = $_GET['_edit'];
+            if( isset($_GET['_qrcode']) ) {
+                $_id = $_GET['_qrcode'];
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
