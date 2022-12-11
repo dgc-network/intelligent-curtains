@@ -186,11 +186,12 @@ if (!class_exists('curtain_remotes')) {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_remotes` (
-                curtain_remote_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                curtain_remote_id int NOT NULL AUTO_INCREMENT,
                 curtain_remote_name varchar(50),
                 curtain_remote_price decimal(10,2),
                 create_timestamp int(10),
                 update_timestamp int(10),
+                PRIMARY KEY (curtain_remote_id)
             ) $charset_collate;";
             dbDelta($sql);
         }
