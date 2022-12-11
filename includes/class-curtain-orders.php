@@ -46,6 +46,7 @@ if (!class_exists('order_items')) {
             $curtain_agents = new curtain_agents();
             $curtain_products = new curtain_products();
             $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
 
@@ -134,17 +135,19 @@ if (!class_exists('order_items')) {
                     $qty = $_POST['_order_item_qty'];
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
+                $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
                 if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                    $amount = $m_price + $width/100 * $s_price * $qty;
+                    $amount = $m_price + $r_price + $width/100 * $s_price * $qty;
                 } else {
-                    $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                    $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
+                $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
                 $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
                 $data['curtain_width']=$_POST['_curtain_width'];
                 $data['curtain_height']=$_POST['_curtain_height'];
@@ -168,16 +171,18 @@ if (!class_exists('order_items')) {
                     $qty = $_POST['_order_item_qty'];
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
+                $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
                 if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                    $amount = $m_price + $width/100 * $s_price * $qty;
+                    $amount = $m_price + $r_price + $width/100 * $s_price * $qty;
                 } else {
-                    $amount = $m_price + $width/100 * $height/100 * $s_price * $qty;
+                    $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
 
                 $data=array();
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
+                $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
                 $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
                 $data['curtain_width']=$_POST['_curtain_width'];
                 $data['curtain_height']=$_POST['_curtain_height'];
@@ -272,13 +277,17 @@ if (!class_exists('order_items')) {
                 $output .= '<select name="_curtain_product_id" id="select-product-id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id, $row->curtain_product_id).'</select>';
+                $output .= '<label for="select-remote-id">Remote</label>';
+                $output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options($row->curtain_remote_id).'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_product_id).'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
+                $output .= '<span>width</span>';
                 $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
-                $output .= '<span> x </span>';
+                $output .= '<span>x</span>';
                 $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
+                $output .= '<span>Height</span>';
                 $output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
@@ -297,6 +306,8 @@ if (!class_exists('order_items')) {
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options().'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
+                $output .= '<label for="select-remote-id">Remote</label>';
+                $output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options().'</select>';
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options().'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
@@ -348,6 +359,7 @@ if (!class_exists('order_items')) {
                 curtain_agent_id int(10),
                 curtain_product_id int(10),
                 curtain_model_id int(10),
+                curtain_remote_id int(10),
                 curtain_specification_id int(10),
                 curtain_width int(10),
                 curtain_height int(10),
