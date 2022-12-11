@@ -56,6 +56,7 @@ require_once MY_PLUGIN_DIR . 'includes/class-curtain-orders.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-products.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-models.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-specifications.php';
+require_once MY_PLUGIN_DIR . 'includes/class-curtain-remotes.php';
 require_once MY_PLUGIN_DIR . 'includes/class-curtain-users.php';
 require_once MY_PLUGIN_DIR . 'includes/class-serial-number.php';
 add_option('_service_page', 'service');

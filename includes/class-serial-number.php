@@ -9,23 +9,29 @@ if (!class_exists('serial_number')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            //self::create_tables();
+            $this->create_tables();
         }
 
         function list_serial_number() {
 
             global $wpdb;
-            $curtain_users = new curtain_users();
+            $curtain_service = new curtain_service();
+            $serial_number = new serial_number();
+            $curtain_models = new curtain_models();
+            $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
 
                 //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_serials_page' ), OBJECT );
                 //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                 //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-                $params = array();
-                $params['line_user_id'] = $_SESSION['line_user_id'];
-                $params['service_option_page'] = '_serials_page';
-                $permission = $curtain_users->check_user_permissions($params);
+                //$params = array();
+                //$params['line_user_id'] = $_SESSION['line_user_id'];
+                //$params['service_option_page'] = '_serials_page';
+                //$permission = $curtain_users->check_user_permissions($params);
+                $_option_title = 'Serials';
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -42,13 +48,14 @@ if (!class_exists('serial_number')) {
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $result = self::insert_serial_number($data);
+                //$result = self::insert_serial_number($data);
+                $serial_number->insert_serial_number($data);
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['serial_number_id']=$_GET['_delete'];
-                $result = self::delete_serial_number($where);
+                $serial_number->delete_serial_number($where);
             }
 
             global $wpdb;
@@ -107,11 +114,8 @@ if (!class_exists('serial_number')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            //echo do_shortcode('[print-me target="body"/]');
 
             if( isset($_POST['_add']) ) {
-                $curtain_models = new curtain_models();
-                $curtain_agents = new curtain_agents();
                 $output .= '<div id="dialog" title="Create new serial_no">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -193,7 +197,7 @@ if (!class_exists('serial_number')) {
             $wpdb->delete($table, $where);
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

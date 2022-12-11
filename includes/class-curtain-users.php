@@ -17,7 +17,8 @@ if (!class_exists('curtain_users')) {
             //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
             //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-            self::create_tables();
+            //self::create_tables();
+            $this->create_tables();
         }
 
         function enqueue_scripts() {
@@ -196,15 +197,18 @@ if (!class_exists('curtain_users')) {
 
         public function list_curtain_users() {            
             global $wpdb;
+            $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $params = array();
-                $params['line_user_id'] = $_SESSION['line_user_id'];
+                //$params = array();
+                //$params['line_user_id'] = $_SESSION['line_user_id'];
                 //$params['service_option_page'] = '_users_page';
-                $params['service_option_title'] = 'Users';
-                $permission = $curtain_users->check_user_permissions($params);
+                //$params['service_option_title'] = 'Users';
+                //$permission = $curtain_users->check_user_permissions($params);
+                $_option_title = 'Users';
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -224,7 +228,7 @@ if (!class_exists('curtain_users')) {
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
                 //$result = self::update_curtain_users($data, $where);
-                $result = $curtain_users->update_curtain_users($data, $where);
+                $curtain_users->update_curtain_users($data, $where);
 
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
@@ -233,17 +237,19 @@ if (!class_exists('curtain_users')) {
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             $data=array();
-                            $data['curtain_user_id']=$_POST['_curtain_user_id'];
+                            //$data['curtain_user_id']=$_POST['_curtain_user_id'];
+                            $data['line_user_id']=$_POST['_line_user_id'];
                             $data['service_option_id']=$result->service_option_id;
-                            self::insert_user_permission($data);
+                            $curtain_users->insert_user_permission($data);
                         }    
                     } else {
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
                             $where=array();
-                            $where['curtain_user_id']=$_POST['_curtain_user_id'];
+                            //$where['curtain_user_id']=$_POST['_curtain_user_id'];
+                            $where['line_user_id']=$_POST['_line_user_id'];
                             $where['service_option_id']=$result->service_option_id;
-                            self::delete_user_permissions($where);
+                            $curtain_users->delete_user_permissions($where);
                         }    
                     }
                 }
@@ -330,7 +336,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div>';
             }
 
-            /** Chat Form with Curtain User List*/
+            /** Chat Form with Curtain User List */
             if( isset($_GET['_id']) ) {                
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {
@@ -356,9 +362,10 @@ if (!class_exists('curtain_users')) {
             }
             return $output;
         }
-
+/*
         public function curtain_chat_form() {
             global $wpdb;
+            $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
@@ -377,7 +384,6 @@ if (!class_exists('curtain_users')) {
                 }
             }
 
-            /** Curtain Chat Form */
             if( isset($_GET['_id']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (is_null($row) || !empty($wpdb->last_error)) {
@@ -407,7 +413,7 @@ if (!class_exists('curtain_users')) {
             }
             return $output;
         }
-
+*/
         public function insert_curtain_user($data=[]) {
             global $wpdb;
             $line_user_id = $data['line_user_id'];
@@ -451,13 +457,15 @@ if (!class_exists('curtain_users')) {
 
         public function check_user_permissions($params=[]) {
             global $wpdb;
-            if (!isset($params['line_user_id'])) {
-                $params['line_user_id'] = $_SESSION['line_user_id'];
-            }
-            $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $params['service_option_title'], $params['service_option_page'] ), OBJECT );
+            $curtain_service = new curtain_service();
+
+            //if (!isset($params['line_user_id'])) {
+            //    $params['line_user_id'] = $_SESSION['line_user_id'];
+            //}
+            //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $params['service_option_title'], $params['service_option_page'] ), OBJECT );
             //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $params['line_user_id'] ), OBJECT );
             //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-            $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $params['line_user_id'], $option->service_option_id ), OBJECT );            
+            $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($params) ), OBJECT );            
             if (is_null($permission) || !empty($wpdb->last_error)) {
                 return null;
             } else {
@@ -477,7 +485,7 @@ if (!class_exists('curtain_users')) {
             return $row->display_name;
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
