@@ -163,6 +163,12 @@ if (!class_exists('curtain_remotes')) {
             return $row->curtain_remote_name;
         }
 
+        public function get_price( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_remotes WHERE curtain_remote_id = %d", $_id ), OBJECT );
+            return $row->curtain_remote_price;
+        }
+
         public function select_options( $_id=0 ) {
             global $wpdb;
             $output = '<option value="0">-- Select an option --</option>';
