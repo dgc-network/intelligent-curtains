@@ -216,7 +216,7 @@ if (!class_exists('line_webhook')) {
                                                             
                                     //$service_option_id = $curtain_service->get_id('_service_page');
                                     //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$curtain_service->get_id('Service')}", OBJECT );
-                                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Service') ), OBJECT );            
+                                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
                                         $hero_messages[] = $profile['displayName'];
