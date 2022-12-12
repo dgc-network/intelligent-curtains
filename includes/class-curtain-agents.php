@@ -200,7 +200,7 @@ if (!class_exists('curtain_agents')) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
             $qr_code_agent_no = $data['agent_number'] . time();
-            $data['qr_code_serial_no'] = $qr_code_agent_no;
+            $data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
@@ -211,7 +211,7 @@ if (!class_exists('curtain_agents')) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
             $qr_code_agent_no = $data['agent_number'] . time();
-            $data['qr_code_serial_no'] = $qr_code_agent_no;
+            $data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }

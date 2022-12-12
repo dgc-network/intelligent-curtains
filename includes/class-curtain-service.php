@@ -21,24 +21,13 @@ if (!class_exists('curtain_service')) {
                 $qr_code_serial_no = $_GET['serial_no'];
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
-
-                    //$where='"%admin%"';
-                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                    //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );            
-                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
-                    //$line_user_id = $_SESSION['line_user_id'];
-                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id like {$line_user_id}", OBJECT );
+                    // incorrect QR-code display the admin link
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
-                        //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d AND service_option_category LIKE {$where}", $result->service_option_id ), OBJECT );            
-                        //if (!(is_null($option) || !empty($wpdb->last_error))) {
-                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            //$output .= '<a class="wp-block-button__link" href="'.$option->service_option_link.'">'.$option->service_option_title.'</a>';
-                            $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
-                            $output .= '</div>';
-                        //}
+                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                        $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
+                        $output .= '</div>';
                     }
                     $output .= '</div>';                    
 
