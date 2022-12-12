@@ -155,7 +155,7 @@ if (!class_exists('order_items')) {
                 $data['order_item_qty']=$_POST['_order_item_qty'];
                 $data['order_item_amount']=$amount;
                 $data['is_checkout']=0;
-                $result = self::insert_order_item($data);
+                $this->insert_order_item($data);
             }
 
             if( isset($_POST['_update']) ) {
@@ -191,14 +191,14 @@ if (!class_exists('order_items')) {
                 $data['order_item_amount']=$amount;
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
-                $result = self::update_order_items($data, $where);
+                $this->update_order_items($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_order_id']=$_GET['_delete'];
-                $result = self::delete_order_items($where);
+                $this->delete_order_items($where);
             }
 
             /* Cart */

@@ -9,10 +9,10 @@ if (!class_exists('line_webhook')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
-        function create_rich_menu( $_content=array() ) {
+        public function create_rich_menu( $_content=array() ) {
             $client = new LINEBotTiny();
             $rick_menu_id = $client->createRichMenu([
                 "size" => [
@@ -55,7 +55,7 @@ if (!class_exists('line_webhook')) {
             $client->uploadImageToRichMenu($rick_menu_id, $image_path);
         }
 
-        function push_imagemap_messages( $_contents=array() ) {
+        public function push_imagemap_messages( $_contents=array() ) {
             $client = new LINEBotTiny();
             $client->pushMessage([
                 'to' => $_contents['line_user_id'],
@@ -85,7 +85,7 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        function push_flex_messages( $_contents=array() ) {
+        public function push_flex_messages( $_contents=array() ) {
             $hero_contents = array();
             foreach ( $_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -138,7 +138,7 @@ if (!class_exists('line_webhook')) {
 
         public function init() {
             global $wpdb;
-            $line_webhook = new line_webhook();
+            //$line_webhook = new line_webhook();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
@@ -153,7 +153,7 @@ if (!class_exists('line_webhook')) {
                 $data=array();
                 $data['line_user_id']=$profile['userId'];
                 $data['display_name']=$profile['displayName'];
-                $return_id = $curtain_users->insert_curtain_user($data);
+                $curtain_users->insert_curtain_user($data);
 
                 switch ($event['type']) {
                     case 'message':
@@ -171,21 +171,22 @@ if (!class_exists('line_webhook')) {
                                             $data['curtain_user_id']=$user->curtain_user_id;
                                             $where=array();
                                             $where['one_time_password']=$six_digit_random_number;
-                                            $result = $serial_number->update_serial_number($data, $where);
+                                            $serial_number->update_serial_number($data, $where);
                                             
                                             $body_messages = array();
                                             $body_messages[] = 'Hi, '.$profile['displayName'];
                                             $body_messages[] = 'QR Code 已經完成註冊';
                                             $body_messages[] = '請點擊連結進入售後服務區';
+
                                             $_contents = array();
                                             $_contents['line_user_id'] = $line_user_id;
                                             $_contents['base_url'] = $curtain_service->get_link('_image003');
                                             $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
-                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page');
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service');
                                             $_contents['body_messages'] = $body_messages;
                                             //self::push_flex_messages( $_contents );
                                             //self::push_imagemap_messages( $_contents );
-                                            $line_webhook->push_imagemap_messages( $_contents );
+                                            $this->push_imagemap_messages( $_contents );
                                         }
                                     } else {
                                         // continue the process if the 6 digit number is incorrect
@@ -193,15 +194,16 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = 'Hi, '.$profile['displayName'];
                                         $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
+
                                         $_contents = array();
                                         $_contents['line_user_id'] = $line_user_id;
                                         $_contents['base_url'] = $curtain_service->get_link('_image002');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有錯誤'.'請重新輸入正確數字已完成 QR Code 註冊';
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_service_page').'/?serial_no=';
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no=';
                                         $_contents['body_messages'] = $body_messages;
                                         //self::push_flex_messages( $_contents );
                                         //self::push_imagemap_messages( $_contents );
-                                        $line_webhook->push_imagemap_messages( $_contents );
+                                        $this->push_imagemap_messages( $_contents );
                                     }
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
@@ -210,10 +212,10 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
                                     //$result = self::insert_chat_message($data);
-                                    $line_webhook->insert_chat_message($data);
+                                    $this->insert_chat_message($data);
                                                             
-                                    $service_option_id = $curtain_service->get_id('_service_page');
-                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$service_option_id}", OBJECT );
+                                    //$service_option_id = $curtain_service->get_id('_service_page');
+                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$curtain_service->get_id('Service')}", OBJECT );
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
                                         $hero_messages[] = $profile['displayName'];
@@ -222,11 +224,11 @@ if (!class_exists('line_webhook')) {
                                         $_contents = array();
                                         $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
                                         //$_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_users_page').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
                                         //self::push_flex_messages( $_contents );
-                                        $line_webhook->push_flex_messages( $_contents );
+                                        $this->push_flex_messages( $_contents );
                                     }
                                 }
                                 break;
@@ -314,7 +316,7 @@ if (!class_exists('line_webhook')) {
             return $wpdb->insert_id;
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

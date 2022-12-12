@@ -9,7 +9,7 @@ if (!class_exists('curtain_products')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
         public function list_curtain_products() {
@@ -17,9 +17,6 @@ if (!class_exists('curtain_products')) {
             $curtain_service = new curtain_service();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_products_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
                 $_option_title = 'Products';
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -36,7 +33,7 @@ if (!class_exists('curtain_products')) {
             if( isset($_POST['_create']) ) {
                 $data=array();
                 $data['curtain_product_name']=$_POST['_curtain_product_name'];
-                $result = self::insert_curtain_product($data);
+                $this->insert_curtain_product($data);
             }
             
             if( isset($_POST['_update']) ) {
@@ -44,14 +41,14 @@ if (!class_exists('curtain_products')) {
                 $data['curtain_product_name']=$_POST['_curtain_product_name'];
                 $where=array();
                 $where['curtain_product_id']=$_POST['_curtain_product_id'];
-                $result = self::update_curtain_products($data, $where);
+                $this->update_curtain_products($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_product_id']=$_GET['_delete'];
-                $result = self::delete_curtain_products($where);
+                $this->delete_curtain_products($where);
             }
 
             global $wpdb;
@@ -129,7 +126,7 @@ if (!class_exists('curtain_products')) {
             return $output;
         }
 
-        function insert_curtain_product($data=[]) {
+        public function insert_curtain_product($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_products';
             $data['create_timestamp'] = time();
@@ -138,7 +135,7 @@ if (!class_exists('curtain_products')) {
             return $wpdb->insert_id;
         }
 
-        function update_curtain_products($data=[], $where=[]) {
+        public function update_curtain_products($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_products';
             $data['update_timestamp'] = time();
@@ -174,7 +171,7 @@ if (!class_exists('curtain_products')) {
             return $output;
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -189,6 +186,6 @@ if (!class_exists('curtain_products')) {
             dbDelta($sql);
         }
     }
-    $curtain_products = new curtain_products();
-    add_shortcode( 'curtain-product-list', array( $curtain_products, 'list_curtain_products' ) );
+    $my_class = new curtain_products();
+    add_shortcode( 'curtain-product-list', array( $my_class, 'list_curtain_products' ) );
 }

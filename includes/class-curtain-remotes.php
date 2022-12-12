@@ -54,7 +54,6 @@ if (!class_exists('curtain_remotes')) {
                 $curtain_remotes->delete_curtain_remotes($where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_remotes WHERE curtain_remote_name LIKE {$where}", OBJECT );
@@ -78,7 +77,7 @@ if (!class_exists('curtain_remotes')) {
             $output .= '</div>';
 
             $output .= '<div class="ui-widget">';
-            $output .= '<table id="products" class="ui-widget ui-widget-content">';
+            $output .= '<table id="remotes" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>remote</th>';

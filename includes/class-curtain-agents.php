@@ -17,10 +17,6 @@ if (!class_exists('curtain_agents')) {
             $curtain_service = new curtain_service();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_agents_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-
                 $_option_title = 'Agents';
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -125,7 +121,8 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<div style="display: flex;">';
@@ -142,14 +139,16 @@ if (!class_exists('curtain_agents')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
@@ -200,6 +199,8 @@ if (!class_exists('curtain_agents')) {
         public function insert_curtain_agent($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
+            $qr_code_agent_no = $data['agent_number'] . time();
+            $data['qr_code_serial_no'] = $qr_code_agent_no;
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
@@ -209,6 +210,8 @@ if (!class_exists('curtain_agents')) {
         public function update_curtain_agents($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
+            $qr_code_agent_no = $data['agent_number'] . time();
+            $data['qr_code_serial_no'] = $qr_code_agent_no;
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
@@ -249,6 +252,7 @@ if (!class_exists('curtain_agents')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_agents` (
                 curtain_agent_id int NOT NULL AUTO_INCREMENT,
+                qr_code_agent_no varchar(50) UNIQUE,
                 agent_number varchar(5),
                 agent_name varchar(50),
                 agent_address varchar(250),

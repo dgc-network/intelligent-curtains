@@ -9,7 +9,7 @@ if (!class_exists('curtain_service')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
         public function init_curtain_service() {
@@ -83,19 +83,11 @@ if (!class_exists('curtain_service')) {
 
         public function list_service_options() {
             global $wpdb;
-            $curtain_service = new curtain_service();
-            //$curtain_users = new curtain_users();
+            $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_options_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-                //$params = array();
-                //$params['line_user_id'] = $_SESSION['line_user_id'];
-                //$params['service_option_title'] = 'Service Options';
-                //$permission = $curtain_users->check_user_permissions($params);
                 $_option_title = 'Options';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -113,8 +105,7 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
                 $data['service_option_page']=$_POST['_service_option_page'];
-                //$result = self::insert_service_option($data);
-                $curtain_service->insert_service_option($data);
+                $this->insert_service_option($data);
             }
         
             if( isset($_POST['_update']) ) {
@@ -125,16 +116,14 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_page']=$_POST['_service_option_page'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
-                //$result = self::update_service_options($data, $where);
-                $curtain_service->update_service_options($data, $where);
+                $this->update_service_options($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['service_option_id']=$_GET['_delete'];
-                //$result = self::delete_service_options($where);
-                $curtain_service->delete_service_options($where);
+                $this->delete_service_options($where);
                 $curtain_users->delete_user_permissions($where);
             }
 
@@ -252,9 +241,9 @@ if (!class_exists('curtain_service')) {
             $wpdb->delete($table, $where);
         }
 
-        public function get_id( $_page='' ) {
+        public function get_id( $_title='' ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $_page, $_page ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $_title, $_title ), OBJECT );
             return $row->service_option_id;
         }
 
@@ -264,9 +253,9 @@ if (!class_exists('curtain_service')) {
             return $row->service_option_title;
         }
 
-        public function get_link( $_id=0 ) {
+        public function get_link( $_title=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_id, $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_title, $_title, $_title ), OBJECT );
             //return get_site_url().'/'.$row->service_option_link;
             return $row->service_option_link;
         }
@@ -289,8 +278,8 @@ if (!class_exists('curtain_service')) {
             dbDelta($sql);            
         }
     }
-    $curtain_service = new curtain_service();
-    add_shortcode( 'curtain-service', array( $curtain_service, 'init_curtain_service' ) );
-    add_shortcode( 'service-option-list', array( $curtain_service, 'list_service_options' ) );
+    $my_class = new curtain_service();
+    add_shortcode( 'curtain-service', array( $my_class, 'init_curtain_service' ) );
+    add_shortcode( 'service-option-list', array( $my_class, 'list_service_options' ) );
 }
 ?>

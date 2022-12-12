@@ -9,18 +9,17 @@ if (!class_exists('curtain_specifications')) {
          * Class constructor
          */
         public function __construct() {
-            self::create_tables();
+            $this->create_tables();
         }
 
         public function list_curtain_specifications() {
-
             global $wpdb;
+            $curtain_service = new curtain_service();
             $curtain_products = new curtain_products();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_specifications_page' ), OBJECT );
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
+                $_option_title = 'Specifications';
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -40,7 +39,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_unit']=$_POST['_specification_unit'];
                 $data['curtain_product_id']=$_POST['_curtain_product_id'];
                 $data['length_only']=$_POST['_length_only'];
-                $result = self::insert_curtain_specification($data);
+                $this->insert_curtain_specification($data);
             }
             
             if( isset($_POST['_update']) ) {
@@ -53,14 +52,14 @@ if (!class_exists('curtain_specifications')) {
                 $data['length_only']=$_POST['_length_only'];
                 $where=array();
                 $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
-                $result = self::update_curtain_specifications($data, $where);
+                $this->update_curtain_specifications($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_specification_id']=$_GET['_delete'];
-                $result = self::delete_curtain_specifications($where);
+                $this->delete_curtain_specifications($where);
             }
 
             if( isset($_POST['_where']) ) {
@@ -119,7 +118,6 @@ if (!class_exists('curtain_specifications')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                //$curtain_products = new curtain_products();
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
                 $output .= '<div id="dialog" title="Curtain specification update">';
                 $output .= '<form method="post">';
@@ -150,7 +148,6 @@ if (!class_exists('curtain_specifications')) {
             }
 
             if( isset($_POST['_add']) ) {
-                //$curtain_products = new curtain_products();
                 $output .= '<div id="dialog" title="Create new specification">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -234,7 +231,7 @@ if (!class_exists('curtain_specifications')) {
             return $output;
         }
 
-        function create_tables() {
+        public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -254,6 +251,6 @@ if (!class_exists('curtain_specifications')) {
             dbDelta($sql);
         }
     }
-    $curtain_specifications = new curtain_specifications();
-    add_shortcode( 'curtain-specification-list', array( $curtain_specifications, 'list_curtain_specifications' ) );
+    $my_class = new curtain_specifications();
+    add_shortcode( 'curtain-specification-list', array( $my_class, 'list_curtain_specifications' ) );
 }

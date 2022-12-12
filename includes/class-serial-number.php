@@ -9,27 +9,17 @@ if (!class_exists('serial_number')) {
          * Class constructor
          */
         public function __construct() {
-            //self::create_tables();
             $this->create_tables();
         }
 
         function list_serial_number() {
-
             global $wpdb;
             $curtain_service = new curtain_service();
-            $serial_number = new serial_number();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
 
-                //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_page = %s", '_serials_page' ), OBJECT );
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $user->curtain_user_id, $option->service_option_id ), OBJECT );            
-                //$params = array();
-                //$params['line_user_id'] = $_SESSION['line_user_id'];
-                //$params['service_option_page'] = '_serials_page';
-                //$permission = $curtain_users->check_user_permissions($params);
                 $_option_title = 'Serials';
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -48,7 +38,6 @@ if (!class_exists('serial_number')) {
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                //$result = self::insert_serial_number($data);
                 $this->insert_serial_number($data);
             }
 
@@ -58,7 +47,6 @@ if (!class_exists('serial_number')) {
                 $this->delete_serial_number($where);
             }
 
-            global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no LIKE {$where}", OBJECT );
@@ -100,13 +88,16 @@ if (!class_exists('serial_number')) {
                 $output .= '<span id="qrcode-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                $model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                $output .= '<td>'.$model->curtain_model_name.'</td>';
+                //$model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
+                //$output .= '<td>'.$model->curtain_model_name.'</td>';
+                $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
-                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                $output .= '<td>'.$agent->agent_name.'</td>';
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
-                $output .= '<td>'.$user->display_name.'</td>';
+                //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
+                //$output .= '<td>'.$agent->agent_name.'</td>';
+                $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
+                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
+                //$output .= '<td>'.$user->display_name.'</td>';
+                $output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -136,7 +127,8 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<div style="display: flex;">';
@@ -153,14 +145,16 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
@@ -171,6 +165,7 @@ if (!class_exists('serial_number')) {
 
         public function insert_serial_number($data=[], $_x='') {
             global $wpdb;
+            $curtain_models = new curtain_models();
             $curtain_model_id = $data['curtain_model_id'];
             $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$curtain_model_id}", OBJECT );
             if (!(is_null($model) || !empty($wpdb->last_error))) {
@@ -217,6 +212,6 @@ if (!class_exists('serial_number')) {
             dbDelta($sql);
         }
     }
-    $serial_number = new serial_number();
-    add_shortcode( 'serial-number-list', array( $serial_number, 'list_serial_number' ) );
+    $my_class = new serial_number();
+    add_shortcode( 'serial-number-list', array( $my_class, 'list_serial_number' ) );
 }
