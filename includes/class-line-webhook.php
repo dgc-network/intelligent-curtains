@@ -237,9 +237,8 @@ if (!class_exists('line_webhook')) {
                                         $_contents = array();
                                         $_contents['line_user_id'] = $profile['userId'];
                                         $_contents['base_url'] = $curtain_service->get_link('_image001');
-                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'Q已經完成經銷商註冊'.'請點擊連結進入售後訂貨服務區';
+                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區';
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Orders').'/?_id='.$profile['userId'];
-                                        $_contents['body_messages'] = $body_messages;
                                         $this->push_imagemap_messages( $_contents );
                                     }
                                 }
