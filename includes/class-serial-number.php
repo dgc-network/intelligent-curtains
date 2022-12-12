@@ -17,6 +17,7 @@ if (!class_exists('serial_number')) {
             $curtain_service = new curtain_service();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
+            $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
 
@@ -24,7 +25,7 @@ if (!class_exists('serial_number')) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access this page. Please check to the administrators.';
+                        return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
                     }
                 }
             } else {
