@@ -64,8 +64,8 @@ if (!class_exists('curtain_users')) {
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_title = 'Users';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_title) ), OBJECT );            
+                $_option_page = 'Users';
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
