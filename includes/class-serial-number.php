@@ -12,7 +12,7 @@ if (!class_exists('serial_number')) {
             $this->create_tables();
         }
 
-        function list_serial_number() {
+        public function list_serial_number() {
             global $wpdb;
             $curtain_service = new curtain_service();
             $curtain_models = new curtain_models();
