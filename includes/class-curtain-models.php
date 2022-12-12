@@ -200,7 +200,7 @@ if (!class_exists('curtain_models')) {
                 } else {
                     $output .= '<option value="'.$result->curtain_model_id.'">';
                 }
-                $output .= $result->curtain_model_name;
+                $output .= $result->curtain_model_name.'('.$result->model_description.')';
                 $output .= '</option>';        
             }
             $output .= '<option value="0">-- Remove this --</option>';

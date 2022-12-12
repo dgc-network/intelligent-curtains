@@ -12,36 +12,7 @@ if (!class_exists('order_items')) {
             $this->create_tables();
         }
 
-        function select_product_id() {
-            global $wpdb;
-            $_id = $_POST['id'];
-
-            $models = array();
-            $models[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
-            }
-            $models[] = '<option value="0">-- Remove this --</option>';
-
-            $specifications = array();
-            $specifications[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
-            }
-            $specifications[] = '<option value="0">-- Remove this --</option>';
-
-            $response = array();
-            $response['currenttime'] = wp_date( get_option('time_format'), time() );
-            $response['models'] = $models;;
-            $response['specifications'] = $specifications;;
-            echo json_encode( $response );
-            
-            wp_die();
-        }
-
-        function list_order_items() {
+        public function list_order_items() {
             global $wpdb;
             $curtain_agents = new curtain_agents();
             $curtain_products = new curtain_products();
@@ -49,6 +20,10 @@ if (!class_exists('order_items')) {
             $curtain_remotes = new curtain_remotes();
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
+
+            if( isset($_GET['_id']) ) {
+                $_SESSION['line_user_id'] = $_GET['_id'];
+            }
 
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
@@ -383,6 +358,35 @@ if (!class_exists('order_items')) {
                 PRIMARY KEY (curtain_order_id)
             ) $charset_collate;";
             dbDelta($sql);
+        }
+
+        function select_product_id() {
+            global $wpdb;
+            $_id = $_POST['id'];
+
+            $models = array();
+            $models[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
+            }
+            $models[] = '<option value="0">-- Remove this --</option>';
+
+            $specifications = array();
+            $specifications[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
+            }
+            $specifications[] = '<option value="0">-- Remove this --</option>';
+
+            $response = array();
+            $response['currenttime'] = wp_date( get_option('time_format'), time() );
+            $response['models'] = $models;;
+            $response['specifications'] = $specifications;;
+            echo json_encode( $response );
+            
+            wp_die();
         }
     }
     $my_class = new order_items();

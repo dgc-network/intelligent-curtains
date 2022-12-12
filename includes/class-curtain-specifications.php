@@ -224,7 +224,7 @@ if (!class_exists('curtain_specifications')) {
                 } else {
                     $output .= '<option value="'.$result->curtain_specification_id.'">';
                 }
-                $output .= $result->curtain_specification_name;
+                $output .= $result->curtain_specification_name.'('.$result->specification_description.')';
                 $output .= '</option>';        
             }
             $output .= '<option value="0">-- Remove this --</option>';

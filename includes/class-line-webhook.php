@@ -147,8 +147,6 @@ if (!class_exists('line_webhook')) {
             foreach ((array)$client->parseEvents() as $event) {
 
                 $profile = $client->getProfile($event['source']['userId']);
-                //$line_user_id = $profile['userId'];
-                //$display_name = $profile['displayName'];
 
                 $data=array();
                 $data['line_user_id']=$profile['userId'];
@@ -164,7 +162,7 @@ if (!class_exists('line_webhook')) {
                                 if( strlen( $six_digit_random_number ) == 6 ) {
                                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = %s", $six_digit_random_number ), OBJECT );            
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
-                                        // continue the process if the 6 digit number is correct, register the qr code
+                                        //** continue the process if the 6 digit number is correct, register the qr code */
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $profile['userId'] ), OBJECT );            
                                         if (!(is_null($user) || !empty($wpdb->last_error))) {
                                             $data=array();
@@ -187,7 +185,7 @@ if (!class_exists('line_webhook')) {
                                             $this->push_imagemap_messages( $_contents );
                                         }
                                     } else {
-                                        // continue the process if the 6 digit number is incorrect
+                                        //** continue the process if the 6 digit number is incorrect */
                                         $body_messages = array();
                                         $body_messages[] = 'Hi, '.$profile['displayName'];
                                         $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
@@ -203,10 +201,10 @@ if (!class_exists('line_webhook')) {
 
                                     }
                                 } else {
-                                    // if the message is not the six digit message
+                                    //** if the message is not the six digit message */
                                     $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
                                     if (is_null($agent) || !empty($wpdb->last_error)) {
-                                        //send message to line_bot 
+                                        //** send message to line_bot */
                                         $data=array();
                                         $data['chat_from']=$profile['userId'];
                                         $data['chat_to']='line_bot';
@@ -227,7 +225,7 @@ if (!class_exists('line_webhook')) {
                                             $this->push_flex_messages( $_contents );
                                         }
                                     } else {
-                                        /** Agent registration */
+                                        //** Agent registration */
                                         $data=array();
                                         $data['curtain_agent_id']=$curtain_agents->get_id($message['text']);
                                         $where=array();
@@ -277,7 +275,7 @@ if (!class_exists('line_webhook')) {
                 PRIMARY KEY (message_id)
             ) $charset_collate;";
             dbDelta($sql);
-        
+/*        
             $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
                 event_id int NOT NULL AUTO_INCREMENT,
                 event_type varchar(20),
@@ -290,6 +288,7 @@ if (!class_exists('line_webhook')) {
                 PRIMARY KEY  (event_id)
             ) $charset_collate;";
             dbDelta($sql);
+*/            
         }        
     }
 }

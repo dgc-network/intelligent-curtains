@@ -11,71 +11,7 @@ if (!class_exists('curtain_agents')) {
         public function __construct() {
             $this->create_tables();
         }
-/*
-        public function agent_registration() {
-            global $wpdb;
-            $serial_number = new serial_number();
 
-            if( isset($_GET['_id']) ) {
-                $_SESSION['line_user_id'] = $_GET['_id'];
-            }
-
-            $output = '<div style="text-align:center;">';
-            if( isset($_GET['agent_no']) ) {
-                $qr_code_agent_no = $_GET['agent_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE qr_code_agent_no = %s", $qr_code_agent_no ), OBJECT );            
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    // incorrect QR-code display the admin link
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                    $output .= '<div class="wp-block-buttons">';
-                    foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                        $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
-                        $output .= '</div>';
-                    }
-                    $output .= '</div>';                    
-
-                } else {
-                    // registration for QR-code
-                    $curtain_user_id=$row->curtain_user_id;
-                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                    if (!(is_null($user) || !empty($wpdb->last_error))) {
-                        $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['line_user_id'] = $user->line_user_id;
-                    }
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if (!(is_null($model) || !empty($wpdb->last_error))) {
-                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                    }
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
-                    $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                    $output .= ' 完成註冊程序<br>';
-                    $data=array();
-                    $data['one_time_password']=$six_digit_random_number;
-                    $where=array();
-                    $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $result = $serial_number->update_serial_number($data, $where);    
-                }
-    
-            } else {
-
-                $where='"%view%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                $output .= '<div class="wp-block-buttons">';
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                    $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                    $output .= '</div>';
-                }
-                $output .= '</div>';
-            }
-            $output .= '</div>';
-            return $output;
-        }
-*/
         public function list_curtain_agents() {
             global $wpdb;
             $curtain_service = new curtain_service();
@@ -172,53 +108,12 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<td style="text-align: center;">'.$result->phone1.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                //$output .= '<span id="qrcode-btn-'.$result->qr_code_agent_no.'"><i class="fa-solid fa-qrcode"></i></span>';
-                //$output .= '<span> </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
             $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-/*
-            if( isset($_GET['_qrcode']) ) {
-                $_id = $_GET['_qrcode'];
-                $output .= '<div id="dialog" title="QR Code">';
-                $output .= '<div id="qrcode">';
-                $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
-                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<div style="display: flex;">';
-                $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
-                $output .= $print_me;
-                $output .= '<span> </span>';
-                $output .= '<span>'.$_id.'</span>';
-                $output .= '</div>';
-                $output .= '</div>';
-                
-                $output .= '<br><br><br><br><br>';                
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE qr_code_agent_no = %s", $_id ), OBJECT );            
-                $output .= '<div class="print-me-'.$_id.'">';
-                //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
-                $output .= '<div id="qrcode1">';
-                $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
-                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
-                //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
-                $output .= '<div id="qrcode2" style="margin-top: 100px;">';
-                $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
-                $output .= get_site_url().'/'.$curtain_service->get_link('Agents').'/?agent_no='.$_id;
-                $output .= '</div>';
-                $output .= '</div>';
-                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
-                $output .= '</div>';                
-            }
-*/
+
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id={$_id}", OBJECT );
@@ -263,8 +158,6 @@ if (!class_exists('curtain_agents')) {
         public function insert_curtain_agent($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
-            //$qr_code_agent_no = $data['agent_number'] . time();
-            //$data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
@@ -274,8 +167,6 @@ if (!class_exists('curtain_agents')) {
         public function update_curtain_agents($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
-            //$qr_code_agent_no = $data['agent_number'] . time();
-            //$data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
@@ -308,7 +199,7 @@ if (!class_exists('curtain_agents')) {
                 } else {
                     $output .= '<option value="'.$result->curtain_agent_id.'">';
                 }
-                $output .= $result->agent_number.'/'.$result->agent_name;
+                $output .= $result->agent_name.'('.$result->agent_number.')';
                 $output .= '</option>';        
             }
             $output .= '<option value="0">-- Remove this --</option>';
@@ -322,7 +213,6 @@ if (!class_exists('curtain_agents')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_agents` (
                 curtain_agent_id int NOT NULL AUTO_INCREMENT,
-                qr_code_agent_no varchar(50) UNIQUE,
                 agent_number varchar(5) UNIQUE,
                 agent_name varchar(50),
                 agent_address varchar(250),
