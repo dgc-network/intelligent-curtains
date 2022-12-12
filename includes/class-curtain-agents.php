@@ -286,9 +286,9 @@ if (!class_exists('curtain_agents')) {
             $wpdb->delete($table, $where);
         }
 
-        public function get_id( $_title='' ) {
+        public function get_id( $_name='' ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s OR agent_name = %s", $_title, $_title ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s OR agent_name = %s", $_name, $_name ), OBJECT );
             return $row->curtain_agent_id;
         }
 

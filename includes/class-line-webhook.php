@@ -227,12 +227,20 @@ if (!class_exists('line_webhook')) {
                                             $this->push_flex_messages( $_contents );
                                         }
                                     } else {
-                                        //** Agent registration */
+                                        /** Agent registration */
                                         $data=array();
                                         $data['curtain_agent_id']=$curtain_agents->get_id($message['text']);
                                         $where=array();
                                         $where['line_user_id']=$profile['userId'];
-                                        $curtain_users->update_curtain_users();
+                                        $curtain_users->update_curtain_users($data, $where);
+
+                                        $_contents = array();
+                                        $_contents['line_user_id'] = $profile['userId'];
+                                        $_contents['base_url'] = $curtain_service->get_link('_image001');
+                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'Q已經完成經銷商註冊'.'請點擊連結進入售後訂貨服務區';
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Orders').'/?_id='.$profile['userId'];
+                                        $_contents['body_messages'] = $body_messages;
+                                        $this->push_imagemap_messages( $_contents );
                                     }
                                 }
                                 break;
