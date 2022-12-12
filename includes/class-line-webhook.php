@@ -165,7 +165,7 @@ if (!class_exists('line_webhook')) {
                                     $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
-                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $line_user_id ), OBJECT );            
+                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $profile['userId'] ), OBJECT );            
                                         if (!(is_null($user) || !empty($wpdb->last_error))) {
                                             $data=array();
                                             $data['curtain_user_id']=$user->curtain_user_id;
@@ -179,7 +179,7 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = '請點擊連結進入售後服務區';
 
                                             $_contents = array();
-                                            $_contents['line_user_id'] = $line_user_id;
+                                            $_contents['line_user_id'] = $profile['userId'];
                                             $_contents['base_url'] = $curtain_service->get_link('_image003');
                                             $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
                                             $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service');
@@ -196,7 +196,7 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
 
                                         $_contents = array();
-                                        $_contents['line_user_id'] = $line_user_id;
+                                        $_contents['line_user_id'] = $profile['userId'];
                                         $_contents['base_url'] = $curtain_service->get_link('_image002');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有錯誤'.'請重新輸入正確數字已完成 QR Code 註冊';
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no=';
@@ -208,10 +208,9 @@ if (!class_exists('line_webhook')) {
                                 } else {
                                     //send message to line_bot if the message is not the six digit message 
                                     $data=array();
-                                    $data['chat_from']=$line_user_id;
+                                    $data['chat_from']=$profile['userId'];
                                     $data['chat_to']='line_bot';
                                     $data['chat_message']=$message['text'];
-                                    //$result = self::insert_chat_message($data);
                                     $this->insert_chat_message($data);
                                                             
                                     //$service_option_id = $curtain_service->get_id('_service_page');
@@ -222,9 +221,10 @@ if (!class_exists('line_webhook')) {
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
                                         $_contents = array();
-                                        $_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
+                                        //$_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
+                                        $_contents['line_user_id'] = $result->line_user_id;
                                         //$_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
                                         //self::push_flex_messages( $_contents );
@@ -244,70 +244,6 @@ if (!class_exists('line_webhook')) {
             }            
         }
 
-        function insert_event_log($event) {
-
-            switch ($event['type']) {
-                case 'message':
-                    $event_object = $event['message'];
-                    break;
-                case 'unsend':
-                    $event_object = $event['unsend'];
-                    break;
-                case 'memberJoined':
-                    $event_object = $event['joined'];
-                    break;
-                case 'memberLeft':
-                    $event_object = $event['left'];
-                    break;
-                case 'postback':
-                    $event_object = $event['postback'];
-                    break;
-                case 'videoPlayComplete':
-                    $event_object = $event['videoPlayComplete'];
-                    break;
-                case 'beacon':
-                    $event_object = $event['beacon'];
-                    break;
-                case 'accountLink':
-                    $event_object = $event['link'];
-                    break;
-                case 'things':
-                    $event_object = $event['things'];
-                    break;
-            }
-
-            switch ($event['source']['type']) {
-                case 'user':
-                    $source_type = $event['source']['type'];
-                    $user_id = $event['source']['userId'];
-                    $group_id = $event['source']['userId'];
-                    break;
-                case 'group':
-                    $source_type = $event['source']['type'];
-                    $user_id = $event['source']['userId'];
-                    $group_id = $event['source']['groupId'];
-                    break;
-                case 'room':
-                    $source_type = $event['source']['type'];
-                    $user_id = $event['source']['userId'];
-                    $group_id = $event['source']['roomId'];
-                    break;
-            }
-
-            global $wpdb;
-            $table = $wpdb->prefix.'eventLogs';
-            $data = array(
-                'event_type' => $event['type'],
-                'event_timestamp' => time(),
-                'source_type' => $source_type,
-                'source_user_id' => $user_id,
-                'source_group_id' => $group_id,
-                'event_replyToken' => $event['replyToken'],
-                'event_object' => json_encode($event_object),
-            );
-            $insert_id = $wpdb->insert($table, $data);        
-        }
-    
         public function insert_chat_message($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';
