@@ -141,6 +141,7 @@ if (!class_exists('line_webhook')) {
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
+            $curtain_agents = new curtain_agents();
             $client = new LINEBotTiny();
 
             foreach ((array)$client->parseEvents() as $event) {
@@ -199,27 +200,39 @@ if (!class_exists('line_webhook')) {
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
                                         $_contents['body_messages'] = $body_messages;
                                         $this->push_imagemap_messages( $_contents );
+
                                     }
                                 } else {
-                                    //send message to line_bot if the message is not the six digit message 
-                                    $data=array();
-                                    $data['chat_from']=$profile['userId'];
-                                    $data['chat_to']='line_bot';
-                                    $data['chat_message']=$message['text'];
-                                    $this->insert_chat_message($data);
-                                                            
-                                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
-                                    foreach ( $results as $index=>$result ) {
-                                        $hero_messages = array();
-                                        $hero_messages[] = $profile['displayName'];
-                                        $body_messages = array();
-                                        $body_messages[] = $message['text'];
-                                        $_contents = array();
-                                        $_contents['line_user_id'] = $result->line_user_id;
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
-                                        $_contents['hero_messages'] = $hero_messages;
-                                        $_contents['body_messages'] = $body_messages;
-                                        $this->push_flex_messages( $_contents );
+                                    // if the message is not the six digit message
+                                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
+                                    if (is_null($agent) || !empty($wpdb->last_error)) {
+                                        //send message to line_bot 
+                                        $data=array();
+                                        $data['chat_from']=$profile['userId'];
+                                        $data['chat_to']='line_bot';
+                                        $data['chat_message']=$message['text'];
+                                        $this->insert_chat_message($data);
+                                                                
+                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
+                                        foreach ( $results as $index=>$result ) {
+                                            $hero_messages = array();
+                                            $hero_messages[] = $profile['displayName'];
+                                            $body_messages = array();
+                                            $body_messages[] = $message['text'];
+                                            $_contents = array();
+                                            $_contents['line_user_id'] = $result->line_user_id;
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
+                                            $_contents['hero_messages'] = $hero_messages;
+                                            $_contents['body_messages'] = $body_messages;
+                                            $this->push_flex_messages( $_contents );
+                                        }
+                                    } else {
+                                        //** Agent registration */
+                                        $data=array();
+                                        $data['curtain_agent_id']=$curtain_agents->get_id($message['text']);
+                                        $where=array();
+                                        $where['line_user_id']=$profile['userId'];
+                                        $curtain_users->update_curtain_users();
                                     }
                                 }
                                 break;

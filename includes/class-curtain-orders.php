@@ -58,8 +58,7 @@ if (!class_exists('order_items')) {
                     $six_digit_random_number = random_int(100000, 999999);
                     $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
                     $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="12px" border="0"></a>';
-                    $output .= '<br>在我們的Line官方帳號聊天室中輸入經銷商代碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                    $output .= ' 完成經銷商註冊程序<br>';
+                    $output .= '<br>在我們的Line官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
                     return $output;
 
 

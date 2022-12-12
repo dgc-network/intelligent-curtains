@@ -11,7 +11,7 @@ if (!class_exists('curtain_agents')) {
         public function __construct() {
             $this->create_tables();
         }
-
+/*
         public function agent_registration() {
             global $wpdb;
             $serial_number = new serial_number();
@@ -75,7 +75,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
             return $output;
         }
-
+*/
         public function list_curtain_agents() {
             global $wpdb;
             $curtain_service = new curtain_service();
@@ -172,14 +172,14 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<td style="text-align: center;">'.$result->phone1.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="qrcode-btn-'.$result->qr_code_agent_no.'"><i class="fa-solid fa-qrcode"></i></span>';
-                $output .= '<span> </span>';
+                //$output .= '<span id="qrcode-btn-'.$result->qr_code_agent_no.'"><i class="fa-solid fa-qrcode"></i></span>';
+                //$output .= '<span> </span>';
                 $output .= '<span id="del-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
             $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-
+/*
             if( isset($_GET['_qrcode']) ) {
                 $_id = $_GET['_qrcode'];
                 $output .= '<div id="dialog" title="QR Code">';
@@ -218,7 +218,7 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
                 $output .= '</div>';                
             }
-
+*/
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id={$_id}", OBJECT );
@@ -263,8 +263,8 @@ if (!class_exists('curtain_agents')) {
         public function insert_curtain_agent($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
-            $qr_code_agent_no = $data['agent_number'] . time();
-            $data['qr_code_agent_no'] = $qr_code_agent_no;
+            //$qr_code_agent_no = $data['agent_number'] . time();
+            //$data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
@@ -274,8 +274,8 @@ if (!class_exists('curtain_agents')) {
         public function update_curtain_agents($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
-            $qr_code_agent_no = $data['agent_number'] . time();
-            $data['qr_code_agent_no'] = $qr_code_agent_no;
+            //$qr_code_agent_no = $data['agent_number'] . time();
+            //$data['qr_code_agent_no'] = $qr_code_agent_no;
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
@@ -284,6 +284,12 @@ if (!class_exists('curtain_agents')) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_agents';
             $wpdb->delete($table, $where);
+        }
+
+        public function get_id( $_title='' ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s OR agent_name = %s", $_title, $_title ), OBJECT );
+            return $row->curtain_agent_id;
         }
 
         public function get_name( $_id=0 ) {
@@ -317,7 +323,7 @@ if (!class_exists('curtain_agents')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_agents` (
                 curtain_agent_id int NOT NULL AUTO_INCREMENT,
                 qr_code_agent_no varchar(50) UNIQUE,
-                agent_number varchar(5),
+                agent_number varchar(5) UNIQUE,
                 agent_name varchar(50),
                 agent_address varchar(250),
                 contact1 varchar(20),
