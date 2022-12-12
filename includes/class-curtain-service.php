@@ -16,12 +16,16 @@ if (!class_exists('curtain_service')) {
             global $wpdb;
             $serial_number = new serial_number();
 
+            if( isset($_GET['_id']) ) {
+                $_SESSION['line_user_id'] = $_GET['_id'];
+            }
+
             $output = '<div style="text-align:center;">';
             if( isset($_GET['serial_no']) ) {
                 $qr_code_serial_no = $_GET['serial_no'];
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
-                    // incorrect QR-code display the admin link
+                    /** incorrect QR-code then display the admin link */
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
@@ -32,12 +36,12 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';                    
 
                 } else {
-                    // registration for QR-code
+                    /** registration for QR-code */
                     $curtain_user_id=$row->curtain_user_id;
                     $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
                     if (!(is_null($user) || !empty($wpdb->last_error))) {
                         $output .= 'Hi, '.$user->display_name.'<br>';
-                        $_SESSION['line_user_id'] = $user->line_user_id;
+                        //$_SESSION['line_user_id'] = $user->line_user_id;
                     }
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
@@ -261,7 +265,6 @@ if (!class_exists('curtain_service')) {
                 service_option_title varchar(20),
                 service_option_link varchar(255),
                 service_option_category varchar(10),
-                service_option_page varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (service_option_id)

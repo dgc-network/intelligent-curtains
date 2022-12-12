@@ -53,10 +53,14 @@ if (!class_exists('order_items')) {
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                if (is_null($user->curtain_agent_id) || !empty($wpdb->last_error)) {
+                if (is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) {
+                    return 'You have to complete the agent registration.';
+
+
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
                     }
+
                 } else {
                     $curtain_agent_id = $user->curtain_agent_id;
                 }
@@ -64,7 +68,7 @@ if (!class_exists('order_items')) {
 
             /* Checkout */
             if( isset($_POST['_checkout_list']) ) {
-                if ($curtain_agent_id==0) {return 'You have to register the system before checkout!';}
+                if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
                 $output  = '<h2>Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';

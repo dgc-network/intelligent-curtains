@@ -16,10 +16,14 @@ if (!class_exists('curtain_agents')) {
             global $wpdb;
             $serial_number = new serial_number();
 
+            if( isset($_GET['_id']) ) {
+                $_SESSION['line_user_id'] = $_GET['_id'];
+            }
+
             $output = '<div style="text-align:center;">';
             if( isset($_GET['agent_no']) ) {
                 $qr_code_agent_no = $_GET['agent_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE qr_code_agent_no = %s", $qr_code_agent_no ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
                     // incorrect QR-code display the admin link
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
@@ -86,7 +90,7 @@ if (!class_exists('curtain_agents')) {
                 }
             } else {
                 if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You have not permission to access this page. Please check to the administrators.';
+                    return 'You have not permission to access this page. You have to complete the registration first.';
                 }
             }
 
@@ -329,4 +333,5 @@ if (!class_exists('curtain_agents')) {
     }
     $my_class = new curtain_agents();
     add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
+    add_shortcode( 'agent-registration', array( $my_class, 'agent_registration' ) );
 }

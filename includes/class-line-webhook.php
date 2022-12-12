@@ -138,7 +138,6 @@ if (!class_exists('line_webhook')) {
 
         public function init() {
             global $wpdb;
-            //$line_webhook = new line_webhook();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
@@ -147,8 +146,8 @@ if (!class_exists('line_webhook')) {
             foreach ((array)$client->parseEvents() as $event) {
 
                 $profile = $client->getProfile($event['source']['userId']);
-                $line_user_id = $profile['userId'];
-                $display_name = $profile['displayName'];
+                //$line_user_id = $profile['userId'];
+                //$display_name = $profile['displayName'];
 
                 $data=array();
                 $data['line_user_id']=$profile['userId'];
@@ -162,7 +161,6 @@ if (!class_exists('line_webhook')) {
                             case 'text':
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
-                                    //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
                                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = %s", $six_digit_random_number ), OBJECT );            
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
@@ -183,10 +181,8 @@ if (!class_exists('line_webhook')) {
                                             $_contents['line_user_id'] = $profile['userId'];
                                             $_contents['base_url'] = $curtain_service->get_link('_image003');
                                             $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
-                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service');
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?_id='.$profile['userId'];
                                             $_contents['body_messages'] = $body_messages;
-                                            //self::push_flex_messages( $_contents );
-                                            //self::push_imagemap_messages( $_contents );
                                             $this->push_imagemap_messages( $_contents );
                                         }
                                     } else {
@@ -200,10 +196,8 @@ if (!class_exists('line_webhook')) {
                                         $_contents['line_user_id'] = $profile['userId'];
                                         $_contents['base_url'] = $curtain_service->get_link('_image002');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有錯誤'.'請重新輸入正確數字已完成 QR Code 註冊';
-                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no=';
+                                        $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
                                         $_contents['body_messages'] = $body_messages;
-                                        //self::push_flex_messages( $_contents );
-                                        //self::push_imagemap_messages( $_contents );
                                         $this->push_imagemap_messages( $_contents );
                                     }
                                 } else {
@@ -214,8 +208,6 @@ if (!class_exists('line_webhook')) {
                                     $data['chat_message']=$message['text'];
                                     $this->insert_chat_message($data);
                                                             
-                                    //$service_option_id = $curtain_service->get_id('_service_page');
-                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$curtain_service->get_id('Service')}", OBJECT );
                                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
@@ -223,13 +215,10 @@ if (!class_exists('line_webhook')) {
                                         $body_messages = array();
                                         $body_messages[] = $message['text'];
                                         $_contents = array();
-                                        //$_contents['line_user_id'] = $curtain_users->get_id($result->curtain_user_id);
                                         $_contents['line_user_id'] = $result->line_user_id;
-                                        //$_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$curtain_users->get_id($result->curtain_user_id);
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
                                         $_contents['hero_messages'] = $hero_messages;
                                         $_contents['body_messages'] = $body_messages;
-                                        //self::push_flex_messages( $_contents );
                                         $this->push_flex_messages( $_contents );
                                     }
                                 }
