@@ -162,7 +162,8 @@ if (!class_exists('line_webhook')) {
                             case 'text':
                                 $six_digit_random_number = $message['text'];
                                 if( strlen( $six_digit_random_number ) == 6 ) {
-                                    $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
+                                    //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = {$six_digit_random_number}", OBJECT );
+                                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = %s", $six_digit_random_number ), OBJECT );            
                                     if (!(is_null($row) || !empty($wpdb->last_error))) {
                                         // continue the process if the 6 digit number is correct, register the qr code
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $profile['userId'] ), OBJECT );            
@@ -214,7 +215,8 @@ if (!class_exists('line_webhook')) {
                                     $this->insert_chat_message($data);
                                                             
                                     //$service_option_id = $curtain_service->get_id('_service_page');
-                                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$curtain_service->get_id('Service')}", OBJECT );
+                                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = {$curtain_service->get_id('Service')}", OBJECT );
+                                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Service') ), OBJECT );            
                                     foreach ( $results as $index=>$result ) {
                                         $hero_messages = array();
                                         $hero_messages[] = $profile['displayName'];
