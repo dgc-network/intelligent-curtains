@@ -22,12 +22,13 @@ if (!class_exists('curtain_service')) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
 
-                    $where='"%admin%"';
+                    //$where='"%admin%"';
                     //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
                     //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );            
                     //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = {$user->curtain_user_id}", OBJECT );
-                    $line_user_id = $_SESSION['line_user_id'];
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id like {$line_user_id}", OBJECT );
+                    //$line_user_id = $_SESSION['line_user_id'];
+                    //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id like {$line_user_id}", OBJECT );
+                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
                         //$option = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d", $result->service_option_id ), OBJECT );            
