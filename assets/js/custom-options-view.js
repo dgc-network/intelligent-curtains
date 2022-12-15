@@ -191,10 +191,10 @@ jQuery(document).ready(function($) {
 
     $( "#dialog" ).dialog({
         close: function() {
-            form[ 0 ].reset();
-            allFields.removeClass( "ui-state-error" );
+            //form[ 0 ].reset();
+            //allFields.removeClass( "ui-state-error" );
             window.location.replace("?_close=");
-            alert("對話框關閉");
+            //alert("對話框關閉");
         }
     });
 /*
