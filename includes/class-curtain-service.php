@@ -85,7 +85,7 @@ if (!class_exists('curtain_service')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Service Options';
+                $_option_page = 'Options';
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
