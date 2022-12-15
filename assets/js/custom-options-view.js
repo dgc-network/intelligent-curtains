@@ -194,9 +194,22 @@ jQuery(document).ready(function($) {
             form[ 0 ].reset();
             allFields.removeClass( "ui-state-error" );
             window.location.replace("?_close=");
+            alert("對話框關閉");
         }
     });
-
+/*
+    // 設定對話框
+    $("#dialog").dialog({
+        autoOpen: false, // 對話框一開始隱藏
+        close:function(event, ui){ // 對話框關閉時觸發的方法
+            alert("對話框關閉");
+        }
+    });
+  
+    function openDialog(){
+        $("#dialog").dialog("open"); // 點選按鈕時開啟對話框
+    }
+*/
     /* jQuery UI Dialog - Modal form */
     $( "#dialog-form" ).dialog({
         //autoOpen: false,
