@@ -49,10 +49,14 @@ if (!class_exists('curtain_service')) {
                         $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                     }
                     $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
-                    $output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                    $output .= ' 完成註冊程序<br>';
+                    $output .= '請利用手機按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+                    $output .= '在電腦上使用Line, 並在官方帳號聊天室中輸入六位數字密碼,<br>';
+                    $output .= '<span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>'.'完成註冊程序<br>';
+
+                    //$output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
+                    //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
+                    //$output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
+                    //$output .= ' 完成註冊程序<br>';
                     $data=array();
                     $data['one_time_password']=$six_digit_random_number;
                     $where=array();
