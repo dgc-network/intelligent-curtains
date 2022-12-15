@@ -31,9 +31,9 @@ if (!class_exists('order_items')) {
                 if (is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) {
                     $output = '<h2>You have to complete the agent registration first.</h2>';
                     $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                    $output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="12px" border="0"></a>';
-                    $output .= '<br>在我們的Line官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
+                    $output .= '請利用手機按'.'<a href="'.get_option('_line_account').'">這裡, 加入我們的Line官方帳號<br>';
+                    $output .= '並使用電腦的Line在聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
+                    //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="12px" border="0"></a>';
                     return $output;
 
 
