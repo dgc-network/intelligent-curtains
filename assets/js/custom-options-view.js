@@ -187,7 +187,14 @@ jQuery(document).ready(function($) {
     });
 
     /* jQuery UI Dialog - Basic dialog */
-    $( "#dialog" ).dialog();
+    $( "#dialog1" ).dialog();
+    
+    $( "#dialog" ).dialog({
+        close: function() {
+            form[ 0 ].reset();
+            allFields.removeClass( "ui-state-error" );
+        }
+    });
 
     /* jQuery UI Dialog - Modal form */
     $( "#dialog-form" ).dialog({
