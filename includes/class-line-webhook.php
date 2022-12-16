@@ -178,7 +178,7 @@ if (!class_exists('line_webhook')) {
 
                                             $_contents = array();
                                             $_contents['line_user_id'] = $profile['userId'];
-                                            $_contents['base_url'] = $curtain_service->get_link('image003');
+                                            $_contents['base_url'] = $curtain_service->get_link('User registry');
                                             $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
                                             $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?_id='.$profile['userId'];
                                             $_contents['body_messages'] = $body_messages;
@@ -193,7 +193,7 @@ if (!class_exists('line_webhook')) {
 
                                         $_contents = array();
                                         $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $curtain_service->get_link('image002');
+                                        $_contents['base_url'] = $curtain_service->get_link('Registry error');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊';
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
                                         $_contents['body_messages'] = $body_messages;
@@ -234,7 +234,7 @@ if (!class_exists('line_webhook')) {
 
                                         $_contents = array();
                                         $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $curtain_service->get_link('image001');
+                                        $_contents['base_url'] = $curtain_service->get_link('Agent registry');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區';
                                         $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Orders').'/?_id='.$profile['userId'];
                                         $this->push_imagemap_messages( $_contents );

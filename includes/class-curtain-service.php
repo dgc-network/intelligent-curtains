@@ -29,9 +29,11 @@ if (!class_exists('curtain_service')) {
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                        $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
-                        $output .= '</div>';
+                        if ($this->get_category($result->service_option_id)=='admin') {
+                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                            $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
+                            $output .= '</div>';    
+                        }
                     }
                     $output .= '</div>';                    
 
@@ -103,7 +105,6 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
-                $data['service_option_page']=$_POST['_service_option_page'];
                 $this->insert_service_option($data);
             }
         
@@ -112,7 +113,6 @@ if (!class_exists('curtain_service')) {
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
-                $data['service_option_page']=$_POST['_service_option_page'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $this->update_service_options($data, $where);
@@ -168,7 +168,6 @@ if (!class_exists('curtain_service')) {
                 $output .= '<td>'.$result->service_option_title.'</td>';
                 //$output .= '<td>'.$result->service_option_link.'</td>';
                 $output .= '<td>'.$result->service_option_category.'</td>';
-                //$output .= '<td>'.$result->service_option_page.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="del-btn-'.$result->service_option_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -184,14 +183,12 @@ if (!class_exists('curtain_service')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
-                $output .= '<label for="service_option_title">Option Title</label>';
-                $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_title.'">';
-                $output .= '<label for="service_option_link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_link.'">';
-                $output .= '<label for="service_option_category">Category</label>';
-                $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_category.'">';
-                //$output .= '<label for="service_option_page">Page</label>';
-                //$output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all" value="'.$row->service_option_page.'">';
+                $output .= '<label for="service-option-title">Option Title</label>';
+                $output .= '<input type="text" name="_service_option_title" value="'.$row->service_option_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service-option-link">Option Link/Page</label>';
+                $output .= '<input type="text" name="_service_option_link" value="'.$row->service_option_link.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service-option-category">Category</label>';
+                $output .= '<input type="text" name="_service_option_category" value="'.$row->service_option_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -208,8 +205,6 @@ if (!class_exists('curtain_service')) {
                 $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service_option_category">Category</label>';
                 $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
-                //$output .= '<label for="service_option_page">Page</label>';
-                //$output .= '<input type="text" name="_service_option_page" id="service_option_page" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -250,6 +245,12 @@ if (!class_exists('curtain_service')) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
             return $row->service_option_title;
+        }
+
+        public function get_category( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            return $row->service_option_category;
         }
 
         public function get_link( $_title=0 ) {

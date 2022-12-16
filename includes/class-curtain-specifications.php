@@ -124,13 +124,13 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->curtain_specification_id.'" name="_curtain_specification_id">';
                 $output .= '<label for="curtain-specification-name">Specification</label>';
-                $output .= '<input type="text" name="_curtain_specification_name" id="curtain-specification-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_specification_name.'">';
+                $output .= '<input type="text" name="_curtain_specification_name" value="'.$row->curtain_specification_name.'" id="curtain-specification-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-description">Description</label>';
-                $output .= '<input type="text" name="_specification_description" id="specification-description" class="text ui-widget-content ui-corner-all" value="'.$row->specification_description.'">';
+                $output .= '<input type="text" name="_specification_description" value="'.$row->specification_description.'" id="specification-description" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-price">Price</label>';
-                $output .= '<input type="text" name="_specification_price" id="specification-price" class="text ui-widget-content ui-corner-all" value="'.$row->specification_price.'">';
+                $output .= '<input type="text" name="_specification_price" value="'.$row->specification_price.'" id="specification-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-unit">Unit</label>';
-                $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all" value="'.$row->specification_unit.'">';
+                $output .= '<input type="text" name="_specification_unit" value="'.$row->specification_unit.'" id="specification-unit" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain_product_id">Product</label>';
                 $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
                 $output .= '<div style="display: flex;">';

@@ -89,15 +89,9 @@ if (!class_exists('serial_number')) {
                 $output .= '<span id="qrcode-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
-                //$model = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $result->curtain_model_id ), OBJECT );            
-                //$output .= '<td>'.$model->curtain_model_name.'</td>';
                 $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
-                //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );            
-                //$output .= '<td>'.$agent->agent_name.'</td>';
                 $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
-                //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $result->curtain_user_id ), OBJECT );            
-                //$output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
@@ -128,7 +122,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
                 $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -146,7 +139,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
                 $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -154,7 +146,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.get_option('_service_page').'/?serial_no='.$_id;
                 $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';

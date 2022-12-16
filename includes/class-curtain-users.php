@@ -119,18 +119,17 @@ if (!class_exists('curtain_users')) {
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
                 $output .= '<input type="hidden" value="'.$row->line_user_id.'" name="_line_user_id">';
-                $output .= '<label for="display_name">Display Name</label>';
-                $output .= '<input type="text" name="_display_name" id="display_name" class="text ui-widget-content ui-corner-all" value="'.$row->display_name.'">';
-                $output .= '<label for="mobile_phone">Mobile Phone</label>';
-                $output .= '<input type="text" name="_mobile_phone" id="mobile_phone" class="text ui-widget-content ui-corner-all" value="'.$row->mobile_phone.'">';
-                $output .= '<label for="curtain_agent_id">Agent</label>';
+                $output .= '<label for="display-name">Display Name</label>';
+                $output .= '<input type="text" name="_display_name" value="'.$row->display_name.'" id="display-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="mobile-phone">Mobile Phone</label>';
+                $output .= '<input type="text" name="_mobile_phone" value="'.$row->mobile_phone.'" id="mobile-phone" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain-agent-id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
-                $output .= '<label for="user_permissions">Permissions</label>';
+                $output .= '<label for="user-permissions">Permissions</label>';
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
                 foreach ($results as $index => $result) {
                     $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
-                    //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $row->curtain_user_id, $result->service_option_id ), OBJECT );            
                     $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $row->line_user_id, $result->service_option_id ), OBJECT );            
                     if (is_null($permission) || !empty($wpdb->last_error)) {
                         $output .= '>';
@@ -148,7 +147,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div>';
             }
 
-            /** Chat Form with Curtain User List */
+            /** Chat Form */
             if( isset($_GET['_id']) ) {                
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_GET['_id'] ), OBJECT );
                 if (!(is_null($row) || !empty($wpdb->last_error))) {

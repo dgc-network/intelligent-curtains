@@ -109,9 +109,9 @@ if (!class_exists('curtain_remotes')) {
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->curtain_remote_id.'" name="_curtain_remote_id">';
                 $output .= '<label for="curtain-remote-name">Remote Name</label>';
-                $output .= '<input type="text" name="_curtain_remote_name" id="curtain-remote-name" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_product_name.'">';
+                $output .= '<input type="text" name="_curtain_remote_name" value="'.$row->curtain_remote_name.'" id="curtain-remote-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain-remote-price">Remote Price</label>';
-                $output .= '<input type="text" name="_curtain_remote_price" id="curtain-remote-price" class="text ui-widget-content ui-corner-all" value="'.$row->curtain_product_price.'">';
+                $output .= '<input type="text" name="_curtain_remote_price" value="'.$row->curtain_remote_price.'" id="curtain-remote-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
