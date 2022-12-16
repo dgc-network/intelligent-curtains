@@ -216,6 +216,7 @@ jQuery(document).ready(function($) {
     $( "#dialog1" ).dialog();
 
     $( "#dialog" ).dialog({
+        modal: true,
         close: function() {
             //form[ 0 ].reset();
             //allFields.removeClass( "ui-state-error" );
