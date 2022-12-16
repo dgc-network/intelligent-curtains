@@ -128,11 +128,37 @@ jQuery(document).ready(function($) {
         $(this).css('color', 'black');
     });
         
-    $('[id^="chat-btn-"]').on( "click", function() {
+    $('[id^="chat-btn-"]').on( "click", function(e) {
+        e.preventDefault(); ///first, prevent the action
+        var targetUrl = $(this).attr("href"); ///the original delete call
+
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
         window.location.replace("?_id=" + id);
+
+        ///construct the dialog
+        $("#dialog_id").dialog({
+            autoOpen: false,
+            title: 'Confirmation',
+            modal: true,
+            buttons: {
+                "OK" : function () {
+                    ///if the user confirms, proceed with the original action
+                    window.location.href = targetUrl;
+                },
+                "Cancel" : function () {
+                    ///otherwise, just close the dialog; the delete event was already interrupted
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
+
+        ///open the dialog window
+        $("#dialog_id").dialog("open");
+
     });
 
     /* Update Button */
