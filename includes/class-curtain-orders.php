@@ -283,9 +283,9 @@ if (!class_exists('order_items')) {
                 $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options().'</select>';
-                $output .= '<label for="select-specification-id">Specification</label>';
                 $output .= '<label for="select-remote-id">Remote</label>';
                 $output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options().'</select>';
+                $output .= '<label for="select-specification-id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options().'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
