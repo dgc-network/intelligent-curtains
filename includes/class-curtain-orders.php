@@ -384,6 +384,6 @@ if (!class_exists('order_items')) {
     }
     $my_class = new order_items();
     add_shortcode( 'order-item-list', array( $my_class, 'list_order_items' ) );
-    add_action( 'wp_ajax_select_product_id', array( $my_class, 'select_category_id' ) );
-    add_action( 'wp_ajax_nopriv_select_product_id', array( $my_class, 'select_category_id' ) );
+    add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
+    add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
 }
