@@ -90,7 +90,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<th></th>';
             $output .= '<th>name</th>';
             $output .= '<th>description</th>';
-            $output .= '<th>product</th>';
+            $output .= '<th>category</th>';
             $output .= '<th>unit</th>';
             $output .= '<th>price</th>';
             $output .= '<th>update_time</th>';
@@ -131,7 +131,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_price" value="'.$row->specification_price.'" id="specification-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-unit">Unit</label>';
                 $output .= '<input type="text" name="_specification_unit" value="'.$row->specification_unit.'" id="specification-unit" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<label for="curtain_category_id">Curtain Category</label>';
                 $output .= '<select name="_curtain_category_id" id="curtain_category_id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"';
@@ -159,7 +159,7 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_price" id="specification-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-unit">Unit</label>';
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<label for="curtain_category_id">Curtain Category</label>';
                 $output .= '<select name="_curtain_category_id" id="curtain_category_id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only">';

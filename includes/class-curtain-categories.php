@@ -12,7 +12,7 @@ if (!class_exists('curtain_categories')) {
             $this->create_tables();
         }
 
-        public function list_curtain_categorys() {
+        public function list_curtain_categories() {
             global $wpdb;
             $curtain_service = new curtain_service();
 
@@ -41,14 +41,14 @@ if (!class_exists('curtain_categories')) {
                 $data['curtain_category_name']=$_POST['_curtain_category_name'];
                 $where=array();
                 $where['curtain_category_id']=$_POST['_curtain_category_id'];
-                $this->update_curtain_categorys($data, $where);
+                $this->update_curtain_categories($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['curtain_category_id']=$_GET['_delete'];
-                $this->delete_curtain_categorys($where);
+                $this->delete_curtain_categories($where);
             }
 
             global $wpdb;
@@ -78,7 +78,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<table id="categories" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
-            $output .= '<th>product</th>';
+            $output .= '<th>category</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
@@ -100,12 +100,12 @@ if (!class_exists('curtain_categories')) {
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$_id}", OBJECT );
-                $output .= '<div id="dialog" title="Curtain product update">';
+                $output .= '<div id="dialog" title="Category update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->curtain_category_id.'" name="_curtain_category_id">';
-                $output .= '<label for="curtain-product-name">Product Name</label>';
-                $output .= '<input type="text" name="_curtain_category_name" value="'.$row->curtain_category_name.'" id="curtain-product-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain-category-name">Category Name</label>';
+                $output .= '<input type="text" name="_curtain_category_name" value="'.$row->curtain_category_name.'" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -113,11 +113,11 @@ if (!class_exists('curtain_categories')) {
             }
 
             if( isset($_POST['_add']) ) {
-                $output .= '<div id="dialog" title="Create new product">';
+                $output .= '<div id="dialog" title="Create new category">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="curtain-product-name">Product Name</label>';
-                $output .= '<input type="text" name="_curtain_category_name" id="curtain-product-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain-category-name">Category Name</label>';
+                $output .= '<input type="text" name="_curtain_category_name" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -135,14 +135,14 @@ if (!class_exists('curtain_categories')) {
             return $wpdb->insert_id;
         }
 
-        public function update_curtain_categorys($data=[], $where=[]) {
+        public function update_curtain_categories($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_categories';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
-        public function delete_curtain_categorys($where=[]) {
+        public function delete_curtain_categories($where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'curtain_categories';
             $wpdb->delete($table, $where);
@@ -187,5 +187,5 @@ if (!class_exists('curtain_categories')) {
         }
     }
     $my_class = new curtain_categories();
-    add_shortcode( 'curtain-category-list', array( $my_class, 'list_curtain_categorys' ) );
+    add_shortcode( 'curtain-category-list', array( $my_class, 'list_curtain_categories' ) );
 }

@@ -50,7 +50,7 @@ if (!class_exists('order_items')) {
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th></th>';
                 $output .= '<th>date/time</th>';
-                $output .= '<th>product</th>';
+                $output .= '<th>category</th>';
                 $output .= '<th>model</th>';
                 $output .= '<th>spec</th>';
                 $output .= '<th>QTY</th>';
@@ -208,7 +208,7 @@ if (!class_exists('order_items')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>date/time</th>';
-            $output .= '<th>product</th>';
+            $output .= '<th>category</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>QTY</th>';
@@ -251,7 +251,7 @@ if (!class_exists('order_items')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                $output .= '<label for="select-category-id">Product</label>';
+                $output .= '<label for="select-category-id">Curtain Category</label>';
                 $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id, $row->curtain_category_id).'</select>';
@@ -279,7 +279,7 @@ if (!class_exists('order_items')) {
                 $output .= '<div id="dialog" title="Create new item">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="select-category-id">Product</label>';
+                $output .= '<label for="select-category-id">Curtain Category</label>';
                 $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options().'</select>';

@@ -124,8 +124,8 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="text" name="_model_description" value="'.$row->model_description.'" id="model-description" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="model-price">Price</label>';
                 $output .= '<input type="text" name="_model_price" value="'.$row->model_price.'" id="model-price" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_category_id">Product</label>';
-                $output .= '<select name="_curtain_category_id" id="curtain-product-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
+                $output .= '<label for="curtain-category-id">Curtain Category</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain-category-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                 $output .= '<input type="text" name="_curtain_vendor_name" value="'.$row->curtain_vendor_name.'" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
@@ -144,8 +144,8 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="model-price">Price</label>';
                 $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_category_id">Product</label>';
-                $output .= '<select name="_curtain_category_id" id="curtain-product-id">'.$curtain_categories->select_options().'</select>';
+                $output .= '<label for="curtain-category-id">Curtain Category</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                 $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
