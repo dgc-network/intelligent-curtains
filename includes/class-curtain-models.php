@@ -15,7 +15,7 @@ if (!class_exists('curtain_models')) {
         public function list_curtain_models() {
             global $wpdb;
             $curtain_service = new curtain_service();
-            $curtain_products = new curtain_products();
+            $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Models';
@@ -36,7 +36,7 @@ if (!class_exists('curtain_models')) {
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
                 $data['model_price']=$_POST['_model_price'];
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $this->insert_curtain_model($data);
             }
@@ -46,7 +46,7 @@ if (!class_exists('curtain_models')) {
                 $data['curtain_model_name']=$_POST['_curtain_model_name'];
                 $data['model_description']=$_POST['_model_description'];
                 $data['model_price']=$_POST['_model_price'];
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
                 $where=array();
                 $where['curtain_model_id']=$_POST['_curtain_model_id'];
@@ -124,8 +124,8 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="text" name="_model_description" value="'.$row->model_description.'" id="model-description" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="model-price">Price</label>';
                 $output .= '<input type="text" name="_model_price" value="'.$row->model_price.'" id="model-price" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_product_id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="curtain-product-id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain-product-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                 $output .= '<input type="text" name="_curtain_vendor_name" value="'.$row->curtain_vendor_name.'" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
@@ -144,8 +144,8 @@ if (!class_exists('curtain_models')) {
                 $output .= '<input type="text" name="_model_description" id="model-description" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="model-price">Price</label>';
                 $output .= '<input type="text" name="_model_price" id="model-price" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_product_id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="curtain-product-id">'.$curtain_products->select_options().'</select>';
+                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain-product-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
                 $output .= '<input type="text" name="_curtain_vendor_name" id="curtain-vendor-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
@@ -192,7 +192,7 @@ if (!class_exists('curtain_models')) {
 
         public function select_options( $_id=0, $_product_id=0 ) {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_product_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_product_id}", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
                 if ( $result->curtain_model_id == $_id ) {
@@ -218,7 +218,7 @@ if (!class_exists('curtain_models')) {
                 model_description varchar(50),
                 model_price decimal(10,2),
                 curtain_vendor_name varchar(50),
-                curtain_product_id int(10),
+                curtain_category_id int(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_model_id)

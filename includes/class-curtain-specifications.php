@@ -15,7 +15,7 @@ if (!class_exists('curtain_specifications')) {
         public function list_curtain_specifications() {
             global $wpdb;
             $curtain_service = new curtain_service();
-            $curtain_products = new curtain_products();
+            $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Specifications';
@@ -37,7 +37,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_description']=$_POST['_specification_description'];
                 $data['specification_price']=$_POST['_specification_price'];
                 $data['specification_unit']=$_POST['_specification_unit'];
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['length_only']=$_POST['_length_only'];
                 $this->insert_curtain_specification($data);
             }
@@ -48,7 +48,7 @@ if (!class_exists('curtain_specifications')) {
                 $data['specification_description']=$_POST['_specification_description'];
                 $data['specification_price']=$_POST['_specification_price'];
                 $data['specification_unit']=$_POST['_specification_unit'];
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['length_only']=$_POST['_length_only'];
                 $where=array();
                 $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
@@ -104,8 +104,8 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_specification_name.'</td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_products WHERE curtain_product_id={$result->curtain_product_id}", OBJECT );
-                $output .= '<td>'.$row->curtain_product_name.'</td>';
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$result->curtain_category_id}", OBJECT );
+                $output .= '<td>'.$row->curtain_category_name.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->specification_unit.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->specification_price.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -131,8 +131,8 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_price" value="'.$row->specification_price.'" id="specification-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-unit">Unit</label>';
                 $output .= '<input type="text" name="_specification_unit" value="'.$row->specification_unit.'" id="specification-unit" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_product_id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain_category_id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only"';
                 if ($row->length_only==1) {
@@ -159,8 +159,8 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '<input type="text" name="_specification_price" id="specification-price" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="specification-unit">Unit</label>';
                 $output .= '<input type="text" name="_specification_unit" id="specification-unit" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="curtain_product_id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="curtain_product_id">'.$curtain_products->select_options().'</select>';
+                $output .= '<label for="curtain_category_id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain_category_id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<input type="checkbox" value="1" name="_length_only" id="length-only">';
                 $output .= '<span>  </span>';
@@ -216,7 +216,7 @@ if (!class_exists('curtain_specifications')) {
 
         public function select_options( $_id=0, $_product_id=0 ) {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_product_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_category_id={$_product_id}", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
                 if ( $result->curtain_specification_id == $_id ) {
@@ -242,7 +242,7 @@ if (!class_exists('curtain_specifications')) {
                 specification_description varchar(50),
                 specification_price decimal(10,2),
                 specification_unit varchar(10),
-                curtain_product_id int(10),
+                curtain_category_id int(10),
                 length_only int(1),
                 create_timestamp int(10),
                 update_timestamp int(10),

@@ -52,7 +52,7 @@ jQuery(document).ready(function($) {
 */            
     });
 
-    $("#select-product-id").change(function() {
+    $("#select-category-id").change(function() {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
-                'action': 'select_product_id',
+                'action': 'select_category_id',
                 'id': val,
             },
             success: function (response) {

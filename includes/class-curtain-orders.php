@@ -15,7 +15,7 @@ if (!class_exists('order_items')) {
         public function list_order_items() {
             global $wpdb;
             $curtain_agents = new curtain_agents();
-            $curtain_products = new curtain_products();
+            $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
             $curtain_remotes = new curtain_remotes();
             $curtain_specifications = new curtain_specifications();
@@ -61,7 +61,7 @@ if (!class_exists('order_items')) {
                     $output .= '<tr>';
                     $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
-                    $output .= '<td>'.$curtain_products->get_name($result->curtain_product_id).'</td>';
+                    $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
                     $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
@@ -123,7 +123,7 @@ if (!class_exists('order_items')) {
 
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
                 $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
@@ -158,7 +158,7 @@ if (!class_exists('order_items')) {
                 }
 
                 $data=array();
-                $data['curtain_product_id']=$_POST['_curtain_product_id'];
+                $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
                 $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
@@ -228,7 +228,7 @@ if (!class_exists('order_items')) {
                 $output .= '<td>';
                 $output .= wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp );
                 $output .= '</td>';
-                $output .= '<td>'.$curtain_products->get_name($result->curtain_product_id).'</td>';
+                $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
@@ -251,14 +251,14 @@ if (!class_exists('order_items')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                $output .= '<label for="select-product-id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="select-product-id">'.$curtain_products->select_options($row->curtain_product_id).'</select>';
+                $output .= '<label for="select-category-id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
-                $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id, $row->curtain_product_id).'</select>';
+                $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_model_id, $row->curtain_category_id).'</select>';
                 $output .= '<label for="select-remote-id">Remote</label>';
                 $output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options($row->curtain_remote_id).'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
-                $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_product_id).'</select>';
+                $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_category_id).'</select>';
                 $output .= '<label for="curtain-dimension">Dimension</label>';
                 $output .= '<div style="display: flex;">';
                 $output .= '<span>Width</span>';
@@ -279,8 +279,8 @@ if (!class_exists('order_items')) {
                 $output .= '<div id="dialog" title="Create new item">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="select-product-id">Product</label>';
-                $output .= '<select name="_curtain_product_id" id="select-product-id">'.$curtain_products->select_options().'</select>';
+                $output .= '<label for="select-category-id">Product</label>';
+                $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options().'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
@@ -337,7 +337,7 @@ if (!class_exists('order_items')) {
                 order_master_id int(10),
                 order_number varchar(50),
                 curtain_agent_id int(10),
-                curtain_product_id int(10),
+                curtain_category_id int(10),
                 curtain_model_id int(10),
                 curtain_remote_id int(10),
                 curtain_specification_id int(10),
@@ -353,13 +353,13 @@ if (!class_exists('order_items')) {
             dbDelta($sql);
         }
 
-        function select_product_id() {
+        function select_category_id() {
             global $wpdb;
             $_id = $_POST['id'];
 
             $models = array();
             $models[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_product_id={$_id}" , OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_id}" , OBJECT );
             foreach ($results as $index => $result) {
                 $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
             }
@@ -367,7 +367,7 @@ if (!class_exists('order_items')) {
 
             $specifications = array();
             $specifications[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_product_id={$_id}" , OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_category_id={$_id}" , OBJECT );
             foreach ($results as $index => $result) {
                 $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
             }
@@ -384,6 +384,6 @@ if (!class_exists('order_items')) {
     }
     $my_class = new order_items();
     add_shortcode( 'order-item-list', array( $my_class, 'list_order_items' ) );
-    add_action( 'wp_ajax_select_product_id', array( $my_class, 'select_product_id' ) );
-    add_action( 'wp_ajax_nopriv_select_product_id', array( $my_class, 'select_product_id' ) );
+    add_action( 'wp_ajax_select_product_id', array( $my_class, 'select_category_id' ) );
+    add_action( 'wp_ajax_nopriv_select_product_id', array( $my_class, 'select_category_id' ) );
 }
