@@ -129,8 +129,8 @@ jQuery(document).ready(function($) {
     });
         
     $('[id^="chat-btn-"]').on( "click", function(e) {
-        e.preventDefault(); ///first, prevent the action
-        var targetUrl = $(this).attr("href"); ///the original delete call
+        //e.preventDefault(); ///first, prevent the action
+        //var targetUrl = $(this).attr("href"); ///the original delete call
 
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
@@ -138,7 +138,7 @@ jQuery(document).ready(function($) {
         window.location.replace("?_id=" + id);
 
         ///construct the dialog
-        $("#dialog_id").dialog({
+        $("#chat-dialog").dialog({
             autoOpen: false,
             title: 'Confirmation',
             modal: true,
@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
 
         ///open the dialog window
-        $("#dialog_id").dialog("open");
+        $("#chat-dialog").dialog("open");
 
     });
 
@@ -221,69 +221,6 @@ jQuery(document).ready(function($) {
             //form[ 0 ].reset();
             //allFields.removeClass( "ui-state-error" );
             window.location.replace("?_close=");
-            //alert("對話框關閉");
         }
     });
-/*
-    // 設定對話框
-    $("#dialog").dialog({
-        autoOpen: false, // 對話框一開始隱藏
-        close:function(event, ui){ // 對話框關閉時觸發的方法
-            alert("對話框關閉");
-        }
-    });
-  
-    function openDialog(){
-        $("#dialog").dialog("open"); // 點選按鈕時開啟對話框
-    }
-*/
-    /* jQuery UI Dialog - Modal form */
-    $( "#dialog-form" ).dialog({
-        //autoOpen: false,
-        //autoOpen: true,
-        height: 450,
-        width: 500,
-        //modal: true,
-
-        buttons: {
-            //"Create": addUser,
-            Cancel: function() {
-                //dialog.dialog( "close" );
-                $(this).dialog("close");
-            }
-        },
-        
-        close: function() {
-            form[ 0 ].reset();
-            allFields.removeClass( "ui-state-error" );
-        }
-    
-    });
-
-    ///on class click
-    $(".delete").click(function (e) {
-        e.preventDefault(); ///first, prevent the action
-        var targetUrl = $(this).attr("href"); ///the original delete call
-
-        ///construct the dialog
-        $("#dialog_id").dialog({
-            autoOpen: false,
-            title: 'Confirmation',
-            modal: true,
-            buttons: {
-                "OK" : function () {
-                    ///if the user confirms, proceed with the original action
-                    window.location.href = targetUrl;
-                },
-                "Cancel" : function () {
-                    ///otherwise, just close the dialog; the delete event was already interrupted
-                    $(this).dialog("close");
-                }
-            }
-        });
-
-        ///open the dialog window
-        $("#dialog_id").dialog("open");
-    });
-
 });
