@@ -238,7 +238,7 @@ if (!class_exists('curtain_specifications')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_specifications` (
                 curtain_specification_id int NOT NULL AUTO_INCREMENT,
-                curtain_specification_name varchar(5) UNIQUE,
+                curtain_specification_name varchar(5),
                 specification_description varchar(50),
                 specification_price decimal(10,2),
                 specification_unit varchar(10),

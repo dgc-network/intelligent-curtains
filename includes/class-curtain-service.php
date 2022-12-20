@@ -52,8 +52,9 @@ if (!class_exists('curtain_service')) {
                     }
                     $six_digit_random_number = random_int(100000, 999999);
                     $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '使用電腦<i class="fa-solid fa-desktop"></i>上的Line, 在我們的官方帳號聊天室中輸入六位數字密碼,<br>';
-                    $output .= '<span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>'.'完成註冊程序<br>';
+                    //$output .= '使用電腦<i class="fa-solid fa-desktop"></i>上的Line, 在我們的官方帳號聊天室中輸入六位數字密碼,<br>';
+                    $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
+                    $output .= '</span>'.'完成註冊程序<br>';
 
                     //$output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
                     //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
