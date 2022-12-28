@@ -250,7 +250,31 @@ if (!class_exists('line_webhook')) {
                                                     'text' => $string
                                                 ]                                                                    
                                             ]
-                                        ]);                            
+                                        ]);
+
+                                        //** send auto-reply message to line_bot */
+                                        $data=array();
+                                        $data['chat_from']='line_bot';
+                                        $data['chat_to']=$profile['userId'];
+                                        $data['chat_message']=$string;
+                                        $this->insert_chat_message($data);
+
+                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
+                                        foreach ( $results as $index=>$result ) {
+                                            $hero_messages = array();
+                                            //$hero_messages[] = $profile['displayName'];
+                                            $hero_messages[] = 'Aihome';
+                                            $body_messages = array();
+                                            //$body_messages[] = $message['text'];
+                                            $body_messages[] = $string;
+                                            $_contents = array();
+                                            $_contents['line_user_id'] = $result->line_user_id;
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
+                                            $_contents['hero_messages'] = $hero_messages;
+                                            $_contents['body_messages'] = $body_messages;
+                                            $this->push_flex_messages( $_contents );
+                                        }
+
                                     } else {
                                         //** Agent registration */
                                         $data=array();
