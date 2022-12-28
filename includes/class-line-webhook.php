@@ -243,7 +243,10 @@ if (!class_exists('line_webhook')) {
                                         $client->pushMessage([
                                             'to' => $_contents['line_user_id'],
                                             'messages' => [
-                                                $response['text']
+                                                [
+                                                    'type' => 'text',
+                                                    'text' => $response['text']
+                                                ]                                                                    
                                             ]
                                         ]);                            
                                     } else {
