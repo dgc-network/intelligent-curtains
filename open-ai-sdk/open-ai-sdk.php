@@ -80,7 +80,7 @@ class open_ai {
 
         //return $response;
         $data = json_decode($response, true);
-        return $data['choices'];
+        return $data['choices'][0];
     }
 
     /**

@@ -230,8 +230,8 @@ if (!class_exists('line_webhook')) {
                                             $hero_messages[] = $profile['displayName'];
                                             $body_messages = array();
                                             //$body_messages[] = $message['text'];
-                                            //$body_messages[] = $response;
-                                            $body_messages = $response;
+                                            $body_messages[] = $response['text'];
+                                            //$body_messages = $response;
                                             $_contents = array();
                                             $_contents['line_user_id'] = $result->line_user_id;
                                             $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
