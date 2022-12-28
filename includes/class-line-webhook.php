@@ -212,10 +212,26 @@ if (!class_exists('line_webhook')) {
                                         $data['chat_message']=$message['text'];
                                         $this->insert_chat_message($data);
 
+                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
+                                        foreach ( $results as $index=>$result ) {
+                                            $hero_messages = array();
+                                            $hero_messages[] = $profile['displayName'];
+                                            $body_messages = array();
+                                            $body_messages[] = $message['text'];
+                                            //$body_messages[] = $response['text'];
+                                            $_contents = array();
+                                            $_contents['line_user_id'] = $result->line_user_id;
+                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
+                                            $_contents['hero_messages'] = $hero_messages;
+                                            $_contents['body_messages'] = $body_messages;
+                                            $this->push_flex_messages( $_contents );
+                                        }
+
+                                        /** Open-AI auto reply */
                                         $param=array();
                                         $param["model"]="text-davinci-003";
                                         $param["prompt"]=$message['text'];
-                                        $param["max_tokens"]=200;
+                                        $param["max_tokens"]=300;
                                         //$param["temperature"]=0;
                                         //$param["top_p"]=1;
                                         //$param["n"]=1;
@@ -224,21 +240,12 @@ if (!class_exists('line_webhook')) {
                                         //$param["stop"]="\n";
                                         $response = $open_ai->createCompletion($param);
                                                                 
-                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
-                                        foreach ( $results as $index=>$result ) {
-                                            $hero_messages = array();
-                                            $hero_messages[] = $profile['displayName'];
-                                            $body_messages = array();
-                                            //$body_messages[] = $message['text'];
-                                            $body_messages[] = $response['text'];
-                                            //$body_messages = $response;
-                                            $_contents = array();
-                                            $_contents['line_user_id'] = $result->line_user_id;
-                                            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
-                                            $_contents['hero_messages'] = $hero_messages;
-                                            $_contents['body_messages'] = $body_messages;
-                                            $this->push_flex_messages( $_contents );
-                                        }
+                                        $client->pushMessage([
+                                            'to' => $_contents['line_user_id'],
+                                            'messages' => [
+                                                $response['text']
+                                            ]
+                                        ]);                            
                                     } else {
                                         //** Agent registration */
                                         $data=array();
