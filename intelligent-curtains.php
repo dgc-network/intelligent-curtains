@@ -43,6 +43,7 @@ function enqueue_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
+require_once plugin_dir_path( __FILE__ ) . 'open-ai-sdk/open-ai-sdk.php';
 require_once plugin_dir_path( __FILE__ ) . 'line-bot-sdk-tiny/LINEBotTiny.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';

@@ -143,6 +143,7 @@ if (!class_exists('line_webhook')) {
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
             $client = new LINEBotTiny();
+            $open_ai = new open_ai();
 
             foreach ((array)$client->parseEvents() as $event) {
 
@@ -210,6 +211,18 @@ if (!class_exists('line_webhook')) {
                                         $data['chat_to']='line_bot';
                                         $data['chat_message']=$message['text'];
                                         $this->insert_chat_message($data);
+
+                                        $param=array();
+                                        $param["model"]="text-davinci-003";
+                                        $param["prompt"]=$message['text'];
+                                        $param["max_tokens"]=7;
+                                        $param["temperature"]=0;
+                                        $param["top_p"]=1;
+                                        $param["n"]=1;
+                                        $param["stream"]=false;
+                                        $param["logprobs"]=null;
+                                        $param["stop"]="\n";
+                                        $response = $open_ai->createCompletion($param);
                                                                 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
                                         foreach ( $results as $index=>$result ) {
@@ -275,20 +288,6 @@ if (!class_exists('line_webhook')) {
                 PRIMARY KEY (message_id)
             ) $charset_collate;";
             dbDelta($sql);
-/*        
-            $sql = "CREATE TABLE `{$wpdb->prefix}eventLogs` (
-                event_id int NOT NULL AUTO_INCREMENT,
-                event_type varchar(20),
-                event_timestamp int(10),
-                source_type varchar(10),
-                source_user_id varchar(50),
-                source_group_id varchar(50),
-                event_replyToken varchar(50),
-                event_object varchar(1000),
-                PRIMARY KEY  (event_id)
-            ) $charset_collate;";
-            dbDelta($sql);
-*/            
         }        
     }
 }
