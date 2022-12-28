@@ -216,12 +216,12 @@ if (!class_exists('line_webhook')) {
                                         $param["model"]="text-davinci-003";
                                         $param["prompt"]=$message['text'];
                                         $param["max_tokens"]=100;
-                                        $param["temperature"]=0;
-                                        $param["top_p"]=1;
-                                        $param["n"]=1;
-                                        $param["stream"]=false;
-                                        $param["logprobs"]=null;
-                                        $param["stop"]="\n";
+                                        //$param["temperature"]=0;
+                                        //$param["top_p"]=1;
+                                        //$param["n"]=1;
+                                        //$param["stream"]=false;
+                                        //$param["logprobs"]=null;
+                                        //$param["stop"]="\n";
                                         $response = $open_ai->createCompletion($param);
                                                                 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $curtain_service->get_id('Messages') ), OBJECT );            
