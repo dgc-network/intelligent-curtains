@@ -215,7 +215,7 @@ if (!class_exists('line_webhook')) {
                                         $param=array();
                                         $param["model"]="text-davinci-003";
                                         $param["prompt"]=$message['text'];
-                                        $param["max_tokens"]=100;
+                                        $param["max_tokens"]=200;
                                         //$param["temperature"]=0;
                                         //$param["top_p"]=1;
                                         //$param["n"]=1;
@@ -230,7 +230,7 @@ if (!class_exists('line_webhook')) {
                                             $hero_messages[] = $profile['displayName'];
                                             $body_messages = array();
                                             //$body_messages[] = $message['text'];
-                                            $body_messages[] = $response;
+                                            $body_messages[] = $response->choices;
                                             $_contents = array();
                                             $_contents['line_user_id'] = $result->line_user_id;
                                             $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$result->line_user_id;
