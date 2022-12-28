@@ -239,7 +239,7 @@ if (!class_exists('line_webhook')) {
                                         //$param["logprobs"]=null;
                                         //$param["stop"]="\n";
                                         $response = $open_ai->createCompletion($param);
-                                        $string = preg_replace('/(^|[^\n\r])[\r\n](?![\n\r])/', '', $response['text']);
+                                        $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
                                                                 
                                         $client->pushMessage([
                                             'to' => $_contents['line_user_id'],
