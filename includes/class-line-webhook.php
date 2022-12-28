@@ -239,13 +239,15 @@ if (!class_exists('line_webhook')) {
                                         //$param["logprobs"]=null;
                                         //$param["stop"]="\n";
                                         $response = $open_ai->createCompletion($param);
+                                        $string = preg_replace("/[^A-Za-z0-9 ]/", '', $response['text']);
                                                                 
                                         $client->pushMessage([
                                             'to' => $_contents['line_user_id'],
                                             'messages' => [
                                                 [
                                                     'type' => 'text',
-                                                    'text' => $response['text']
+                                                    //'text' => $response['text']
+                                                    'text' => $string
                                                 ]                                                                    
                                             ]
                                         ]);                            
