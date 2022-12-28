@@ -215,7 +215,7 @@ if (!class_exists('line_webhook')) {
                                         $param=array();
                                         $param["model"]="text-davinci-003";
                                         $param["prompt"]=$message['text'];
-                                        $param["max_tokens"]=7;
+                                        $param["max_tokens"]=100;
                                         $param["temperature"]=0;
                                         $param["top_p"]=1;
                                         $param["n"]=1;
