@@ -78,7 +78,9 @@ class open_ai {
             error_log('Request failed: ' . $response);
         }
 
-        return $response;
+        //return $response;
+        $data = json_decode($response, true);
+        return $data['choices'];
     }
 
     /**
