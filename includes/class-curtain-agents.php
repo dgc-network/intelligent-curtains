@@ -110,7 +110,7 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="del-btn-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
-            $output .= '</tr>';
+                $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
 

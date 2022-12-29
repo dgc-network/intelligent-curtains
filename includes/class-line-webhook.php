@@ -227,7 +227,7 @@ if (!class_exists('line_webhook')) {
                                             $this->push_flex_messages( $_contents );
                                         }
 
-                                        /** Open-AI auto reply */
+                                        //** Open-AI auto reply */
                                         $param=array();
                                         $param["model"]="text-davinci-003";
                                         $param["prompt"]=$message['text'];
