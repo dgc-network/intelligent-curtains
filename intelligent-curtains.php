@@ -52,7 +52,7 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
     }
     
     $page_id = wp_insert_post(
-            array(
+        array(
             'comment_status' => 'close',
             'ping_status'    => 'close',
             'post_author'    => 1,
@@ -62,8 +62,8 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
             'post_content'   => $content,
             'post_type'      => 'page',
             'post_parent'    =>  $parent_id //'id_of_the_parent_page_if_it_available'
-            )
-        );
+        )
+    );
     echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
     return $page_id;
 }
