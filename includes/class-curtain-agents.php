@@ -10,7 +10,7 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Agent1', '<?php return do_shortcode("[curtain-agent-list]");?>');
+            create_page('Agent2', '<?php return do_shortcode("[curtain-agent-list]");?>');
 /*            
             // Create post object
             $my_post = array(
