@@ -47,7 +47,7 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
     $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
     if( ! empty( $objPage ) )
     {
-        echo "Page already exists:" . $title_of_the_page . "<br/>";
+        //echo "Page already exists:" . $title_of_the_page . "<br/>";
         return $objPage->ID;
     }
     
@@ -64,7 +64,7 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
             'post_parent'    =>  $parent_id //'id_of_the_parent_page_if_it_available'
         )
     );
-    echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
+    //echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
     return $page_id;
 }
 
