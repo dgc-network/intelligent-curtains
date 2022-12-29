@@ -57,7 +57,8 @@ class business_central {
      * @param array<string, mixed> $param
      * @return void
      */
-    public function getItems($param) {
+    //public function getItems($param) {
+    public function getItems() {
 
         $header = array(
             'Content-Type: application/json',
@@ -70,11 +71,11 @@ class business_central {
                 //'method' => 'POST',
                 'method' => 'GET',
                 'header' => implode("\r\n", $header),
-                'content' => json_encode($param),
+                //'content' => json_encode($param),
             ],
         ]);
 
-        $response = file_get_contents('https://api.openai.com/v1/completions', false, $context);
+        $response = file_get_contents('https://api.businesscentral.dynamics.com/v2.0/6431b284-21b0-4f5d-9bff-8f963418794e/Development/ODataV4/Company("'.'DG'.'")/Items', false, $context);
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
