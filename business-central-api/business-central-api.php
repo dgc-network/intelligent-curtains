@@ -75,7 +75,7 @@ class business_central {
             ],
         ]);
 
-        $response = file_get_contents('https://api.businesscentral.dynamics.com/v2.0/6431b284-21b0-4f5d-9bff-8f963418794e/Development/ODataV4/Company("'.'DG'.'")/Items', false, $context);
+        $response = file_get_contents('https://api.businesscentral.dynamics.com/v2.0/6431b284-21b0-4f5d-9bff-8f963418794e/Development/ODataV4/Company("DG")/Items', false, $context);
         if (strpos($http_response_header[0], '200') === false) {
             error_log('Request failed: ' . $response);
         }
