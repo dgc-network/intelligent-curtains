@@ -10,20 +10,7 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Agent3', '[curtain-agent-list]');
-/*            
-            // Create post object
-            $my_post = array(
-                'post_type'     => 'page',
-                'post_title'    => 'My post',
-                'post_content'  => '<?php echo do_shortcode("[curtain-agent-list]");?>',
-                'post_status'   => 'publish',
-                'post_author'   => 1
-            );
-         
-            // Insert the post into the database
-            wp_insert_post( $my_post );
- */
+            create_page('Agents', '[curtain-agent-list]');
         }
 
         public function list_curtain_agents() {
@@ -243,5 +230,5 @@ if (!class_exists('curtain_agents')) {
     }
     $my_class = new curtain_agents();
     add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
-    add_shortcode( 'agent-registration', array( $my_class, 'agent_registration' ) );
+    //add_shortcode( 'agent-registration', array( $my_class, 'agent_registration' ) );
 }

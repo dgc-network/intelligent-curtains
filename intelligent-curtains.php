@@ -68,6 +68,7 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
     return $page_id;
 }
 
+require_once plugin_dir_path( __FILE__ ) . 'business-central-api/business-central-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'open-ai-api/open-ai-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'line-bot-api/LINEBotTiny.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';

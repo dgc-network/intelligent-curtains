@@ -144,6 +144,7 @@ if (!class_exists('line_webhook')) {
             $curtain_agents = new curtain_agents();
             $client = new LINEBotTiny();
             $open_ai = new open_ai();
+            $business_central = new business_central();
 
             foreach ((array)$client->parseEvents() as $event) {
 
@@ -238,8 +239,9 @@ if (!class_exists('line_webhook')) {
                                         //$param["stream"]=false;
                                         //$param["logprobs"]=null;
                                         //$param["stop"]="\n";
-                                        $response = $open_ai->createCompletion($param);
-                                        $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
+                                        //$response = $open_ai->createCompletion($param);
+                                        //$string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
+                                        $response = $business_central->getItems();
                                                                 
                                         $client->pushMessage([
                                             'to' => $_contents['line_user_id'],
@@ -247,7 +249,8 @@ if (!class_exists('line_webhook')) {
                                                 [
                                                     'type' => 'text',
                                                     //'text' => $response['text']
-                                                    'text' => $string
+                                                    'text' => $response
+                                                    //'text' => $string
                                                 ]                                                                    
                                             ]
                                         ]);
