@@ -41,10 +41,10 @@ class open_ai {
         if ($channelAccessToken==''||$channelSecret=='') {
             if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
                 $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
-                if ($config['Channel']['Token'] == null || $config['Channel']['Secret'] == null) {
+                if ($config['Channel']['API_KEY'] == null || $config['Channel']['Secret'] == null) {
                     error_log("config.ini uncompleted!", 0);
                 } else {
-                    $channelAccessToken = $config['Channel']['Token'];
+                    $channelAccessToken = $config['Channel']['API_KEY'];
                     $channelSecret = $config['Channel']['Secret'];
                 }
             }    
