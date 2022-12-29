@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright 2022 dgc.network
+ * Copyright 2016 LINE Corporation
  *
- * dgc.network licenses this file to you under the Apache License,
+ * LINE Corporation licenses this file to you under the Apache License,
  * version 2.0 (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at:
  *
@@ -18,7 +18,47 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-class business_central {
+/*
+ * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
+ *
+ * Copyright (c) 2015 Indigo Development Team
+ * Released under the MIT license
+ * https://github.com/indigophp/hash-compat/blob/43a19f42093a0cd2d11874dff9d891027fc42214/LICENSE
+ */
+if (!function_exists('hash_equals')) {
+    defined('USE_MB_STRING') or define('USE_MB_STRING', function_exists('mb_strlen'));
+
+    /**
+     * @param string $knownString
+     * @param string $userString
+     * @return bool
+     */
+    function hash_equals($knownString, $userString) {
+        
+        $strlen = function ($string) {
+            if (USE_MB_STRING) {
+                return mb_strlen($string, '8bit');
+            }
+
+            return strlen($string);
+        };
+
+        // Compare string lengths
+        if (($length = $strlen($knownString)) !== $strlen($userString)) {
+            return false;
+        }
+
+        $diff = 0;
+
+        // Calculate differences
+        for ($i = 0; $i < $length; $i++) {
+            $diff |= ord($knownString[$i]) ^ ord($userString[$i]);
+        }
+        return $diff === 0;
+    }
+}
+
+class LINEBotTiny {
 
     /** @var string */
     private $channelAccessToken;
@@ -54,38 +94,6 @@ class business_central {
     }
 
     /**
-     * @param array<string, mixed> $param
-     * @return void
-     */
-    //public function getItems($param) {
-    public function getItems() {
-
-        $header = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->channelAccessToken,
-        );
-
-        $context = stream_context_create([
-            'http' => [
-                'ignore_errors' => true,
-                //'method' => 'POST',
-                'method' => 'GET',
-                'header' => implode("\r\n", $header),
-                //'content' => json_encode($param),
-            ],
-        ]);
-
-        $response = file_get_contents('https://api.businesscentral.dynamics.com/v2.0/6431b284-21b0-4f5d-9bff-8f963418794e/Development/ODataV4/Company("DG")/Items', false, $context);
-        if (strpos($http_response_header[0], '200') === false) {
-            error_log('Request failed: ' . $response);
-        }
-
-        return $response;
-        //$data = json_decode($response, true);
-        //return $data['choices'][0];
-    }
-
-    /**
      * @return mixed
      */
     public function parseEvents() {
@@ -116,6 +124,32 @@ class business_central {
 */
         return $data['events'];
    
+    }
+
+    /**
+     * @param array<string, mixed> $message
+     * @return void
+     */
+    public function replyMessage($message) {
+
+        $header = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->channelAccessToken,
+        );
+
+        $context = stream_context_create([
+            'http' => [
+                'ignore_errors' => true,
+                'method' => 'POST',
+                'header' => implode("\r\n", $header),
+                'content' => json_encode($message),
+            ],
+        ]);
+
+        $response = file_get_contents('https://api.line.me/v2/bot/message/reply', false, $context);
+        if (strpos($http_response_header[0], '200') === false) {
+            error_log('Request failed: ' . $response);
+        }
     }
 
     /**
