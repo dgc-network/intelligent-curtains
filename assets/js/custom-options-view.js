@@ -56,17 +56,16 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
-
+/*
         jQuery.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
-                //'action': 'select_category_id',
-                //'id': val,
+                'action': 'select_category_id',
+                'id': val,
             },
             success: function (response) {
-                /*
                 current_time = response.currenttime;
                 models = response.models;
                 specifications = response.specifications;
@@ -78,12 +77,12 @@ jQuery(document).ready(function($) {
                 for (let x in specifications) {
                     $("#select-specification-id").append(specifications[x]);
                 }
-                */
             },
             error: function(error){
                 alert(error);
             }
         });
+        */
     });
     
     /* Cart Button */

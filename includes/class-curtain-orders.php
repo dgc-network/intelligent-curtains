@@ -356,7 +356,7 @@ if (!class_exists('order_items')) {
         function select_category_id() {
             global $wpdb;
             $_id = $_POST['id'];
-/*
+
             $models = array();
             $models[] = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_id}" , OBJECT );
@@ -378,7 +378,7 @@ if (!class_exists('order_items')) {
             $response['models'] = $models;;
             $response['specifications'] = $specifications;;
             echo json_encode( $response );
-*/            
+
             wp_die();
         }
     }
