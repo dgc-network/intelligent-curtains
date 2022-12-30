@@ -66,6 +66,7 @@ jQuery(document).ready(function($) {
                 'id': val,
             },
             success: function (response) {
+                /*
                 current_time = response.currenttime;
                 models = response.models;
                 specifications = response.specifications;
@@ -77,6 +78,7 @@ jQuery(document).ready(function($) {
                 for (let x in specifications) {
                     $("#select-specification-id").append(specifications[x]);
                 }
+                */
             },
             error: function(error){
                 alert(error);

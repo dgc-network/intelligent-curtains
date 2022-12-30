@@ -190,9 +190,9 @@ if (!class_exists('curtain_models')) {
             return $row->model_price;
         }
 
-        public function select_options( $_id=0, $_product_id=0 ) {
+        public function select_options( $_id=0, $_category_id=0 ) {
             global $wpdb;
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_product_id}", OBJECT );
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_category_id}", OBJECT );
             $output = '<option value="0">-- Select an option --</option>';
             foreach ($results as $index => $result) {
                 if ( $result->curtain_model_id == $_id ) {
