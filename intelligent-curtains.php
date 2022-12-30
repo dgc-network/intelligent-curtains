@@ -39,7 +39,7 @@ function enqueue_scripts() {
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 
     // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
-    wp_localize_script( 'custom-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), 'we_value' => 1234 ) );
+    wp_localize_script( 'custom-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 

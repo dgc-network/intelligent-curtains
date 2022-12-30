@@ -59,8 +59,7 @@ jQuery(document).ready(function($) {
 
         jQuery.ajax({
             type: 'POST',
-            //url: ajax_object.ajax_url,
-            url: admin_url( 'admin-ajax.php' ),
+            url: ajax_object.ajax_url,
             dataType: "json",
             data: {
                 'action': 'select_category_id',
