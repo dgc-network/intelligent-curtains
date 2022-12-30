@@ -62,8 +62,8 @@ jQuery(document).ready(function($) {
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
-                'action': 'select_category_id',
-                'id': val,
+                //'action': 'select_category_id',
+                //'id': val,
             },
             success: function (response) {
                 /*
