@@ -56,10 +56,11 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
-/*
+
         jQuery.ajax({
             type: 'POST',
-            url: ajax_object.ajax_url,
+            //url: ajax_object.ajax_url,
+            url: admin_url( 'admin-ajax.php' ),
             dataType: "json",
             data: {
                 'action': 'select_category_id',
@@ -82,7 +83,6 @@ jQuery(document).ready(function($) {
                 alert(error);
             }
         });
-        */
     });
     
     /* Cart Button */
