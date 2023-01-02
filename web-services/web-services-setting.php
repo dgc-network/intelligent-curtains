@@ -86,22 +86,6 @@ function web_services_register_settings() {
     );
 
     add_settings_field(
-        'is_open_ai_api_enabled',
-        'Line Bot API:',
-        'web_services_render_is_open_ai_api_enabled',
-        'web_services_page',
-        'section_one'
-    );
-
-    add_settings_field(
-        'is_business_central_api_enabled',
-        'Line Bot API:',
-        'web_services_render_is_business_central_api_enabled',
-        'web_services_page',
-        'section_one'
-    );
-
-    add_settings_field(
         'line_bot_token',
         'Token:',
         'web_services_render_line_bot_token',
@@ -118,11 +102,27 @@ function web_services_register_settings() {
     );
 
     add_settings_field(
+        'is_open_ai_api_enabled',
+        'Open AI API:',
+        'web_services_render_is_open_ai_api_enabled',
+        'web_services_page',
+        'section_two'
+    );
+
+    add_settings_field(
         'open_ai_api_key',
         'API KEY:',
         'web_services_render_open_ai_api_key',
         'web_services_page',
         'section_two'
+    );
+
+    add_settings_field(
+        'is_business_central_api_enabled',
+        'Business Central API:',
+        'web_services_render_is_business_central_api_enabled',
+        'web_services_page',
+        'section_three'
     );
 
     add_settings_field(
@@ -155,6 +155,14 @@ function web_services_sanitize_callback( $input ) {
 }
 
 function web_services_section_one_callback() {
+    //echo '<p>This is the first (and only) section in my settings.</p>';
+}
+  
+function web_services_section_two_callback() {
+    //echo '<p>This is the first (and only) section in my settings.</p>';
+}
+  
+function web_services_section_three_callback() {
     //echo '<p>This is the first (and only) section in my settings.</p>';
 }
   
