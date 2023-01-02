@@ -1,14 +1,14 @@
 <?php
 
 $options = get_option( 'web_services_settings' );
-if (isset( $options['is_line_bot_api_enabled'] )){
-    require_once plugin_dir_path( __FILE__ ) . 'web-services/line-bot-api.php';
+if ( $options['is_line_bot_api_enabled']==true ){
+    require_once plugin_dir_path( __FILE__ ) . 'line-bot-api.php';
 }
-if (isset( $options['is_open_ai_api_enabled'] )){
-    require_once plugin_dir_path( __FILE__ ) . 'web-services/open-ai-api.php';
+if ( $options['is_open_ai_api_enabled']=true ){
+    require_once plugin_dir_path( __FILE__ ) . 'open-ai-api.php';
 }
-if (isset( $options['is_business_central_api_enabled'] )){
-    require_once plugin_dir_path( __FILE__ ) . 'web-services/business-central-api.php';
+if ( $options['is_business_central_api_enabled']==true ){
+    require_once plugin_dir_path( __FILE__ ) . 'business-central-api.php';
 }
 define('OP_RETURN_IN_PRODUCTION', $options['is_line_bot_api_enabled']); // development mode or production mode
 define('OP_RETURN_BITCOIN_IP', $options['line_bot_token']); // IP address of your bitcoin node
@@ -88,7 +88,7 @@ function web_services_register_settings() {
 
     add_settings_field(
         'is_line_bot_api_enabled',
-        'Line Bot API:',
+        'Line Bot API enabled:',
         'web_services_render_is_line_bot_api_enabled',
         'web_services_page',
         'section_one'
@@ -112,7 +112,7 @@ function web_services_register_settings() {
 
     add_settings_field(
         'is_open_ai_api_enabled',
-        'Open AI API:',
+        'Open AI API enabled:',
         'web_services_render_is_open_ai_api_enabled',
         'web_services_page',
         'section_two'
@@ -128,7 +128,7 @@ function web_services_register_settings() {
 
     add_settings_field(
         'is_business_central_api_enabled',
-        'Business Central API:',
+        'Business Central API enabled:',
         'web_services_render_is_business_central_api_enabled',
         'web_services_page',
         'section_three'
@@ -149,16 +149,11 @@ function web_services_sanitize_callback( $input ) {
     $output['is_line_bot_api_enabled']   = rest_sanitize_boolean( $input['is_line_bot_api_enabled'] );
     $output['line_bot_token']      = sanitize_text_field( $input['line_bot_token'] );
     $output['line_bot_secret']     = sanitize_text_field( $input['line_bot_secret'] );
+    $output['is_open_ai_api_enabled']   = rest_sanitize_boolean( $input['is_open_ai_api_enabled'] );
     $output['open_ai_api_key']        = sanitize_text_field( $input['open_ai_api_key'] );
+    $output['is_business_central_api_enabled']   = rest_sanitize_boolean( $input['is_business_central_api_enabled'] );
     $output['business_central_token']    = sanitize_text_field( $input['business_central_token'] );
-    $output['send_amount_field']     = floatval( $input['send_amount_field'] );
-    $output['send_address_field']    = sanitize_text_field( $input['send_address_field'] );
-    $output['transaction_fee_field'] = floatval($input['transaction_fee_field']);
-    $output['dust_amount_field']     = floatval($input['dust_amount_field']);
-    $output['max_bytes_field']       = intval($input['max_bytes_field']);
-    $output['max_blocks_field']      = intval($input['max_blocks_field']);
-    $output['connect_timeout_field'] = intval($input['connect_timeout_field']);
-    $output['receive_timeout_field'] = intval($input['receive_timeout_field']);
+    //$output['business_central_token']    = $input['business_central_token'] ;
     // ...
     return $output;
 }
