@@ -241,7 +241,7 @@ function web_services_render_business_central_token() {
       esc_attr( $options['business_central_token'] )
     );
 }
-
+/*
 $options = get_option( 'web_services_settings' );
 if ( $options['is_line_bot_api_enabled']==true ){
     require_once plugin_dir_path( __FILE__ ) . 'line-bot-api.php';
@@ -252,5 +252,5 @@ if ( $options['is_open_ai_api_enabled']==true ){
 if ( $options['is_business_central_api_enabled']==true ){
     require_once plugin_dir_path( __FILE__ ) . 'business-central-api.php';
 }
-
+*/
 ?>
