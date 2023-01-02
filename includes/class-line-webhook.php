@@ -13,7 +13,7 @@ if (!class_exists('line_webhook')) {
         }
 
         public function create_rich_menu( $_content=array() ) {
-            $client = new LINEBotTiny();
+            $client = new line_bot_api();
             $rick_menu_id = $client->createRichMenu([
                 "size" => [
                     "width" => 2500,
@@ -56,7 +56,7 @@ if (!class_exists('line_webhook')) {
         }
 
         public function push_imagemap_messages( $_contents=array() ) {
-            $client = new LINEBotTiny();
+            $client = new line_bot_api();
             $client->pushMessage([
                 'to' => $_contents['line_user_id'],
                 'messages' => [
@@ -109,7 +109,7 @@ if (!class_exists('line_webhook')) {
                 $body_contents[] = $body_content;
             }
 
-            $client = new LINEBotTiny();
+            $client = new line_bot_api();
             $client->pushMessage([
                 'to' => $_contents['line_user_id'],
                 'messages' => [
@@ -142,7 +142,7 @@ if (!class_exists('line_webhook')) {
             $curtain_service = new curtain_service();
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
-            $client = new LINEBotTiny();
+            $client = new line_bot_api();
             $open_ai = new open_ai();
             $business_central = new business_central();
 

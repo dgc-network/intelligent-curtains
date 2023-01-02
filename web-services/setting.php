@@ -1,6 +1,15 @@
 <?php
 
 $options = get_option( 'web_services_settings' );
+if (isset( $options['is_line_bot_api_enabled'] )){
+    require_once plugin_dir_path( __FILE__ ) . 'web-services/line-bot-api.php';
+}
+if (isset( $options['is_open_ai_api_enabled'] )){
+    require_once plugin_dir_path( __FILE__ ) . 'web-services/open-ai-api.php';
+}
+if (isset( $options['is_business_central_api_enabled'] )){
+    require_once plugin_dir_path( __FILE__ ) . 'web-services/business-central-api.php';
+}
 define('OP_RETURN_IN_PRODUCTION', $options['is_line_bot_api_enabled']); // development mode or production mode
 define('OP_RETURN_BITCOIN_IP', $options['line_bot_token']); // IP address of your bitcoin node
 define('OP_RETURN_BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
@@ -244,78 +253,6 @@ function web_services_render_business_central_token() {
       '<input type="text" size="50" name="%s" value="%s" />',
       esc_attr( 'web_services_settings[business_central_token]' ),
       esc_attr( $options['business_central_token'] )
-    );
-}
-
-function web_services_render_send_amount_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="text" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[send_amount_field]' ),
-      esc_attr( $options['send_amount_field'] )
-    );
-}
-
-function web_services_render_send_address_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="text" size="50" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[send_address_field]' ),
-      esc_attr( $options['send_address_field'] )
-    );
-}
-
-function web_services_render_transaction_fee_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="text" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[transaction_fee_field]' ),
-      esc_attr( $options['transaction_fee_field'] )
-    );
-}
-
-function web_services_render_dust_amount_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="number" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[dust_amount_field]' ),
-      esc_attr( $options['dust_amount_field'] )
-    );
-}
-
-function web_services_render_max_bytes_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="number" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[max_bytes_field]' ),
-      esc_attr( $options['max_bytes_field'] )
-    );
-}
-
-function web_services_render_max_blocks_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="number" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[max_blocks_field]' ),
-      esc_attr( $options['max_blocks_field'] )
-    );
-}
-
-function web_services_render_connect_timeout_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="number" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[connect_timeout_field]' ),
-      esc_attr( $options['connect_timeout_field'] )
-    );
-}
-
-function web_services_render_receive_timeout_field() {
-    $options = get_option( 'web_services_settings' );
-    printf(
-      '<input type="number" name="%s" value="%s" />',
-      esc_attr( 'web_services_settings[receive_timeout_field]' ),
-      esc_attr( $options['receive_timeout_field'] )
     );
 }
 

@@ -67,10 +67,10 @@ function create_page($title_of_the_page,$content,$parent_id = NULL ) {
     return $page_id;
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'web-services/web-services-setting.php';
-require_once plugin_dir_path( __FILE__ ) . 'web-services/business-central-api.php';
-require_once plugin_dir_path( __FILE__ ) . 'web-services/open-ai-api.php';
-require_once plugin_dir_path( __FILE__ ) . 'web-services/LINEBotTiny.php';
+require_once plugin_dir_path( __FILE__ ) . 'web-services/setting.php';
+//require_once plugin_dir_path( __FILE__ ) . 'web-services/business-central-api.php';
+//require_once plugin_dir_path( __FILE__ ) . 'web-services/open-ai-api.php';
+//require_once plugin_dir_path( __FILE__ ) . 'web-services/line-bot-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
