@@ -18,68 +18,71 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-class open_ai {
+if (!class_exists('open_ai')) {
+    class open_ai {
 
-    /** @var string */
-    private $channelAccessToken;
-    /** @var string */
-    private $channelSecret;
-
-    /**
-     * @param string $channelAccessToken
-     * @param string $channelSecret
-     */
-/*    
-    public function __construct($channelAccessToken, $channelSecret)
-    {
-        $this->channelAccessToken = $channelAccessToken;
-        $this->channelSecret = $channelSecret;
-    }
-*/
-    public function __construct($channelAccessToken='', $channelSecret='') {
-
-        if ($channelAccessToken==''||$channelSecret=='') {
-            if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
-                $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
-                if ($config['OpenAI']['API_KEY'] == null || $config['OpenAI']['Orgnazation'] == null) {
-                    error_log("config.ini uncompleted!", 0);
-                } else {
-                    $channelAccessToken = $config['OpenAI']['API_KEY'];
-                    $channelSecret = $config['OpenAI']['Orgnazation'];
-                }
-            }    
-        } 
-        $this->channelAccessToken = $channelAccessToken;
-        $this->channelSecret = $channelSecret;
-    }
-
-    /**
-     * @param array<string, mixed> $param
-     * @return void
-     */
-    public function createCompletion($param) {
-
-        $header = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->channelAccessToken,
-        );
-
-        $context = stream_context_create([
-            'http' => [
-                'ignore_errors' => true,
-                'method' => 'POST',
-                'header' => implode("\r\n", $header),
-                'content' => json_encode($param),
-            ],
-        ]);
-
-        $response = file_get_contents('https://api.openai.com/v1/completions', false, $context);
-        if (strpos($http_response_header[0], '200') === false) {
-            error_log('Request failed: ' . $response);
+        /** @var string */
+        private $channelAccessToken;
+        /** @var string */
+        private $channelSecret;
+    
+        /**
+         * @param string $channelAccessToken
+         * @param string $channelSecret
+         */
+    /*    
+        public function __construct($channelAccessToken, $channelSecret)
+        {
+            $this->channelAccessToken = $channelAccessToken;
+            $this->channelSecret = $channelSecret;
         }
-
-        //return $response;
-        $data = json_decode($response, true);
-        return $data['choices'][0];
+    */
+        public function __construct($channelAccessToken='', $channelSecret='') {
+    
+            if ($channelAccessToken==''||$channelSecret=='') {
+                if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
+                    $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
+                    if ($config['OpenAI']['API_KEY'] == null || $config['OpenAI']['Orgnazation'] == null) {
+                        error_log("config.ini uncompleted!", 0);
+                    } else {
+                        $channelAccessToken = $config['OpenAI']['API_KEY'];
+                        $channelSecret = $config['OpenAI']['Orgnazation'];
+                    }
+                }    
+            } 
+            $this->channelAccessToken = $channelAccessToken;
+            $this->channelSecret = $channelSecret;
+        }
+    
+        /**
+         * @param array<string, mixed> $param
+         * @return void
+         */
+        public function createCompletion($param) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channelAccessToken,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'POST',
+                    'header' => implode("\r\n", $header),
+                    'content' => json_encode($param),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.openai.com/v1/completions', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            //return $response;
+            $data = json_decode($response, true);
+            return $data['choices'][0];
+        }
     }
 }
+
