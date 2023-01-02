@@ -155,15 +155,15 @@ function web_services_sanitize_callback( $input ) {
 }
 
 function web_services_section_one_callback() {
-    //echo '<p>This is the first (and only) section in my settings.</p>';
+    echo '<p>Use the Messaging API to build bots that provide personalized experiences for your users on LINE.</p>';
 }
   
 function web_services_section_two_callback() {
-    //echo '<p>This is the first (and only) section in my settings.</p>';
+    echo '<p>The API has been deployed in thousands of applications with tasks ranging from helping people learn new languages to solving complex classification problems.</p>';
 }
   
 function web_services_section_three_callback() {
-    //echo '<p>This is the first (and only) section in my settings.</p>';
+    echo '<p>Connect apps establish a point-to-point connection between Dynamics 365 Business Central and a 3rd party solution or service and is typically created using standard REST API to interchange data.</p>';
 }
   
 function web_services_render_is_line_bot_api_enabled() {
