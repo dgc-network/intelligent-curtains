@@ -239,9 +239,9 @@ if (!class_exists('line_webhook')) {
                                         //$param["stream"]=false;
                                         //$param["logprobs"]=null;
                                         //$param["stop"]="\n";
-                                        //$response = $open_ai->createCompletion($param);
-                                        //$string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
-                                        $response = $business_central->getItems();
+                                        $response = $open_ai->createCompletion($param);
+                                        $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
+                                        //$response = $business_central->getItems();
                                                                 
                                         $client->pushMessage([
                                             'to' => $_contents['line_user_id'],
@@ -249,8 +249,8 @@ if (!class_exists('line_webhook')) {
                                                 [
                                                     'type' => 'text',
                                                     //'text' => $response['text']
-                                                    'text' => $response
-                                                    //'text' => $string
+                                                    //'text' => $response
+                                                    'text' => $string
                                                 ]                                                                    
                                             ]
                                         ]);
