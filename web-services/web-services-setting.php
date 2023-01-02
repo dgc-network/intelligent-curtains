@@ -22,7 +22,7 @@ define('OP_RETURN_NET_TIMEOUT_RECEIVE', $options['receive_timeout_field']); // h
 function web_services_submenu_settings() {
     add_options_page(
         __( 'Web Services Settings', 'textdomain' ),
-        __( 'Web_Services', 'textdomain' ),
+        __( 'Web Services', 'textdomain' ),
       'manage_options',
       'web-services-page',
       'web_services_render_settings_page'
@@ -30,7 +30,8 @@ function web_services_submenu_settings() {
 }
 add_action( 'admin_menu', 'web_services_submenu_settings' );
 
-function web_services_settings_page_callback() {
+//function web_services_settings_page_callback() {
+function web_services_render_settings_page() {
 ?>
     <h2>Web Services Settings</h2>
     <form action="options.php" method="post">
