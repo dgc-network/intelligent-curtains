@@ -1,7 +1,7 @@
 <?php
 
 $options = get_option( 'web_services_settings' );
-define('OP_RETURN_IN_PRODUCTION', $options['in_production_field']); // development mode or production mode
+define('OP_RETURN_IN_PRODUCTION', $options['is_line_bot_api_enabled']); // development mode or production mode
 define('OP_RETURN_BITCOIN_IP', $options['ip_address_field']); // IP address of your bitcoin node
 define('OP_RETURN_BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
 define('OP_RETURN_BITCOIN_PORT', $options['port_number_field']); // leave empty to use default port for mainnet/testnet
@@ -58,15 +58,15 @@ function web_services_register_settings() {
 
     add_settings_section(
         'section_one',
-        '',
+        'Line Bot API',
         'web_services_section_one_callback',
         'web_services_page'
     );
 
     add_settings_field(
-        'in_production_field',
-        'Production Mode:',
-        'web_services_render_in_production_field',
+        'is_line_bot_api_enabled',
+        'Line Bot API:',
+        'web_services_render_is_line_bot_api_enabled',
         'web_services_page',
         'section_one'
     );
@@ -171,7 +171,7 @@ function web_services_register_settings() {
 add_action( 'admin_init', 'web_services_register_settings' );
 
 function web_services_sanitize_callback( $input ) {
-    $output['in_production_field']   = rest_sanitize_boolean( $input['in_production_field'] );
+    $output['is_line_bot_api_enabled']   = rest_sanitize_boolean( $input['is_line_bot_api_enabled'] );
     $output['ip_address_field']      = sanitize_text_field( $input['ip_address_field'] );
     $output['port_number_field']     = sanitize_text_field( $input['port_number_field'] );
     $output['rpc_user_field']        = sanitize_text_field( $input['rpc_user_field'] );
@@ -189,20 +189,20 @@ function web_services_sanitize_callback( $input ) {
 }
 
 function web_services_section_one_callback() {
-    //echo '<p>This is the first (and only) section in my settings.</p>';
+    echo '<p>This is the first (and only) section in my settings.</p>';
 }
   
-function web_services_render_in_production_field() {
+function web_services_render_is_line_bot_api_enabled() {
     $options = get_option( 'web_services_settings' );
-    if (esc_attr( $options['in_production_field'] )){
+    if (esc_attr( $options['is_line_bot_api_enabled'] )){
         printf(
             '<input type="checkbox" name="%s" checked />',
-            esc_attr( 'web_services_settings[in_production_field]' )
+            esc_attr( 'web_services_settings[is_line_bot_api_enabled]' )
         );      
     } else {
         printf(
             '<input type="checkbox" name="%s" />',
-            esc_attr( 'web_services_settings[in_production_field]' )
+            esc_attr( 'web_services_settings[is_line_bot_api_enabled]' )
         );      
     }
 }
