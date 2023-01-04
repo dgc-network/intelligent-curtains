@@ -12,6 +12,7 @@ if ( $options['is_business_central_api_enabled']==1 ){
 }
 */
 $options = get_option( 'web_services_settings' );
+/*
 define('OP_RETURN_IN_PRODUCTION', $options['is_line_bot_api_enabled']); // development mode or production mode
 define('OP_RETURN_BITCOIN_IP', $options['line_bot_token']); // IP address of your bitcoin node
 define('OP_RETURN_BITCOIN_USE_CMD', false); // use command-line instead of JSON-RPC?
@@ -29,7 +30,7 @@ define('OP_RETURN_MAX_BLOCKS', $options['max_blocks_field']); // maximum number 
 
 define('OP_RETURN_NET_TIMEOUT_CONNECT', $options['connect_timeout_field']); // how long to time out when connecting to bitcoin node
 define('OP_RETURN_NET_TIMEOUT_RECEIVE', $options['receive_timeout_field']); // how long to time out retrieving data from bitcoin node
-
+*/
 function web_services_submenu_settings() {
     add_options_page(
         __( 'Web Services Settings', 'textdomain' ),
