@@ -10,9 +10,10 @@ if (!class_exists('order_items')) {
          */
         public function __construct() {
             $this->create_tables();
+            create_page('Orders', '[shopping-item-list]');
         }
 
-        public function list_order_items() {
+        public function list_shopping_items() {
             global $wpdb;
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
@@ -76,15 +77,21 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_checkout_submit']) ) {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
+                $customer_order_number='';
+                $customer_order_amount=0;
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
                 foreach ( $results as $index=>$result ) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
+                        if ($customer_order_number=='') {$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));}
                         $data=array();
+                        $data['customer_order_number']=$customer_order_number;
                         $data['is_checkout']=1;
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
                         $this->update_order_items($data, $where);
+
+                        $customer_order_amount=$customer_order_amount+$result->order_item_amount;
 
                         $x = 0;
                         while ($x < $result->order_item_qty) {
@@ -96,7 +103,34 @@ if (!class_exists('order_items')) {
                             $x = $x + 1;
                         }
                     }
-                }                
+                }
+                // Conver the shopping items to customer orders and purchase order
+                // Customer Order need to display all the item detail, 
+                $data=array();
+                $data['customer_order_number']=$customer_order_number;
+                $data['curtain_agent_id']=$curtain_agent_id;
+                $data['customer_order_amount']=$customer_order_amount;
+                $data['customer_order_status']=1; // 1: completed checkout, did not purchase yet
+                                                  // 2: completed purchase --> did not ship yet
+                                                  // 3: completed shipment --> did not receive the payment
+                                                  // 4: completed the payment
+                $this->insert_customer_order($data);
+
+                // Notice the admin about the order status
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $service_options->get_id('Messages') ), OBJECT );            
+                foreach ( $results as $index=>$result ) {
+                    $hero_messages = array();
+                    $hero_messages[] = 'System Notification';
+                    $body_messages = array();
+                    $body_messages[] = 'Order Number: '.$customer_order_number;
+                    $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                    $_contents = array();
+                    $_contents['line_user_id'] = $result->line_user_id;
+                    $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Orders').'/?_id='.$customer_order_number;
+                    $_contents['hero_messages'] = $hero_messages;
+                    $_contents['body_messages'] = $body_messages;
+                    $this->push_flex_messages( $_contents );
+                }
             }
             
             if( isset($_POST['_create']) ) {
@@ -305,6 +339,28 @@ if (!class_exists('order_items')) {
             return $output;
         }
 
+        public function insert_customer_order($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'customer_order';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
+        }
+
+        public function update_customer_orders($data=[], $where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'customer_orders';
+            $data['update_timestamp'] = time();
+            $wpdb->update($table, $data, $where);
+        }
+
+        public function delete_customer_orders($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'customer_orders';
+            $wpdb->delete($table, $where);
+        }
+
         public function insert_order_item($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
@@ -332,10 +388,22 @@ if (!class_exists('order_items')) {
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
+            $sql = "CREATE TABLE `{$wpdb->prefix}customer_orders` (
+                customer_order_id int NOT NULL AUTO_INCREMENT,
+                customer_order_number varchar(20),
+                curtain_agent_id int(10),
+                customer_order_amount decimal(10,0),
+                customer_order_status tinyint,
+                create_timestamp int(10),
+                update_timestamp int(10),
+                PRIMARY KEY (customer_order_id)
+            ) $charset_collate;";
+            dbDelta($sql);
+        
             $sql = "CREATE TABLE `{$wpdb->prefix}order_items` (
                 curtain_order_id int NOT NULL AUTO_INCREMENT,
-                order_master_id int(10),
-                order_number varchar(50),
+                customer_order_id int(10),
+                customer_order_number varchar(20),
                 curtain_agent_id int(10),
                 curtain_category_id int(10),
                 curtain_model_id int(10),
@@ -344,7 +412,7 @@ if (!class_exists('order_items')) {
                 curtain_width int(10),
                 curtain_height int(10),
                 order_item_qty int(10),
-                order_item_amount decimal(10,2),
+                order_item_amount decimal(10,0),
                 is_checkout tinyint,
                 create_timestamp int(10),
                 update_timestamp int(10),
@@ -383,7 +451,7 @@ if (!class_exists('order_items')) {
         }
     }
     $my_class = new order_items();
-    add_shortcode( 'order-item-list', array( $my_class, 'list_order_items' ) );
+    add_shortcode( 'shopping-item-list', array( $my_class, 'list_shopping_items' ) );
     add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
     add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
 }

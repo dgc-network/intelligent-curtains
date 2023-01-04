@@ -3,84 +3,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('curtain_service')) {
-    class curtain_service {
+if (!class_exists('service_options')) {
+    class service_options {
         /**
          * Class constructor
          */
         public function __construct() {
             $this->create_tables();
-        }
-
-        public function init_curtain_service() {
-            global $wpdb;
-            $serial_number = new serial_number();
-
-            if( isset($_GET['_id']) ) {
-                $_SESSION['line_user_id'] = $_GET['_id'];
-            }
-
-            $output = '<div style="text-align:center;">';
-            if( isset($_GET['serial_no']) ) {
-                $qr_code_serial_no = $_GET['serial_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    /** incorrect QR-code then display the admin link */
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                    $output .= '<div class="wp-block-buttons">';
-                    foreach ( $results as $index=>$result ) {
-                        if ($this->get_category($result->service_option_id)=='admin') {
-                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
-                            $output .= '</div>';    
-                        }
-                    }
-                    $output .= '</div>';                    
-
-                } else {
-                    /** registration for QR-code */
-                    $curtain_user_id=$row->curtain_user_id;
-                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                    if (!(is_null($user) || !empty($wpdb->last_error))) {
-                        $output .= 'Hi, '.$user->display_name.'<br>';
-                        //$_SESSION['line_user_id'] = $user->line_user_id;
-                    }
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if (!(is_null($model) || !empty($wpdb->last_error))) {
-                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                    }
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    //$output .= '使用電腦<i class="fa-solid fa-desktop"></i>上的Line, 在我們的官方帳號聊天室中輸入六位數字密碼,<br>';
-                    $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
-                    $output .= '</span>'.'完成註冊程序<br>';
-
-                    //$output .= '請利用手機按<br>'.'<a href="'.get_option('_line_account').'">';
-                    //$output .= '<img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入好友" height="16px" border="0"></a>';
-                    //$output .= '<br>在我們的Line官方帳號聊天室中輸入六位數字密碼: <span style="font-size:24px;color:blue;">'.$six_digit_random_number.'</span>';
-                    //$output .= ' 完成註冊程序<br>';
-                    $data=array();
-                    $data['one_time_password']=$six_digit_random_number;
-                    $where=array();
-                    $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $result = $serial_number->update_serial_number($data, $where);    
-                }
-    
-            } else {
-
-                $where='"%view%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                $output .= '<div class="wp-block-buttons">';
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                    $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
-                    $output .= '</div>';
-                }
-                $output .= '</div>';
-            }
-            $output .= '</div>';
-            return $output;
+            create_page('Options', '[service-option-list]');
         }
 
         public function list_service_options() {
@@ -278,8 +208,8 @@ if (!class_exists('curtain_service')) {
             dbDelta($sql);            
         }
     }
-    $my_class = new curtain_service();
-    add_shortcode( 'curtain-service', array( $my_class, 'init_curtain_service' ) );
+    $my_class = new service_options();
+    //add_shortcode( 'curtain-service', array( $my_class, 'init_curtain_service' ) );
     add_shortcode( 'service-option-list', array( $my_class, 'list_service_options' ) );
 }
 ?>

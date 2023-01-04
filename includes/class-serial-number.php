@@ -10,11 +10,12 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $this->create_tables();
+            create_page('Serial Number', '[serial-number-list]');
         }
 
         public function list_serial_number() {
             global $wpdb;
-            $curtain_service = new curtain_service();
+            $service_options = new service_options();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
             $curtain_users = new curtain_users();
@@ -22,7 +23,7 @@ if (!class_exists('serial_number')) {
             if( isset($_SESSION['line_user_id']) ) {
 
                 $_option_page = 'Serial Number';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $service_options->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
@@ -122,7 +123,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$service_options->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<div style="display: flex;">';
@@ -139,14 +140,14 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$service_options->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$curtain_service->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_site_url().'/'.$service_options->get_link('Service').'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';

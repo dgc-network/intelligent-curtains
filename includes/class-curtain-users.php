@@ -10,16 +10,17 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             $this->create_tables();
+            create_page('Users', '[curtain-user-list]');
         }
 
         public function list_curtain_users() {            
             global $wpdb;
-            $curtain_service = new curtain_service();
+            $service_options = new service_options();
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Users';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $curtain_service->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $service_options->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -257,7 +258,7 @@ if (!class_exists('curtain_users')) {
 
         function send_chat() {
             $line_webhook = new line_webhook();
-            $curtain_service = new curtain_service();
+            $service_options = new service_options();
             //$curtain_users = new curtain_users();
 
             $data=array();
@@ -272,8 +273,8 @@ if (!class_exists('curtain_users')) {
             $body_messages[] = $_POST['message'];
             $_contents = array();
             $_contents['line_user_id'] = $_POST['to'];
-            //$_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('_chat_form').'/?_id='.$_POST['to'];
-            $_contents['link_uri'] = get_site_url().'/'.$curtain_service->get_link('Users').'/?_id='.$_POST['to'];
+            //$_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('_chat_form').'/?_id='.$_POST['to'];
+            $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Users').'/?_id='.$_POST['to'];
             $_contents['hero_messages'] = $hero_messages;
             $_contents['body_messages'] = $body_messages;
             $line_webhook->push_flex_messages( $_contents );
