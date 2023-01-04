@@ -10,7 +10,8 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Agents', '[curtain-agent-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Agents', '[curtain-agent-list]');
         }
 
         public function list_curtain_agents() {

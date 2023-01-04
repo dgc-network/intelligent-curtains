@@ -10,7 +10,8 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Users', '[curtain-user-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Users', '[curtain-user-list]');            
         }
 
         public function list_curtain_users() {            

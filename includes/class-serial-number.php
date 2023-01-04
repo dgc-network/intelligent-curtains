@@ -10,7 +10,8 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Serial Number', '[serial-number-list]');
+            $service_options = new service_options();
+            $service_options->create_page('serial-number', '[serial-number-list]');            
         }
 
         public function list_serial_number() {

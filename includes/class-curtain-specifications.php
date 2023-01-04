@@ -10,7 +10,8 @@ if (!class_exists('curtain_specifications')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Specifications', '[curtain-specification-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Specifications', '[curtain-specification-list]');            
         }
 
         public function list_curtain_specifications() {

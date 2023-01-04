@@ -10,11 +10,13 @@ if (!class_exists('line_webhook')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Service', '[init-line-service]');
+            $service_options = new service_options();
+            $service_options->create_page('Service', '[init-line-service]');            
         }
 
-        public function init_line_service() {
+        public function curtain_service() {
             global $wpdb;
+            $service_options = new service_options();
             $serial_number = new serial_number();
 
             if( isset($_GET['_id']) ) {
@@ -30,9 +32,9 @@ if (!class_exists('line_webhook')) {
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        if ($this->get_category($result->service_option_id)=='admin') {
+                        if ($service_options->get_category($result->service_option_id)=='admin') {
                             $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.$this->get_link($result->service_option_id).'">'.$this->get_name($result->service_option_id).'</a>';
+                            $output .= '<a class="wp-block-button__link" href="'.$service_options->get_link($result->service_option_id).'">'.$service_options->get_name($result->service_option_id).'</a>';
                             $output .= '</div>';    
                         }
                     }
@@ -208,7 +210,7 @@ if (!class_exists('line_webhook')) {
             ]);
         }
 
-        public function init() {
+        public function init_webhook() {
             global $wpdb;
             $serial_number = new serial_number();
             $service_options = new service_options();
@@ -403,6 +405,6 @@ if (!class_exists('line_webhook')) {
         }        
     }
     $my_class = new line_webhook();
-    add_shortcode( 'init-line-service', array( $my_class, 'init_line_service' ) );
+    add_shortcode( 'curtain-service', array( $my_class, 'curtain_service' ) );
 }
 ?>

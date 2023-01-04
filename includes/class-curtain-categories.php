@@ -10,7 +10,8 @@ if (!class_exists('curtain_categories')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Categories', '[curtain-category-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Categories', '[curtain-category-list]');            
         }
 
         public function list_curtain_categories() {

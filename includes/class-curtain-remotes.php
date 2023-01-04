@@ -10,7 +10,8 @@ if (!class_exists('curtain_remotes')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Remotes', '[curtain-remote-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Remotes', '[curtain-remote-list]');            
         }
 
         public function list_curtain_remotes() {

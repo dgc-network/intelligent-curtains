@@ -10,7 +10,8 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Models', '[curtain-model-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Models', '[curtain-model-list]');            
         }
 
         public function list_curtain_models() {

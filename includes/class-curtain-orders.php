@@ -10,7 +10,8 @@ if (!class_exists('order_items')) {
          */
         public function __construct() {
             $this->create_tables();
-            create_page('Orders', '[shopping-item-list]');
+            $service_options = new service_options();
+            $service_options->create_page('Orders', '[shopping-item-list]');            
         }
 
         public function list_shopping_items() {
