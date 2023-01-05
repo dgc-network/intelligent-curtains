@@ -27,6 +27,7 @@ if (!class_exists('order_items')) {
             $curtain_remotes = new curtain_remotes();
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
+            $line_webhook = new line_webhook();
 
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
@@ -129,7 +130,7 @@ if (!class_exists('order_items')) {
                                                     // 4: completed the payment        
                     )
                 );
-/*
+
                 // Notice the admin about the order status
                 //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Notification') ), OBJECT );            
                 $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Notification' ), OBJECT );
@@ -139,7 +140,7 @@ if (!class_exists('order_items')) {
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
                     $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                    $this->push_flex_messages(
+                    $line_webhook->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
                             'link_uri' => get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number,
@@ -148,7 +149,7 @@ if (!class_exists('order_items')) {
                         )
                     );
                 }
-*/
+
             }
             
             if( isset($_POST['_create']) ) {
