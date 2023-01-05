@@ -240,7 +240,7 @@ if (!class_exists('option_pages')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}option_pages` (
                 service_option_id int NOT NULL AUTO_INCREMENT,
-                service_option_title varchar(20) UNIQUE,
+                service_option_title varchar(50) UNIQUE,
                 service_option_link varchar(255),
                 service_option_category varchar(10),
                 create_timestamp int(10),

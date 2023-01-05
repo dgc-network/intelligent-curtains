@@ -141,7 +141,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
                 foreach ($results as $index => $result) {
                     $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
-                    $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $row->line_user_id, $result->service_option_id ), OBJECT );            
+                    $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $row->line_user_id, $result->service_option_title ), OBJECT );            
                     if (is_null($permission) || !empty($wpdb->last_error)) {
                         $output .= '>';
                     } else {
@@ -268,13 +268,7 @@ if (!class_exists('curtain_users')) {
         function send_chat() {
             $line_webhook = new line_webhook();
             $option_pages = new option_pages();
-/*
-            $data=array();
-            $data['chat_from']= $_SESSION['line_user_id'];
-            $data['chat_to']= $_POST['to'];
-            $data['chat_message']= $_POST['message'];
-            $line_webhook->insert_chat_message($data);
-            */
+
             $line_webhook->insert_chat_message(
                 array(
                     'chat_from' => $_SESSION['line_user_id'],
@@ -287,15 +281,6 @@ if (!class_exists('curtain_users')) {
             $hero_messages[] = $this->get_name($_POST['to']);
             $body_messages = array();
             $body_messages[] = $_POST['message'];
-            /*
-            $_contents = array();
-            $_contents['line_user_id'] = $_POST['to'];
-            //$_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('_chat_form').'/?_id='.$_POST['to'];
-            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$_POST['to'];
-            $_contents['hero_messages'] = $hero_messages;
-            $_contents['body_messages'] = $body_messages;
-            $line_webhook->push_flex_messages( $_contents );
-            */
             $line_webhook->push_flex_messages(
                 array(
                     'line_user_id' => $_POST['to'],
