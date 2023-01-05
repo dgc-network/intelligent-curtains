@@ -130,8 +130,8 @@ if (!class_exists('order_items')) {
                 );
 
                 // Notice the admin about the order status
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
-                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Messages' ), OBJECT );
+                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Notification') ), OBJECT );            
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Notification' ), OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
                     $hero_messages[] = 'System Notification';
