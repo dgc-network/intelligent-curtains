@@ -74,7 +74,7 @@ if (!class_exists('line_webhook')) {
 
                 //$where='"%view%"';
                 //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE {$where}", OBJECT );
-                $output .= '<div style="font-weight:700;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
+                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
                 $output .= '<div class="wp-block-buttons">';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
                 foreach ( $results as $index=>$result ) {

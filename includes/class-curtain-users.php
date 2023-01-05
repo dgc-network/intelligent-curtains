@@ -21,7 +21,8 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Users';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -46,16 +47,24 @@ if (!class_exists('curtain_users')) {
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
-                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
                         if (is_null($permission) || !empty($wpdb->last_error)) {
+                            /*
                             $data=array();
                             $data['line_user_id']=$_POST['_line_user_id'];
+                            $data['option_page']=$result->service_option_title;
                             $data['service_option_id']=$result->service_option_id;
                             $this->insert_user_permission($data);
+                            */
+                            insert_user_permission(
+                                array(
+                                    'line_user_id'  => $_POST['_line_user_id'],
+                                    'option_page'   => $result->service_option_title,
+                                    'service_option_id'=> $result->service_option_id,
+                                )
+                            );
                         }    
                     } else {
-                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE curtain_user_id = %d AND service_option_id= %d", $_POST['_curtain_user_id'], $result->service_option_id ), OBJECT );            
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
                             $where=array();
@@ -240,7 +249,6 @@ if (!class_exists('curtain_users')) {
                 display_name varchar(50),
                 mobile_phone varchar(20),
                 curtain_agent_id int(10),
-                user_role varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)
@@ -250,6 +258,7 @@ if (!class_exists('curtain_users')) {
             $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
                 user_permission_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50) NOT NULL,
+                option_page varchar(50) NOT NULL,
                 service_option_id int NOT NULL,
                 create_timestamp int(10),
                 PRIMARY KEY (user_permission_id)
