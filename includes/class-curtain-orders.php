@@ -28,6 +28,7 @@ if (!class_exists('order_items')) {
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
             $line_webhook = new line_webhook();
+            $option_pages = new option_pages();
 
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
