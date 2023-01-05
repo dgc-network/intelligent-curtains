@@ -23,8 +23,6 @@ if (!class_exists('curtain_remotes')) {
             $option_pages = new option_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$_option_page = 'Remotes';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -38,26 +36,52 @@ if (!class_exists('curtain_remotes')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['curtain_remote_name']=$_POST['_curtain_remote_name'];
                 $data['curtain_remote_price']=$_POST['_curtain_remote_price'];
                 $curtain_remotes->insert_curtain_remote($data);
+                */
+                $curtain_remotes->insert_curtain_remote(
+                    array(
+                        'curtain_remote_name'=>$_POST['_curtain_remote_name'],
+                        'curtain_remote_price'=>$_POST['_curtain_remote_price']
+                    )
+                );
             }
             
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['curtain_remote_name']=$_POST['_curtain_remote_name'];
                 $data['curtain_remote_price']=$_POST['_curtain_remote_price'];
                 $where=array();
                 $where['curtain_remote_id']=$_POST['_curtain_remote_id'];
                 $curtain_remotes->update_curtain_remotes($data, $where);
+                */
+                $curtain_remotes->update_curtain_remotes(
+                    array(
+                        'curtain_remote_name'=>$_POST['_curtain_remote_name'],
+                        'curtain_remote_price'=>$_POST['_curtain_remote_price']
+                    ),
+                    array(
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['curtain_remote_id']=$_GET['_delete'];
                 $curtain_remotes->delete_curtain_remotes($where);
+                */
+                $curtain_remotes->delete_curtain_remotes(
+                    array(
+                        'curtain_remote_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             if( isset($_POST['_where']) ) {

@@ -88,37 +88,60 @@ if (!class_exists('order_items')) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
                         if ($customer_order_number=='') {$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));}
+                        /*
                         $data=array();
                         $data['customer_order_number']=$customer_order_number;
                         $data['is_checkout']=1;
                         $where=array();
                         $where['curtain_order_id']=$result->curtain_order_id;
                         $this->update_order_items($data, $where);
+                        */
+                        $this->update_order_items(
+                            array(
+                                'customer_order_number'=>$customer_order_number,
+                                'is_checkout'=>1
+                            ),
+                            array(
+                                'curtain_order_id'=>$result->curtain_order_id
+                            )
+                        );
 
                         $customer_order_amount=$customer_order_amount+$result->order_item_amount;
 
                         $x = 0;
                         while ($x < $result->order_item_qty) {
+                            /*
                             $data=array();
                             $data['curtain_model_id']=$result->curtain_model_id;
                             $data['specification']=$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width;
                             $data['curtain_agent_id']=$result->curtain_agent_id;
                             $serial_number->insert_serial_number($data, $x);
+                            */
+                            $serial_number->insert_serial_number(
+                                array(
+                                    'curtain_model_id'=>$result->curtain_model_id,
+                                    'specification'=>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
+                                    'curtain_agent_id'=>$result->curtain_agent_id
+                                ),
+                                $x
+                            );
                             $x = $x + 1;
                         }
                     }
                 }
                 // Conver the shopping items to customer orders and purchase order
                 // Customer Order need to display all the item detail, 
-                $data=array();
-                $data['customer_order_number']=$customer_order_number;
-                $data['curtain_agent_id']=$curtain_agent_id;
-                $data['customer_order_amount']=$customer_order_amount;
-                $data['customer_order_status']=1; // 1: completed checkout, did not purchase yet
-                                                  // 2: completed purchase --> did not ship yet
-                                                  // 3: completed shipment --> did not receive the payment
-                                                  // 4: completed the payment
-                $this->insert_customer_order($data);
+                $this->insert_customer_order(
+                    array(
+                        'customer_order_number'=>$customer_order_number,
+                        'curtain_agent_id'=>$curtain_agent_id,
+                        'customer_order_amount'=>$customer_order_amount,
+                        'customer_order_status'=>1  // 1: completed checkout, did not purchase yet
+                                                    // 2: completed purchase --> did not ship yet
+                                                    // 3: completed shipment --> did not receive the payment
+                                                    // 4: completed the payment        
+                    )
+                );
 
                 // Notice the admin about the order status
                 $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
@@ -128,12 +151,22 @@ if (!class_exists('order_items')) {
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
                     $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                    /*
                     $_contents = array();
                     $_contents['line_user_id'] = $result->line_user_id;
                     $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number;
                     $_contents['hero_messages'] = $hero_messages;
                     $_contents['body_messages'] = $body_messages;
                     $this->push_flex_messages( $_contents );
+                    */
+                    $this->push_flex_messages(
+                        array(
+                            'line_user_id' => $result->line_user_id,
+                            'link_uri' => get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number,
+                            'hero_messages' => $hero_messages,
+                            'body_messages' => $body_messages
+                        )
+                    );
                 }
             }
             
@@ -158,7 +191,7 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-
+/*
                 $data=array();
                 $data['curtain_agent_id']=$curtain_agent_id;
                 $data['curtain_category_id']=$_POST['_curtain_category_id'];
@@ -171,6 +204,21 @@ if (!class_exists('order_items')) {
                 $data['order_item_amount']=$amount;
                 $data['is_checkout']=0;
                 $this->insert_order_item($data);
+                */
+                $this->insert_order_item(
+                    array(
+                        'curtain_agent_id'=>$curtain_agent_id,
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_amount'=>$amount,
+                        'is_checkout'=>0
+                    )
+                );
             }
 
             if( isset($_POST['_update']) ) {
@@ -194,7 +242,7 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-
+/*
                 $data=array();
                 $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
@@ -207,13 +255,36 @@ if (!class_exists('order_items')) {
                 $where=array();
                 $where['curtain_order_id']=$_POST['_curtain_order_id'];
                 $this->update_order_items($data, $where);
+                */
+                $this->update_order_items(
+                    array(
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_amount'=>$amount,
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_curtain_order_id'],
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['curtain_order_id']=$_GET['_delete'];
                 $this->delete_order_items($where);
+                */
+                $this->delete_order_items(
+                    array(
+                        'curtain_order_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             /* Cart */

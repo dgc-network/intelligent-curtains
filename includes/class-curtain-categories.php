@@ -22,8 +22,6 @@ if (!class_exists('curtain_categories')) {
             $option_pages = new option_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$_option_page = 'Categories';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -37,24 +35,48 @@ if (!class_exists('curtain_categories')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['curtain_category_name']=$_POST['_curtain_category_name'];
                 $this->insert_curtain_category($data);
+                */
+                $this->insert_curtain_category(
+                    array(
+                        'curtain_category_name'=>$_POST['_curtain_category_name']
+                    )
+                );
             }
             
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['curtain_category_name']=$_POST['_curtain_category_name'];
                 $where=array();
                 $where['curtain_category_id']=$_POST['_curtain_category_id'];
                 $this->update_curtain_categories($data, $where);
+                */
+                $this->update_curtain_categories(
+                    array(
+                        'curtain_category_name'=>$_POST['_curtain_category_name']
+                    ),
+                    array(
+                        'curtain_category_id'=>$_POST['_curtain_category_id']
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['curtain_category_id']=$_GET['_delete'];
                 $this->delete_curtain_categories($where);
+                */
+                $this->delete_curtain_categories(
+                    array(
+                        'curtain_category_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             global $wpdb;

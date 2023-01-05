@@ -66,14 +66,24 @@ if (!class_exists('option_pages')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
                 $this->insert_option_page($data);
+                */
+                $this->insert_option_page(
+                    array(
+                        'service_option_title'=>$_POST['_service_option_title'],
+                        'service_option_link'=>$_POST['_service_option_link'],
+                        'service_option_category'=>$_POST['_service_option_category']
+                    )
+                );
             }
         
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
@@ -81,14 +91,36 @@ if (!class_exists('option_pages')) {
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $this->update_option_pages($data, $where);
+                */
+                $this->update_option_pages(
+                    array(
+                        'service_option_title'=>$_POST['_service_option_title'],
+                        'service_option_link'=>$_POST['_service_option_link'],
+                        'service_option_category'=>$_POST['_service_option_category']
+                    ),
+                    array(
+                        'service_option_id'=>$_POST['_service_option_id'],
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['service_option_id']=$_GET['_delete'];
                 $this->delete_option_pages($where);
-                $curtain_users->delete_user_permissions($where);
+                */
+                $this->delete_option_pages(
+                    array(
+                        'service_option_id'=>$_GET['_delete']
+                    )
+                );
+                $curtain_users->delete_user_permissions(
+                    array(
+                        'option_page'=>$this->get_name($_GET['_delete'])
+                    )
+                );
             }
 
             if( isset($_POST['_where']) ) {

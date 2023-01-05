@@ -22,8 +22,6 @@ if (!class_exists('service_links')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$_option_page = 'Links';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -37,14 +35,24 @@ if (!class_exists('service_links')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
                 $this->insert_service_link($data);
+                */
+                $this->insert_service_link(
+                    array(
+                        'service_option_title'=>$_POST['_service_option_title'],
+                        'service_option_link'=>$_POST['_service_option_link'],
+                        'service_option_category'=>$_POST['_service_option_category']
+                    )
+                );
             }
         
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
@@ -52,13 +60,31 @@ if (!class_exists('service_links')) {
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
                 $this->update_service_links($data, $where);
+                */
+                $this->update_service_links(
+                    array(
+                        'service_option_title'=>$_POST['_service_option_title'],
+                        'service_option_link'=>$_POST['_service_option_link'],
+                        'service_option_category'=>$_POST['_service_option_category']
+                    ),
+                    array(
+                        'service_option_id'=>$_POST['_service_option_id'],
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['service_option_id']=$_GET['_delete'];
                 $this->delete_service_links($where);
+                */
+                $this->delete_service_links(
+                    array(
+                        'service_option_id'=>$_GET['_delete']
+                    )
+                );
                 //$curtain_users->delete_user_permissions($where);
             }
 

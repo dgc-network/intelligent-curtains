@@ -23,8 +23,6 @@ if (!class_exists('curtain_specifications')) {
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$_option_page = 'Specifications';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -38,6 +36,7 @@ if (!class_exists('curtain_specifications')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['curtain_specification_name']=$_POST['_curtain_specification_name'];
                 $data['specification_description']=$_POST['_specification_description'];
@@ -46,9 +45,21 @@ if (!class_exists('curtain_specifications')) {
                 $data['curtain_category_id']=$_POST['_curtain_category_id'];
                 $data['length_only']=$_POST['_length_only'];
                 $this->insert_curtain_specification($data);
+                */
+                $this->insert_curtain_specification(
+                    array(
+                        'curtain_specification_name'=>$_POST['_curtain_specification_name'],
+                        'specification_description'=>$_POST['_specification_description'],
+                        'specification_price'=>$_POST['_specification_price'],
+                        'specification_unit'=>$_POST['_specification_unit'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'length_only'=>$_POST['_length_only']
+                    )
+                );
             }
             
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['curtain_specification_name']=$_POST['_curtain_specification_name'];
                 $data['specification_description']=$_POST['_specification_description'];
@@ -59,13 +70,34 @@ if (!class_exists('curtain_specifications')) {
                 $where=array();
                 $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
                 $this->update_curtain_specifications($data, $where);
+                */
+                $this->update_curtain_specifications(
+                    array(
+                        'curtain_specification_name'=>$_POST['_curtain_specification_name'],
+                        'specification_description'=>$_POST['_specification_description'],
+                        'specification_price'=>$_POST['_specification_price'],
+                        'specification_unit'=>$_POST['_specification_unit'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'length_only'=>$_POST['_length_only']
+                    ),
+                    array(
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['curtain_specification_id']=$_GET['_delete'];
                 $this->delete_curtain_specifications($where);
+                */
+                $this->delete_curtain_specifications(
+                    array(
+                        'curtain_specification_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             if( isset($_POST['_where']) ) {

@@ -22,8 +22,6 @@ if (!class_exists('curtain_agents')) {
             $option_pages = new option_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Agents';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -37,6 +35,7 @@ if (!class_exists('curtain_agents')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -46,9 +45,22 @@ if (!class_exists('curtain_agents')) {
                 $data['contact2']=$_POST['_contact2'];
                 $data['phone2']=$_POST['_phone2'];
                 $this->insert_curtain_agent($data);
+                */
+                $this->insert_curtain_agent(
+                    array(
+                        'agent_number'=>$_POST['_agent_number'],
+                        'agent_name'=>$_POST['_agent_name'],
+                        'agent_address'=>$_POST['_agent_address'],
+                        'contact1'=>$_POST['_contact1'],
+                        'phone1'=>$_POST['_phone1'],
+                        'contact2'=>$_POST['_contact2'],
+                        'phone2'=>$_POST['_phone2']
+                    )
+                );
             }
         
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['agent_number']=$_POST['_agent_number'];
                 $data['agent_name']=$_POST['_agent_name'];
@@ -60,13 +72,35 @@ if (!class_exists('curtain_agents')) {
                 $where=array();
                 $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $this->update_curtain_agents($data, $where);
+                */
+                $this->update_curtain_agents(
+                    array(
+                        'agent_number'=>$_POST['_agent_number'],
+                        'agent_name'=>$_POST['_agent_name'],
+                        'agent_address'=>$_POST['_agent_address'],
+                        'contact1'=>$_POST['_contact1'],
+                        'phone1'=>$_POST['_phone1'],
+                        'contact2'=>$_POST['_contact2'],
+                        'phone2'=>$_POST['_phone2']
+                    ),
+                    array(
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id']
+                    )
+                );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['curtain_agent_id']=$_GET['_delete'];
                 $this->delete_curtain_agents($where);
+                */
+                $this->delete_curtain_agents(
+                    array(
+                        'curtain_agent_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             if( isset($_POST['_where']) ) {

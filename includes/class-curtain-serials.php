@@ -25,9 +25,6 @@ if (!class_exists('serial_number')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-
-                //$_option_page = 'Serial Number';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -41,17 +38,33 @@ if (!class_exists('serial_number')) {
             }
 
             if( isset($_POST['_create']) ) {
+                /*
                 $data=array();
                 $data['curtain_model_id']=$_POST['_curtain_model_id'];
                 $data['specification']=$_POST['_specification'];
                 $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
                 $this->insert_serial_number($data);
+                */
+                $this->insert_serial_number(
+                    array(
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'specification'=>$_POST['_specification'],
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id']
+                    )
+                );
             }
 
             if( isset($_GET['_delete']) ) {
+                /*
                 $where=array();
                 $where['serial_number_id']=$_GET['_delete'];
                 $this->delete_serial_number($where);
+                */
+                $this->delete_serial_number(
+                    array(
+                        'serial_number_id'=>$_GET['_delete']
+                    )
+                );
             }
 
             if( isset($_POST['_where']) ) {
