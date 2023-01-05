@@ -115,7 +115,7 @@ if (!class_exists('order_items')) {
                         }
                     }
                 }
-/*
+
                 // Conver the shopping items to customer orders and purchase order
                 // Customer Order need to display all the item detail, 
                 $this->insert_customer_order(
@@ -148,7 +148,7 @@ if (!class_exists('order_items')) {
                         )
                     );
                 }
-*/
+
             }
             
             if( isset($_POST['_create']) ) {
