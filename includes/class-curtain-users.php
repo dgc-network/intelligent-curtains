@@ -13,9 +13,7 @@ if (!class_exists('curtain_users')) {
             $this->_option_page = 'Users';
             $this->create_tables();
             add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
-            add_shortcode( 'curtain-chat-form', array( $this, 'curtain_chat_form' ) );
             $option_pages = new option_pages();
-            //$option_pages->create_page('Users', '[curtain-user-list]');
             $option_pages->create_page($this->_option_page, '[curtain-user-list]');
         }
 

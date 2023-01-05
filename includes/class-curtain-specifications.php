@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_specifications')) {
     class curtain_specifications {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Specifications';
             $this->create_tables();
+            add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Specifications', '[curtain-specification-list]');            
+            $option_pages->create_page($this->_option_page, '[curtain-specification-list]');            
         }
 
         public function list_curtain_specifications() {
@@ -20,8 +23,9 @@ if (!class_exists('curtain_specifications')) {
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Specifications';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                //$_option_page = 'Specifications';
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -254,5 +258,5 @@ if (!class_exists('curtain_specifications')) {
         }
     }
     $my_class = new curtain_specifications();
-    add_shortcode( 'curtain-specification-list', array( $my_class, 'list_curtain_specifications' ) );
+    //add_shortcode( 'curtain-specification-list', array( $my_class, 'list_curtain_specifications' ) );
 }

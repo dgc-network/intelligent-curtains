@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('line_webhook')) {
     class line_webhook {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Service';
             $this->create_tables();
+            add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Service', '[curtain-service]');            
+            $option_pages->create_page($this->_option_page, '[curtain-service]', 'system');
         }
 
         public function curtain_service() {
@@ -74,6 +77,7 @@ if (!class_exists('line_webhook')) {
 
                 //$where='"%view%"';
                 //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE {$where}", OBJECT );
+                $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務/使用說明</div>';
                 $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
                 $output .= '<div class="wp-block-buttons">';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
@@ -407,6 +411,6 @@ if (!class_exists('line_webhook')) {
         }        
     }
     $my_class = new line_webhook();
-    add_shortcode( 'curtain-service', array( $my_class, 'curtain_service' ) );
+    //add_shortcode( 'curtain-service', array( $my_class, 'curtain_service' ) );
 }
 ?>

@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_agents')) {
     class curtain_agents {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Agents';
             $this->create_tables();
+            add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Agents', '[curtain-agent-list]');
+            $option_pages->create_page($this->_option_page, '[curtain-agent-list]');
         }
 
         public function list_curtain_agents() {
@@ -20,7 +23,8 @@ if (!class_exists('curtain_agents')) {
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Agents';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -230,6 +234,6 @@ if (!class_exists('curtain_agents')) {
         }
     }
     $my_class = new curtain_agents();
-    add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
+    //add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
     //add_shortcode( 'agent-registration', array( $my_class, 'agent_registration' ) );
 }

@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('service_links')) {
     class service_links {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Links';
             $this->create_tables();
+            add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Links', '[service-link-list]');
+            $option_pages->create_page($this->_option_page, '[service-link-list]');
         }
 
         public function list_service_links() {
@@ -19,8 +22,9 @@ if (!class_exists('service_links')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Links';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
+                //$_option_page = 'Links';
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
@@ -210,6 +214,6 @@ if (!class_exists('service_links')) {
         }
     }
     $my_class = new service_links();
-    add_shortcode( 'service-link-list', array( $my_class, 'list_service_links' ) );
+    //add_shortcode( 'service-link-list', array( $my_class, 'list_service_links' ) );
 }
 ?>

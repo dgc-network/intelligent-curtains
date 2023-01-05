@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('order_items')) {
     class order_items {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Orders';
             $this->create_tables();
+            add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Orders', '[shopping-item-list]');            
+            $option_pages->create_page($this->_option_page, '[shopping-item-list]', 'system');
         }
 
         public function list_shopping_items() {
@@ -452,7 +455,7 @@ if (!class_exists('order_items')) {
         }
     }
     $my_class = new order_items();
-    add_shortcode( 'shopping-item-list', array( $my_class, 'list_shopping_items' ) );
+    //add_shortcode( 'shopping-item-list', array( $my_class, 'list_shopping_items' ) );
     add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
     add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
 }

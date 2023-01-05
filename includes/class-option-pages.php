@@ -12,12 +12,11 @@ if (!class_exists('option_pages')) {
         public function __construct() {
             $this->_option_page = 'Pages';
             $this->create_tables();
-            //$this->create_page('Options', '[option-page-list]');
             add_shortcode( 'option-page-list', array( $this, 'list_option_pages' ) );
             $this->create_page($this->_option_page, '[option-page-list]');
         }
 
-        public function create_page($title_of_the_page,$content,$parent_id = NULL ) {
+        public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {
             $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
             if( ! empty( $objPage ) ) {
                 //echo "Page already exists:" . $title_of_the_page . "<br/>";
@@ -42,7 +41,7 @@ if (!class_exists('option_pages')) {
                 array(
                     'service_option_title' => $title_of_the_page,
                     'service_option_link' => get_page_link($title_of_the_page),
-                    'service_option_category' => 'admin',
+                    'service_option_category' => $category,
                 )
             );
             //echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
@@ -54,8 +53,6 @@ if (!class_exists('option_pages')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Options';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {

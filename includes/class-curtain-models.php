@@ -5,13 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_models')) {
     class curtain_models {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Models';
             $this->create_tables();
+            add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Models', '[curtain-model-list]');            
+            $option_pages->create_page($this->_option_page, '[curtain-model-list]');            
         }
 
         public function list_curtain_models() {
@@ -20,8 +23,9 @@ if (!class_exists('curtain_models')) {
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Models';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                //$_option_page = 'Models';
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -229,5 +233,5 @@ if (!class_exists('curtain_models')) {
         }
     }
     $my_class = new curtain_models();
-    add_shortcode( 'curtain-model-list', array( $my_class, 'list_curtain_models' ) );
+    //add_shortcode( 'curtain-model-list', array( $my_class, 'list_curtain_models' ) );
 }
