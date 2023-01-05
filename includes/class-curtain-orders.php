@@ -82,14 +82,13 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_checkout_submit']) ) {
-                $customer_order_number='';
+                $customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
                 $customer_order_amount=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
                 foreach ( $results as $index=>$result ) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
-                        if ($customer_order_number=='') {$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));}
-                        $this->update_order_items(
+                        $this->update_shopping_items(
                             array(
                                 'customer_order_number'=>$customer_order_number,
                                 'is_checkout'=>1
@@ -115,6 +114,7 @@ if (!class_exists('order_items')) {
                         }
                     }
                 }
+/*
                 // Conver the shopping items to customer orders and purchase order
                 // Customer Order need to display all the item detail, 
                 $this->insert_customer_order(
@@ -147,6 +147,7 @@ if (!class_exists('order_items')) {
                         )
                     );
                 }
+*/
             }
             
             if( isset($_POST['_create']) ) {
@@ -159,8 +160,8 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_curtain_height'])) {
                     $height = $_POST['_curtain_height'];
                 }
-                if (is_numeric($_POST['_order_item_qty'])) {
-                    $qty = $_POST['_order_item_qty'];
+                if (is_numeric($_POST['_shopping_item_qty'])) {
+                    $qty = $_POST['_shopping_item_qty'];
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
@@ -170,7 +171,7 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-                $this->insert_order_item(
+                $this->insert_shopping_item(
                     array(
                         'curtain_agent_id'=>$curtain_agent_id,
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
@@ -179,7 +180,7 @@ if (!class_exists('order_items')) {
                         'curtain_specification_id'=>$_POST['_curtain_specification_id'],
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
-                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_qty'=>$_POST['_shopping_item_qty'],
                         'order_item_amount'=>$amount,
                         'is_checkout'=>0
                     )
@@ -196,8 +197,8 @@ if (!class_exists('order_items')) {
                 if (is_numeric($_POST['_curtain_height'])) {
                     $height = $_POST['_curtain_height'];
                 }
-                if (is_numeric($_POST['_order_item_qty'])) {
-                    $qty = $_POST['_order_item_qty'];
+                if (is_numeric($_POST['_shopping_item_qty'])) {
+                    $qty = $_POST['_shopping_item_qty'];
                 }
                 $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
                 $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
@@ -207,7 +208,7 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-                $this->update_order_items(
+                $this->update_shopping_items(
                     array(
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
@@ -215,7 +216,7 @@ if (!class_exists('order_items')) {
                         'curtain_specification_id'=>$_POST['_curtain_specification_id'],
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
-                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_qty'=>$_POST['_shopping_item_qty'],
                         'order_item_amount'=>$amount,
                     ),
                     array(
@@ -226,7 +227,7 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                $this->delete_order_items(
+                $this->delete_shopping_items(
                     array(
                         'curtain_order_id'=>$_GET['_delete']
                     )
@@ -323,7 +324,7 @@ if (!class_exists('order_items')) {
                 $output .= '<span>Height</span>';
                 $output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
-                $output .= '<input type="text" name="_order_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_shopping_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
                 $output .= '</form>';
@@ -351,7 +352,7 @@ if (!class_exists('order_items')) {
                 $output .= '<span>Height</span>';
                 $output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
-                $output .= '<input type="text" name="_order_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -382,7 +383,7 @@ if (!class_exists('order_items')) {
             $wpdb->delete($table, $where);
         }
 
-        public function insert_order_item($data=[]) {
+        public function insert_shopping_item($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['create_timestamp'] = time();
@@ -391,14 +392,14 @@ if (!class_exists('order_items')) {
             return $wpdb->insert_id;
         }
 
-        public function update_order_items($data=[], $where=[]) {
+        public function update_shopping_items($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
-        public function delete_order_items($where=[]) {
+        public function delete_shopping_items($where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $wpdb->delete($table, $where);
