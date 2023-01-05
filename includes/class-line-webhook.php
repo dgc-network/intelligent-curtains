@@ -10,13 +10,13 @@ if (!class_exists('line_webhook')) {
          */
         public function __construct() {
             $this->create_tables();
-            $service_options = new service_options();
-            $service_options->create_page('Service', '[curtain-service]');            
+            $option_pages = new option_pages();
+            $option_pages->create_page('Service', '[curtain-service]');            
         }
 
         public function curtain_service() {
             global $wpdb;
-            $service_options = new service_options();
+            $option_pages = new option_pages();
             $serial_number = new serial_number();
 
             if( isset($_GET['_id']) ) {
@@ -32,9 +32,9 @@ if (!class_exists('line_webhook')) {
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        if ($service_options->get_category($result->service_option_id)=='admin') {
+                        if ($option_pages->get_category($result->service_option_id)=='admin') {
                             $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.$service_options->get_link($result->service_option_id).'">'.$service_options->get_name($result->service_option_id).'</a>';
+                            $output .= '<a class="wp-block-button__link" href="'.$option_pages->get_link($result->service_option_id).'">'.$option_pages->get_name($result->service_option_id).'</a>';
                             $output .= '</div>';    
                         }
                     }
@@ -73,9 +73,10 @@ if (!class_exists('line_webhook')) {
             } else {
 
                 //$where='"%view%"';
-                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE {$where}", OBJECT );
+                $output .= '<div style="font-weight:700;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
                 $output .= '<div class="wp-block-buttons">';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $output .= '<div class="wp-block-button" style="margin: 10px;">';
                     $output .= '<a class="wp-block-button__link" href="'.$result->service_option_link.'">'.$result->service_option_title.'</a>';
@@ -214,7 +215,7 @@ if (!class_exists('line_webhook')) {
         public function init_webhook() {
             global $wpdb;
             $serial_number = new serial_number();
-            $service_options = new service_options();
+            $option_pages = new option_pages();
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
             $client = new line_bot_api();
@@ -255,9 +256,9 @@ if (!class_exists('line_webhook')) {
 
                                             $_contents = array();
                                             $_contents['line_user_id'] = $profile['userId'];
-                                            $_contents['base_url'] = $service_options->get_link('User registry');
+                                            $_contents['base_url'] = $option_pages->get_link('User registry');
                                             $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
-                                            $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Service').'/?_id='.$profile['userId'];
+                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Service').'/?_id='.$profile['userId'];
                                             $_contents['body_messages'] = $body_messages;
                                             $this->push_imagemap_messages( $_contents );
                                         }
@@ -270,9 +271,9 @@ if (!class_exists('line_webhook')) {
 
                                         $_contents = array();
                                         $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $service_options->get_link('Registry error');
+                                        $_contents['base_url'] = $option_pages->get_link('Registry error');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊';
-                                        $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
+                                        $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
                                         $_contents['body_messages'] = $body_messages;
                                         $this->push_imagemap_messages( $_contents );
 
@@ -288,7 +289,7 @@ if (!class_exists('line_webhook')) {
                                         $data['chat_message']=$message['text'];
                                         $this->insert_chat_message($data);
 
-                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $service_options->get_id('Messages') ), OBJECT );            
+                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
                                         foreach ( $results as $index=>$result ) {
                                             $hero_messages = array();
                                             $hero_messages[] = $profile['displayName'];
@@ -296,7 +297,7 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = $message['text'];
                                             $_contents = array();
                                             $_contents['line_user_id'] = $result->line_user_id;
-                                            $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Users').'/?_id='.$result->line_user_id;
+                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$result->line_user_id;
                                             $_contents['hero_messages'] = $hero_messages;
                                             $_contents['body_messages'] = $body_messages;
                                             $this->push_flex_messages( $_contents );
@@ -336,7 +337,7 @@ if (!class_exists('line_webhook')) {
                                         $data['chat_message']=$string;
                                         $this->insert_chat_message($data);
 
-                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $service_options->get_id('Messages') ), OBJECT );            
+                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
                                         foreach ( $results as $index=>$result ) {
                                             $hero_messages = array();
                                             //$hero_messages[] = $profile['displayName'];
@@ -346,7 +347,7 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = $string;
                                             $_contents = array();
                                             $_contents['line_user_id'] = $result->line_user_id;
-                                            $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Users').'/?_id='.$result->line_user_id;
+                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$result->line_user_id;
                                             $_contents['hero_messages'] = $hero_messages;
                                             $_contents['body_messages'] = $body_messages;
                                             $this->push_flex_messages( $_contents );
@@ -362,9 +363,9 @@ if (!class_exists('line_webhook')) {
 
                                         $_contents = array();
                                         $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $service_options->get_link('Agent registry');
+                                        $_contents['base_url'] = $option_pages->get_link('Agent registry');
                                         $_contents['alt_text'] = 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區';
-                                        $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Orders').'/?_id='.$profile['userId'];
+                                        $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$profile['userId'];
                                         $this->push_imagemap_messages( $_contents );
                                     }
                                 }

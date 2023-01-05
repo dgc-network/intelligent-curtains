@@ -10,18 +10,18 @@ if (!class_exists('curtain_remotes')) {
          */
         public function __construct() {
             $this->create_tables();
-            $service_options = new service_options();
-            $service_options->create_page('Remotes', '[curtain-remote-list]');            
+            $option_pages = new option_pages();
+            $option_pages->create_page('Remotes', '[curtain-remote-list]');            
         }
 
         public function list_curtain_remotes() {
             global $wpdb;
             $curtain_remotes = new curtain_remotes();
-            $service_options = new service_options();
+            $option_pages = new option_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Remotes';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $service_options->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';

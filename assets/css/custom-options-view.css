@@ -1,3 +1,6 @@
+.page .entry-title {
+    display: none;
+}
 
 .example_content {
     display : none;

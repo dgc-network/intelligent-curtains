@@ -10,8 +10,8 @@ if (!class_exists('order_items')) {
          */
         public function __construct() {
             $this->create_tables();
-            $service_options = new service_options();
-            $service_options->create_page('Orders', '[shopping-item-list]');            
+            $option_pages = new option_pages();
+            $option_pages->create_page('Orders', '[shopping-item-list]');            
         }
 
         public function list_shopping_items() {
@@ -118,7 +118,7 @@ if (!class_exists('order_items')) {
                 $this->insert_customer_order($data);
 
                 // Notice the admin about the order status
-                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $service_options->get_id('Messages') ), OBJECT );            
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
                     $hero_messages[] = 'System Notification';
@@ -127,7 +127,7 @@ if (!class_exists('order_items')) {
                     $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
                     $_contents = array();
                     $_contents['line_user_id'] = $result->line_user_id;
-                    $_contents['link_uri'] = get_site_url().'/'.$service_options->get_link('Orders').'/?_id='.$customer_order_number;
+                    $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number;
                     $_contents['hero_messages'] = $hero_messages;
                     $_contents['body_messages'] = $body_messages;
                     $this->push_flex_messages( $_contents );

@@ -44,7 +44,7 @@ function enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-options.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-option-pages.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';

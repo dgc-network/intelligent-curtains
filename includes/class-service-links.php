@@ -10,8 +10,8 @@ if (!class_exists('service_links')) {
          */
         public function __construct() {
             $this->create_tables();
-            $service_options = new service_options();
-            $service_options->create_page('Links', '[service-link-list]');
+            $option_pages = new option_pages();
+            $option_pages->create_page('Links', '[service-link-list]');
         }
 
         public function list_service_links() {

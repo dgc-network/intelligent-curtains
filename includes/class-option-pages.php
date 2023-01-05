@@ -3,14 +3,14 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('service_options')) {
-    class service_options {
+if (!class_exists('option_pages')) {
+    class option_pages {
         /**
          * Class constructor
          */
         public function __construct() {
             $this->create_tables();
-            $this->create_page('Options', '[service-option-list]');
+            $this->create_page('Options', '[option-page-list]');
         }
 
         public function create_page($title_of_the_page,$content,$parent_id = NULL ) {
@@ -33,11 +33,19 @@ if (!class_exists('service_options')) {
                     'post_parent'    =>  $parent_id //'id_of_the_parent_page_if_it_available'
                 )
             );
+
+            insert_option_page(
+                array(
+                    'service_option_title' => $title_of_the_page,
+                    'service_option_link' => get_page_link($title_of_the_page),
+                    'service_option_category' => 'admin',
+                )
+            );
             //echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
             return $page_id;
         }
         
-        public function list_service_options() {
+        public function list_option_pages() {
             global $wpdb;
             $curtain_users = new curtain_users();
 
@@ -60,7 +68,7 @@ if (!class_exists('service_options')) {
                 $data['service_option_title']=$_POST['_service_option_title'];
                 $data['service_option_link']=$_POST['_service_option_link'];
                 $data['service_option_category']=$_POST['_service_option_category'];
-                $this->insert_service_option($data);
+                $this->insert_option_page($data);
             }
         
             if( isset($_POST['_update']) ) {
@@ -70,23 +78,23 @@ if (!class_exists('service_options')) {
                 $data['service_option_category']=$_POST['_service_option_category'];
                 $where=array();
                 $where['service_option_id']=$_POST['_service_option_id'];
-                $this->update_service_options($data, $where);
+                $this->update_option_pages($data, $where);
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
                 $where=array();
                 $where['service_option_id']=$_GET['_delete'];
-                $this->delete_service_options($where);
+                $this->delete_option_pages($where);
                 $curtain_users->delete_user_permissions($where);
             }
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_title LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages", OBJECT );
             }
             $output  = '<h2>Service Options</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
@@ -133,7 +141,7 @@ if (!class_exists('service_options')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Service Option update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
@@ -168,49 +176,49 @@ if (!class_exists('service_options')) {
             return $output;
         }
 
-        public function insert_service_option($data=[]) {
+        public function insert_option_page($data=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'service_options';
+            $table = $wpdb->prefix.'option_pages';
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }
 
-        public function update_service_options($data=[], $where=[]) {
+        public function update_option_pages($data=[], $where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'service_options';
+            $table = $wpdb->prefix.'option_pages';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
-        public function delete_service_options($where=[]) {
+        public function delete_option_pages($where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'service_options';
+            $table = $wpdb->prefix.'option_pages';
             $wpdb->delete($table, $where);
         }
 
         public function get_id( $_title='' ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_title = %s OR service_option_page = %s", $_title, $_title ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_title = %s OR service_option_page = %s", $_title, $_title ), OBJECT );
             return $row->service_option_id;
         }
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
             return $row->service_option_title;
         }
 
         public function get_category( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
             return $row->service_option_category;
         }
 
         public function get_link( $_title=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_title, $_title, $_title ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_title, $_title, $_title ), OBJECT );
             //return get_site_url().'/'.$row->service_option_link;
             return $row->service_option_link;
         }
@@ -220,9 +228,9 @@ if (!class_exists('service_options')) {
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-            $sql = "CREATE TABLE `{$wpdb->prefix}service_options` (
+            $sql = "CREATE TABLE `{$wpdb->prefix}option_pages` (
                 service_option_id int NOT NULL AUTO_INCREMENT,
-                service_option_title varchar(20),
+                service_option_title varchar(20) UNIQUE,
                 service_option_link varchar(255),
                 service_option_category varchar(10),
                 create_timestamp int(10),
@@ -232,7 +240,7 @@ if (!class_exists('service_options')) {
             dbDelta($sql);            
         }
     }
-    $my_class = new service_options();
-    add_shortcode( 'service-option-list', array( $my_class, 'list_service_options' ) );
+    $my_class = new option_pages();
+    add_shortcode( 'option-page-list', array( $my_class, 'list_option_pages' ) );
 }
 ?>
