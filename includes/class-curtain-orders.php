@@ -82,7 +82,8 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_checkout_submit']) ) {
-                $customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
+                //$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
+                $customer_order_number=time();
                 $customer_order_amount=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
                 foreach ( $results as $index=>$result ) {
@@ -473,6 +474,4 @@ if (!class_exists('order_items')) {
         }
     }
     $my_class = new order_items();
-    //add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
-    //add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
 }
