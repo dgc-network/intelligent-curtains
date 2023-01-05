@@ -35,13 +35,6 @@ if (!class_exists('service_links')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['service_option_title']=$_POST['_service_option_title'];
-                $data['service_option_link']=$_POST['_service_option_link'];
-                $data['service_option_category']=$_POST['_service_option_category'];
-                $this->insert_service_link($data);
-                */
                 $this->insert_service_link(
                     array(
                         'service_option_title'=>$_POST['_service_option_title'],
@@ -52,15 +45,6 @@ if (!class_exists('service_links')) {
             }
         
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['service_option_title']=$_POST['_service_option_title'];
-                $data['service_option_link']=$_POST['_service_option_link'];
-                $data['service_option_category']=$_POST['_service_option_category'];
-                $where=array();
-                $where['service_option_id']=$_POST['_service_option_id'];
-                $this->update_service_links($data, $where);
-                */
                 $this->update_service_links(
                     array(
                         'service_option_title'=>$_POST['_service_option_title'],
@@ -75,17 +59,11 @@ if (!class_exists('service_links')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['service_option_id']=$_GET['_delete'];
-                $this->delete_service_links($where);
-                */
                 $this->delete_service_links(
                     array(
                         'service_option_id'=>$_GET['_delete']
                     )
                 );
-                //$curtain_users->delete_user_permissions($where);
             }
 
             if( isset($_POST['_where']) ) {
@@ -115,9 +93,7 @@ if (!class_exists('service_links')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>title</th>';
-            //$output .= '<th>link</th>';
             $output .= '<th>category</th>';
-            //$output .= '<th>page</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
@@ -128,7 +104,6 @@ if (!class_exists('service_links')) {
                 $output .= '<span id="edit-btn-'.$result->service_option_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->service_option_title.'</td>';
-                //$output .= '<td>'.$result->service_option_link.'</td>';
                 $output .= '<td>'.$result->service_option_category.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
@@ -199,25 +174,25 @@ if (!class_exists('service_links')) {
 
         public function get_id( $_title='' ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_title = %s OR service_option_page = %s", $_title, $_title ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_title = %s", $_title ), OBJECT );
             return $row->service_option_id;
         }
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d", $_id ), OBJECT );
             return $row->service_option_title;
         }
 
         public function get_category( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_page = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_title = %s", $_id, $_id ), OBJECT );
             return $row->service_option_category;
         }
 
         public function get_link( $_title=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_page = %s OR service_option_title = %s", $_title, $_title, $_title ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_title = %s", $_title, $_title ), OBJECT );
             //return get_site_url().'/'.$row->service_option_link;
             return $row->service_option_link;
         }
@@ -240,6 +215,5 @@ if (!class_exists('service_links')) {
         }
     }
     $my_class = new service_links();
-    //add_shortcode( 'service-link-list', array( $my_class, 'list_service_links' ) );
 }
 ?>

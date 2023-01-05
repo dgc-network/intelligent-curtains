@@ -36,16 +36,6 @@ if (!class_exists('curtain_specifications')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['curtain_specification_name']=$_POST['_curtain_specification_name'];
-                $data['specification_description']=$_POST['_specification_description'];
-                $data['specification_price']=$_POST['_specification_price'];
-                $data['specification_unit']=$_POST['_specification_unit'];
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['length_only']=$_POST['_length_only'];
-                $this->insert_curtain_specification($data);
-                */
                 $this->insert_curtain_specification(
                     array(
                         'curtain_specification_name'=>$_POST['_curtain_specification_name'],
@@ -59,18 +49,6 @@ if (!class_exists('curtain_specifications')) {
             }
             
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['curtain_specification_name']=$_POST['_curtain_specification_name'];
-                $data['specification_description']=$_POST['_specification_description'];
-                $data['specification_price']=$_POST['_specification_price'];
-                $data['specification_unit']=$_POST['_specification_unit'];
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['length_only']=$_POST['_length_only'];
-                $where=array();
-                $where['curtain_specification_id']=$_POST['_curtain_specification_id'];
-                $this->update_curtain_specifications($data, $where);
-                */
                 $this->update_curtain_specifications(
                     array(
                         'curtain_specification_name'=>$_POST['_curtain_specification_name'],
@@ -88,11 +66,6 @@ if (!class_exists('curtain_specifications')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['curtain_specification_id']=$_GET['_delete'];
-                $this->delete_curtain_specifications($where);
-                */
                 $this->delete_curtain_specifications(
                     array(
                         'curtain_specification_id'=>$_GET['_delete']
@@ -290,5 +263,4 @@ if (!class_exists('curtain_specifications')) {
         }
     }
     $my_class = new curtain_specifications();
-    //add_shortcode( 'curtain-specification-list', array( $my_class, 'list_curtain_specifications' ) );
 }

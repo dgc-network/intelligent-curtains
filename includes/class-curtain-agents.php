@@ -35,17 +35,6 @@ if (!class_exists('curtain_agents')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['agent_number']=$_POST['_agent_number'];
-                $data['agent_name']=$_POST['_agent_name'];
-                $data['agent_address']=$_POST['_agent_address'];
-                $data['contact1']=$_POST['_contact1'];
-                $data['phone1']=$_POST['_phone1'];
-                $data['contact2']=$_POST['_contact2'];
-                $data['phone2']=$_POST['_phone2'];
-                $this->insert_curtain_agent($data);
-                */
                 $this->insert_curtain_agent(
                     array(
                         'agent_number'=>$_POST['_agent_number'],
@@ -60,19 +49,6 @@ if (!class_exists('curtain_agents')) {
             }
         
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['agent_number']=$_POST['_agent_number'];
-                $data['agent_name']=$_POST['_agent_name'];
-                $data['agent_address']=$_POST['_agent_address'];
-                $data['contact1']=$_POST['_contact1'];
-                $data['phone1']=$_POST['_phone1'];
-                $data['contact2']=$_POST['_contact2'];
-                $data['phone2']=$_POST['_phone2'];
-                $where=array();
-                $where['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $this->update_curtain_agents($data, $where);
-                */
                 $this->update_curtain_agents(
                     array(
                         'agent_number'=>$_POST['_agent_number'],
@@ -91,11 +67,6 @@ if (!class_exists('curtain_agents')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['curtain_agent_id']=$_GET['_delete'];
-                $this->delete_curtain_agents($where);
-                */
                 $this->delete_curtain_agents(
                     array(
                         'curtain_agent_id'=>$_GET['_delete']
@@ -268,6 +239,4 @@ if (!class_exists('curtain_agents')) {
         }
     }
     $my_class = new curtain_agents();
-    //add_shortcode( 'curtain-agent-list', array( $my_class, 'list_curtain_agents' ) );
-    //add_shortcode( 'agent-registration', array( $my_class, 'agent_registration' ) );
 }

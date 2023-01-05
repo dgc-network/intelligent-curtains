@@ -38,13 +38,6 @@ if (!class_exists('serial_number')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['curtain_model_id']=$_POST['_curtain_model_id'];
-                $data['specification']=$_POST['_specification'];
-                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $this->insert_serial_number($data);
-                */
                 $this->insert_serial_number(
                     array(
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
@@ -55,11 +48,6 @@ if (!class_exists('serial_number')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['serial_number_id']=$_GET['_delete'];
-                $this->delete_serial_number($where);
-                */
                 $this->delete_serial_number(
                     array(
                         'serial_number_id'=>$_GET['_delete']
@@ -224,5 +212,4 @@ if (!class_exists('serial_number')) {
         }
     }
     $my_class = new serial_number();
-    //add_shortcode( 'serial-number-list', array( $my_class, 'list_serial_number' ) );
 }

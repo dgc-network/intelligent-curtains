@@ -15,6 +15,8 @@ if (!class_exists('curtain_users')) {
             add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
             $option_pages = new option_pages();
             $option_pages->create_page($this->_option_page, '[curtain-user-list]');
+            add_action( 'wp_ajax_send_chat', array( $this, 'send_chat' ) );
+            add_action( 'wp_ajax_nopriv_send_chat', array( $this, 'send_chat' ) );
         }
 
         public function list_curtain_users() {            
@@ -23,8 +25,6 @@ if (!class_exists('curtain_users')) {
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
-                //$_option_page = 'Users';
-                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
@@ -38,15 +38,6 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['display_name']=$_POST['_display_name'];
-                $data['mobile_phone']=$_POST['_mobile_phone'];
-                $data['curtain_agent_id']=$_POST['_curtain_agent_id'];
-                $where=array();
-                $where['curtain_user_id']=$_POST['_curtain_user_id'];
-                $this->update_curtain_users($data, $where);
-                */
                 $this->update_curtain_users(
                     array(
                         'display_name'=>$_POST['_display_name'],
@@ -62,16 +53,8 @@ if (!class_exists('curtain_users')) {
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
-                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
                         if (is_null($permission) || !empty($wpdb->last_error)) {
-                            /*
-                            $data=array();
-                            $data['line_user_id']=$_POST['_line_user_id'];
-                            $data['option_page']=$result->service_option_title;
-                            $data['service_option_id']=$result->service_option_id;
-                            $this->insert_user_permission($data);
-                            */
                             $this->insert_user_permission(
                                 array(
                                     'line_user_id'  => $_POST['_line_user_id'],
@@ -80,15 +63,8 @@ if (!class_exists('curtain_users')) {
                             );
                         }    
                     } else {
-                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
-                            /*
-                            $where=array();
-                            $where['line_user_id']=$_POST['_line_user_id'];
-                            $where['service_option_id']=$result->service_option_id;
-                            $this->delete_user_permissions($where);
-                            */
                             $this->delete_user_permissions(
                                 array(
                                     'line_user_id'  => $_POST['_line_user_id'],
@@ -292,18 +268,26 @@ if (!class_exists('curtain_users')) {
         function send_chat() {
             $line_webhook = new line_webhook();
             $option_pages = new option_pages();
-            //$curtain_users = new curtain_users();
-
+/*
             $data=array();
             $data['chat_from']= $_SESSION['line_user_id'];
             $data['chat_to']= $_POST['to'];
             $data['chat_message']= $_POST['message'];
             $line_webhook->insert_chat_message($data);
+            */
+            $line_webhook->insert_chat_message(
+                array(
+                    'chat_from' => $_SESSION['line_user_id'],
+                    'chat_to' => $_POST['to'],
+                    'chat_message'=> $_POST['message']
+                )
+            );
 
             $hero_messages = array();
             $hero_messages[] = $this->get_name($_POST['to']);
             $body_messages = array();
             $body_messages[] = $_POST['message'];
+            /*
             $_contents = array();
             $_contents['line_user_id'] = $_POST['to'];
             //$_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('_chat_form').'/?_id='.$_POST['to'];
@@ -311,6 +295,15 @@ if (!class_exists('curtain_users')) {
             $_contents['hero_messages'] = $hero_messages;
             $_contents['body_messages'] = $body_messages;
             $line_webhook->push_flex_messages( $_contents );
+            */
+            $line_webhook->push_flex_messages(
+                array(
+                    'line_user_id' => $_POST['to'],
+                    'link_uri' => get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$_POST['to'],
+                    'hero_messages' => $hero_messages,
+                    'body_messages' => $body_messages
+                )
+            );
 
             $response = array();
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
@@ -332,15 +325,6 @@ if (!class_exists('curtain_users')) {
         }
     }
     $my_class = new curtain_users();
-    //add_shortcode( 'curtain-user-list', array( $my_class, 'list_curtain_users' ) );
-    //add_shortcode( 'curtain-chat-form', array( $my_class, 'curtain_chat_form' ) );
-    add_action( 'wp_ajax_send_chat', array( $my_class, 'send_chat' ) );
-    add_action( 'wp_ajax_nopriv_send_chat', array( $my_class, 'send_chat' ) );
-                
-    //add_action( 'wp_ajax_sendChat', array( __CLASS__, 'sendChat' ) );
-    //add_action( 'wp_ajax_nopriv_sendChat', array( __CLASS__, 'sendChat' ) );
-    //add_action( 'wp_ajax_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-    //add_action( 'wp_ajax_nopriv_chatHeartbeat', array( __CLASS__, 'chatHeartbeat' ) );
-    //add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-
+    //add_action( 'wp_ajax_send_chat', array( $my_class, 'send_chat' ) );
+    //add_action( 'wp_ajax_nopriv_send_chat', array( $my_class, 'send_chat' ) );
 }

@@ -36,12 +36,6 @@ if (!class_exists('curtain_remotes')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['curtain_remote_name']=$_POST['_curtain_remote_name'];
-                $data['curtain_remote_price']=$_POST['_curtain_remote_price'];
-                $curtain_remotes->insert_curtain_remote($data);
-                */
                 $curtain_remotes->insert_curtain_remote(
                     array(
                         'curtain_remote_name'=>$_POST['_curtain_remote_name'],
@@ -51,14 +45,6 @@ if (!class_exists('curtain_remotes')) {
             }
             
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['curtain_remote_name']=$_POST['_curtain_remote_name'];
-                $data['curtain_remote_price']=$_POST['_curtain_remote_price'];
-                $where=array();
-                $where['curtain_remote_id']=$_POST['_curtain_remote_id'];
-                $curtain_remotes->update_curtain_remotes($data, $where);
-                */
                 $curtain_remotes->update_curtain_remotes(
                     array(
                         'curtain_remote_name'=>$_POST['_curtain_remote_name'],
@@ -72,11 +58,6 @@ if (!class_exists('curtain_remotes')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['curtain_remote_id']=$_GET['_delete'];
-                $curtain_remotes->delete_curtain_remotes($where);
-                */
                 $curtain_remotes->delete_curtain_remotes(
                     array(
                         'curtain_remote_id'=>$_GET['_delete']
@@ -232,5 +213,4 @@ if (!class_exists('curtain_remotes')) {
         }
     }
     $my_class = new curtain_remotes();
-    //add_shortcode( 'curtain-remote-list', array( $my_class, 'list_curtain_remotes' ) );
 }

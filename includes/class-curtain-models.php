@@ -36,15 +36,6 @@ if (!class_exists('curtain_models')) {
             }
 
             if( isset($_POST['_create']) ) {
-                /*
-                $data=array();
-                $data['curtain_model_name']=$_POST['_curtain_model_name'];
-                $data['model_description']=$_POST['_model_description'];
-                $data['model_price']=$_POST['_model_price'];
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
-                $this->insert_curtain_model($data);
-                */
                 $this->insert_curtain_model(
                     array(
                         'curtain_model_name'=>$_POST['_curtain_model_name'],
@@ -57,17 +48,6 @@ if (!class_exists('curtain_models')) {
             }
             
             if( isset($_POST['_update']) ) {
-                /*
-                $data=array();
-                $data['curtain_model_name']=$_POST['_curtain_model_name'];
-                $data['model_description']=$_POST['_model_description'];
-                $data['model_price']=$_POST['_model_price'];
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['curtain_vendor_name']=$_POST['_curtain_vendor_name'];
-                $where=array();
-                $where['curtain_model_id']=$_POST['_curtain_model_id'];
-                $this->update_curtain_models($data, $where);
-                */
                 $this->update_curtain_models(
                     array(
                         'curtain_model_name'=>$_POST['_curtain_model_name'],
@@ -84,11 +64,6 @@ if (!class_exists('curtain_models')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['curtain_model_id']=$_GET['_delete'];
-                $this->delete_curtain_models($where);
-                */
                 $this->delete_curtain_models(
                     array(
                         'curtain_model_id'=>$_GET['_delete']
@@ -263,5 +238,4 @@ if (!class_exists('curtain_models')) {
         }
     }
     $my_class = new curtain_models();
-    //add_shortcode( 'curtain-model-list', array( $my_class, 'list_curtain_models' ) );
 }

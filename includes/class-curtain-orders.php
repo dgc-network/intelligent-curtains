@@ -15,6 +15,8 @@ if (!class_exists('order_items')) {
             add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
             $option_pages = new option_pages();
             $option_pages->create_page($this->_option_page, '[shopping-item-list]', 'system');
+            add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
+            add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
         }
 
         public function list_shopping_items() {
@@ -35,7 +37,6 @@ if (!class_exists('order_items')) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                 if (is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) {
                     $output = '<h2>You have to complete the agent registration first.</h2>';
-                    //$output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號<im><br>';
                     $output .= '請利用電腦<i class="fa-solid fa-desktop"></i>上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼,<br>';
                     $output .= '完成經銷商註冊程序<br>';
                     return $output;
@@ -88,14 +89,6 @@ if (!class_exists('order_items')) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
                         if ($customer_order_number=='') {$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));}
-                        /*
-                        $data=array();
-                        $data['customer_order_number']=$customer_order_number;
-                        $data['is_checkout']=1;
-                        $where=array();
-                        $where['curtain_order_id']=$result->curtain_order_id;
-                        $this->update_order_items($data, $where);
-                        */
                         $this->update_order_items(
                             array(
                                 'customer_order_number'=>$customer_order_number,
@@ -110,13 +103,6 @@ if (!class_exists('order_items')) {
 
                         $x = 0;
                         while ($x < $result->order_item_qty) {
-                            /*
-                            $data=array();
-                            $data['curtain_model_id']=$result->curtain_model_id;
-                            $data['specification']=$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width;
-                            $data['curtain_agent_id']=$result->curtain_agent_id;
-                            $serial_number->insert_serial_number($data, $x);
-                            */
                             $serial_number->insert_serial_number(
                                 array(
                                     'curtain_model_id'=>$result->curtain_model_id,
@@ -144,21 +130,14 @@ if (!class_exists('order_items')) {
                 );
 
                 // Notice the admin about the order status
-                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
+                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Messages') ), OBJECT );            
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Messages' ), OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
                     $hero_messages[] = 'System Notification';
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
                     $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                    /*
-                    $_contents = array();
-                    $_contents['line_user_id'] = $result->line_user_id;
-                    $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number;
-                    $_contents['hero_messages'] = $hero_messages;
-                    $_contents['body_messages'] = $body_messages;
-                    $this->push_flex_messages( $_contents );
-                    */
                     $this->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
@@ -191,20 +170,6 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-/*
-                $data=array();
-                $data['curtain_agent_id']=$curtain_agent_id;
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['curtain_model_id']=$_POST['_curtain_model_id'];
-                $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
-                $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
-                $data['curtain_width']=$_POST['_curtain_width'];
-                $data['curtain_height']=$_POST['_curtain_height'];
-                $data['order_item_qty']=$_POST['_order_item_qty'];
-                $data['order_item_amount']=$amount;
-                $data['is_checkout']=0;
-                $this->insert_order_item($data);
-                */
                 $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$curtain_agent_id,
@@ -242,20 +207,6 @@ if (!class_exists('order_items')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-/*
-                $data=array();
-                $data['curtain_category_id']=$_POST['_curtain_category_id'];
-                $data['curtain_model_id']=$_POST['_curtain_model_id'];
-                $data['curtain_remote_id']=$_POST['_curtain_remote_id'];
-                $data['curtain_specification_id']=$_POST['_curtain_specification_id'];
-                $data['curtain_width']=$_POST['_curtain_width'];
-                $data['curtain_height']=$_POST['_curtain_height'];
-                $data['order_item_qty']=$_POST['_order_item_qty'];
-                $data['order_item_amount']=$amount;
-                $where=array();
-                $where['curtain_order_id']=$_POST['_curtain_order_id'];
-                $this->update_order_items($data, $where);
-                */
                 $this->update_order_items(
                     array(
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
@@ -275,11 +226,6 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                /*
-                $where=array();
-                $where['curtain_order_id']=$_GET['_delete'];
-                $this->delete_order_items($where);
-                */
                 $this->delete_order_items(
                     array(
                         'curtain_order_id'=>$_GET['_delete']
@@ -526,7 +472,6 @@ if (!class_exists('order_items')) {
         }
     }
     $my_class = new order_items();
-    //add_shortcode( 'shopping-item-list', array( $my_class, 'list_shopping_items' ) );
-    add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
-    add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
+    //add_action( 'wp_ajax_select_category_id', array( $my_class, 'select_category_id' ) );
+    //add_action( 'wp_ajax_nopriv_select_category_id', array( $my_class, 'select_category_id' ) );
 }
