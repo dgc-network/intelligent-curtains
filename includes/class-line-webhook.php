@@ -11,7 +11,7 @@ if (!class_exists('line_webhook')) {
         public function __construct() {
             $this->create_tables();
             $service_options = new service_options();
-            $service_options->create_page('Service', '[init-line-service]');            
+            $service_options->create_page('Service', '[curtain-service]');            
         }
 
         public function curtain_service() {
@@ -72,8 +72,9 @@ if (!class_exists('line_webhook')) {
     
             } else {
 
-                $where='"%view%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
+                //$where='"%view%"';
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_options WHERE service_option_category LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
                 $output .= '<div class="wp-block-buttons">';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<div class="wp-block-button" style="margin: 10px;">';

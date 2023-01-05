@@ -46,7 +46,6 @@ add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-options.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
@@ -55,6 +54,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specification
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-serial-number.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $line_webhook = new line_webhook();
