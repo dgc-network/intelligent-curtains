@@ -5,13 +5,18 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_users')) {
     class curtain_users {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Users';
             $this->create_tables();
+            add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
+            add_shortcode( 'curtain-chat-form', array( $this, 'curtain_chat_form' ) );
             $option_pages = new option_pages();
-            $option_pages->create_page('Users', '[curtain-user-list]');            
+            //$option_pages->create_page('Users', '[curtain-user-list]');
+            $option_pages->create_page($this->_option_page, '[curtain-user-list]');
         }
 
         public function list_curtain_users() {            
@@ -20,9 +25,9 @@ if (!class_exists('curtain_users')) {
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $_option_page = 'Users';
+                //$_option_page = 'Users';
                 //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $option_pages->get_id($_option_page) ), OBJECT );            
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -35,6 +40,7 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_POST['_update']) ) {
+                /*
                 $data=array();
                 $data['display_name']=$_POST['_display_name'];
                 $data['mobile_phone']=$_POST['_mobile_phone'];
@@ -42,12 +48,24 @@ if (!class_exists('curtain_users')) {
                 $where=array();
                 $where['curtain_user_id']=$_POST['_curtain_user_id'];
                 $this->update_curtain_users($data, $where);
+                */
+                $this->update_curtain_users(
+                    array(
+                        'display_name'=>$_POST['_display_name'],
+                        'mobile_phone'=>$_POST['_mobile_phone'],
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id'],
+                    ),
+                    array(
+                        'curtain_user_id'=>$_POST['_curtain_user_id'],
+                    )
+                );
 
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
-                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
+                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             /*
                             $data=array();
@@ -56,21 +74,29 @@ if (!class_exists('curtain_users')) {
                             $data['service_option_id']=$result->service_option_id;
                             $this->insert_user_permission($data);
                             */
-                            insert_user_permission(
+                            $this->insert_user_permission(
                                 array(
                                     'line_user_id'  => $_POST['_line_user_id'],
                                     'option_page'   => $result->service_option_title,
-                                    'service_option_id'=> $result->service_option_id,
                                 )
                             );
                         }    
                     } else {
-                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
+                        //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_POST['_line_user_id'], $result->service_option_id ), OBJECT );
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
+                            /*
                             $where=array();
                             $where['line_user_id']=$_POST['_line_user_id'];
                             $where['service_option_id']=$result->service_option_id;
                             $this->delete_user_permissions($where);
+                            */
+                            $this->delete_user_permissions(
+                                array(
+                                    'line_user_id'  => $_POST['_line_user_id'],
+                                    'option_page'   => $result->service_option_title,
+                                )
+                            );
                         }    
                     }
                 }
@@ -259,7 +285,6 @@ if (!class_exists('curtain_users')) {
                 user_permission_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50) NOT NULL,
                 option_page varchar(50) NOT NULL,
-                service_option_id int NOT NULL,
                 create_timestamp int(10),
                 PRIMARY KEY (user_permission_id)
             ) $charset_collate;";
@@ -309,8 +334,8 @@ if (!class_exists('curtain_users')) {
         }
     }
     $my_class = new curtain_users();
-    add_shortcode( 'curtain-user-list', array( $my_class, 'list_curtain_users' ) );
-    add_shortcode( 'curtain-chat-form', array( $my_class, 'curtain_chat_form' ) );
+    //add_shortcode( 'curtain-user-list', array( $my_class, 'list_curtain_users' ) );
+    //add_shortcode( 'curtain-chat-form', array( $my_class, 'curtain_chat_form' ) );
     add_action( 'wp_ajax_send_chat', array( $my_class, 'send_chat' ) );
     add_action( 'wp_ajax_nopriv_send_chat', array( $my_class, 'send_chat' ) );
                 

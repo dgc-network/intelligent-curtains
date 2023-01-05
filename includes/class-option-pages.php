@@ -5,12 +5,16 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('option_pages')) {
     class option_pages {
+        private $_option_page;
         /**
          * Class constructor
          */
         public function __construct() {
+            $this->_option_page = 'Pages';
             $this->create_tables();
-            $this->create_page('Options', '[option-page-list]');
+            //$this->create_page('Options', '[option-page-list]');
+            add_shortcode( 'option-page-list', array( $this, 'list_option_pages' ) );
+            $this->create_page($this->_option_page, '[option-page-list]');
         }
 
         public function create_page($title_of_the_page,$content,$parent_id = NULL ) {
@@ -34,7 +38,7 @@ if (!class_exists('option_pages')) {
                 )
             );
 
-            insert_option_page(
+            $this->insert_option_page(
                 array(
                     'service_option_title' => $title_of_the_page,
                     'service_option_link' => get_page_link($title_of_the_page),
@@ -51,7 +55,8 @@ if (!class_exists('option_pages')) {
 
             if( isset($_SESSION['line_user_id']) ) {
                 $_option_page = 'Options';
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
+                //$permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND service_option_id= %d", $_SESSION['line_user_id'], $this->get_id($_option_page) ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
@@ -96,7 +101,7 @@ if (!class_exists('option_pages')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages", OBJECT );
             }
-            $output  = '<h2>Service Options</h2>';
+            $output  = '<h2>Option Pages</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
@@ -241,6 +246,6 @@ if (!class_exists('option_pages')) {
         }
     }
     $my_class = new option_pages();
-    add_shortcode( 'option-page-list', array( $my_class, 'list_option_pages' ) );
+    //add_shortcode( 'option-page-list', array( $my_class, 'list_option_pages' ) );
 }
 ?>
