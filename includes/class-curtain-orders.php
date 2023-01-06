@@ -52,8 +52,6 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_customer_orders']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
-                //return var_dump($results);
                 $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
@@ -66,19 +64,23 @@ if (!class_exists('order_items')) {
                 $output .= '<th>Amount</th>';
                 $output .= '<th>Status</th>';
                 $output .= '</tr></thead>';
+                $output .= '<form method="post">';
                 $output .= '<tbody>';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
-                    $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
+                    $output .= '<td style="text-align: center;">';
+                    //$output .= '<span id="edit-btn-'.$result->customer_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
-                    $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
+                    //$output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
+                    $output .= '<select name="_customer_order_status">'.$system_status->select_options($result->customer_order_status).'</select>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
-                $output .= '<form method="post">';
+                //$output .= '<form method="post">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
                 $output .= '</form>';
                 return $output;
@@ -191,7 +193,6 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_checkout_submit']) ) {
-                //$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
                 $customer_order_number=time();
                 $customer_order_amount=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
@@ -229,13 +230,13 @@ if (!class_exists('order_items')) {
                 // Customer Order need to display all the item detail, 
                 $this->insert_customer_order(
                     array(
-                        'customer_order_number'=>$customer_order_number,
-                        'curtain_agent_id'=>$curtain_agent_id,
-                        'customer_order_amount'=>$customer_order_amount,
-                        'customer_order_status'=>1  // 1: completed checkout, did not purchase yet
-                                                    // 2: completed purchase --> did not ship yet
-                                                    // 3: completed shipment --> did not receive the payment
-                                                    // 4: completed the payment        
+                        'customer_order_number' =>$customer_order_number,
+                        'curtain_agent_id'      =>$curtain_agent_id,
+                        'customer_order_amount' =>$customer_order_amount,
+                        'customer_order_status' =>1  // 1: completed checkout, did not purchase yet
+                                                     // 2: completed purchase, did not ship yet
+                                                     // 3: completed shipment, did not receive payment
+                                                     // 4: completed the payment        
                     )
                 );
 
