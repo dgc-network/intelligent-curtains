@@ -76,7 +76,7 @@ if (!class_exists('order_items')) {
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
                     //$output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    $output .= '<select name="_customer_order_status">'.$system_status->select_options($result->customer_order_status).'</select>';
+                    $output .= '<td><select name="_customer_order_status">'.$system_status->select_options($result->customer_order_status).'</select></td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
