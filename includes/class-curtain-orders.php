@@ -52,6 +52,7 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_customer_orders']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
                 return var_dump($results);
                 $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';
