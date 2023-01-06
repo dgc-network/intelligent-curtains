@@ -52,6 +52,7 @@ if (!class_exists('order_items')) {
             if( isset($_POST['_customer_orders']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                return var_dump($results);
                 $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
@@ -121,13 +122,13 @@ if (!class_exists('order_items')) {
                 // Customer Order need to display all the item detail, 
                 $this->insert_customer_order(
                     array(
-                        'customer_order_number'=>$customer_order_number,
-                        'curtain_agent_id'=>$curtain_agent_id,
-                        'customer_order_amount'=>$customer_order_amount,
-                        'customer_order_status'=>1  // 1: completed checkout, did not purchase yet
-                                                    // 2: completed purchase --> did not ship yet
-                                                    // 3: completed shipment --> did not receive the payment
-                                                    // 4: completed the payment        
+                        'customer_order_number' => $customer_order_number,
+                        'curtain_agent_id'      => $curtain_agent_id,
+                        'customer_order_amount' => $customer_order_amount,
+                        'customer_order_status' => 1  // 1: completed checkout, did not purchase yet
+                                                      // 2: completed purchase, did not ship yet
+                                                      // 3: completed shipment, did not receive payment
+                                                      // 4: completed the payment
                     )
                 );
 

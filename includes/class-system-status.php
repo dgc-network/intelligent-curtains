@@ -198,7 +198,7 @@ if (!class_exists('system_status')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}system_status` (
                 system_status_id int NOT NULL AUTO_INCREMENT,
                 system_status_title varchar(50),
-                system_status_category varchar(10),
+                system_status_category varchar(20),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (system_status_id)
