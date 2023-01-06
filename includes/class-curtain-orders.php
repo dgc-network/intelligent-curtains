@@ -69,14 +69,14 @@ if (!class_exists('order_items')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
-                    //$output .= '<span id="edit-btn-'.$result->customer_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '<span id="print-btn-'.$result->customer_order_id.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
                     //$output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    $output .= '<td><select name="_customer_order_status">'.$system_status->select_options($result->customer_order_status).'</select></td>';
+                    $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($result->customer_order_status).'</select></td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
@@ -87,73 +87,18 @@ if (!class_exists('order_items')) {
             }
 
             if( isset($_POST['_status_submit']) ) {
-                //$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
-                $customer_order_number=time();
-                $customer_order_amount=0;
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 foreach ( $results as $index=>$result ) {
-                    $_is_checkout = '_is_checkout_'.$index;
-                    if ( $_POST[$_is_checkout]==1 ) {
-                        $this->update_shopping_items(
-                            array(
-                                'customer_order_number'=>$customer_order_number,
-                                'is_checkout'=>1
-                            ),
-                            array(
-                                'curtain_order_id'=>$result->curtain_order_id
-                            )
-                        );
-
-                        $customer_order_amount=$customer_order_amount+$result->order_item_amount;
-
-                        $x = 0;
-                        while ($x < $result->order_item_qty) {
-                            $serial_number->insert_serial_number(
-                                array(
-                                    'curtain_model_id'=>$result->curtain_model_id,
-                                    'specification'=>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
-                                    'curtain_agent_id'=>$result->curtain_agent_id
-                                ),
-                                $x
-                            );
-                            $x = $x + 1;
-                        }
-                    }
-                }
-
-                // Conver the shopping items to customer orders and purchase order
-                // Customer Order need to display all the item detail, 
-                $this->insert_customer_order(
-                    array(
-                        'customer_order_number' => $customer_order_number,
-                        'curtain_agent_id'      => $curtain_agent_id,
-                        'customer_order_amount' => $customer_order_amount,
-                        'customer_order_status' => 1  // 1: completed checkout, did not purchase yet
-                                                      // 2: completed purchase, did not ship yet
-                                                      // 3: completed shipment, did not receive payment
-                                                      // 4: completed the payment
-                    )
-                );
-
-                // Notice the admin about the order status
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Notification') ), OBJECT );            
-                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Notification' ), OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $hero_messages = array();
-                    $hero_messages[] = 'System Notification';
-                    $body_messages = array();
-                    $body_messages[] = 'Order Number: '.$customer_order_number;
-                    $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                    $line_webhook->push_flex_messages(
+                    $_customer_order_status = '_customer_order_status_'.$index;
+                    $this->update_customer_orders(
                         array(
-                            'line_user_id' => $result->line_user_id,
-                            'link_uri' => get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number,
-                            'hero_messages' => $hero_messages,
-                            'body_messages' => $body_messages
+                            'customer_order_status'=>$_POST[$_customer_order_status],
+                        ),
+                        array(
+                            'customer_order_id'=>$result->customer_order_id
                         )
                     );
                 }
-
             }
             
             /* Checkout */

@@ -199,6 +199,24 @@ jQuery(document).ready(function($) {
         }        
     });
 
+    /* Print Button */
+    $('[id^="print-btn-"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
+    });
+        
+    $('[id^="print-btn-"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
+    });
+        
+    $('[id^="print-btn-"]').on( "click", function() {
+        id = this.id;
+        // strip the first part of the element id to leave the numeric ID
+        id = id.substring(10);        
+        window.location.replace("?_print=" + id);
+    });
+
     /* QR Code */
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
