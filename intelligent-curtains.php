@@ -55,6 +55,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specification
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $line_webhook = new line_webhook();

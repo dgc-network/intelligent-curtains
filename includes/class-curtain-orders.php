@@ -29,6 +29,7 @@ if (!class_exists('order_items')) {
             $serial_number = new serial_number();
             $line_webhook = new line_webhook();
             $option_pages = new option_pages();
+            $system_status = new system_status();
 
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
@@ -47,6 +48,110 @@ if (!class_exists('order_items')) {
                 }
             }
 
+            /* Customer Orders */
+            if( isset($_POST['_customer_orders']) ) {
+                if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                $output .= '<form method="post">';
+                $output .= '<div class="ui-widget">';
+                $output .= '<table id="orders" class="ui-widget ui-widget-content">';
+                $output .= '<thead><tr class="ui-widget-header ">';
+                $output .= '<th></th>';
+                $output .= '<th>date/time</th>';
+                $output .= '<th>Order No.</th>';
+                $output .= '<th>Agent</th>';
+                $output .= '<th>Amount</th>';
+                $output .= '<th>Status</th>';
+                $output .= '</tr></thead>';
+                $output .= '<tbody>';
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<tr>';
+                    $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
+                    $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
+                    $output .= '<td>'.$result->customer_order_number.'</td>';
+                    $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
+                    $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
+                    $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
+                    $output .= '</tr>';
+                }
+                $output .= '</tbody></table></div>';
+                $output .= '<form method="post">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
+                $output .= '</form>';
+                return $output;
+            }
+
+            if( isset($_POST['_status_submit']) ) {
+                //$customer_order_number=strval(time()).strval($curtain_agent->get_name($curtain_agent_id));
+                $customer_order_number=time();
+                $customer_order_amount=0;
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );                
+                foreach ( $results as $index=>$result ) {
+                    $_is_checkout = '_is_checkout_'.$index;
+                    if ( $_POST[$_is_checkout]==1 ) {
+                        $this->update_shopping_items(
+                            array(
+                                'customer_order_number'=>$customer_order_number,
+                                'is_checkout'=>1
+                            ),
+                            array(
+                                'curtain_order_id'=>$result->curtain_order_id
+                            )
+                        );
+
+                        $customer_order_amount=$customer_order_amount+$result->order_item_amount;
+
+                        $x = 0;
+                        while ($x < $result->order_item_qty) {
+                            $serial_number->insert_serial_number(
+                                array(
+                                    'curtain_model_id'=>$result->curtain_model_id,
+                                    'specification'=>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
+                                    'curtain_agent_id'=>$result->curtain_agent_id
+                                ),
+                                $x
+                            );
+                            $x = $x + 1;
+                        }
+                    }
+                }
+
+                // Conver the shopping items to customer orders and purchase order
+                // Customer Order need to display all the item detail, 
+                $this->insert_customer_order(
+                    array(
+                        'customer_order_number'=>$customer_order_number,
+                        'curtain_agent_id'=>$curtain_agent_id,
+                        'customer_order_amount'=>$customer_order_amount,
+                        'customer_order_status'=>1  // 1: completed checkout, did not purchase yet
+                                                    // 2: completed purchase --> did not ship yet
+                                                    // 3: completed shipment --> did not receive the payment
+                                                    // 4: completed the payment        
+                    )
+                );
+
+                // Notice the admin about the order status
+                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Notification') ), OBJECT );            
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Notification' ), OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $hero_messages = array();
+                    $hero_messages[] = 'System Notification';
+                    $body_messages = array();
+                    $body_messages[] = 'Order Number: '.$customer_order_number;
+                    $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                    $line_webhook->push_flex_messages(
+                        array(
+                            'line_user_id' => $result->line_user_id,
+                            'link_uri' => get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number,
+                            'hero_messages' => $hero_messages,
+                            'body_messages' => $body_messages
+                        )
+                    );
+                }
+
+            }
+            
             /* Checkout */
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
@@ -237,7 +342,7 @@ if (!class_exists('order_items')) {
                 );
             }
 
-            /* Cart */
+            /* Shopping Cart */
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
@@ -252,6 +357,7 @@ if (!class_exists('order_items')) {
             $output .= '<form method="post">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right;">';

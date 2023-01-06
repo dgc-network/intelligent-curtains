@@ -35,9 +35,9 @@ if (!class_exists('line_webhook')) {
                     $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                     $output .= '<div class="wp-block-buttons">';
                     foreach ( $results as $index=>$result ) {
-                        if ($option_pages->get_category($result->service_option_id)=='admin') {
+                        if ($option_pages->get_category($result->option_page)=='admin') {
                             $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.$option_pages->get_link($result->service_option_id).'">'.$option_pages->get_name($result->service_option_id).'</a>';
+                            $output .= '<a class="wp-block-button__link" href="'.$option_pages->get_link($result->option_page).'">'.$option_pages->get_name($result->option_page).'</a>';
                             $output .= '</div>';    
                         }
                     }
@@ -57,16 +57,9 @@ if (!class_exists('line_webhook')) {
                     }
                     $six_digit_random_number = random_int(100000, 999999);
                     $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    //$output .= '使用電腦<i class="fa-solid fa-desktop"></i>上的Line, 在我們的官方帳號聊天室中輸入六位數字密碼,<br>';
                     $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
                     $output .= '</span>'.'完成註冊程序<br>';
-/*
-                    $data=array();
-                    $data['one_time_password']=$six_digit_random_number;
-                    $where=array();
-                    $where['qr_code_serial_no']=$qr_code_serial_no;
-                    $result = $serial_number->update_serial_number($data, $where);  
-                    */  
+
                     $result = $serial_number->update_serial_number(
                         array('one_time_password'=>$six_digit_random_number),
                         array('qr_code_serial_no'=>$qr_code_serial_no)
@@ -245,13 +238,7 @@ if (!class_exists('line_webhook')) {
                                         //** continue the process if the 6 digit number is correct, register the qr code */
                                         $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $profile['userId'] ), OBJECT );            
                                         if (!(is_null($user) || !empty($wpdb->last_error))) {
-                                            /*
-                                            $data=array();
-                                            $data['curtain_user_id']=$user->curtain_user_id;
-                                            $where=array();
-                                            $where['one_time_password']=$six_digit_random_number;
-                                            $serial_number->update_serial_number($data, $where);
-                                            */
+
                                             $serial_number->update_serial_number(
                                                 array('curtain_user_id'=>$user->curtain_user_id),
                                                 array('one_time_password'=>$six_digit_random_number)
@@ -261,15 +248,7 @@ if (!class_exists('line_webhook')) {
                                             $body_messages[] = 'Hi, '.$profile['displayName'];
                                             $body_messages[] = 'QR Code 已經完成註冊';
                                             $body_messages[] = '請點擊連結進入售後服務區';
-/*
-                                            $_contents = array();
-                                            $_contents['line_user_id'] = $profile['userId'];
-                                            $_contents['base_url'] = $option_pages->get_link('User registry');
-                                            $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區';
-                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Service').'/?_id='.$profile['userId'];
-                                            $_contents['body_messages'] = $body_messages;
-                                            $this->push_imagemap_messages( $_contents );
-                                            */
+
                                             $this->push_imagemap_messages(
                                                 array(
                                                     'line_user_id' => $profile['userId'],
@@ -286,15 +265,7 @@ if (!class_exists('line_webhook')) {
                                         $body_messages[] = 'Hi, '.$profile['displayName'];
                                         $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
                                         $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
-/*
-                                        $_contents = array();
-                                        $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $option_pages->get_link('Registry error');
-                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊';
-                                        $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Service').'/?_id='.$profile['userId'].'&serial_no=';
-                                        $_contents['body_messages'] = $body_messages;
-                                        $this->push_imagemap_messages( $_contents );
-                                        */
+
                                         $this->push_imagemap_messages(
                                             array(
                                                 'line_user_id' => $profile['userId'],
@@ -311,13 +282,6 @@ if (!class_exists('line_webhook')) {
                                     $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
                                     if (is_null($agent) || !empty($wpdb->last_error)) {
                                         //** send message to line_bot */
-                                        /*
-                                        $data=array();
-                                        $data['chat_from']=$profile['userId'];
-                                        $data['chat_to']='line_bot';
-                                        $data['chat_message']=$message['text'];
-                                        $this->insert_chat_message($data);
-                                        */
                                         $this->insert_chat_message(
                                             array(
                                                 'chat_from' =>$profile['userId'],
@@ -333,14 +297,6 @@ if (!class_exists('line_webhook')) {
                                             $hero_messages[] = $profile['displayName'];
                                             $body_messages = array();
                                             $body_messages[] = $message['text'];
-                                            /*
-                                            $_contents = array();
-                                            $_contents['line_user_id'] = $result->line_user_id;
-                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$result->line_user_id;
-                                            $_contents['hero_messages'] = $hero_messages;
-                                            $_contents['body_messages'] = $body_messages;
-                                            $this->push_flex_messages( $_contents );
-                                            */
                                             $this->push_flex_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
@@ -371,7 +327,6 @@ if (!class_exists('line_webhook')) {
                                             'messages' => [
                                                 [
                                                     'type' => 'text',
-                                                    //'text' => $response['text']
                                                     //'text' => $response
                                                     'text' => $string
                                                 ]                                                                    
@@ -379,13 +334,6 @@ if (!class_exists('line_webhook')) {
                                         ]);
 
                                         //** send auto-reply message to line_bot */
-                                        /*
-                                        $data=array();
-                                        $data['chat_from']='line_bot';
-                                        $data['chat_to']=$profile['userId'];
-                                        $data['chat_message']=$string;
-                                        $this->insert_chat_message($data);
-                                        */
                                         $this->insert_chat_message(
                                             array(
                                                 'chat_from' =>'line_bot',
@@ -401,14 +349,6 @@ if (!class_exists('line_webhook')) {
                                             $hero_messages[] = 'Aihome';
                                             $body_messages = array();
                                             $body_messages[] = $string;
-                                            /*
-                                            $_contents = array();
-                                            $_contents['line_user_id'] = $result->line_user_id;
-                                            $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$result->line_user_id;
-                                            $_contents['hero_messages'] = $hero_messages;
-                                            $_contents['body_messages'] = $body_messages;
-                                            $this->push_flex_messages( $_contents );
-                                            */
                                             $this->push_flex_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
@@ -421,25 +361,11 @@ if (!class_exists('line_webhook')) {
 
                                     } else {
                                         //** Agent registration */
-                                        /*
-                                        $data=array();
-                                        $data['curtain_agent_id']=$curtain_agents->get_id($message['text']);
-                                        $where=array();
-                                        $where['line_user_id']=$profile['userId'];
-                                        $curtain_users->update_curtain_users($data, $where);
-                                        */
                                         $curtain_users->update_curtain_users(
                                             array('curtain_agent_id'=>$curtain_agents->get_id($message['text'])),
                                             array('line_user_id'=>$profile['userId'])
                                         );
-/*
-                                        $_contents = array();
-                                        $_contents['line_user_id'] = $profile['userId'];
-                                        $_contents['base_url'] = $option_pages->get_link('Agent registry');
-                                        $_contents['alt_text'] = 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區';
-                                        $_contents['link_uri'] = get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$profile['userId'];
-                                        $this->push_imagemap_messages( $_contents );
-                                        */
+
                                         $this->push_imagemap_messages(
                                             array(
                                                 'line_user_id' => $profile['userId'],
@@ -487,6 +413,6 @@ if (!class_exists('line_webhook')) {
             dbDelta($sql);
         }        
     }
-    $my_class = new line_webhook();
+    //$my_class = new line_webhook();
 }
 ?>
