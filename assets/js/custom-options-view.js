@@ -84,6 +84,21 @@ jQuery(document).ready(function($) {
         });
     });
     
+    /* Cart Button */
+    $('[id^="cart-btn"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
+    });
+        
+    $('[id^="cart-btn"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
+    });
+        
+    $('[id^="cart-btn"]').on( "click", function() {
+        window.location.assign("orders")
+    });
+
     /* Button */    
     $('[id^="btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
@@ -93,22 +108,6 @@ jQuery(document).ready(function($) {
     $('[id^="btn-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
-    });
-
-    /* Cart Button */
-/*    
-    $('[id^="btn-cart"]').mouseover(function() {
-        $(this).css('cursor', 'pointer');
-        $(this).css('color', 'cornflowerblue');
-    });
-        
-    $('[id^="btn-cart"]').mouseout(function() {
-        $(this).css('cursor', 'default');
-        $(this).css('color', 'black');
-    });
-*/        
-    $('[id^="btn-cart"]').on( "click", function() {
-        window.location.assign("orders")
     });
 
     /* QR Code Button */

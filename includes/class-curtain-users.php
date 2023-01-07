@@ -186,7 +186,7 @@ if (!class_exists('curtain_users')) {
                 } else {
                     $output .= '>';
                 }
-                $output .= '<label style="display: inline-block;" for="is-admin"> is_admin</label>';
+                $output .= '<label style="display: inline-block; margin-left: 8px;" for="is-admin">is_admin</label>';
                 $output .= '</div>';
 
                 /*                
@@ -209,15 +209,16 @@ if (!class_exists('curtain_users')) {
                 $output .= '</fieldset>';
                 $output .= '<div>';
                 $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Permission" name="_permission">';
+                $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Permit" name="_permission">';
                 $output .= '</div>';
                 $output .= '</form>';
                 $output .= '</div>';
             }
 
             if( isset($_POST['_permission']) ) {
+                ?><script>window.location.replace("?_update=");</script><?php
                 $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_POST['_curtain_user_id']}", OBJECT );
                 $output .= '<div id="dialog" title="User permissions">';
                 $output .= '<form method="post">';                
                 $output .= '<fieldset>';
@@ -232,7 +233,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
                 */
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
-                $output .= '<label for="user-permissions">Permissions</label>';
+                $output .= '<label for="user-permissions">Permissions - '.$_POST['_display_name'].'</label>';
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
                 foreach ($results as $index => $result) {
                     $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
