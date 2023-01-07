@@ -48,7 +48,55 @@ if (!class_exists('order_items')) {
                 }
             }
 
-            /* Customer Orders */
+            //* Print Customer Order */
+            if( isset($_GET['_print']) ) {
+                $_id = $_GET['_print'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_id={$_id}", OBJECT );
+                $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                $output .= '<div class="ui-widget">';
+                $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
+                $output .= '<tr>';
+                $output .= '<td>Order Number: </td><td>'.$row->customer_orders_number.'</td>';
+                $output .= '<td>Date: </td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
+                $output .= '</tr>';
+                $output .= '<tr>';
+                $output .= '<td>Agent: </td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
+                $output .= '<td>Status: </td><td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                $output .= '</tr>';
+                $output .= '</table>';
+                $output .= '<table id="orders" class="ui-widget ui-widget-content">';
+                $output .= '<thead><tr class="ui-widget-header ">';
+                $output .= '<th>#</th>';
+                $output .= '<th>Category</th>';
+                $output .= '<th>Model</th>';
+                $output .= '<th>Remote</th>';
+                $output .= '<th>Specification</th>';
+                $output .= '<th>Dimension</th>';
+                $output .= '<th>QTY</th>';
+                $output .= '<th>Amount</th>';
+                $output .= '</tr></thead>';
+                $output .= '<tbody>';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE customer_order_number={$row->customer_order_number}", OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<tr>';
+                    $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
+                    $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                    $output .= '<td>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
+                    $output .= '<td>'.$curtain_specifications->get_name($result->curtain_specification_id).'</td>';
+                    $output .= '<td>Width:'.$result->curtain_width.'</td>';
+                    $output .= '<td>'.$result->order_item_qty.'</td>';
+                    $output .= '<td>'.$result->order_item_amount.'</td>';
+                    $output .= '</tr>';
+                }
+                $output .= '<tr>';
+                $output .= '<td colspan="6">Sub Total: </td>';
+                $output .= '<td>'.$row->customer_order_amount.'</td>';
+                $output .= '</tr>';
+                $output .= '</tbody></table></div>';
+                return $output;
+            }
+
+            //* Customer Orders List */
             if( isset($_POST['_customer_orders']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
@@ -101,7 +149,7 @@ if (!class_exists('order_items')) {
                 }
             }
             
-            /* Checkout */
+            //* Checkout List */
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
@@ -206,6 +254,7 @@ if (!class_exists('order_items')) {
 
             }
             
+            //* Shopping Cart Items Create & Update & Delete*/
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
@@ -290,7 +339,7 @@ if (!class_exists('order_items')) {
                 );
             }
 
-            /* Shopping Cart */
+            //* Shopping Cart List */
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
