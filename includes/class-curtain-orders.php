@@ -5,16 +5,19 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_orders')) {
     class curtain_orders {
-        private $_option_page;
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Orders';
+            $this->_wp_page_title = 'Orders';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
             add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
-            $option_pages = new option_pages();
-            $option_pages->create_page($this->_option_page, '[shopping-item-list]', 'system');
+            $wp_pages = new wp_pages();
+            $wp_pages->create_page($this->_wp_page_title, '[shopping-item-list]', 'system');
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
         }
@@ -29,7 +32,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
             $line_webhook = new line_webhook();
-            $option_pages = new option_pages();
+            $wp_pages = new wp_pages();
             $system_status = new system_status();
 
             if( isset($_GET['_id']) ) {
@@ -245,8 +248,8 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE service_option_id = %d", $option_pages->get_id('Notification') ), OBJECT );            
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE option_page = %s", 'Notification' ), OBJECT );
+                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE wp_page_id = %d", $wp_pages->get_id('Notification') ), OBJECT );            
+                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE wp_page = %s", 'Notification' ), OBJECT );
                 $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
@@ -257,7 +260,8 @@ if (!class_exists('curtain_orders')) {
                     $line_webhook->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
-                            'link_uri' => get_site_url().'/'.$option_pages->get_link('Orders').'/?_id='.$customer_order_number,
+                            //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Orders').'/?_id='.$customer_order_number,
+                            'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$customer_order_number,
                             'hero_messages' => $hero_messages,
                             'body_messages' => $body_messages
                         )

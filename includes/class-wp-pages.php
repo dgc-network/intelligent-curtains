@@ -3,17 +3,20 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('option_pages')) {
-    class option_pages {
-        private $_option_page;
+if (!class_exists('wp_pages')) {
+    class wp_pages {
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Pages';
+            $this->_wp_page_title = 'Pages';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
-            add_shortcode( 'option-page-list', array( $this, 'list_option_pages' ) );
-            $this->create_page($this->_option_page, '[option-page-list]');
+            add_shortcode( 'option-page-list', array( $this, 'list_wp_pages' ) );
+            $this->create_page($this->_wp_page_title, '[option-page-list]');
         }
 
         public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {
@@ -37,26 +40,27 @@ if (!class_exists('option_pages')) {
                 )
             );
 
-            $this->insert_option_page(
+            $this->insert_wp_page(
                 array(
-                    'service_option_title' => $title_of_the_page,
-                    'service_option_link' => get_page_link($page_id),
-                    'service_option_category' => $category,
+                    //'wp_page_title' => $title_of_the_page,
+                    'wp_page_postid' => $page_id,
+                    //'wp_page_link' => get_page_link($page_id),
+                    'wp_page_category' => $category,
                 )
             );
             //echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
             return $page_id;
         }
         
-        public function list_option_pages() {
+        public function list_wp_pages() {
             global $wpdb;
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
+                        return 'You have not permission to access '.$_wp_page.' page. Please check to the administrators.';
                     }
                 }
             } else {
@@ -66,54 +70,51 @@ if (!class_exists('option_pages')) {
             }
 
             if( isset($_POST['_create']) ) {
-                $this->insert_option_page(
+                $this->insert_wp_page(
                     array(
-                        'service_option_title'=>$_POST['_service_option_title'],
-                        'service_option_link'=>$_POST['_service_option_link'],
-                        'service_option_category'=>$_POST['_service_option_category']
+                        'wp_page_category'=>$_POST['_wp_page_category']
                     )
                 );
             }
         
             if( isset($_POST['_update']) ) {
-                $this->update_option_pages(
+                $this->update_wp_pages(
                     array(
-                        'service_option_title'=>$_POST['_service_option_title'],
-                        'service_option_link'=>$_POST['_service_option_link'],
-                        'service_option_category'=>$_POST['_service_option_category']
+                        'wp_page_category'=>$_POST['_wp_page_category']
                     ),
                     array(
-                        'service_option_id'=>$_POST['_service_option_id'],
+                        'wp_page_id'=>$_POST['_wp_page_id'],
                     )
                 );
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
             if( isset($_GET['_delete']) ) {
-                $this->delete_option_pages(
+                $this->delete_wp_pages(
                     array(
-                        'service_option_id'=>$_GET['_delete']
+                        'wp_page_id'=>$_GET['_delete']
                     )
                 );
                 $curtain_users->delete_user_permissions(
                     array(
-                        'option_page'=>$this->get_name($_GET['_delete'])
+                        'wp_page'=>$this->get_name($_GET['_delete'])
                     )
                 );
+                wp_delete_post($this->get_postid($_GET['_delete']), true);
             }
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_title LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_title LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages", OBJECT );
             }
-            $output  = '<h2>Option Pages</h2>';
+            $output  = '<h2>Wordpress Pages</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -129,6 +130,7 @@ if (!class_exists('option_pages')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>title</th>';
+            $output .= '<th>postid</th>';
             $output .= '<th>category</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
@@ -137,13 +139,14 @@ if (!class_exists('option_pages')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->service_option_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-edit-'.$result->wp_page_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
-                $output .= '<td>'.$result->service_option_title.'</td>';
-                $output .= '<td>'.$result->service_option_category.'</td>';
+                $output .= '<td>'.get_the_title($result->wp_page_postid).'</td>';
+                $output .= '<td>'.$result->wp_page_postid.'</td>';
+                $output .= '<td>'.$result->wp_page_category.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-del-'.$result->service_option_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '<span id="btn-del-'.$result->wp_page_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
@@ -151,105 +154,105 @@ if (!class_exists('option_pages')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Service Option update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
+                $output .= '<input type="hidden" value="'.$row->wp_page_id.'" name="_wp_page_id">';
                 $output .= '<label for="service-option-title">Option Title</label>';
-                $output .= '<input type="text" name="_service_option_title" value="'.$row->service_option_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-option-link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_service_option_link" value="'.$row->service_option_link.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_wp_page_title" value="'.get_the_title($row->wp_page_postid).'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
+                //$output .= '<label for="service-option-link">Option Link/Page</label>';
+                //$output .= '<input type="text" name="_wp_page_link" value="'.$row->wp_page_link.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-option-category">Category</label>';
-                $output .= '<input type="text" name="_service_option_category" value="'.$row->service_option_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_wp_page_category" value="'.$row->wp_page_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
-
+/*
             if( isset($_POST['_add']) ) {
                 $output .= '<div id="dialog" title="Create new option">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="service_option_title">Option Title</label>';
-                $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service_option_link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service_option_category">Category</label>';
-                $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="wp_page_title">Option Title</label>';
+                $output .= '<input type="text" name="_wp_page_title" id="wp_page_title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="wp_page_link">Option Link/Page</label>';
+                $output .= '<input type="text" name="_wp_page_link" id="wp_page_link" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="wp_page_category">Category</label>';
+                $output .= '<input type="text" name="_wp_page_category" id="wp_page_category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
+*/            
             return $output;
         }
 
-        public function insert_option_page($data=[]) {
+        public function insert_wp_page($data=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'option_pages';
+            $table = $wpdb->prefix.'wp_pages';
             $data['create_timestamp'] = time();
             $data['update_timestamp'] = time();
             $wpdb->insert($table, $data);        
             return $wpdb->insert_id;
         }
 
-        public function update_option_pages($data=[], $where=[]) {
+        public function update_wp_pages($data=[], $where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'option_pages';
+            $table = $wpdb->prefix.'wp_pages';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
-        public function delete_option_pages($where=[]) {
+        public function delete_wp_pages($where=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'option_pages';
+            $table = $wpdb->prefix.'wp_pages';
             $wpdb->delete($table, $where);
         }
 
-        public function get_id( $_title='' ) {
+        public function get_postid( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_title = %s", $_title ), OBJECT );
-            return $row->service_option_id;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d", $_id ), OBJECT );
+            return $row->wp_page_postid;
         }
-
+/*
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d", $_id ), OBJECT );
-            return $row->service_option_title;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d", $_id ), OBJECT );
+            return $row->wp_page_title;
         }
-
+*/
         public function get_category( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d OR service_option_title = %s", $_id, $_id ), OBJECT );
-            return $row->service_option_category;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_postid = %d OR wp_page_title = %s", $_id, $_id, $_id ), OBJECT );
+            return $row->wp_page_category;
         }
-
+/*
         public function get_link( $_title=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_id = %d OR service_option_title = %s", $_title, $_title ), OBJECT );
-            //return get_site_url().'/'.$row->service_option_link;
-            return $row->service_option_link;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_title = %s", $_title, $_title ), OBJECT );
+            //return get_site_url().'/'.$row->wp_page_link;
+            return $row->wp_page_link;
         }
-
+*/
         public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-            $sql = "CREATE TABLE `{$wpdb->prefix}option_pages` (
-                service_option_id int NOT NULL AUTO_INCREMENT,
-                service_option_title varchar(50) UNIQUE,
-                service_option_link varchar(255),
-                service_option_category varchar(10),
+            $sql = "CREATE TABLE `{$wpdb->prefix}wp_pages` (
+                wp_page_id int NOT NULL AUTO_INCREMENT,
+                wp_page_postid int NOT NULL,
+                wp_page_category varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                PRIMARY KEY (service_option_id)
+                PRIMARY KEY (wp_page_id)
             ) $charset_collate;";
             dbDelta($sql);            
         }
     }
-    $my_class = new option_pages();
+    $my_class = new wp_pages();
 }
 ?>

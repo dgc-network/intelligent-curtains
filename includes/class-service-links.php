@@ -5,16 +5,19 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('service_links')) {
     class service_links {
-        private $_option_page;
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Links';
+            $this->_wp_page_title = 'Links';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
             add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
-            $option_pages = new option_pages();
-            $option_pages->create_page($this->_option_page, '[service-link-list]');
+            $wp_pages = new wp_pages();
+            $wp_pages->create_page($this->_wp_page_title, '[service-link-list]');
         }
 
         public function list_service_links() {
@@ -22,10 +25,10 @@ if (!class_exists('service_links')) {
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
+                        return 'You have not permission to access '.$_wp_page.' page. Please check to the administrators.';
                     }
                 }
             } else {
@@ -37,9 +40,9 @@ if (!class_exists('service_links')) {
             if( isset($_POST['_create']) ) {
                 $this->insert_service_link(
                     array(
-                        'service_option_title'=>$_POST['_service_option_title'],
-                        'service_option_link'=>$_POST['_service_option_link'],
-                        'service_option_category'=>$_POST['_service_option_category']
+                        'service_link_title'=>$_POST['_service_link_title'],
+                        'service_link_uri'=>$_POST['_service_link_uri'],
+                        'service_link_category'=>$_POST['_service_link_category']
                     )
                 );
             }
@@ -47,12 +50,12 @@ if (!class_exists('service_links')) {
             if( isset($_POST['_update']) ) {
                 $this->update_service_links(
                     array(
-                        'service_option_title'=>$_POST['_service_option_title'],
-                        'service_option_link'=>$_POST['_service_option_link'],
-                        'service_option_category'=>$_POST['_service_option_category']
+                        'service_link_title'=>$_POST['_service_link_title'],
+                        'service_link_uri'=>$_POST['_service_link_uri'],
+                        'service_link_category'=>$_POST['_service_link_category']
                     ),
                     array(
-                        'service_option_id'=>$_POST['_service_option_id'],
+                        'service_link_id'=>$_POST['_service_link_id'],
                     )
                 );
                 ?><script>window.location.replace("?_update=");</script><?php
@@ -61,19 +64,19 @@ if (!class_exists('service_links')) {
             if( isset($_GET['_delete']) ) {
                 $this->delete_service_links(
                     array(
-                        'service_option_id'=>$_GET['_delete']
+                        'service_link_id'=>$_GET['_delete']
                     )
                 );
             }
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_title LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_title LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
             }
-            $output  = '<h2>Service Options</h2>';
+            $output  = '<h2>Service Links</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
@@ -101,13 +104,13 @@ if (!class_exists('service_links')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->service_option_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-edit-'.$result->service_link_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
-                $output .= '<td>'.$result->service_option_title.'</td>';
-                $output .= '<td>'.$result->service_option_category.'</td>';
+                $output .= '<td>'.$result->service_link_title.'</td>';
+                $output .= '<td>'.$result->service_link_category.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-del-'.$result->service_option_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '<span id="btn-del-'.$result->service_link_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
@@ -115,17 +118,17 @@ if (!class_exists('service_links')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Service Option update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<input type="hidden" value="'.$row->service_option_id.'" name="_service_option_id">';
+                $output .= '<input type="hidden" value="'.$row->service_link_id.'" name="_service_link_id">';
                 $output .= '<label for="service-option-title">Option Title</label>';
-                $output .= '<input type="text" name="_service_option_title" value="'.$row->service_option_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_service_link_title" value="'.$row->service_link_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-option-link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_service_option_link" value="'.$row->service_option_link.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_service_link_uri" value="'.$row->service_link_uri.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-option-category">Category</label>';
-                $output .= '<input type="text" name="_service_option_category" value="'.$row->service_option_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_service_link_category" value="'.$row->service_link_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -136,12 +139,12 @@ if (!class_exists('service_links')) {
                 $output .= '<div id="dialog" title="Create new option">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="service_option_title">Option Title</label>';
-                $output .= '<input type="text" name="_service_option_title" id="service_option_title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service_option_link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_service_option_link" id="service_option_link" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service_option_category">Category</label>';
-                $output .= '<input type="text" name="_service_option_category" id="service_option_category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_link_title">Option Title</label>';
+                $output .= '<input type="text" name="_service_link_title" id="service_link_title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_link_uri">Option Link/Page</label>';
+                $output .= '<input type="text" name="_service_link_uri" id="service_link_uri" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="service_link_category">Category</label>';
+                $output .= '<input type="text" name="_service_link_category" id="service_link_category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -174,27 +177,27 @@ if (!class_exists('service_links')) {
 
         public function get_id( $_title='' ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_title = %s", $_title ), OBJECT );
-            return $row->service_option_id;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_title = %s", $_title ), OBJECT );
+            return $row->service_link_id;
         }
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d", $_id ), OBJECT );
-            return $row->service_option_title;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id = %d", $_id ), OBJECT );
+            return $row->service_link_title;
         }
 
         public function get_category( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_title = %s", $_id, $_id ), OBJECT );
-            return $row->service_option_category;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id = %d OR service_link_title = %s", $_id, $_id ), OBJECT );
+            return $row->service_link_category;
         }
 
         public function get_link( $_title=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_option_id = %d OR service_option_title = %s", $_title, $_title ), OBJECT );
-            //return get_site_url().'/'.$row->service_option_link;
-            return $row->service_option_link;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id = %d OR service_link_title = %s", $_title, $_title ), OBJECT );
+            //return get_site_url().'/'.$row->service_link_uri;
+            return $row->service_link_uri;
         }
 
         public function create_tables() {
@@ -203,13 +206,13 @@ if (!class_exists('service_links')) {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
             $sql = "CREATE TABLE `{$wpdb->prefix}service_links` (
-                service_option_id int NOT NULL AUTO_INCREMENT,
-                service_option_title varchar(20),
-                service_option_link varchar(255),
-                service_option_category varchar(10),
+                service_link_id int NOT NULL AUTO_INCREMENT,
+                service_link_title varchar(20),
+                service_link_uri varchar(255),
+                service_link_category varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
-                PRIMARY KEY (service_option_id)
+                PRIMARY KEY (service_link_id)
             ) $charset_collate;";
             dbDelta($sql);            
         }

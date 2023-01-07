@@ -5,27 +5,30 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_users')) {
     class curtain_users {
-        private $_option_page;
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Users';
+            $this->_wp_page_title = 'Users';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
             add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
-            $option_pages = new option_pages();
-            $option_pages->create_page($this->_option_page, '[curtain-user-list]');
+            $wp_pages = new wp_pages();
+            $wp_pages->create_page($this->_wp_page_title, '[curtain-user-list]');
             add_action( 'wp_ajax_send_chat', array( $this, 'send_chat' ) );
             add_action( 'wp_ajax_nopriv_send_chat', array( $this, 'send_chat' ) );
         }
 
         public function list_curtain_users() {            
             global $wpdb;
-            $option_pages = new option_pages();
+            $wp_pages = new wp_pages();
             $curtain_agents = new curtain_agents();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';
@@ -53,26 +56,26 @@ if (!class_exists('curtain_users')) {
                     )
                 );
 
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_category LIKE '%admin%' OR wp_page_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
                     if (isset($_POST[$_checkbox])) {
-                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_POST['_line_user_id'], $result->wp_page_postid ), OBJECT );
                         if (is_null($permission) || !empty($wpdb->last_error)) {
                             $this->insert_user_permission(
                                 array(
-                                    'line_user_id'  => $_POST['_line_user_id'],
-                                    'option_page'   => $result->service_option_title,
+                                    'line_user_id'   => $_POST['_line_user_id'],
+                                    'wp_page_postid' => $result->wp_page_postid,
                                 )
                             );
                         }    
                     } else {
-                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_POST['_line_user_id'], $result->wp_page_postid ), OBJECT );
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
                             $this->delete_user_permissions(
                                 array(
-                                    'line_user_id'  => $_POST['_line_user_id'],
-                                    'option_page'   => $result->service_option_title,
+                                    'line_user_id'   => $_POST['_line_user_id'],
+                                    'wp_page_postid' => $result->wp_page_postid,
                                 )
                             );
                         }    
@@ -141,7 +144,6 @@ if (!class_exists('curtain_users')) {
                 $output .= '<label for="curtain-agent-id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
                 $output .= '<div>';
-                //$output .= '<input style="display: inline-block;" type="checkbox" id="is-admin" name="_is_admin" value="'.$row->is_admin.'"';
                 $output .= '<input style="display: inline-block;" type="checkbox" id="is-admin" name="_is_admin"';
                 if ($row->is_admin==1) {
                     $output .= ' checked>';
@@ -151,19 +153,19 @@ if (!class_exists('curtain_users')) {
                 $output .= '<label style="display: inline-block; margin-left: 8px;" for="is-admin">is_admin</label>';
                 $output .= '</div>';
 
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
                 $output .= '<label for="user-permissions">Permissions</label>';
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_category LIKE '%admin%' OR wp_page_category LIKE '%system%' ", OBJECT );
                 foreach ($results as $index => $result) {
-                    $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
-                    $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $row->line_user_id, $result->service_option_title ), OBJECT );            
+                    $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->wp_page_id.'"';
+                    $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $row->line_user_id, $result->wp_page_postid ), OBJECT );            
                     if (is_null($permission) || !empty($wpdb->last_error)) {
                         $output .= '>';
                     } else {
                         $output .= ' checked>';
                     }
-                    $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title;
-                    $output .= '('.$result->service_option_category.')</label><br>';
+                    $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.get_the_title($result->wp_page_postid);
+                    $output .= '('.$result->wp_page_category.')</label><br>';
                 }
                 $output .= '</div>';        
 
@@ -283,7 +285,7 @@ if (!class_exists('curtain_users')) {
             $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
                 user_permission_id int NOT NULL AUTO_INCREMENT,
                 line_user_id varchar(50) NOT NULL,
-                option_page varchar(50) NOT NULL,
+                wp_page_postid int NOT NULL,
                 create_timestamp int(10),
                 PRIMARY KEY (user_permission_id)
             ) $charset_collate;";
@@ -292,7 +294,7 @@ if (!class_exists('curtain_users')) {
 
         function send_chat() {
             $line_webhook = new line_webhook();
-            $option_pages = new option_pages();
+            $wp_pages = new wp_pages();
 
             $line_webhook->insert_chat_message(
                 array(
@@ -309,7 +311,8 @@ if (!class_exists('curtain_users')) {
             $line_webhook->push_flex_messages(
                 array(
                     'line_user_id' => $_POST['to'],
-                    'link_uri' => get_site_url().'/'.$option_pages->get_link('Users').'/?_id='.$_POST['to'],
+                    //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Users').'/?_id='.$_POST['to'],
+                    'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$_POST['to'],
                     'hero_messages' => $hero_messages,
                     'body_messages' => $body_messages
                 )

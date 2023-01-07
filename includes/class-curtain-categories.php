@@ -5,24 +5,27 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_categories')) {
     class curtain_categories {
-        private $_option_page;
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Categories';
+            $this->_wp_page_title = 'Categories';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
             add_shortcode( 'curtain-category-list', array( $this, 'list_curtain_categories' ) );
-            $option_pages = new option_pages();
-            $option_pages->create_page($this->_option_page, '[curtain-category-list]');            
+            $wp_pages = new wp_pages();
+            $wp_pages->create_page($this->_wp_page_title, '[curtain-category-list]');            
         }
 
         public function list_curtain_categories() {
             global $wpdb;
-            $option_pages = new option_pages();
+            $wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
                         return 'You have not permission to access this page. Please check to the administrators.';

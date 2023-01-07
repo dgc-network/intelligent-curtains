@@ -5,30 +5,33 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('serial_number')) {
     class serial_number {
-        private $_option_page;
+        private $_wp_page_title;
+        private $_wp_page_postid;
         /**
          * Class constructor
          */
         public function __construct() {
-            $this->_option_page = 'Serials';
+            $this->_wp_page_title = 'Serials';
+            $page = get_page_by_title($this->_wp_page_title);
+            $this->_wp_page_postid = $page->ID;
             $this->create_tables();
             add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
-            $option_pages = new option_pages();
-            $option_pages->create_page($this->_option_page, '[serial-number-list]');            
+            $wp_pages = new wp_pages();
+            $wp_pages->create_page($this->_wp_page_title, '[serial-number-list]');            
         }
 
         public function list_serial_number() {
             global $wpdb;
-            $option_pages = new option_pages();
+            $wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
             $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_SESSION['line_user_id'], $this->_option_page ), OBJECT );            
+                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
                     if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access '.$_option_page.' page. Please check to the administrators.';
+                        return 'You have not permission to access '.$_wp_page.' page. Please check to the administrators.';
                     }
                 }
             } else {
@@ -129,7 +132,8 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$option_pages->get_link('Service').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<div style="display: flex;">';
@@ -146,14 +150,16 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$option_pages->get_link('Service').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_site_url().'/'.$option_pages->get_link('Service').'/?serial_no='.$_id;
+                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
+                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
