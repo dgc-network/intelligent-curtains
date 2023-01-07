@@ -3,7 +3,8 @@
 }
 
 .wp-block-button__link {
-    margin: 10px;
+    margin: 2px;
+    display: inline-block;
 }
 
 .example_content {
