@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!class_exists('curtain_orders')) {
-    class cutain_orders {
+    class curtain_orders {
         private $_option_page;
         /**
          * Class constructor
