@@ -136,6 +136,46 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="text" name="_mobile_phone" value="'.$row->mobile_phone.'" id="mobile-phone" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain-agent-id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+/*                
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
+                $output .= '<label for="user-permissions">Permissions</label>';
+                $output .= '<div style="border: 1px solid; padding: 10px;">';
+                foreach ($results as $index => $result) {
+                    $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
+                    $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $row->line_user_id, $result->service_option_title ), OBJECT );            
+                    if (is_null($permission) || !empty($wpdb->last_error)) {
+                        $output .= '>';
+                    } else {
+                        $output .= ' checked>';
+                    }
+                    $output .= '<label style="display: inline-block; margin-left: 8px;" for="checkbox'.$index.'"> '.$result->service_option_title;
+                    $output .= '('.$result->service_option_category.')</label><br>';
+                }
+                $output .= '</div>';        
+*/
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Permission" name="_permission">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+
+            if( isset($_POST['_permission']) ) {
+                $_id = $_GET['_edit'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id={$_id}", OBJECT );
+                $output .= '<div id="dialog" title="User permissions">';
+                $output .= '<form method="post">';                
+                $output .= '<fieldset>';
+/*                
+                $output .= '<input type="hidden" value="'.$row->curtain_user_id.'" name="_curtain_user_id">';
+                $output .= '<input type="hidden" value="'.$row->line_user_id.'" name="_line_user_id">';
+                $output .= '<label for="display-name">Display Name</label>';
+                $output .= '<input type="text" name="_display_name" value="'.$row->display_name.'" id="display-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="mobile-phone">Mobile Phone</label>';
+                $output .= '<input type="text" name="_mobile_phone" value="'.$row->mobile_phone.'" id="mobile-phone" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain-agent-id">Agent</label>';
+                $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+                */
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
                 $output .= '<label for="user-permissions">Permissions</label>';
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
@@ -249,6 +289,7 @@ if (!class_exists('curtain_users')) {
                 display_name varchar(50),
                 mobile_phone varchar(20),
                 curtain_agent_id int(10),
+                is_admin tinyint,
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)

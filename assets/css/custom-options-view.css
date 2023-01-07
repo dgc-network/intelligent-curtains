@@ -2,6 +2,10 @@
     display: none;
 }
 
+.wp-block-button__link {
+    margin: 10px;
+}
+
 .example_content {
     display : none;
 } 
