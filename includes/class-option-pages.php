@@ -40,7 +40,7 @@ if (!class_exists('option_pages')) {
             $this->insert_option_page(
                 array(
                     'service_option_title' => $title_of_the_page,
-                    'service_option_link' => get_page_link($title_of_the_page,true),
+                    'service_option_link' => get_page_link($page_id),
                     'service_option_category' => $category,
                 )
             );
