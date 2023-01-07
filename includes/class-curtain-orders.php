@@ -3,8 +3,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('order_items')) {
-    class order_items {
+if (!class_exists('curtain_orders')) {
+    class cutain_orders {
         private $_option_page;
         /**
          * Class constructor
@@ -590,5 +590,5 @@ if (!class_exists('order_items')) {
             wp_die();
         }
     }
-    //$my_class = new order_items();
+    $my_class = new curtain_orders();
 }
