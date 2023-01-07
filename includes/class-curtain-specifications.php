@@ -213,6 +213,12 @@ if (!class_exists('curtain_specifications')) {
             return $row->curtain_specification_name;
         }
 
+        public function get_description( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
+            return $row->specification_description.'('.$row->curtain_specification_name.')';
+        }
+
         public function get_price( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );

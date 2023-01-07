@@ -52,11 +52,11 @@ if (!class_exists('order_items')) {
             if( isset($_GET['_print']) ) {
                 $_id = $_GET['_print'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_id={$_id}", OBJECT );
-                $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                $output  = '<div style="text-align:center;"><h2>Customer Orders</h2></div>';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
                 $output .= '<tr>';
-                $output .= '<td>Order Number: </td><td>'.$row->customer_orders_number.'</td>';
+                $output .= '<td>Order Number: </td><td>'.$row->customer_order_number.'</td>';
                 $output .= '<td>Date: </td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
                 $output .= '<tr>';
@@ -76,13 +76,16 @@ if (!class_exists('order_items')) {
                 $output .= '<th>Amount</th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
+                $x=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE customer_order_number={$row->customer_order_number}", OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
+                    $x=$x+1;
+                    $output .= '<td>'.$x.'</td>';
                     $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
-                    $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                    $output .= '<td>'.$curtain_models->get_description($result->curtain_model_id).'</td>';
                     $output .= '<td>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
-                    $output .= '<td>'.$curtain_specifications->get_name($result->curtain_specification_id).'</td>';
+                    $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
                     $output .= '<td>Width:'.$result->curtain_width.'</td>';
                     $output .= '<td>'.$result->order_item_qty.'</td>';
                     $output .= '<td>'.$result->order_item_amount.'</td>';
