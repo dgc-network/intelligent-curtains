@@ -15,8 +15,8 @@ if (!class_exists('wp_pages')) {
             $page = get_page_by_title($this->_wp_page_title);
             $this->_wp_page_postid = $page->ID;
             $this->create_tables();
-            add_shortcode( 'option-page-list', array( $this, 'list_wp_pages' ) );
-            $this->create_page($this->_wp_page_title, '[option-page-list]');
+            add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
+            $this->create_page($this->_wp_page_title, '[wp-page-list]');
         }
 
         public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {
@@ -42,9 +42,7 @@ if (!class_exists('wp_pages')) {
 
             $this->insert_wp_page(
                 array(
-                    //'wp_page_title' => $title_of_the_page,
                     'wp_page_postid' => $page_id,
-                    //'wp_page_link' => get_page_link($page_id),
                     'wp_page_category' => $category,
                 )
             );
@@ -119,8 +117,10 @@ if (!class_exists('wp_pages')) {
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            //$output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
+            //$output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            $output .= '<input class="wp-block-button__link" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
@@ -155,38 +155,19 @@ if (!class_exists('wp_pages')) {
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id={$_id}", OBJECT );
-                $output .= '<div id="dialog" title="Service Option update">';
+                $output .= '<div id="dialog" title="page update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->wp_page_id.'" name="_wp_page_id">';
-                $output .= '<label for="service-option-title">Option Title</label>';
-                $output .= '<input type="text" name="_wp_page_title" value="'.get_the_title($row->wp_page_postid).'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
-                //$output .= '<label for="service-option-link">Option Link/Page</label>';
-                //$output .= '<input type="text" name="_wp_page_link" value="'.$row->wp_page_link.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-option-category">Category</label>';
-                $output .= '<input type="text" name="_wp_page_category" value="'.$row->wp_page_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="wp-page-title">Page Title</label>';
+                $output .= '<input type="text" name="_wp_page_title" value="'.get_the_title($row->wp_page_postid).'" id="wp-page-title" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="wp-page-category">Category</label>';
+                $output .= '<input type="text" name="_wp_page_category" value="'.$row->wp_page_category.'" id="wp-page-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
-/*
-            if( isset($_POST['_add']) ) {
-                $output .= '<div id="dialog" title="Create new option">';
-                $output .= '<form method="post">';
-                $output .= '<fieldset>';
-                $output .= '<label for="wp_page_title">Option Title</label>';
-                $output .= '<input type="text" name="_wp_page_title" id="wp_page_title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="wp_page_link">Option Link/Page</label>';
-                $output .= '<input type="text" name="_wp_page_link" id="wp_page_link" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="wp_page_category">Category</label>';
-                $output .= '<input type="text" name="_wp_page_category" id="wp_page_category" class="text ui-widget-content ui-corner-all">';
-                $output .= '</fieldset>';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
-                $output .= '</form>';
-                $output .= '</div>';
-            }
-*/            
             return $output;
         }
 
@@ -217,26 +198,13 @@ if (!class_exists('wp_pages')) {
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d", $_id ), OBJECT );
             return $row->wp_page_postid;
         }
-/*
-        public function get_name( $_id=0 ) {
-            global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d", $_id ), OBJECT );
-            return $row->wp_page_title;
-        }
-*/
+
         public function get_category( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_postid = %d OR wp_page_title = %s", $_id, $_id, $_id ), OBJECT );
             return $row->wp_page_category;
         }
-/*
-        public function get_link( $_title=0 ) {
-            global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_title = %s", $_title, $_title ), OBJECT );
-            //return get_site_url().'/'.$row->wp_page_link;
-            return $row->wp_page_link;
-        }
-*/
+
         public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();

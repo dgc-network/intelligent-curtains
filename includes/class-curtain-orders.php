@@ -31,7 +31,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_remotes = new curtain_remotes();
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
-            $line_webhook = new line_webhook();
+            $curtain_service = new curtain_service();
             $wp_pages = new wp_pages();
             $system_status = new system_status();
 
@@ -257,7 +257,7 @@ if (!class_exists('curtain_orders')) {
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
                     $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                    $line_webhook->push_flex_messages(
+                    $curtain_service->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
                             //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Orders').'/?_id='.$customer_order_number,

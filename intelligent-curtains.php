@@ -46,7 +46,7 @@ add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-pages.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-line-webhook.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
@@ -58,6 +58,6 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-$line_webhook = new line_webhook();
-$line_webhook->init_webhook();
+$curtain_service = new curtain_service();
+$curtain_service->init_webhook();
 ?>

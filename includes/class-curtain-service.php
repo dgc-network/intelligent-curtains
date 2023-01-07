@@ -3,8 +3,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!class_exists('line_webhook')) {
-    class line_webhook {
+if (!class_exists('curtain_service')) {
+    class curtain_service {
         private $_wp_page_title;
         private $_wp_page_postid;
         /**
@@ -425,6 +425,6 @@ if (!class_exists('line_webhook')) {
             dbDelta($sql);
         }        
     }
-    $my_class = new line_webhook();
+    $my_class = new curtain_service();
 }
 ?>

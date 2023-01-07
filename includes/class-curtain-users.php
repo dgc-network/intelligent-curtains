@@ -293,10 +293,10 @@ if (!class_exists('curtain_users')) {
         }
 
         function send_chat() {
-            $line_webhook = new line_webhook();
+            $curtain_service = new curtain_service();
             $wp_pages = new wp_pages();
 
-            $line_webhook->insert_chat_message(
+            $curtain_service->insert_chat_message(
                 array(
                     'chat_from' => $_SESSION['line_user_id'],
                     'chat_to' => $_POST['to'],
@@ -308,7 +308,7 @@ if (!class_exists('curtain_users')) {
             $hero_messages[] = $this->get_name($_POST['to']);
             $body_messages = array();
             $body_messages[] = $_POST['message'];
-            $line_webhook->push_flex_messages(
+            $curtain_service->push_flex_messages(
                 array(
                     'line_user_id' => $_POST['to'],
                     //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Users').'/?_id='.$_POST['to'],
