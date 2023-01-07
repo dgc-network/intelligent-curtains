@@ -21,6 +21,7 @@ if (!class_exists('order_items')) {
 
         public function list_shopping_items() {
             global $wpdb;
+            $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
@@ -130,13 +131,16 @@ if (!class_exists('order_items')) {
                     $output .= '<td>'.$result->customer_order_number.'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
-                    //$output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($result->customer_order_status).'</select></td>';
+                    if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                        $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($result->customer_order_status).'</select></td>';
+                    } else {
+                        $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
+                    }
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
                 //$output .= '<form method="post">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
+                //$output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
                 $output .= '</form>';
                 return $output;
             }

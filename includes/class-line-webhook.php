@@ -37,7 +37,7 @@ if (!class_exists('line_webhook')) {
                     foreach ( $results as $index=>$result ) {
                         if ($option_pages->get_category($result->option_page)=='admin') {
                             $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.$option_pages->get_link($result->option_page).'">'.$option_pages->get_name($result->option_page).'</a>';
+                            $output .= '<a class="wp-block-button__link" href="'.$option_pages->get_link($result->option_page).'">'.$result->option_page.'</a>';
                             $output .= '</div>';    
                         }
                     }
