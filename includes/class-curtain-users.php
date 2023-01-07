@@ -107,16 +107,16 @@ if (!class_exists('curtain_users')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="edit-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-edit-'.$result->curtain_user_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->line_user_id.'</td>';
                 $output .= '<td>'.$result->display_name.'</td>';
                 $output .= '<td>'.$result->mobile_phone.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="chat-btn-'.$result->line_user_id.'"><i class="fa-solid fa-user-tie"></i></span>';
+                $output .= '<span id="btn-chat-'.$result->line_user_id.'"><i class="fa-solid fa-user-tie"></i></span>';
                 $output .= '<span>  </span>';
-                $output .= '<span id="del-btn-'.$result->curtain_user_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '<span id="btn-del-'.$result->curtain_user_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
@@ -136,7 +136,17 @@ if (!class_exists('curtain_users')) {
                 $output .= '<input type="text" name="_mobile_phone" value="'.$row->mobile_phone.'" id="mobile-phone" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="curtain-agent-id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-/*                
+                $output .= '<div>';
+                $output .= '<input style="display: inline-block;" type="checkbox" id="is-admin" name="_is_admin" value="'.$row->is_admin.'"';
+                if ($row->is_admin==1) {
+                    $output .= ' checked>';
+                } else {
+                    $output .= '>';
+                }
+                $output .= '<label style="display: inline-block;" for="is-admin">is_admin</label>';
+                $output .= '</div>';
+
+                /*                
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
                 $output .= '<label for="user-permissions">Permissions</label>';
                 $output .= '<div style="border: 1px solid; padding: 10px;">';
@@ -154,8 +164,10 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div>';        
 */
                 $output .= '</fieldset>';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Permission" name="_permission">';
+                $output .= '<div>';
+                $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Permission" name="_permission">';
+                $output .= '</div>';
                 $output .= '</form>';
                 $output .= '</div>';
             }

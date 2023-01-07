@@ -84,33 +84,46 @@ jQuery(document).ready(function($) {
         });
     });
     
-    /* Cart Button */
-    $('[id^="cart-btn"]').mouseover(function() {
+    /* Button */    
+    $('[id^="btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="cart-btn"]').mouseout(function() {
+    $('[id^="btn-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
+
+    /* Cart Button */
+/*    
+    $('[id^="btn-cart"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        $(this).css('color', 'cornflowerblue');
+    });
         
-    $('[id^="cart-btn"]').on( "click", function() {
+    $('[id^="btn-cart"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', 'black');
+    });
+*/        
+    $('[id^="btn-cart"]').on( "click", function() {
         window.location.assign("orders")
     });
 
     /* QR Code Button */
-    $('[id^="qrcode-btn-"]').mouseover(function() {
+/*    
+    $('[id^="btn-qrcode-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="qrcode-btn-"]').mouseout(function() {
+    $('[id^="btn-qrcode-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-        
-    $('[id^="qrcode-btn-"]').on( "click", function() {
+*/        
+    $('[id^="btn-qrcode-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(11);
@@ -118,17 +131,18 @@ jQuery(document).ready(function($) {
     });
 
     /* Chat Button */
-    $('[id^="chat-btn-"]').mouseover(function() {
+/*    
+    $('[id^="btn-chat-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="chat-btn-"]').mouseout(function() {
+    $('[id^="btn-chat-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-        
-    $('[id^="chat-btn-"]').on( "click", function(e) {
+*/        
+    $('[id^="btn-chat-"]').on( "click", function(e) {
         //e.preventDefault(); ///first, prevent the action
         //var targetUrl = $(this).attr("href"); ///the original delete call
 
@@ -162,17 +176,18 @@ jQuery(document).ready(function($) {
     });
 
     /* Update Button */
-    $('[id^="edit-btn-"]').mouseover(function() {
+/*    
+    $('[id^="btn-edit-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="edit-btn-"]').mouseout(function() {
+    $('[id^="btn-edit-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-        
-    $('[id^="edit-btn-"]').on( "click", function() {
+*/        
+    $('[id^="btn-edit-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(9);
@@ -180,17 +195,18 @@ jQuery(document).ready(function($) {
     });
 
     /* Delete Button */
-    $('[id^="del-btn-"]').mouseover(function() {
+    /*
+    $('[id^="btn-del-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="del-btn-"]').mouseout(function() {
+    $('[id^="btn-del-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-        
-    $('[id^="del-btn-"]').on( "click", function() {
+*/        
+    $('[id^="btn-del-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(8);        
@@ -200,17 +216,18 @@ jQuery(document).ready(function($) {
     });
 
     /* Print Button */
-    $('[id^="print-btn-"]').mouseover(function() {
+    /*
+    $('[id^="btn-print-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
     });
         
-    $('[id^="print-btn-"]').mouseout(function() {
+    $('[id^="btn-print-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-        
-    $('[id^="print-btn-"]').on( "click", function() {
+*/        
+    $('[id^="btn-print-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(10);        

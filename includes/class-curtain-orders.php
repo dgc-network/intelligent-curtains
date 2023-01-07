@@ -124,7 +124,7 @@ if (!class_exists('order_items')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="print-btn-'.$result->customer_order_id.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '<span id="btn-print-'.$result->customer_order_id.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
@@ -391,7 +391,7 @@ if (!class_exists('order_items')) {
                     $output .= '<td></td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="edit-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '<span id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                 }
                 $output .= '<td>';
@@ -406,7 +406,7 @@ if (!class_exists('order_items')) {
                     $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="del-btn-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '<span id="btn-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                 }
                 $output .= '</tr>';

@@ -93,7 +93,7 @@ if (!class_exists('serial_number')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="qrcode-btn-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
+                $output .= '<span id="btn-qrcode-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->qr_code_serial_no.'</td>';
                 $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
@@ -102,7 +102,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="del-btn-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
