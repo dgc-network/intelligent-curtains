@@ -334,7 +334,5 @@ if (!class_exists('curtain_users')) {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
         }
     }
-    //$my_class = new curtain_users();
-    //add_action( 'wp_ajax_send_chat', array( $my_class, 'send_chat' ) );
-    //add_action( 'wp_ajax_nopriv_send_chat', array( $my_class, 'send_chat' ) );
+    $my_class = new curtain_users();
 }

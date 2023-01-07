@@ -212,5 +212,5 @@ if (!class_exists('curtain_remotes')) {
             dbDelta($sql);
         }
     }
-    //$my_class = new curtain_remotes();
+    $my_class = new curtain_remotes();
 }

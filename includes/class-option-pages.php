@@ -250,6 +250,6 @@ if (!class_exists('option_pages')) {
             dbDelta($sql);            
         }
     }
-    //$my_class = new option_pages();
+    $my_class = new option_pages();
 }
 ?>

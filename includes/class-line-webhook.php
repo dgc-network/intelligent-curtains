@@ -415,6 +415,6 @@ if (!class_exists('line_webhook')) {
             dbDelta($sql);
         }        
     }
-    //$my_class = new line_webhook();
+    $my_class = new line_webhook();
 }
 ?>

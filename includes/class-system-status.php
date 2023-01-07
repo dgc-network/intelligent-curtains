@@ -206,5 +206,5 @@ if (!class_exists('system_status')) {
             dbDelta($sql);
         }
     }
-    //$my_class = new system_status();
+    $my_class = new system_status();
 }

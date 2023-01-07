@@ -238,5 +238,5 @@ if (!class_exists('curtain_agents')) {
             dbDelta($sql);            
         }
     }
-    //$my_class = new curtain_agents();
+    $my_class = new curtain_agents();
 }

@@ -197,5 +197,5 @@ if (!class_exists('curtain_categories')) {
             dbDelta($sql);
         }
     }
-    //$my_class = new curtain_categories();
+    $my_class = new curtain_categories();
 }

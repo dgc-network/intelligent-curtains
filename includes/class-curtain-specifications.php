@@ -268,5 +268,5 @@ if (!class_exists('curtain_specifications')) {
             dbDelta($sql);
         }
     }
-    //$my_class = new curtain_specifications();
+    $my_class = new curtain_specifications();
 }
