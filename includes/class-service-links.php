@@ -214,6 +214,6 @@ if (!class_exists('service_links')) {
             dbDelta($sql);            
         }
     }
-    $my_class = new service_links();
+    //$my_class = new service_links();
 }
 ?>

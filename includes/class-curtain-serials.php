@@ -211,5 +211,5 @@ if (!class_exists('serial_number')) {
             dbDelta($sql);
         }
     }
-    $my_class = new serial_number();
+    //$my_class = new serial_number();
 }

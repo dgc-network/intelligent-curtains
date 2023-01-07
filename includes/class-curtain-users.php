@@ -38,17 +38,14 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_POST['_update']) ) {
-                //return var_dump($_POST['_is_admin']);
                 $_is_admin=0;
-                if ($_POST['_is_admin']=='on'){
-                    $_is_admin=1;
-                }
+                if ($_POST['_is_admin']=='on'){$_is_admin=1;}
+
                 $this->update_curtain_users(
                     array(
                         'display_name'  => $_POST['_display_name'],
                         'mobile_phone'  => $_POST['_mobile_phone'],
                         'curtain_agent_id'=>$_POST['_curtain_agent_id'],
-                        //'is_admin'      => $_POST['_is_admin'],
                         'is_admin'      => $_is_admin
                     ),
                     array(
@@ -258,6 +255,13 @@ if (!class_exists('curtain_users')) {
             return $row->display_name;
         }
 
+        public function is_admin( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d OR line_user_id = %s", $_id, $_id ), OBJECT );
+            if ($row->is_admin==1) {return true;}
+            return false;
+        }
+
         public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
@@ -330,7 +334,7 @@ if (!class_exists('curtain_users')) {
             wp_enqueue_script( 'custom-curtain-users', plugin_dir_url( __DIR__ ) . 'assets/js/custom-curtain-users.js', array( 'jquery' ), time(), true );
         }
     }
-    $my_class = new curtain_users();
+    //$my_class = new curtain_users();
     //add_action( 'wp_ajax_send_chat', array( $my_class, 'send_chat' ) );
     //add_action( 'wp_ajax_nopriv_send_chat', array( $my_class, 'send_chat' ) );
 }
