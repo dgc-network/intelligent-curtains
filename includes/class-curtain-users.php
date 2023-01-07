@@ -38,6 +38,7 @@ if (!class_exists('curtain_users')) {
             }
 
             if( isset($_POST['_update']) ) {
+                return var_dump($_POST['_is_admin']);
                 $_is_admin=0;
                 if ($_POST['_is_admin']==1){
                     $_is_admin=1;
