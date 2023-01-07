@@ -49,7 +49,7 @@ if (!class_exists('curtain_users')) {
                         'curtain_user_id'=>$_POST['_curtain_user_id'],
                     )
                 );
-/*
+
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
@@ -75,7 +75,6 @@ if (!class_exists('curtain_users')) {
                         }    
                     }
                 }
-*/                
                 ?><script>window.location.replace("?_update=");</script><?php
             }
         
@@ -189,10 +188,9 @@ if (!class_exists('curtain_users')) {
                 $output .= '<label style="display: inline-block; margin-left: 8px;" for="is-admin">is_admin</label>';
                 $output .= '</div>';
 
-                /*                
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%' ", OBJECT );
                 $output .= '<label for="user-permissions">Permissions</label>';
-                $output .= '<div style="border: 1px solid; padding: 10px;">';
+                $output .= '<div style="border: 1px solid; padding: 10px; height:250px;">';
                 foreach ($results as $index => $result) {
                     $output .= '<input style="display: inline-block;" type="checkbox" id="checkbox'.$index.'" name="_checkbox'.$index.'" value="'.$result->service_option_id.'"';
                     $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $row->line_user_id, $result->service_option_title ), OBJECT );            
@@ -205,11 +203,11 @@ if (!class_exists('curtain_users')) {
                     $output .= '('.$result->service_option_category.')</label><br>';
                 }
                 $output .= '</div>';        
-*/
+
                 $output .= '</fieldset>';
                 $output .= '<div>';
                 $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Update" name="_update">';
-                $output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Permit" name="_permission">';
+                //$output .= '<input style="display:inline" class="wp-block-button__link" type="submit" value="Permit" name="_permission">';
                 $output .= '</div>';
                 $output .= '</form>';
                 $output .= '</div>';
