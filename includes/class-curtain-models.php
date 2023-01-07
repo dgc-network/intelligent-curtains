@@ -243,5 +243,5 @@ if (!class_exists('curtain_models')) {
             dbDelta($sql);
         }
     }
-    $my_class = new curtain_models();
+    //$my_class = new curtain_models();
 }

@@ -81,19 +81,24 @@ if (!class_exists('order_items')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $x=$x+1;
-                    $output .= '<td>'.$x.'</td>';
+                    $output .= '<td style="text-align: center;">'.$x.'</td>';
                     $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
-                    $output .= '<td>'.$curtain_models->get_description($result->curtain_model_id).'</td>';
-                    $output .= '<td>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
+                    $output .= '<td>'.$curtain_models->get_description($result->curtain_model_id);
+                    $output .= '<br>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
                     $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
-                    $output .= '<td>Width:'.$result->curtain_width.'</td>';
-                    $output .= '<td>'.$result->order_item_qty.'</td>';
-                    $output .= '<td>'.$result->order_item_amount.'</td>';
+                    $output .= '<td>Width:'.$result->curtain_width;
+                    if ($result->curtain_category_id==1){
+                        $output .= '</td>';
+                    } else {
+                        $output .= '<br>Height:'.$result->curtain_height.'</td>';
+                    }
+                    $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
+                    $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
                     $output .= '</tr>';
                 }
                 $output .= '<tr>';
                 $output .= '<td colspan="6">Sub Total: </td>';
-                $output .= '<td>'.$row->customer_order_amount.'</td>';
+                $output .= '<td style="text-align: center;">'.$row->customer_order_amount.'</td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
