@@ -39,7 +39,7 @@ if (!class_exists('curtain_users')) {
 
             if( isset($_POST['_update']) ) {
                 $_is_admin=0;
-                if ($_POST['_is_admin']=1){
+                if ($_POST['_is_admin']==1){
                     $_is_admin=1;
                 }
                 $this->update_curtain_users(
