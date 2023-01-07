@@ -43,12 +43,55 @@ if (!class_exists('curtain_users')) {
                         'display_name'=>$_POST['_display_name'],
                         'mobile_phone'=>$_POST['_mobile_phone'],
                         'curtain_agent_id'=>$_POST['_curtain_agent_id'],
+                        'is_admin'=>$_POST['_is_admin'],
                     ),
                     array(
                         'curtain_user_id'=>$_POST['_curtain_user_id'],
                     )
                 );
-
+/*
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
+                foreach ($results as $index => $result) {
+                    $_checkbox = '_checkbox'.$index;
+                    if (isset($_POST[$_checkbox])) {
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
+                        if (is_null($permission) || !empty($wpdb->last_error)) {
+                            $this->insert_user_permission(
+                                array(
+                                    'line_user_id'  => $_POST['_line_user_id'],
+                                    'option_page'   => $result->service_option_title,
+                                )
+                            );
+                        }    
+                    } else {
+                        $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND option_page= %s", $_POST['_line_user_id'], $result->service_option_title ), OBJECT );
+                        if (!(is_null($permission) || !empty($wpdb->last_error))) {
+                            $this->delete_user_permissions(
+                                array(
+                                    'line_user_id'  => $_POST['_line_user_id'],
+                                    'option_page'   => $result->service_option_title,
+                                )
+                            );
+                        }    
+                    }
+                }
+*/                
+                ?><script>window.location.replace("?_update=");</script><?php
+            }
+        
+            if( isset($_POST['_update_permissions']) ) {
+/*                
+                $this->update_curtain_users(
+                    array(
+                        'display_name'=>$_POST['_display_name'],
+                        'mobile_phone'=>$_POST['_mobile_phone'],
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id'],
+                    ),
+                    array(
+                        'curtain_user_id'=>$_POST['_curtain_user_id'],
+                    )
+                );
+*/
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}option_pages WHERE service_option_category LIKE '%admin%' OR service_option_category LIKE '%system%'", OBJECT );
                 foreach ($results as $index => $result) {
                     $_checkbox = '_checkbox'.$index;
@@ -143,7 +186,7 @@ if (!class_exists('curtain_users')) {
                 } else {
                     $output .= '>';
                 }
-                $output .= '<label style="display: inline-block;" for="is-admin">is_admin</label>';
+                $output .= '<label style="display: inline-block;" for="is-admin"> is_admin</label>';
                 $output .= '</div>';
 
                 /*                
@@ -205,7 +248,7 @@ if (!class_exists('curtain_users')) {
                 $output .= '</div>';        
 
                 $output .= '</fieldset>';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update_permissions">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
