@@ -69,7 +69,6 @@ if (!class_exists('order_items')) {
                 $output .= '<th>#</th>';
                 $output .= '<th>Category</th>';
                 $output .= '<th>Model</th>';
-                $output .= '<th>Remote</th>';
                 $output .= '<th>Specification</th>';
                 $output .= '<th>Dimension</th>';
                 $output .= '<th>QTY</th>';
