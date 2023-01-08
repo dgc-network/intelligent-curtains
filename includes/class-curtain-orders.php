@@ -34,11 +34,11 @@ if (!class_exists('curtain_orders')) {
             $curtain_service = new curtain_service();
             $wp_pages = new wp_pages();
             $system_status = new system_status();
-
+/*
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
             }
-
+*/
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
@@ -55,7 +55,8 @@ if (!class_exists('curtain_orders')) {
             //* Print Customer Order */
             if( isset($_GET['_print']) ) {
                 $_id = $_GET['_print'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_id={$_id}", OBJECT );
+                //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_id={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
                 $output  = '<div style="text-align:center;"><h2>Customer Orders</h2></div>';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
@@ -128,7 +129,8 @@ if (!class_exists('curtain_orders')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-print-'.$result->customer_order_id.'"><i class="fa-solid fa-print"></i></span>';
+                    //$output .= '<span id="btn-print-'.$result->customer_order_id.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
@@ -183,13 +185,13 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tbody>';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
-                    $output .= '<td><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
+                    $output .= '<td style="text-align:center;"><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
-                    $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                    $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
-                    $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
-                    $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
+                    $output .= '<td style="text-align:center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                    $output .= '<td style="text-align:center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
+                    $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
+                    $output .= '<td style="text-align:center;">'.$result->order_item_amount.'</td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
@@ -248,8 +250,6 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE wp_page_id = %d", $wp_pages->get_id('Notification') ), OBJECT );            
-                //$results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE wp_page = %s", 'Notification' ), OBJECT );
                 $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
@@ -261,7 +261,7 @@ if (!class_exists('curtain_orders')) {
                         array(
                             'line_user_id' => $result->line_user_id,
                             //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Orders').'/?_id='.$customer_order_number,
-                            'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$customer_order_number,
+                            'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                             'hero_messages' => $hero_messages,
                             'body_messages' => $body_messages
                         )
