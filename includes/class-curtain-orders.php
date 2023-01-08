@@ -62,7 +62,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
                 $output .= '<tr>';
-                $output .= '<td>Order Number:</td><td id="select-order-number">'.$row->customer_order_number.'</td>';
+                $output .= '<td>Order Number:</td><td><span id="select-order-number">'.$row->customer_order_number.'</span></td>';
                 $output .= '<td>Order Date:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
                 $output .= '<tr>';
@@ -581,7 +581,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function select_order_status() {
-            global $wpdb;
+            //global $wpdb;
             $customer_order_number = $_POST['number'];
             $customer_order_status = $_POST['status'];
 

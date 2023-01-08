@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
                 'number': number,
                 'status': status,
             },
-            success: function (response) {
+            //success: function (response) {
 /*                
                 current_time = response.currenttime;
                 models = response.models;
@@ -79,7 +79,7 @@ jQuery(document).ready(function($) {
                     $("#select-specification-id").append(specifications[x]);
                 }
 */                
-            },
+            //},
             error: function(error){
                 alert(error);
             }
