@@ -61,14 +61,20 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
                 $output .= '<tr>';
-                $output .= '<td>Order Number: </td><td>'.$row->customer_order_number.'</td>';
-                $output .= '<td>Date: </td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
+                $output .= '<td>Order Number:</td><td>'.$row->customer_order_number.'</td>';
+                $output .= '<td>Order Date:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
                 $output .= '<tr>';
-                $output .= '<td>Agent: </td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
-                $output .= '<td>Status: </td><td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
+                $output .= '<td>Status:</td>';
+                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                    $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($row->customer_order_status).'</select></td>';
+                } else {
+                    $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                }
                 $output .= '</tr>';
                 $output .= '</table>';
+
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th>#</th>';
@@ -123,6 +129,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Agent</th>';
                 $output .= '<th>Amount</th>';
                 $output .= '<th>Status</th>';
+                $output .= '<th></th>';
                 $output .= '</tr></thead>';
                 $output .= '<form method="post">';
                 $output .= '<tbody>';
@@ -136,11 +143,15 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$result->customer_order_number.'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
+                    $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
+/*
                     if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                         $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($result->customer_order_status).'</select></td>';
                     } else {
                         $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     }
+                    */
+                    $output .= '<td></td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
