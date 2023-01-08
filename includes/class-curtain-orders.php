@@ -271,7 +271,8 @@ if (!class_exists('curtain_orders')) {
                     $hero_messages[] = 'System Notification';
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
-                    $body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                    //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                    $body_messages[] = 'Order Status: '.$system_status->get_name(1);
                     $curtain_service->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
@@ -593,6 +594,27 @@ if (!class_exists('curtain_orders')) {
                     'customer_order_number'=>$customer_order_number
                 )
             );
+
+            // Notice the admin about the order status
+            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
+            foreach ( $results as $index=>$result ) {
+                $hero_messages = array();
+                $hero_messages[] = 'System Notification';
+                $body_messages = array();
+                $body_messages[] = 'Order Number: '.$customer_order_number;
+                //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
+                $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
+                $curtain_service->push_flex_messages(
+                    array(
+                        'line_user_id' => $result->line_user_id,
+                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
+                        'hero_messages' => $hero_messages,
+                        'body_messages' => $body_messages
+                    )
+                );
+            }
+
+            
 /*
             $models = array();
             $models[] = '<option value="0">-- Select an option --</option>';
