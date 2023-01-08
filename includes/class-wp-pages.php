@@ -117,9 +117,7 @@ if (!class_exists('wp_pages')) {
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            //$output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            //$output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
-            $output .= '<input class="wp-block-button__link" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
@@ -201,7 +199,7 @@ if (!class_exists('wp_pages')) {
 
         public function get_category( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_postid = %d OR wp_page_title = %s", $_id, $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d OR wp_page_postid = %d", $_id, $_id ), OBJECT );
             return $row->wp_page_category;
         }
 

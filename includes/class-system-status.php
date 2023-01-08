@@ -85,7 +85,7 @@ if (!class_exists('system_status')) {
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
