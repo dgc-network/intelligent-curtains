@@ -85,9 +85,9 @@ if (!class_exists('service_links')) {
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            //$output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             //$output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
-            $output .= '<input class="wp-block-button__link" type="text" name="_where" placeholder="Search...">';
+            //$output .= '<input class="wp-block-button__link" type="text" name="_where" placeholder="Search...">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
@@ -127,7 +127,7 @@ if (!class_exists('service_links')) {
                 $output .= '<input type="hidden" value="'.$row->service_link_id.'" name="_service_link_id">';
                 $output .= '<label for="service-option-title">Title</label>';
                 $output .= '<input type="text" name="_service_link_title" value="'.$row->service_link_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-option-link">Uri/Page</label>';
+                $output .= '<label for="service-option-link">Uri</label>';
                 $output .= '<input type="text" name="_service_link_uri" value="'.$row->service_link_uri.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-option-category">Category</label>';
                 $output .= '<input type="text" name="_service_link_category" value="'.$row->service_link_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
