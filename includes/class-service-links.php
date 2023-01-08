@@ -85,8 +85,10 @@ if (!class_exists('service_links')) {
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
             $output .= '<form method="post">';
-            $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            $output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            //$output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
+            //$output .= '<input style="display:inline" type="submit" value="Search" name="submit_action">';
+            $output .= '<input class="wp-block-button__link" type="text" name="_where" placeholder="Search...">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
@@ -119,13 +121,13 @@ if (!class_exists('service_links')) {
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id={$_id}", OBJECT );
-                $output .= '<div id="dialog" title="Service Option update">';
+                $output .= '<div id="dialog" title="Service Link update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->service_link_id.'" name="_service_link_id">';
-                $output .= '<label for="service-option-title">Option Title</label>';
+                $output .= '<label for="service-option-title">Title</label>';
                 $output .= '<input type="text" name="_service_link_title" value="'.$row->service_link_title.'" id="service-option-title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-option-link">Option Link/Page</label>';
+                $output .= '<label for="service-option-link">Uri/Page</label>';
                 $output .= '<input type="text" name="_service_link_uri" value="'.$row->service_link_uri.'" id="service-option-link" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-option-category">Category</label>';
                 $output .= '<input type="text" name="_service_link_category" value="'.$row->service_link_category.'" id="service-option-category" class="text ui-widget-content ui-corner-all">';
@@ -136,12 +138,12 @@ if (!class_exists('service_links')) {
             }
 
             if( isset($_POST['_add']) ) {
-                $output .= '<div id="dialog" title="Create new option">';
+                $output .= '<div id="dialog" title="New service link">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="service_link_title">Option Title</label>';
+                $output .= '<label for="service_link_title">Title</label>';
                 $output .= '<input type="text" name="_service_link_title" id="service_link_title" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service_link_uri">Option Link/Page</label>';
+                $output .= '<label for="service_link_uri">Uri</label>';
                 $output .= '<input type="text" name="_service_link_uri" id="service_link_uri" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service_link_category">Category</label>';
                 $output .= '<input type="text" name="_service_link_category" id="service_link_category" class="text ui-widget-content ui-corner-all">';
