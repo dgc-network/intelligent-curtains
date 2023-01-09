@@ -15,13 +15,13 @@ if (!class_exists('curtain_orders')) {
             $page = get_page_by_title($this->_wp_page_title);
             $this->_wp_page_postid = $page->ID;
             $this->create_tables();
-            add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[shopping-item-list]', 'system');
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
+            add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
         }
 
         public function list_shopping_items() {
@@ -55,6 +55,17 @@ if (!class_exists('curtain_orders')) {
             }
 
             //* Print Customer Order */
+            if( isset($_POST['_status_submit']) ) {
+                $this->update_customer_orders(
+                    array(
+                        'customer_order_status'=>$_POST['_customer_order_status'],
+                    ),
+                    array(
+                        'customer_order_id'=>$_POST['_customer_order_id'],
+                    )
+                );
+            }
+
             if( isset($_GET['_print']) ) {
                 $_id = $_GET['_print'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
@@ -119,17 +130,6 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</form>';
                 }
                 return $output;
-            }
-
-            if( isset($_POST['_status_submit']) ) {
-                $this->update_customer_orders(
-                    array(
-                        'customer_order_status'=>$_POST['_customer_order_status'],
-                    ),
-                    array(
-                        'customer_order_id'=>$_POST['_customer_order_id'],
-                    )
-                );
             }
 
             //* Customer Orders List */
@@ -254,7 +254,7 @@ if (!class_exists('curtain_orders')) {
                             $serial_number->insert_serial_number(
                                 array(
                                     'curtain_model_id'=>$result->curtain_model_id,
-                                    'specification'=>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
+                                    'specification'   =>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
                                     'curtain_agent_id'=>$result->curtain_agent_id
                                 ),
                                 $x
@@ -264,17 +264,14 @@ if (!class_exists('curtain_orders')) {
                     }
                 }
 
-                // Conver the shopping items to customer orders and purchase order
-                // Customer Order need to display all the item detail, 
+                // Convert the shopping items to customer orders and purchase order
                 $this->insert_customer_order(
                     array(
-                        'customer_order_number' =>$customer_order_number,
-                        'curtain_agent_id'      =>$curtain_agent_id,
-                        'customer_order_amount' =>$customer_order_amount,
-                        'customer_order_status' =>'order01'  // 1: completed checkout, did not purchase yet
-                                                     // 2: completed purchase, did not ship yet
-                                                     // 3: completed shipment, did not receive payment
-                                                     // 4: completed the payment        
+                        'customer_order_number' => $customer_order_number,
+                        'curtain_agent_id'      => $curtain_agent_id,
+                        'customer_order_amount' => $customer_order_amount,
+                        'customer_order_status' => 'order01'
+                        // order01: completed the checkout but did not purchase yet
                     )
                 );
 
@@ -285,12 +282,10 @@ if (!class_exists('curtain_orders')) {
                     $hero_messages[] = 'System Notification';
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
-                    //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
                     $body_messages[] = 'Order Status: '.$system_status->get_name('order01');
                     $curtain_service->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
-                            //'link_uri' => get_site_url().'/'.$wp_pages->get_link('Orders').'/?_id='.$customer_order_number,
                             'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                             'hero_messages' => $hero_messages,
                             'body_messages' => $body_messages

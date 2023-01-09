@@ -15,9 +15,41 @@ if (!class_exists('system_status')) {
             $page = get_page_by_title($this->_wp_page_title);
             $this->_wp_page_postid = $page->ID;
             $this->create_tables();
-            add_shortcode( 'system-status-list', array( $this, 'list_system_status' ) );
+            $this->init_system_status();
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[system-status-list]');            
+            add_shortcode( 'system-status-list', array( $this, 'list_system_status' ) );
+        }
+
+        public function init_system_status() {
+            $this->insert_system_status(
+                array(
+                    'system_status_code'    => 'order01',
+                    'system_status_title'   => 'Completed the checkout but did not purchase yet',
+                    'system_status_category'=> 'order'
+                )
+            );
+            $this->insert_system_status(
+                array(
+                    'system_status_code'    => 'order02',
+                    'system_status_title'   => 'Completed the procurement but did not ship yet',
+                    'system_status_category'=> 'order'
+                )
+            );
+            $this->insert_system_status(
+                array(
+                    'system_status_code'    => 'order03',
+                    'system_status_title'   => 'Completed the shipment but did not pay yet',
+                    'system_status_category'=> 'order'
+                )
+            );
+            $this->insert_system_status(
+                array(
+                    'system_status_code'    => 'order04',
+                    'system_status_title'   => 'Completed the payment',
+                    'system_status_category'=> 'order'
+                )
+            );
         }
 
         public function list_system_status() {
