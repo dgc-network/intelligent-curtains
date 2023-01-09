@@ -24,6 +24,27 @@ if (!class_exists('curtain_orders')) {
             add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
         }
 
+        public function notice_order_status($customer_order_number, $customer_order_status) {
+            global $wpdb;
+            $system_status = new system_status();
+            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
+            foreach ( $results as $index=>$result ) {
+                $hero_messages = array();
+                $hero_messages[] = 'System Notification';
+                $body_messages = array();
+                $body_messages[] = 'Order Number: '.$customer_order_number;
+                $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
+                $curtain_service->push_flex_messages(
+                    array(
+                        'line_user_id' => $result->line_user_id,
+                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
+                        'hero_messages' => $hero_messages,
+                        'body_messages' => $body_messages
+                    )
+                );
+            }    
+        }
+
         public function list_shopping_items() {
             global $wpdb;
             $curtain_users = new curtain_users();
@@ -61,9 +82,10 @@ if (!class_exists('curtain_orders')) {
                         'customer_order_status'=>$_POST['_customer_order_status'],
                     ),
                     array(
-                        'customer_order_id'=>$_POST['_customer_order_id'],
+                        'customer_order_number'=>$_POST['_customer_order_number'],
                     )
                 );
+                $this->notice_order_status($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
             if( isset($_GET['_print']) ) {
@@ -81,7 +103,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Status:</td>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $output .= '<form method="post">';
-                    $output .= '<input type="hidden" name="_customer_order_id" value="'.$row->customer_order_id.'">';
+                    $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'">';
                     $output .= '<td><select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select></td>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
@@ -276,6 +298,8 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
+                $this->notice_order_status($customer_order_number, $customer_order_status);
+/*                
                 $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $hero_messages = array();
@@ -292,7 +316,7 @@ if (!class_exists('curtain_orders')) {
                         )
                     );
                 }
-
+*/
             }
             
             //* Shopping Cart Items Create-Update-Delete */
