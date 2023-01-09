@@ -583,6 +583,7 @@ if (!class_exists('curtain_orders')) {
 
         function select_order_status() {
             //global $wpdb;
+/*            
             $customer_order_number = $_POST['number'];
             $customer_order_status = $_POST['status'];
 
@@ -613,7 +614,7 @@ if (!class_exists('curtain_orders')) {
                     )
                 );
             }
-
+*/
             
 /*
             $models = array();
