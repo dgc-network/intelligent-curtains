@@ -55,15 +55,15 @@ jQuery(document).ready(function($) {
     $("#select-order-status").change(function() {
         var status = $(this).val();
         var number = $("#select-order-number").val();
-/*
+
         jQuery.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
                 'action': 'select_order_status',
-                'number': number,
-                'status': status,
+                //'number': number,
+                //'status': status,
             },
             //success: function (response) {
             //},
@@ -71,7 +71,7 @@ jQuery(document).ready(function($) {
                 alert(error);
             }
         });
-*/
+
     });
     
     $("#select-category-id").change(function() {
