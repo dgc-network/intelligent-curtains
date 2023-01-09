@@ -55,7 +55,7 @@ jQuery(document).ready(function($) {
     $("#select-order-status").change(function() {
         var status = $(this).val();
         var number = $("#select-order-number").val();
-
+/*
         jQuery.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
@@ -66,24 +66,12 @@ jQuery(document).ready(function($) {
                 'status': status,
             },
             //success: function (response) {
-/*                
-                current_time = response.currenttime;
-                models = response.models;
-                specifications = response.specifications;
-
-                for (let x in models) {
-                    $("#select-model-id").append(models[x]);
-                }
-    
-                for (let x in specifications) {
-                    $("#select-specification-id").append(specifications[x]);
-                }
-*/                
             //},
             error: function(error){
                 alert(error);
             }
         });
+*/
     });
     
     $("#select-category-id").change(function() {
