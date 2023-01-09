@@ -124,10 +124,10 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_status_submit']) ) {
                 $this->update_customer_orders(
                     array(
-                        'customer_order_status'=>$_POST[$_customer_order_status],
+                        'customer_order_status'=>$_POST['_customer_order_status'],
                     ),
                     array(
-                        'customer_order_id'=>$_POST[$_customer_order_id],
+                        'customer_order_id'=>$_POST['_customer_order_id'],
                     )
                 );
             }
