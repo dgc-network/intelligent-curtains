@@ -71,7 +71,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $output .= '<td><select id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select></td>';
+                    $output .= '<td><select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select></td>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 }
