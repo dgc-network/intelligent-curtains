@@ -65,12 +65,12 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Order Number:</td><td><span id="select-order-number">'.$row->customer_order_number.'</span></td>';
                 $output .= '<td>Order Date:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
-                $output .= '<form method="post">';
-                $output .= '<input type="hidden" name="_customer_order_id" value="'.$row->customer_order_id.'">';
                 $output .= '<tr>';
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                    $output .= '<form method="post">';
+                    $output .= '<input type="hidden" name="_customer_order_id" value="'.$row->customer_order_id.'">';
                     $output .= '<td><select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select></td>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
@@ -116,8 +116,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tbody></table></div>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
+                    $output .= '</form>';
                 }
-                $output .= '</form>';
                 return $output;
             }
 
