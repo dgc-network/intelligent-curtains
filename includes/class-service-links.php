@@ -66,7 +66,8 @@ if (!class_exists('service_links')) {
                     array(
                         'service_link_title'=>$_POST['_service_link_title'],
                         'service_link_uri'=>$_POST['_service_link_uri'],
-                        'service_link_category'=>$_POST['_service_link_category']
+                        //'service_link_category'=>$_POST['_service_link_category']
+                        'service_link_category'=>'view'
                     )
                 );
             }
@@ -76,7 +77,7 @@ if (!class_exists('service_links')) {
                     array(
                         'service_link_title'=>$_POST['_service_link_title'],
                         'service_link_uri'=>$_POST['_service_link_uri'],
-                        'service_link_category'=>$_POST['_service_link_category']
+                        //'service_link_category'=>$_POST['_service_link_category']
                     ),
                     array(
                         'service_link_id'=>$_POST['_service_link_id'],
@@ -120,7 +121,8 @@ if (!class_exists('service_links')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>title</th>';
-            $output .= '<th>category</th>';
+            $output .= '<th>uri</th>';
+            //$output .= '<th>category</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
@@ -131,7 +133,8 @@ if (!class_exists('service_links')) {
                 $output .= '<span id="btn-edit-'.$result->service_link_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->service_link_title.'</td>';
-                $output .= '<td>'.$result->service_link_category.'</td>';
+                $output .= '<td>'.$result->service_link_uri.'</td>';
+                //$output .= '<td>'.$result->service_link_category.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->service_link_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -151,8 +154,8 @@ if (!class_exists('service_links')) {
                 $output .= '<input type="text" name="_service_link_title" value="'.$row->service_link_title.'" id="service-link-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-link-uri">Uri</label>';
                 $output .= '<input type="text" name="_service_link_uri" value="'.$row->service_link_uri.'" id="service-link-uri" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-link-category">Category</label>';
-                $output .= '<input type="text" name="_service_link_category" value="'.$row->service_link_category.'" id="service-link-category" class="text ui-widget-content ui-corner-all">';
+                //$output .= '<label for="service-link-category">Category</label>';
+                //$output .= '<input type="text" name="_service_link_category" value="'.$row->service_link_category.'" id="service-link-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -167,8 +170,8 @@ if (!class_exists('service_links')) {
                 $output .= '<input type="text" name="_service_link_title" id="service-link-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="service-link-uri">Uri</label>';
                 $output .= '<input type="text" name="_service_link_uri" id="service-link-uri" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="service-link-category">Category</label>';
-                $output .= '<input type="text" name="_service_link_category" id="service-link-category" class="text ui-widget-content ui-corner-all">';
+                //$output .= '<label for="service-link-category">Category</label>';
+                //$output .= '<input type="text" name="_service_link_category" id="service-link-category" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
