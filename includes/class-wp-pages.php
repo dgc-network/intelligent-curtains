@@ -12,11 +12,10 @@ if (!class_exists('wp_pages')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Pages';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
-            add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $this->create_page($this->_wp_page_title, '[wp-page-list]');
+            add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
+            $this->create_tables();
         }
 
         public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {

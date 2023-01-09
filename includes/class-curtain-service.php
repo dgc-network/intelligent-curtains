@@ -12,12 +12,11 @@ if (!class_exists('curtain_service')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Service';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
-            add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[curtain-service]', 'system');
+            add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
+            $this->create_tables();
         }
 
         public function curtain_service() {

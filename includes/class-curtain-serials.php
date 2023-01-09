@@ -12,12 +12,11 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Serials';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
-            add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[serial-number-list]');            
+            add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
+            $this->create_tables();
         }
 
         public function list_serial_number() {

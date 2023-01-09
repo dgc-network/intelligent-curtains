@@ -12,12 +12,11 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Agents';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
-            add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[curtain-agent-list]');
+            add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
+            $this->create_tables();
         }
 
         public function list_curtain_agents() {

@@ -12,9 +12,7 @@ if (!class_exists('curtain_orders')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Orders';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[shopping-item-list]', 'system');
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
@@ -22,6 +20,7 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
             add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
+            $this->create_tables();
         }
 
         public function notice_order_status($customer_order_number, $customer_order_status) {
