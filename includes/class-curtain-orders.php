@@ -58,11 +58,11 @@ if (!class_exists('curtain_orders')) {
             $curtain_service = new curtain_service();
             $wp_pages = new wp_pages();
             $system_status = new system_status();
-/*
+
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
             }
-*/
+
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
@@ -140,12 +140,12 @@ if (!class_exists('curtain_orders')) {
                         $output .= '<br>Height:'.$result->curtain_height.'</td>';
                     }
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
-                    $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount, 0).'</td>';
+                    $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
                     $output .= '</tr>';
                 }
                 $output .= '<tr>';
                 $output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
-                $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount, 0).'</td>';
+                $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){

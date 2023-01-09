@@ -12,12 +12,36 @@ if (!class_exists('service_links')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Links';
-            $page = get_page_by_title($this->_wp_page_title);
-            $this->_wp_page_postid = $page->ID;
-            $this->create_tables();
-            add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
+            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
             $wp_pages->create_page($this->_wp_page_title, '[service-link-list]');
+            add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
+            $this->create_tables();
+            $this->init_service_links();
+        }
+
+        public function init_service_links() {
+            $this->insert_service_link(
+                array(
+                    'service_link_title'    => 'User registry',
+                    'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image003',
+                    'service_link_category' => 'image',
+                )
+            );
+            $this->insert_service_link(
+                array(
+                    'service_link_title'    => 'Registry error',
+                    'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image002',
+                    'service_link_category' => 'image',
+                )
+            );
+            $this->insert_service_link(
+                array(
+                    'service_link_title'    => 'Agent registry',
+                    'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image001',
+                    'service_link_category' => 'image',
+                )
+            );
         }
 
         public function list_service_links() {
@@ -74,7 +98,7 @@ if (!class_exists('service_links')) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_title LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_category='view'", OBJECT );
             }
             $output  = '<h2>Service Links</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
@@ -196,7 +220,6 @@ if (!class_exists('service_links')) {
         public function get_link( $_title=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_id = %d OR service_link_title = %s", $_title, $_title ), OBJECT );
-            //return get_site_url().'/'.$row->service_link_uri;
             return $row->service_link_uri;
         }
 
@@ -207,7 +230,7 @@ if (!class_exists('service_links')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}service_links` (
                 service_link_id int NOT NULL AUTO_INCREMENT,
-                service_link_title varchar(20),
+                service_link_title varchar(20) UNIQUE,
                 service_link_uri varchar(255),
                 service_link_category varchar(10),
                 create_timestamp int(10),
