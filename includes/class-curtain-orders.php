@@ -65,6 +65,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Order Number:</td><td><span id="select-order-number">'.$row->customer_order_number.'</span></td>';
                 $output .= '<td>Order Date:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
+                $output .= '<form method="post">';
+                $output .= '<input type="hidden" name="_customer_order_id" value="'.$row->customer_order_id.'">';
                 $output .= '<tr>';
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
@@ -112,7 +114,22 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td style="text-align:center;">'.$row->customer_order_amount.'</td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
+                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
+                }
+                $output .= '</form>';
                 return $output;
+            }
+
+            if( isset($_POST['_status_submit']) ) {
+                $this->update_customer_orders(
+                    array(
+                        'customer_order_status'=>$_POST[$_customer_order_status],
+                    ),
+                    array(
+                        'customer_order_id'=>$_POST[$_customer_order_id],
+                    )
+                );
             }
 
             //* Customer Orders List */
@@ -159,12 +176,9 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
-                //$output .= '<form method="post">';
-                //$output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
-                $output .= '</form>';
                 return $output;
             }
-
+/*
             if( isset($_POST['_status_submit']) ) {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 foreach ( $results as $index=>$result ) {
@@ -179,7 +193,7 @@ if (!class_exists('curtain_orders')) {
                     );
                 }
             }
-            
+*/            
             //* Checkout List */
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
@@ -582,8 +596,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function select_order_status() {
-            //global $wpdb;
-/*            
+            global $wpdb;
             $customer_order_number = $_POST['number'];
             $customer_order_status = $_POST['status'];
 
@@ -614,31 +627,7 @@ if (!class_exists('curtain_orders')) {
                     )
                 );
             }
-*/
-            
-/*
-            $models = array();
-            $models[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
-            }
-            $models[] = '<option value="0">-- Remove this --</option>';
 
-            $specifications = array();
-            $specifications[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_category_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
-            }
-            $specifications[] = '<option value="0">-- Remove this --</option>';
-
-            $response = array();
-            $response['currenttime'] = wp_date( get_option('time_format'), time() );
-            $response['models'] = $models;;
-            $response['specifications'] = $specifications;;
-            echo json_encode( $response );
-*/
             wp_die();
         }
 

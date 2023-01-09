@@ -52,7 +52,7 @@ jQuery(document).ready(function($) {
 */            
     });
 
-    $("#select-order-status").change(function() {
+    $("#select-order-status-backup").change(function() {
         var status = $(this).val();
         var number = $("#select-order-number").val();
 
@@ -62,11 +62,11 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'select_order_status',
-                //'number': number,
-                //'status': status,
+                'number': number,
+                'status': status,
             },
-            //success: function (response) {
-            //},
+            success: function (response) {
+            },
             error: function(error){
                 alert(error);
             }
