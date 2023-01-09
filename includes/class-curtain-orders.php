@@ -27,6 +27,7 @@ if (!class_exists('curtain_orders')) {
         public function notice_order_status($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
+            $curtain_service = new curtain_service();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
                 $hero_messages = array();
