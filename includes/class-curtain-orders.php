@@ -271,7 +271,7 @@ if (!class_exists('curtain_orders')) {
                         'customer_order_number' =>$customer_order_number,
                         'curtain_agent_id'      =>$curtain_agent_id,
                         'customer_order_amount' =>$customer_order_amount,
-                        'customer_order_status' =>1  // 1: completed checkout, did not purchase yet
+                        'customer_order_status' =>'order01'  // 1: completed checkout, did not purchase yet
                                                      // 2: completed purchase, did not ship yet
                                                      // 3: completed shipment, did not receive payment
                                                      // 4: completed the payment        
@@ -286,7 +286,7 @@ if (!class_exists('curtain_orders')) {
                     $body_messages = array();
                     $body_messages[] = 'Order Number: '.$customer_order_number;
                     //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                    $body_messages[] = 'Order Status: '.$system_status->get_name(1);
+                    $body_messages[] = 'Order Status: '.$system_status->get_name('order01');
                     $curtain_service->push_flex_messages(
                         array(
                             'line_user_id' => $result->line_user_id,
@@ -300,7 +300,7 @@ if (!class_exists('curtain_orders')) {
 
             }
             
-            //* Shopping Cart Items Create & Update & Delete*/
+            //* Shopping Cart Items Create-Update-Delete */
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
@@ -567,7 +567,7 @@ if (!class_exists('curtain_orders')) {
                 customer_order_number varchar(20),
                 curtain_agent_id int(10),
                 customer_order_amount decimal(10,0),
-                customer_order_status tinyint,
+                customer_order_status varchar(10),
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (customer_order_id)

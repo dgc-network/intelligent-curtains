@@ -40,8 +40,9 @@ if (!class_exists('system_status')) {
             if( isset($_POST['_create']) ) {
                 $this->insert_system_status(
                     array(
-                        'system_status_title'=>$_POST['_system_status_title'],
-                        'system_status_category'=>$_POST['_system_status_category']
+                        'system_status_code'    => $_POST['_system_status_code'],
+                        'system_status_title'   => $_POST['_system_status_title'],
+                        'system_status_category'=> $_POST['_system_status_category']
                     )
                 );
             }
@@ -49,11 +50,12 @@ if (!class_exists('system_status')) {
             if( isset($_POST['_update']) ) {
                 $this->update_system_status(
                     array(
-                        'system_status_title'=>$_POST['_system_status_title'],
-                        'system_status_category'=>$_POST['_system_status_category']
+                        'system_status_code'    => $_POST['_system_status_code'],
+                        'system_status_title'   => $_POST['_system_status_title'],
+                        'system_status_category'=> $_POST['_system_status_category']
                     ),
                     array(
-                        'system_status_id'=>$_POST['_system_status_id']
+                        'system_status_id'  => $_POST['_system_status_id']
                     )
                 );
                 ?><script>window.location.replace("?_update=");</script><?php
@@ -62,7 +64,7 @@ if (!class_exists('system_status')) {
             if( isset($_GET['_delete']) ) {
                 $this->delete_system_status(
                     array(
-                        'system_status_id'=>$_GET['_delete']
+                        'system_status_id'  => $_GET['_delete']
                     )
                 );
             }
@@ -94,6 +96,7 @@ if (!class_exists('system_status')) {
             $output .= '<table id="categories" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
+            $output .= '<th>code</th>';
             $output .= '<th>ststus</th>';
             $output .= '<th>category</th>';
             $output .= '<th>update_time</th>';
@@ -105,6 +108,7 @@ if (!class_exists('system_status')) {
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-edit-'.$result->system_status_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
+                $output .= '<td>'.$result->system_status_code.'</td>';
                 $output .= '<td>'.$result->system_status_title.'</td>';
                 $output .= '<td>'.$result->system_status_category.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -122,6 +126,8 @@ if (!class_exists('system_status')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->system_status_id.'" name="_system_status_id">';
+                $output .= '<label for="system-status-code">Code</label>';
+                $output .= '<input type="text" name="_system_status_code" value="'.$row->system_status_code.'" id="system-status-code" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="system-status-title">Title</label>';
                 $output .= '<input type="text" name="_system_status_title" value="'.$row->system_status_title.'" id="system-status-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="system-status-category">Category</label>';
@@ -136,6 +142,8 @@ if (!class_exists('system_status')) {
                 $output .= '<div id="dialog" title="Create new status">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
+                $output .= '<label for="system-status-code">Code</label>';
+                $output .= '<input type="text" name="_system_status_code" id="system-status-code" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="system-status-title">Title</label>';
                 $output .= '<input type="text" name="_system_status_title" id="system-status-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="system-status-category">Category</label>';
@@ -172,19 +180,19 @@ if (!class_exists('system_status')) {
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}system_status WHERE system_status_id = %d", $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}system_status WHERE system_status_id = %d OR system_status_code = %s", $_id, $_id ), OBJECT );
             return $row->system_status_title;
         }
 
-        public function select_options( $_id=0 ) {
+        public function select_options( $_code=0 ) {
             global $wpdb;
             //$output = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}system_status", OBJECT );
             foreach ($results as $index => $result) {
-                if ( $result->system_status_id == $_id ) {
-                    $output .= '<option value="'.$result->system_status_id.'" selected>';
+                if ( $result->system_status_code == $_code ) {
+                    $output .= '<option value="'.$result->system_status_code.'" selected>';
                 } else {
-                    $output .= '<option value="'.$result->system_status_id.'">';
+                    $output .= '<option value="'.$result->system_status_code.'">';
                 }
                 $output .= $result->system_status_title;
                 $output .= '</option>';        
@@ -200,6 +208,7 @@ if (!class_exists('system_status')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}system_status` (
                 system_status_id int NOT NULL AUTO_INCREMENT,
+                system_status_code varchar(10) UNIQUE,
                 system_status_title varchar(50),
                 system_status_category varchar(20),
                 create_timestamp int(10),
