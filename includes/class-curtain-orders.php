@@ -29,6 +29,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_service = new curtain_service();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
+                /*
                 $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
@@ -41,6 +42,7 @@ if (!class_exists('curtain_orders')) {
                         )
                     )
                 );
+                */
                 $curtain_service->push_carousel_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
