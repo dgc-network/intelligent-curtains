@@ -283,7 +283,6 @@ if (!class_exists('curtain_service')) {
 
         public function box_contents( $_box_contents=array(), $_link_uri ) {
             $_contents = array();
-            //$_box = array();
 
             if ($_box_contents!=array()) {
 
@@ -299,25 +298,12 @@ if (!class_exists('curtain_service')) {
                 } else {
                     $header_contents[] = $this->text_content($_box_contents,$_link_uri);
                 }
-/*
-                if (is_array($_box_contents)) {
-                    foreach ( $_box_contents as $_box_content ) {
-                        if (is_array($_box_content)) {
-                            $_box[] = $_box_content;
-                        } else {
-                            $_box[] = $this->text_content($_box_content, $_link_uri);
-                        }
-                    }
-                } else {
-                    $_box[] = $this->text_content($_box_contents, $_link_uri);
-                }
-*/
-                $_box_content['type'] = 'box';
-                $_box_content['layout'] = 'vertical';
-                $_box_content['contents'] = $header_contents;
+                $_content['type'] = 'box';
+                $_content['layout'] = 'vertical';
+                $_content['contents'] = $header_contents;
             }
             
-            return $_box_contents;
+            return $_contents;
         }
 
         public function push_bubble_messages( $_contents=array() ) {
