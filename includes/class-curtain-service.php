@@ -299,7 +299,7 @@ if (!class_exists('curtain_service')) {
                 }
                 $_contents['type'] = 'box';
                 $_contents['layout'] = 'vertical';
-                $_contents['contents'] = $header_contents;
+                $_contents['contents'] = $box_contents;
             }            
             return $_contents;
         }
