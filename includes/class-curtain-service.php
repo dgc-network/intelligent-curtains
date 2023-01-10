@@ -160,6 +160,17 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
+            $header_contents = array();
+            foreach ( $_contents['header_messages'] as $header_message ) {
+                $header_content = array();
+                $header_content['type'] = 'text';
+                $header_content['text'] = $header_message;
+                $header_content['wrap'] = true;
+                $header_content['action']['type'] = 'uri';
+                $header_content['action']['label'] = 'action';
+                $header_content['action']['uri'] = $_contents['link_uri'];
+                $header_contents[] = $header_content;
+            }
             $hero_contents = array();
             foreach ( $_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -193,6 +204,11 @@ if (!class_exists('curtain_service')) {
                         "altText" => $_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
+                            "header" => [
+                                "type" => "box",
+                                "layout" => "vertical",
+                                "contents" => $header_contents
+                            ],
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
