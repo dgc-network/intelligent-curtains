@@ -51,11 +51,13 @@ if (!class_exists('curtain_orders')) {
                             array(
                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                                 "hero" => array(
-                                    "type" => "image",
-                                    "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
-                                    "size" => "full",
-                                    "aspectMode" => "cover",
-                                    "aspectRatio" => "320:213"                                    
+                                    array(
+                                        "type" => "image",
+                                        "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+                                        "size" => "full",
+                                        "aspectMode" => "cover",
+                                        "aspectRatio" => "320:213"                                        
+                                    )
                                 ),
                                 'body' => array(
                                     'Order Number: '.$customer_order_number,
