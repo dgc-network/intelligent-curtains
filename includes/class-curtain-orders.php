@@ -42,7 +42,11 @@ if (!class_exists('curtain_orders')) {
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'header_messages' => 'System Notification',
-                        'body_messages' => $body_messages,
+                        //'body_messages' => $body_messages,
+                        'body_messages' => array(
+                            'Order Number: '.$customer_order_number,
+                            'Order Status: '.$system_status->get_name($customer_order_status)
+                        )
                     )
                 );
             }    
