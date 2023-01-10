@@ -44,7 +44,7 @@ if (!class_exists('curtain_orders')) {
                         'header_messages' => 'System Notification',
                         //'hero_messages' => $hero_messages,
                         //'body_messages' => $body_messages
-                        'body_messages' => $body_messages
+                        //'body_messages' => $body_messages
                     )
                 );
             }    
@@ -111,7 +111,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'">';
                     $output .= '<td>';
                     $output .= '<select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select>';
-                    $output .= '<span id="btn-check"><i class="fa-solid fa-check"></i></span>';
+                    //$output .= '<span id="btn-check"><i class="fa-solid fa-check"></i></span>';
                     $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
                     $output .= '</td>';
                     $output .= '</form>';
