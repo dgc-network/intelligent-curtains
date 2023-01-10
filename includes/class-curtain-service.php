@@ -180,7 +180,7 @@ if (!class_exists('curtain_service')) {
                 $hero_content['action']['uri'] = $_contents['link_uri'];
                 $hero_contents[] = $hero_content;
             }
-
+/*
             $body_contents = array();
             foreach ( $_contents['body_messages'] as $body_message ) {
                 $body_content = array();
@@ -191,6 +191,15 @@ if (!class_exists('curtain_service')) {
                 $body_content['action']['label'] = 'action';
                 $body_content['action']['uri'] = $_contents['link_uri'];
                 $body_contents[] = $body_content;
+            }
+*/
+            $body_contents = array();
+            if ( is_array($_contents['body_messages']) ) {
+                foreach ( $_contents['body_messages'] as $body_message ) {
+                    $body_contents[] = $this->text_content($body_message,$_contents['link_uri']);
+                }    
+            } else {
+                $body_contents[] = $this->text_content($_contents['body_messages'],$_contents['link_uri']);
             }
 
             $line_bot_api = new line_bot_api();
