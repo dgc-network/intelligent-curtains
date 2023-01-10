@@ -161,7 +161,7 @@ if (!class_exists('curtain_service')) {
 
         public function push_flex_messages( $_contents=array() ) {
             $header_contents = $this->header_contents($_contents);
-            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
+            $box_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
 /*            
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
@@ -219,7 +219,7 @@ if (!class_exists('curtain_service')) {
                         "altText" => $_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
-                            "header" => $header_contents,
+                            "header" => $box_contents,
 /*                            
                             "header" => [
                                 "type" => "box",
@@ -298,9 +298,9 @@ if (!class_exists('curtain_service')) {
                 } else {
                     $header_contents[] = $this->text_content($_box_contents,$_link_uri);
                 }
-                $_content['type'] = 'box';
-                $_content['layout'] = 'vertical';
-                $_content['contents'] = $header_contents;
+                $_contents['type'] = 'box';
+                $_contents['layout'] = 'vertical';
+                $_contents['contents'] = $header_contents;
             }
             
             return $_contents;
