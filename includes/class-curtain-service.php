@@ -161,17 +161,14 @@ if (!class_exists('curtain_service')) {
 
         public function push_flex_messages( $_contents=array() ) {
             $header_contents = array();
-            foreach ( $_contents['header_messages'] as $header_message ) {
-                $header_content = array();
-                $header_content['type'] = 'text';
-                $header_content['text'] = $header_message;
-                $header_content['wrap'] = true;
-                $header_content['action']['type'] = 'uri';
-                $header_content['action']['label'] = 'action';
-                $header_content['action']['uri'] = $_contents['link_uri'];
-                //$header_contents[] = $header_content;
-                $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
+            if ( is_array($_contents['header_messages']) ) {
+                foreach ( $_contents['header_messages'] as $header_message ) {
+                    $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
+                }    
+            } else {
+                $header_contents[] = $this->text_content($_contents['header_messages'],$_contents['link_uri']);
             }
+
             $hero_contents = array();
             foreach ( $_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -183,6 +180,7 @@ if (!class_exists('curtain_service')) {
                 $hero_content['action']['uri'] = $_contents['link_uri'];
                 $hero_contents[] = $hero_content;
             }
+
             $body_contents = array();
             foreach ( $_contents['body_messages'] as $body_message ) {
                 $body_content = array();
