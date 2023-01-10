@@ -31,19 +31,19 @@ if (!class_exists('curtain_orders')) {
             foreach ( $results as $index=>$result ) {
                 $header_messages = array();
                 $header_messages[] = 'System Notification';
-                //$hero_messages = array();
-                //$hero_messages[] = 'System Notification';
+                $hero_messages = array();
+                $hero_messages[] = 'System Notification';
                 $body_messages = array();
                 $body_messages[] = 'Order Number: '.$customer_order_number;
                 $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
-                //$curtain_service->push_flex_messages(
-                $curtain_service->push_bubble_messages(
+                $curtain_service->push_flex_messages(
+                //$curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'header_messages' => 'System Notification',
-                        //'hero_messages' => $hero_messages,
-                        //'body_messages' => $body_messages
+                        'hero_messages' => $hero_messages,
+                        'body_messages' => $body_messages
                         //'body_messages' => $body_messages
                     )
                 );
