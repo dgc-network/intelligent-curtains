@@ -225,9 +225,9 @@ if (!class_exists('curtain_service')) {
                         "contents" => [
                             "type" => "bubble",
                             "header" => $header_contents,
-                            "hero" => $hero_contents,
+                            //"hero" => $hero_contents,
                             "body" => $body_contents,
-                            "footer" => $footer_contents,
+                            //"footer" => $footer_contents,
 /*                            
                             "header" => [
                                 "type" => "box",
