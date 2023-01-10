@@ -283,26 +283,24 @@ if (!class_exists('curtain_service')) {
 
         public function box_contents( $_box_contents=array(), $_link_uri ) {
             $_contents = array();
-
             if ($_box_contents!=array()) {
 
-                $header_contents = array();
+                $box_contents = array();
                 if ( is_array($_box_contents) ) {
-                    foreach ( $_box_contents as $header_message ) {
-                        if ( is_array($header_message) ) {
-                            $header_contents[] = $header_message;
+                    foreach ( $_box_contents as $box_content ) {
+                        if ( is_array($box_content) ) {
+                            $box_contents[] = $box_content;
                         } else {
-                            $header_contents[] = $this->text_content($header_message,$_link_uri);
+                            $box_contents[] = $this->text_content($box_content,$_link_uri);
                         }
                     }    
                 } else {
-                    $header_contents[] = $this->text_content($_box_contents,$_link_uri);
+                    $box_contents[] = $this->text_content($_box_contents,$_link_uri);
                 }
                 $_contents['type'] = 'box';
                 $_contents['layout'] = 'vertical';
                 $_contents['contents'] = $header_contents;
-            }
-            
+            }            
             return $_contents;
         }
 
