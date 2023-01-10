@@ -160,60 +160,12 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
-            //$header_contents = $this->header_contents($_contents);
+
             $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
             $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
             $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
             $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
-/*            
-            $header_contents = array();
-            if ( is_array($_contents['header_messages']) ) {
-                foreach ( $_contents['header_messages'] as $header_message ) {
-                    if ( is_array($header_message) ) {
-                        $header_contents[] = $header_message;
-                    } else {
-                        $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
-                    }
-                }    
-            } else {
-                $header_contents[] = $this->text_content($_contents['header_messages'],$_contents['link_uri']);
-            }
-*/
-/*
-            $hero_contents = array();
-            foreach ( $_contents['hero_messages'] as $hero_message ) {
-                $hero_content = array();
-                $hero_content['type'] = 'text';
-                $hero_content['text'] = $hero_message;
-                $hero_content['margin'] = '20px';
-                $hero_content['action']['type'] = 'uri';
-                $hero_content['action']['label'] = 'action';
-                $hero_content['action']['uri'] = $_contents['link_uri'];
-                $hero_contents[] = $hero_content;
-            }
-*/            
-/*
-            $body_contents = array();
-            foreach ( $_contents['body_messages'] as $body_message ) {
-                $body_content = array();
-                $body_content['type'] = 'text';
-                $body_content['text'] = $body_message;
-                $body_content['wrap'] = true;
-                $body_content['action']['type'] = 'uri';
-                $body_content['action']['label'] = 'action';
-                $body_content['action']['uri'] = $_contents['link_uri'];
-                $body_contents[] = $body_content;
-            }
 
-            $body_contents = array();
-            if ( is_array($_contents['body_messages']) ) {
-                foreach ( $_contents['body_messages'] as $body_message ) {
-                    $body_contents[] = $this->text_content($body_message,$_contents['link_uri']);
-                }    
-            } else {
-                $body_contents[] = $this->text_content($_contents['body_messages'],$_contents['link_uri']);
-            }
-*/
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
@@ -228,27 +180,6 @@ if (!class_exists('curtain_service')) {
                             //"hero" => $hero_contents,
                             "body" => $body_contents,
                             //"footer" => $footer_contents,
-/*                            
-                            "header" => [
-                                "type" => "box",
-                                "layout" => "vertical",
-                                "contents" => $header_contents
-                            ],
-
-                            "hero" => [
-                                "type" => "box",
-                                "layout" => "horizontal",
-                                "backgroundColor" => "#00b900",
-                                "contents" => $hero_contents
-                            ],
-*/                            
-/*                            
-                            "body" => [
-                                "type" => "box",
-                                "layout" => "vertical",
-                                "contents" => $body_contents
-                            ]
-*/                            
                         ]    
                     ]
                 ]
@@ -275,7 +206,7 @@ if (!class_exists('curtain_service')) {
                 )
             );
         }
-
+/*
         public function header_contents( $_contents=array() ) {
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
@@ -291,8 +222,8 @@ if (!class_exists('curtain_service')) {
             }
             return $header_contents;
         }
-
-        public function box_contents( $_box_contents=array(), $_link_uri ) {
+*/
+        public function box_contents( $_box_contents=array(), $_link_uri='' ) {
             $_contents = array();
             if ($_box_contents!=array()) {
 
@@ -316,7 +247,12 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
+
             $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
+            $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
+            $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
+
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
@@ -327,11 +263,17 @@ if (!class_exists('curtain_service')) {
                         //"altText" => $this->box_contents($_contents['body_messages'])[0],
                         "contents" => [
                             "type"  => "bubble",
+                            "header" => $header_contents,
+                            //"hero" => $hero_contents,
+                            "body" => $body_contents,
+                            //"footer" => $footer_contents,
+/*
                             "header"=> $this->box_contents($_contents['header_messages'],$_contents['link_uri']),
                             "hero"  => $this->box_contents($_contents['hero_messages'],$_contents['link_uri']),
                             "body"  => $this->box_contents($_contents['body_messages'],$_contents['link_uri']),
                             "footer"=> $this->box_contents($_contents['footer_messages'],$_contents['link_uri']),
-                        ]    
+*/
+                        ]
                     ]
                 ]
             ]);
