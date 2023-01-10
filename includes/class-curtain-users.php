@@ -303,20 +303,12 @@ if (!class_exists('curtain_users')) {
                 )
             );
 
-            $header_messages = array();
-            $header_messages[] = $this->get_name($_POST['to']);
-            //$hero_messages = array();
-            //$hero_messages[] = $this->get_name($_POST['to']);
-            $body_messages = array();
-            $body_messages[] = $_POST['message'];
-            //$curtain_service->push_flex_messages(
             $curtain_service->push_bubble_messages(
                 array(
                     'line_user_id' => $_POST['to'],
                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$_POST['to'],
-                    'header_messages' => $hero_messages,
-                    //'hero_messages' => $hero_messages,
-                    'body_messages' => $body_messages
+                    'header_messages' => $this->get_name($_POST['to']),
+                    'body_messages' => $_POST['message']
                 )
             );
 

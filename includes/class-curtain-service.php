@@ -159,40 +159,6 @@ if (!class_exists('curtain_service')) {
             ]);
         }
 
-        public function push_flex_messages( $_contents=array() ) {
-
-            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
-            $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
-            $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
-            $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
-
-            $line_bot_api = new line_bot_api();
-            $line_bot_api->pushMessage([
-                'to' => $_contents['line_user_id'],
-                'messages' => [
-                    [
-                        "type" => "flex",
-                        "altText" => $_contents['alt_text'],
-                        "contents" => [
-                            "type" => "bubble",
-                            "header" => $header_contents,
-                            //"hero" => $hero_contents,
-                            "body" => $body_contents,
-                            //"footer" => $footer_contents,
-                        ]    
-                    ]
-                ]
-            ]);
-        }
-
-        public function bubble_contents( $_bubble_contents=array() ) {
-            if ($_bubble_contents!=array()) {
-                $_bubble_contents['type'] = 'bubble';
-                $_bubble_contents['contents'] = $_bubble_contents;
-            }
-            return $_bubble_contents;
-        }
-
         public function text_content( $_text_message, $_link_uri ) {
             return array(
                 'type' => 'text',
@@ -371,20 +337,12 @@ if (!class_exists('curtain_service')) {
 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                                         foreach ( $results as $index=>$result ) {
-                                            $header_messages = array();
-                                            $header_messages[] = $profile['displayName'];
-                                            //$hero_messages = array();
-                                            //$hero_messages[] = $profile['displayName'];
-                                            $body_messages = array();
-                                            $body_messages[] = $message['text'];
-                                            //$this->push_flex_messages(
                                             $this->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'header_messages' => $hero_messages,
-                                                    //'hero_messages' => $hero_messages,
-                                                    'body_messages' => $body_messages
+                                                    'header_messages' => $profile['displayName'],
+                                                    'body_messages' => $message['text']
                                                 )
                                             );
                                         }
@@ -426,20 +384,12 @@ if (!class_exists('curtain_service')) {
 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                                         foreach ( $results as $index=>$result ) {
-                                            $header_messages = array();
-                                            $header_messages[] = 'Aihome';
-                                            //$hero_messages = array();
-                                            //$hero_messages[] = 'Aihome';
-                                            $body_messages = array();
-                                            $body_messages[] = $string;
-                                            //$this->push_flex_messages(
                                             $this->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'header_messages' => $header_messages,
-                                                    //'hero_messages' => $hero_messages,
-                                                    'body_messages' => $body_messages
+                                                    'header_messages' => 'Aihome',
+                                                    'body_messages' => $string
                                                 )
                                             );
                                         }
