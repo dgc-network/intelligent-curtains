@@ -23,23 +23,23 @@ if (!class_exists('service_links')) {
         public function init_service_links() {
             $this->insert_service_link(
                 array(
-                    'service_link_title'    => 'User registry',
+                    'service_link_title'    => 'user_registry',
                     'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image003',
-                    'service_link_category' => 'image',
+                    'service_link_category' => 'imagemap',
                 )
             );
             $this->insert_service_link(
                 array(
-                    'service_link_title'    => 'Registry error',
+                    'service_link_title'    => 'registry_error',
                     'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image002',
-                    'service_link_category' => 'image',
+                    'service_link_category' => 'imagemap',
                 )
             );
             $this->insert_service_link(
                 array(
-                    'service_link_title'    => 'Agent registry',
+                    'service_link_title'    => 'agent_registry',
                     'service_link_uri'      => 'https://disabused-shop.000webhostapp.com/images/image001',
-                    'service_link_category' => 'image',
+                    'service_link_category' => 'imagemap',
                 )
             );
         }

@@ -23,22 +23,27 @@ if (!class_exists('curtain_orders')) {
             $this->create_tables();
         }
 
-        public function notice_order_status($customer_order_number, $customer_order_status) {
+        public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
             $curtain_service = new curtain_service();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-                $hero_messages = array();
-                $hero_messages[] = 'System Notification';
+                $header_messages = array();
+                $header_messages[] = 'System Notification';
+                //$hero_messages = array();
+                //$hero_messages[] = 'System Notification';
                 $body_messages = array();
                 $body_messages[] = 'Order Number: '.$customer_order_number;
                 $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
-                $curtain_service->push_flex_messages(
+                //$curtain_service->push_flex_messages(
+                $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'hero_messages' => $hero_messages,
+                        'header_contents' => $curtain_service->header_contents('System Notification'),
+                        //'hero_messages' => $hero_messages,
+                        //'body_messages' => $body_messages
                         'body_messages' => $body_messages
                     )
                 );
@@ -85,7 +90,7 @@ if (!class_exists('curtain_orders')) {
                         'customer_order_number'=>$_POST['_customer_order_number'],
                     )
                 );
-                $this->notice_order_status($_POST['_customer_order_number'], $_POST['_customer_order_status']);
+                $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
             if( isset($_GET['_print']) ) {
@@ -104,7 +109,12 @@ if (!class_exists('curtain_orders')) {
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'">';
-                    $output .= '<td><select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select></td>';
+                    $output .= '<td>';
+                    $output .= '<select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select>';
+                    $output .= '<span id="btn-check"><i class="fa-solid fa-check"></i></span>';
+                    $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
+                    $output .= '</td>';
+                    $output .= '</form>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 }
@@ -148,8 +158,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
-                    $output .= '</form>';
                 }
                 return $output;
             }
@@ -298,25 +306,7 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
-                $this->notice_order_status($customer_order_number, $customer_order_status);
-/*                
-                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $hero_messages = array();
-                    $hero_messages[] = 'System Notification';
-                    $body_messages = array();
-                    $body_messages[] = 'Order Number: '.$customer_order_number;
-                    $body_messages[] = 'Order Status: '.$system_status->get_name('order01');
-                    $curtain_service->push_flex_messages(
-                        array(
-                            'line_user_id' => $result->line_user_id,
-                            'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                            'hero_messages' => $hero_messages,
-                            'body_messages' => $body_messages
-                        )
-                    );
-                }
-*/
+                $this->order_status_notice($customer_order_number, $customer_order_status);
             }
             
             //* Shopping Cart Items Create-Update-Delete */
@@ -631,17 +621,21 @@ if (!class_exists('curtain_orders')) {
             // Notice the admin about the order status
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-                $hero_messages = array();
-                $hero_messages[] = 'System Notification';
+                $header_messages = array();
+                $header_messages[] = 'System Notification';
+                //$hero_messages = array();
+                //$hero_messages[] = 'System Notification';
                 $body_messages = array();
                 $body_messages[] = 'Order Number: '.$customer_order_number;
                 //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
                 $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
-                $curtain_service->push_flex_messages(
+                //$curtain_service->push_flex_messages(
+                $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'hero_messages' => $hero_messages,
+                        'header_messages' => $header_messages,
+                        //'hero_messages' => $hero_messages,
                         'body_messages' => $body_messages
                     )
                 );

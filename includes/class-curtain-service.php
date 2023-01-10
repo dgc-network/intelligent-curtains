@@ -87,8 +87,8 @@ if (!class_exists('curtain_service')) {
         }
 
         public function create_rich_menu( $_content=array() ) {
-            $client = new line_bot_api();
-            $rick_menu_id = $client->createRichMenu([
+            $line_bot_api = new line_bot_api();
+            $rick_menu_id = $line_bot_api->createRichMenu([
                 "size" => [
                     "width" => 2500,
                     "height" => 1686    
@@ -126,12 +126,12 @@ if (!class_exists('curtain_service')) {
             ]);
 
             $image_path = '/path/to/image.jpeg';
-            $client->uploadImageToRichMenu($rick_menu_id, $image_path);
+            $line_bot_api->uploadImageToRichMenu($rick_menu_id, $image_path);
         }
 
         public function push_imagemap_messages( $_contents=array() ) {
-            $client = new line_bot_api();
-            $client->pushMessage([
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
                 'messages' => [
                     [
@@ -183,8 +183,8 @@ if (!class_exists('curtain_service')) {
                 $body_contents[] = $body_content;
             }
 
-            $client = new line_bot_api();
-            $client->pushMessage([
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
                 'messages' => [
                     [
@@ -210,6 +210,88 @@ if (!class_exists('curtain_service')) {
             ]);
         }
 
+        public function text_content( $_text_message, $_link_uri ) {
+            return array(
+                'type' => 'text',
+                'text' => $_text_message,
+                'wrap' => true,
+                'action' => array(
+                    'type' => 'uri',
+                    'label' => 'action',
+                    'uri' => $_link_uri
+                )
+            );
+        }
+
+        public function box_contents( $_box_contents=array(), $_link_uri ) {
+            $_contents = array();
+            $_box = array();
+
+            if ($_box_contents!=array()) {
+                if (is_array($_box_contents)) {
+                    foreach ( $_box_contents as $_box_content ) {
+                        if (is_array($_box_content)) {
+                            $_box[] = $_box_content;
+                        } else {
+                            $_box[] = $this->text_content($_box_content, $_link_uri);
+                        }
+                    }
+                } else {
+                    $_box[] = $this->text_content($_box_contents, $_link_uri);
+                }
+                $_content['type'] = 'box';
+                $_content['layout'] = 'vertical';
+                $_content['contents'] = $_box;
+            }
+            return $_contents;
+        }
+
+        public function bubble_contents( $_bubble_contents=array() ) {
+            if ($_bubble_contents!=array()) {
+                $_bubble_contents['type'] = 'bubble';
+                $_bubble_contents['contents'] = $_bubble_contents;
+            }
+            return $_bubble_contents;
+        }
+
+        public function push_bubble_messages( $_contents=array() ) {
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        //"altText" => "this is a flex message",
+                        "altText" => $this->box_contents($_contents['body_messages'])[0],
+                        "contents" => [
+                            "type"  => "bubble",
+                            "header"=>$this->box_contents($_contents['header_messages'],$_contents['link_uri']),
+                            "hero"  =>$this->box_contents($_contents['hero_messages'],$_contents['link_uri']),
+                            "body"  =>$this->box_contents($_contents['body_messages'],$_contents['link_uri']),
+                            "footer"=>$this->box_contents($_contents['footer_messages'],$_contents['link_uri']),
+                        ]    
+                    ]
+                ]
+            ]);
+        }
+
+        public function push_carousel_messages( $_contents=array() ) {
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => $_contents['body_messages'][0],
+                        "contents" => [
+                            "type" => "carousel",
+                            "contents"=>$this->bubble_contents($_contents['bubble_contents']),
+                        ]    
+                    ]
+                ]
+            ]);
+        }
+
         public function init_webhook() {
             global $wpdb;
             $serial_number = new serial_number();
@@ -217,13 +299,13 @@ if (!class_exists('curtain_service')) {
             $service_links = new service_links();
             $curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
-            $client = new line_bot_api();
+            $line_bot_api = new line_bot_api();
             $open_ai = new open_ai();
             $business_central = new business_central();
 
-            foreach ((array)$client->parseEvents() as $event) {
+            foreach ((array)$line_bot_api->parseEvents() as $event) {
 
-                $profile = $client->getProfile($event['source']['userId']);
+                $profile = $line_bot_api->getProfile($event['source']['userId']);
 
                 $data=array();
                 $data['line_user_id']=$profile['userId'];
@@ -256,7 +338,7 @@ if (!class_exists('curtain_service')) {
                                             $this->push_imagemap_messages(
                                                 array(
                                                     'line_user_id' => $profile['userId'],
-                                                    'base_url' => $service_links->get_link('User registry'),
+                                                    'base_url' => $service_links->get_link('user_registry'),
                                                     'alt_text' => 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區',
                                                     'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'],
                                                     'body_messages' => $body_messages
@@ -273,7 +355,7 @@ if (!class_exists('curtain_service')) {
                                         $this->push_imagemap_messages(
                                             array(
                                                 'line_user_id' => $profile['userId'],
-                                                'base_url' => $service_links->get_link('Registry error'),
+                                                'base_url' => $service_links->get_link('registry_error'),
                                                 'alt_text' => 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊',
                                                 'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'].'&serial_no=',
                                                 'body_messages' => $body_messages
@@ -296,15 +378,19 @@ if (!class_exists('curtain_service')) {
 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                                         foreach ( $results as $index=>$result ) {
-                                            $hero_messages = array();
-                                            $hero_messages[] = $profile['displayName'];
+                                            $header_messages = array();
+                                            $header_messages[] = $profile['displayName'];
+                                            //$hero_messages = array();
+                                            //$hero_messages[] = $profile['displayName'];
                                             $body_messages = array();
                                             $body_messages[] = $message['text'];
-                                            $this->push_flex_messages(
+                                            //$this->push_flex_messages(
+                                            $this->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'hero_messages' => $hero_messages,
+                                                    'header_messages' => $hero_messages,
+                                                    //'hero_messages' => $hero_messages,
                                                     'body_messages' => $body_messages
                                                 )
                                             );
@@ -325,7 +411,7 @@ if (!class_exists('curtain_service')) {
                                         $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
                                         //$response = $business_central->getItems();
                                                                 
-                                        $client->pushMessage([
+                                        $line_bot_api->pushMessage([
                                             'to' => $_contents['line_user_id'],
                                             'messages' => [
                                                 [
@@ -347,15 +433,19 @@ if (!class_exists('curtain_service')) {
 
                                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
                                         foreach ( $results as $index=>$result ) {
-                                            $hero_messages = array();
-                                            $hero_messages[] = 'Aihome';
+                                            $header_messages = array();
+                                            $header_messages[] = 'Aihome';
+                                            //$hero_messages = array();
+                                            //$hero_messages[] = 'Aihome';
                                             $body_messages = array();
                                             $body_messages[] = $string;
-                                            $this->push_flex_messages(
+                                            //$this->push_flex_messages(
+                                            $this->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'hero_messages' => $hero_messages,
+                                                    'header_messages' => $header_messages,
+                                                    //'hero_messages' => $hero_messages,
                                                     'body_messages' => $body_messages
                                                 )
                                             );
@@ -371,7 +461,7 @@ if (!class_exists('curtain_service')) {
                                         $this->push_imagemap_messages(
                                             array(
                                                 'line_user_id' => $profile['userId'],
-                                                'base_url' => $service_links->get_link('Agent registry'),
+                                                'base_url' => $service_links->get_link('agent_registry'),
                                                 'alt_text' => 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區',
                                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$profile['userId']
                                                 )
