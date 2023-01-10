@@ -160,6 +160,8 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
+            $header_contents = $this->header_contents($_contents);
+/*            
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
                 foreach ( $_contents['header_messages'] as $header_message ) {
@@ -172,7 +174,7 @@ if (!class_exists('curtain_service')) {
             } else {
                 $header_contents[] = $this->text_content($_contents['header_messages'],$_contents['link_uri']);
             }
-
+*/
             $hero_contents = array();
             foreach ( $_contents['hero_messages'] as $hero_message ) {
                 $hero_content = array();
@@ -259,6 +261,22 @@ if (!class_exists('curtain_service')) {
             );
         }
 
+        public function header_contents( $_contents=array(), $_link_uri ) {
+            $header_contents = array();
+            if ( is_array($_contents['header_messages']) ) {
+                foreach ( $_contents['header_messages'] as $header_message ) {
+                    if ( is_array($header_message) ) {
+                        $header_contents[] = $header_message;
+                    } else {
+                        $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
+                    }
+                }    
+            } else {
+                $header_contents[] = $this->text_content($_contents['header_messages'],$_contents['link_uri']);
+            }
+            return $header_contents;
+        }
+
         public function box_contents( $_box_contents=array(), $_link_uri ) {
             $_contents = array();
             $_box = array();
@@ -277,16 +295,6 @@ if (!class_exists('curtain_service')) {
                     $_box[] = $this->text_content($_box_contents, $_link_uri);
                 }
 
-            $_box[] = array(
-                'type' => 'text',
-                'text' => 'System Notification',
-                'wrap' => true,
-                'action' => array(
-                    'type' => 'uri',
-                    'label' => 'action',
-                    'uri' => $_link_uri
-                )
-            );
                 $_content['type'] = 'box';
                 $_content['layout'] = 'vertical';
                 $_content['contents'] = $_box;
