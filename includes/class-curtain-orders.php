@@ -50,7 +50,7 @@ if (!class_exists('curtain_orders')) {
                         'contents' => array(
                             array(
                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                                "hero" => [
+                                "hero_messages" => [
                                     "type" => "image",
                                     "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
                                     "size" => "full",
