@@ -161,6 +161,7 @@ if (!class_exists('curtain_service')) {
 
         public function push_flex_messages( $_contents=array() ) {
             $header_contents = $this->header_contents($_contents);
+            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
 /*            
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
@@ -218,11 +219,14 @@ if (!class_exists('curtain_service')) {
                         "altText" => $_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
+                            "header" => $header_contents,
+/*                            
                             "header" => [
                                 "type" => "box",
                                 "layout" => "vertical",
                                 "contents" => $header_contents
                             ],
+*/
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
@@ -279,10 +283,23 @@ if (!class_exists('curtain_service')) {
 
         public function box_contents( $_box_contents=array(), $_link_uri ) {
             $_contents = array();
-            $_box = array();
+            //$_box = array();
 
             if ($_box_contents!=array()) {
 
+                $header_contents = array();
+                if ( is_array($_box_contents) ) {
+                    foreach ( $_box_contents as $header_message ) {
+                        if ( is_array($header_message) ) {
+                            $header_contents[] = $header_message;
+                        } else {
+                            $header_contents[] = $this->text_content($header_message,$_link_uri);
+                        }
+                    }    
+                } else {
+                    $header_contents[] = $this->text_content($_box_contents,$_link_uri);
+                }
+/*
                 if (is_array($_box_contents)) {
                     foreach ( $_box_contents as $_box_content ) {
                         if (is_array($_box_content)) {
@@ -294,13 +311,13 @@ if (!class_exists('curtain_service')) {
                 } else {
                     $_box[] = $this->text_content($_box_contents, $_link_uri);
                 }
-
-                $_content['type'] = 'box';
-                $_content['layout'] = 'vertical';
-                $_content['contents'] = $_box;
+*/
+                $_box_content['type'] = 'box';
+                $_box_content['layout'] = 'vertical';
+                $_box_content['contents'] = $header_contents;
             }
             
-            return $_contents;
+            return $_box_contents;
         }
 
         public function push_bubble_messages( $_contents=array() ) {
