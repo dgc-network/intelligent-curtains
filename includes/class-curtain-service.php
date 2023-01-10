@@ -169,7 +169,8 @@ if (!class_exists('curtain_service')) {
                 $header_content['action']['type'] = 'uri';
                 $header_content['action']['label'] = 'action';
                 $header_content['action']['uri'] = $_contents['link_uri'];
-                $header_contents[] = $header_content;
+                //$header_contents[] = $header_content;
+                $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
             }
             $hero_contents = array();
             foreach ( $_contents['hero_messages'] as $hero_message ) {
