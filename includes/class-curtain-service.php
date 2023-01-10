@@ -236,6 +236,7 @@ if (!class_exists('curtain_service')) {
             $_box = array();
 
             if ($_box_contents!=array()) {
+
                 if (is_array($_box_contents)) {
                     foreach ( $_box_contents as $_box_content ) {
                         if (is_array($_box_content)) {
@@ -247,6 +248,17 @@ if (!class_exists('curtain_service')) {
                 } else {
                     $_box[] = $this->text_content($_box_contents, $_link_uri);
                 }
+
+            $_box[] = array(
+                'type' => 'text',
+                'text' => 'System Notification',
+                'wrap' => true,
+                'action' => array(
+                    'type' => 'uri',
+                    'label' => 'action',
+                    'uri' => $_link_uri
+                )
+            );
                 $_content['type'] = 'box';
                 $_content['layout'] = 'vertical';
                 $_content['contents'] = $_box;
