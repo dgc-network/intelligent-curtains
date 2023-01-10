@@ -160,8 +160,9 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
-            $header_contents = $this->header_contents($_contents);
-            $box_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
+            //$header_contents = $this->header_contents($_contents);
+            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_contents['bodyr_messages'], $_contents['link_uri']);
 /*            
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
@@ -199,7 +200,7 @@ if (!class_exists('curtain_service')) {
                 $body_content['action']['uri'] = $_contents['link_uri'];
                 $body_contents[] = $body_content;
             }
-*/
+
             $body_contents = array();
             if ( is_array($_contents['body_messages']) ) {
                 foreach ( $_contents['body_messages'] as $body_message ) {
@@ -208,7 +209,7 @@ if (!class_exists('curtain_service')) {
             } else {
                 $body_contents[] = $this->text_content($_contents['body_messages'],$_contents['link_uri']);
             }
-
+*/
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
@@ -219,25 +220,29 @@ if (!class_exists('curtain_service')) {
                         "altText" => $_contents['body_messages'][0],
                         "contents" => [
                             "type" => "bubble",
-                            "header" => $box_contents,
+                            "header" => $header_contents,
 /*                            
                             "header" => [
                                 "type" => "box",
                                 "layout" => "vertical",
                                 "contents" => $header_contents
                             ],
-*/
+
                             "hero" => [
                                 "type" => "box",
                                 "layout" => "horizontal",
                                 "backgroundColor" => "#00b900",
                                 "contents" => $hero_contents
                             ],
+*/                            
+                            "body" => $body_contents,
+/*                            
                             "body" => [
                                 "type" => "box",
                                 "layout" => "vertical",
                                 "contents" => $body_contents
                             ]
+*/                            
                         ]    
                     ]
                 ]
@@ -305,6 +310,7 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
+            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
