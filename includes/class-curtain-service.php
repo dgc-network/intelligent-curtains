@@ -162,7 +162,7 @@ if (!class_exists('curtain_service')) {
         public function push_flex_messages( $_contents=array() ) {
             //$header_contents = $this->header_contents($_contents);
             $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
-            $body_contents = $this->box_contents($_contents['bodyr_messages'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
 /*            
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
