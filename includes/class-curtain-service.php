@@ -252,6 +252,12 @@ if (!class_exists('curtain_service')) {
             $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
             $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
             $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
+            $contents = array();
+            $contents['type'] = 'bubble';
+            if ($header_contents != array()) {$contents['header'] = $header_contents;}
+            if ($hero_contents != array()) {$contents['hero'] = $hero_contents;}
+            if ($body_contents != array()) {$contents['body'] = $body_contents;}
+            if ($footer_contents != array()) {$contents['footer'] = $footer_contents;}
 
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
@@ -261,19 +267,22 @@ if (!class_exists('curtain_service')) {
                         "type" => "flex",
                         "altText" => "this is a flex message",
                         //"altText" => $this->box_contents($_contents['body_messages'])[0],
+                        'contents' => $contents,
+/*                
                         "contents" => [
                             "type"  => "bubble",
                             "header" => $header_contents,
                             "hero" => $hero_contents,
                             "body" => $body_contents,
                             "footer" => $footer_contents,
-/*
+
                             "header"=> $this->box_contents($_contents['header_messages'],$_contents['link_uri']),
                             "hero"  => $this->box_contents($_contents['hero_messages'],$_contents['link_uri']),
                             "body"  => $this->box_contents($_contents['body_messages'],$_contents['link_uri']),
                             "footer"=> $this->box_contents($_contents['footer_messages'],$_contents['link_uri']),
-*/
+
                         ]
+*/                        
                     ]
                 ]
             ]);

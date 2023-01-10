@@ -42,9 +42,9 @@ if (!class_exists('curtain_orders')) {
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'header_messages' => 'System Notification',
-                        'hero_messages' => array(),
+                        //'hero_messages' => array(),
                         'body_messages' => $body_messages,
-                        'footer_messages' => array(),
+                        //'footer_messages' => array(),
                     )
                 );
             }    
