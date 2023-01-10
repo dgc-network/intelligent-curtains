@@ -50,13 +50,13 @@ if (!class_exists('curtain_orders')) {
                         'contents' => array(
                             array(
                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                                "hero_messages" => [
+                                "hero_messages" => array(
                                     "type" => "image",
                                     "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
                                     "size" => "full",
                                     "aspectMode" => "cover",
                                     "aspectRatio" => "320:213"                                    
-                                ],
+                                ),
                                 'body_messages' => array(
                                     'Order Number: '.$customer_order_number,
                                     'Order Status: '.$system_status->get_name($customer_order_status)
