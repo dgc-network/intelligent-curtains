@@ -163,7 +163,11 @@ if (!class_exists('curtain_service')) {
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
                 foreach ( $_contents['header_messages'] as $header_message ) {
-                    $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
+                    if ( is_array($header_message) ) {
+                        $header_contents[] = $header_message;
+                    } else {
+                        $header_contents[] = $this->text_content($header_message,$_contents['link_uri']);
+                    }
                 }    
             } else {
                 $header_contents[] = $this->text_content($_contents['header_messages'],$_contents['link_uri']);
