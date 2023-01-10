@@ -287,11 +287,11 @@ if (!class_exists('curtain_service')) {
 
                 $box_contents = array();
                 if ( is_array($_box_contents) ) {
-                    foreach ( $_box_contents as $box_content ) {
-                        if ( is_array($box_content) ) {
-                            $box_contents[] = $box_content;
+                    foreach ( $_box_contents as $_box_content ) {
+                        if ( is_array($_box_content) ) {
+                            $box_contents[] = $_box_content;
                         } else {
-                            $box_contents[] = $this->text_content($box_content,$_link_uri);
+                            $box_contents[] = $this->text_content($_box_content,$_link_uri);
                         }
                     }    
                 } else {
