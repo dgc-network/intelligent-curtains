@@ -41,7 +41,7 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header_contents' => $curtain_service->header_contents('System Notification'),
+                        'header_messages' => 'System Notification',
                         //'hero_messages' => $hero_messages,
                         //'body_messages' => $body_messages
                         'body_messages' => $body_messages
@@ -183,7 +183,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Status</th>';
                 $output .= '<th></th>';
                 $output .= '</tr></thead>';
-                //$output .= '<form method="post">';
                 $output .= '<tbody>';
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
@@ -195,35 +194,13 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-/*
-                    if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                        $output .= '<td><select name="_customer_order_status_'.$index.'">'.$system_status->select_options($result->customer_order_status).'</select></td>';
-                    } else {
-                        $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    }
-*/
                     $output .= '<td></td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
                 return $output;
             }
-/*
-            if( isset($_POST['_status_submit']) ) {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $_customer_order_status = '_customer_order_status_'.$index;
-                    $this->update_customer_orders(
-                        array(
-                            'customer_order_status'=>$_POST[$_customer_order_status],
-                        ),
-                        array(
-                            'customer_order_id'=>$result->customer_order_id
-                        )
-                    );
-                }
-            }
-*/            
+
             //* Checkout List */
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
@@ -603,7 +580,7 @@ if (!class_exists('curtain_orders')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
-
+/*
         function select_order_status() {
             global $wpdb;
             $customer_order_number = $_POST['number'];
@@ -634,16 +611,16 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header_messages' => $header_messages,
+                        'header_messages' => 'System Notification',
                         //'hero_messages' => $hero_messages,
-                        'body_messages' => $body_messages
+                        //'body_messages' => $body_messages
                     )
                 );
             }
 
             wp_die();
         }
-
+*/
         function select_category_id() {
             global $wpdb;
             $_id = $_POST['id'];
