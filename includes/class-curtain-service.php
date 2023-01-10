@@ -261,7 +261,7 @@ if (!class_exists('curtain_service')) {
             );
         }
 
-        public function header_contents( $_contents=array(), $_link_uri ) {
+        public function header_contents( $_contents=array() ) {
             $header_contents = array();
             if ( is_array($_contents['header_messages']) ) {
                 foreach ( $_contents['header_messages'] as $header_message ) {
