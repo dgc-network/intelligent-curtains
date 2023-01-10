@@ -35,8 +35,8 @@ if (!class_exists('curtain_orders')) {
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'this is a System Notification message',
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header_messages' => 'System Notification',
-                        'body_messages' => array(
+                        'header' => 'System Notification',
+                        'body' => array(
                             'Order Number: '.$customer_order_number,
                             'Order Status: '.$system_status->get_name($customer_order_status)
                         )
@@ -50,22 +50,22 @@ if (!class_exists('curtain_orders')) {
                         'contents' => array(
                             array(
                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                                "hero_messages" => array(
+                                "hero" => array(
                                     "type" => "image",
                                     "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
                                     "size" => "full",
                                     "aspectMode" => "cover",
                                     "aspectRatio" => "320:213"                                    
                                 ),
-                                'body_messages' => array(
+                                'body' => array(
                                     'Order Number: '.$customer_order_number,
                                     'Order Status: '.$system_status->get_name($customer_order_status)
                                 )    
                             ),
                             array(
                                 'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                                'header_messages' => 'System Notification',
-                                'body_messages' => array(
+                                'header' => 'System Notification',
+                                'body' => array(
                                     'Order Number: '.$customer_order_number,
                                     'Order Status: '.$system_status->get_name($customer_order_status)
                                 )    
@@ -624,21 +624,21 @@ if (!class_exists('curtain_orders')) {
             // Notice the admin about the order status
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-                $header_messages = array();
-                $header_messages[] = 'System Notification';
-                //$hero_messages = array();
-                //$hero_messages[] = 'System Notification';
-                $body_messages = array();
-                $body_messages[] = 'Order Number: '.$customer_order_number;
-                //$body_messages[] = 'Order Status: Completed checkout but did not purchase yet';
-                $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
+                $header = array();
+                $header[] = 'System Notification';
+                //$hero = array();
+                //$hero[] = 'System Notification';
+                $body = array();
+                $body[] = 'Order Number: '.$customer_order_number;
+                //$body[] = 'Order Status: Completed checkout but did not purchase yet';
+                $body[] = 'Order Status: '.$system_status->get_name($customer_order_status);
                 $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header_messages' => 'System Notification',
-                        //'hero_messages' => $hero_messages,
-                        //'body_messages' => $body_messages
+                        'header' => 'System Notification',
+                        //'hero' => $hero,
+                        //'body' => $body
                     )
                 );
             }

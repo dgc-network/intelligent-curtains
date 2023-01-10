@@ -196,10 +196,10 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
-            $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
-            $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
-            $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
-            $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
+            $header_contents = $this->box_contents($_contents['header'], $_contents['link_uri']);
+            $hero_contents = $this->box_contents($_contents['hero'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_contents['body'], $_contents['link_uri']);
+            $footer_contents = $this->box_contents($_contents['footer'], $_contents['link_uri']);
             $bubble_contents = array();
             $bubble_contents['type'] = 'bubble';
             if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
@@ -223,10 +223,10 @@ if (!class_exists('curtain_service')) {
         public function push_carousel_messages( $_carousel_contents=array() ) {
             $carousel_contents = array();
             foreach ( $_carousel_contents['contents'] as $_contents ) {
-                $header_contents = $this->box_contents($_contents['header_messages'], $_contents['link_uri']);
-                $hero_contents = $this->box_contents($_contents['hero_messages'], $_contents['link_uri']);
-                $body_contents = $this->box_contents($_contents['body_messages'], $_contents['link_uri']);
-                $footer_contents = $this->box_contents($_contents['footer_messages'], $_contents['link_uri']);
+                $header_contents = $this->box_contents($_contents['header'], $_contents['link_uri']);
+                $hero_contents = $this->box_contents($_contents['hero'], $_contents['link_uri']);
+                $body_contents = $this->box_contents($_contents['body'], $_contents['link_uri']);
+                $footer_contents = $this->box_contents($_contents['footer'], $_contents['link_uri']);
                 $bubble_contents = array();
                 $bubble_contents['type'] = 'bubble';
                 if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
@@ -289,10 +289,10 @@ if (!class_exists('curtain_service')) {
                                                 array('one_time_password'=>$six_digit_random_number)
                                             );
                                             
-                                            $body_messages = array();
-                                            $body_messages[] = 'Hi, '.$profile['displayName'];
-                                            $body_messages[] = 'QR Code 已經完成註冊';
-                                            $body_messages[] = '請點擊連結進入售後服務區';
+                                            $body = array();
+                                            $body[] = 'Hi, '.$profile['displayName'];
+                                            $body[] = 'QR Code 已經完成註冊';
+                                            $body[] = '請點擊連結進入售後服務區';
 
                                             $this->push_imagemap_messages(
                                                 array(
@@ -300,16 +300,16 @@ if (!class_exists('curtain_service')) {
                                                     'base_url' => $service_links->get_link('user_registry'),
                                                     'alt_text' => 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區',
                                                     'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'],
-                                                    'body_messages' => $body_messages
+                                                    'body' => $body
                                                 )
                                             );
                                         }
                                     } else {
                                         //** continue the process if the 6 digit number is incorrect */
-                                        $body_messages = array();
-                                        $body_messages[] = 'Hi, '.$profile['displayName'];
-                                        $body_messages[] = '您輸入的六位數字'.$message['text'].'有錯誤';
-                                        $body_messages[] = '請重新輸入正確數字已完成 QR Code 註冊';
+                                        $body = array();
+                                        $body[] = 'Hi, '.$profile['displayName'];
+                                        $body[] = '您輸入的六位數字'.$message['text'].'有錯誤';
+                                        $body[] = '請重新輸入正確數字已完成 QR Code 註冊';
 
                                         $this->push_imagemap_messages(
                                             array(
@@ -317,7 +317,7 @@ if (!class_exists('curtain_service')) {
                                                 'base_url' => $service_links->get_link('registry_error'),
                                                 'alt_text' => 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊',
                                                 'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'].'&serial_no=',
-                                                'body_messages' => $body_messages
+                                                'body' => $body
                                             )
                                         );
 
@@ -341,8 +341,8 @@ if (!class_exists('curtain_service')) {
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'header_messages' => $profile['displayName'],
-                                                    'body_messages' => $message['text']
+                                                    'header' => $profile['displayName'],
+                                                    'body' => $message['text']
                                                 )
                                             );
                                         }
@@ -388,8 +388,8 @@ if (!class_exists('curtain_service')) {
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
                                                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'header_messages' => 'Aihome',
-                                                    'body_messages' => $string
+                                                    'header' => 'Aihome',
+                                                    'body' => $string
                                                 )
                                             );
                                         }
