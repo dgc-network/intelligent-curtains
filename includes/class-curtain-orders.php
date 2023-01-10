@@ -33,8 +33,8 @@ if (!class_exists('curtain_orders')) {
                 $body_messages[] = 'Order Number: '.$customer_order_number;
                 $body_messages[] = 'Order Status: '.$system_status->get_name($customer_order_status);
                 $body_messages = array(
-                    0 => 'Order Number: '.$customer_order_number,
-                    1 => 'Order Status: '.$system_status->get_name($customer_order_status)
+                    'Order Number: '.$customer_order_number,
+                    'Order Status: '.$system_status->get_name($customer_order_status)
                 );
                 //$curtain_service->push_flex_messages(
                 $curtain_service->push_bubble_messages(
