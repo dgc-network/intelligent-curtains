@@ -264,9 +264,9 @@ if (!class_exists('curtain_service')) {
                         "contents" => [
                             "type"  => "bubble",
                             "header" => $header_contents,
-                            //"hero" => $hero_contents,
+                            "hero" => $hero_contents,
                             "body" => $body_contents,
-                            //"footer" => $footer_contents,
+                            "footer" => $footer_contents,
 /*
                             "header"=> $this->box_contents($_contents['header_messages'],$_contents['link_uri']),
                             "hero"  => $this->box_contents($_contents['hero_messages'],$_contents['link_uri']),
