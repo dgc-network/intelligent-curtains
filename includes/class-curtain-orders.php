@@ -29,27 +29,29 @@ if (!class_exists('curtain_orders')) {
             $curtain_service = new curtain_service();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-/*
+
                 $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'this is a System Notification message',
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header' => 'System Notification',
-                        'body' => array(
-                            'Order Number: '.$customer_order_number,
-                            'Order Status: '.$system_status->get_name($customer_order_status)
-                        )
+                        'contents' => array(
+                            'header' => 'System Notification',
+                            'body' => array(
+                                'Order Number: '.$customer_order_number,
+                                'Order Status: '.$system_status->get_name($customer_order_status)
+                            )
+                        )                            
                     )
                 );
-*/
+
                 $curtain_service->push_carousel_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'this is a System Notification message',
+                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'contents' => array(
                             array(
-                                'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                                 "hero" => array(
                                     array(
                                         "type" => "image",
@@ -65,7 +67,6 @@ if (!class_exists('curtain_orders')) {
                                 )    
                             ),
                             array(
-                                'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                                 'header' => 'System Notification',
                                 'body' => array(
                                     'Order Number: '.$customer_order_number,
@@ -369,7 +370,10 @@ if (!class_exists('curtain_orders')) {
 
             /** Shopping Cart List */
             if( isset($_POST['_where']) ) {
+                $table = $wpdb->prefix.'order_items';
                 $where='"%'.$_POST['_where'].'%"';
+                get_search_results($table,$where);
+
                 $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
                 $where_condition = '';
                 $x = count($existing_columns);
@@ -390,7 +394,8 @@ if (!class_exists('curtain_orders')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
-            $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
+            //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
+            
             $output  = '<h2>Cart</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -568,20 +573,6 @@ if (!class_exists('curtain_orders')) {
             $wpdb->delete($table, $where);
         }
 
-        public static function rows( $table, $fields = 'all' ) {
-            global $wpdb;
-            $table = $wpdb->prefix . $table;
-        
-            // Build an array of all field names for this table
-            // -------------------------------------------------------------------------
-            $existing_columns = $wpdb->get_col("DESC {$table}", 0);
-            $sql = implode( ', ', $existing_columns );
-            if ( 'all' === $fields ) {
-              return $wpdb->get_results( "SELECT $sql FROM {$table}" );
-            }
-            // Build a query for specific fields if these are passed in to the function
-        }
-
         public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
@@ -589,7 +580,7 @@ if (!class_exists('curtain_orders')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}customer_orders` (
                 customer_order_id int NOT NULL AUTO_INCREMENT,
-                customer_order_number varchar(20),
+                customer_order_number varchar(20) UNIQUE,
                 curtain_agent_id int(10),
                 customer_order_amount decimal(10,0),
                 customer_order_status varchar(10),
@@ -601,7 +592,6 @@ if (!class_exists('curtain_orders')) {
         
             $sql = "CREATE TABLE `{$wpdb->prefix}order_items` (
                 curtain_order_id int NOT NULL AUTO_INCREMENT,
-                customer_order_id int(10),
                 customer_order_number varchar(20),
                 curtain_agent_id int(10),
                 curtain_category_id int(10),

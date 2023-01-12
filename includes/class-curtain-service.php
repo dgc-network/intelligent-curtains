@@ -196,10 +196,11 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
-            $header_contents = $this->box_contents($_contents['header'], $_contents['link_uri']);
-            $hero_contents = $this->box_contents($_contents['hero'], $_contents['link_uri']);
-            $body_contents = $this->box_contents($_contents['body'], $_contents['link_uri']);
-            $footer_contents = $this->box_contents($_contents['footer'], $_contents['link_uri']);
+            $_bubble_contents = $_contents['contents'];
+            $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
+            $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
+            $footer_contents = $this->box_contents($_bubble_contents['footer'], $_contents['link_uri']);
             $bubble_contents = array();
             $bubble_contents['type'] = 'bubble';
             if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
@@ -220,20 +221,22 @@ if (!class_exists('curtain_service')) {
             ]);
         }
 
-        public function push_carousel_messages( $_carousel_contents=array() ) {
+        public function push_carousel_messages( $_contents=array() ) {
+            $_carousel_contents = $_contents['contents'];
             $carousel_contents = array();
-            foreach ( $_carousel_contents['contents'] as $_contents ) {
-                $header_contents = $this->box_contents($_contents['header'], $_contents['link_uri']);
-                $hero_contents = $this->box_contents($_contents['hero'], $_contents['link_uri']);
-                $body_contents = $this->box_contents($_contents['body'], $_contents['link_uri']);
-                $footer_contents = $this->box_contents($_contents['footer'], $_contents['link_uri']);
+            $carousel_contents['type'] = 'carousel';
+            foreach ( $_carousel_contents as $_bubble_contents ) {
+                $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
+                $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
+                $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
+                $footer_contents = $this->box_contents($_bubble_contents['footer'], $_contents['link_uri']);
                 $bubble_contents = array();
                 $bubble_contents['type'] = 'bubble';
                 if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
                 if ($hero_contents != array()) {$bubble_contents['hero'] = $hero_contents;}
                 if ($body_contents != array()) {$bubble_contents['body'] = $body_contents;}
                 if ($footer_contents != array()) {$bubble_contents['footer'] = $footer_contents;}
-                $carousel_contents[]=$bubble_contents;
+                $carousel_contents['contents'][]=$bubble_contents;
             }
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
@@ -241,11 +244,8 @@ if (!class_exists('curtain_service')) {
                 'messages' => [
                     [
                         "type" => "flex",
-                        "altText" => $_carousel_contents['alt_text'],
-                        "contents" => [
-                            "type" => "carousel",
-                            "contents"=>$carousel_contents,
-                        ]    
+                        "altText" => $_contents['alt_text'],
+                        "contents" => $carousel_contents,
                     ]
                 ]
             ]);
