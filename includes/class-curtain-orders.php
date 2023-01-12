@@ -415,13 +415,13 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_lisit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
-            //$output .= '</form>';
+            $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right;">';
-            //$output .= '<form method="post">';
+            $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
-            //$output .= '</form>';
+            $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
 
@@ -437,6 +437,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+            $output .= '<form method="post">';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
@@ -444,7 +445,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td></td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'">';
+                    $output .= '<input style="display:inline" type="checkbox" value="1" name="_is_checkout_'.$index.'">';
                     $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                 }
