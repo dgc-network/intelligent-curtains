@@ -230,6 +230,7 @@ if (!class_exists('curtain_orders')) {
             }
 
             //* Checkout */
+/*            
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
@@ -264,7 +265,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</form>';
                 return $output;
             }
-
+*/
             if( isset($_POST['_checkout_submit']) ) {
                 $customer_order_number=time();
                 $customer_order_amount=0;
@@ -311,7 +312,7 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
-                $this->order_status_notice($customer_order_number, $customer_order_status);
+                $this->order_status_notice($customer_order_number, 'order01');
             }
             
             /** Shopping Cart Item Editing*/
