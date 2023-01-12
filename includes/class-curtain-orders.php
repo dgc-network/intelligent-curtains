@@ -229,7 +229,7 @@ if (!class_exists('curtain_orders')) {
                 return $output;
             }
 
-            //* Checkout List */
+            //* Checkout */
             if( isset($_POST['_checkout_list']) ) {
                 if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
