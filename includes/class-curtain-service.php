@@ -238,6 +238,7 @@ if (!class_exists('curtain_service')) {
                 if ($footer_contents != array()) {$bubble_contents['footer'] = $footer_contents;}
                 $carousel_contents['contents'][]=$bubble_contents;
             }
+            return var_dump($carousel_contents);
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_carousel_contents['line_user_id'],
