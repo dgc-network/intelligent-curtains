@@ -377,7 +377,7 @@ if (!class_exists('curtain_orders')) {
                     $where_condition .= $existing_column.'='.$_POST['_where'];
                     $x = $x -1 ;
                     if ($x > 0) {
-                        $where_condition .= $existing_column.' OR ';
+                        $where_condition .= ' OR ';
                     }
                 }
                 if ($where_condition == '') {
