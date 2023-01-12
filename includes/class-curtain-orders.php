@@ -29,12 +29,34 @@ if (!class_exists('curtain_orders')) {
             $curtain_service = new curtain_service();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-/*
+                $template = '    {
+                    "type": "bubble",
+                    "body": {
+                      "type": "box",
+                      "layout": "vertical",
+                      "spacing": "sm",
+                      "contents": [
+                        {
+                          "type": "button",
+                          "flex": 1,
+                          "gravity": "center",
+                          "action": {
+                            "type": "uri",
+                            "label": "See more",
+                            "uri": "https://linecorp.com"
+                          }
+                        }
+                      ]
+                    }
+                  }
+              ';
+
                 $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
+/*                        
                         'contents' => array(
                             'header' => 'System Notification',
                             'body' => array(
@@ -42,9 +64,11 @@ if (!class_exists('curtain_orders')) {
                                 'Order Status: '.$system_status->get_name($customer_order_status)
                             )
                         )                            
+*/
+                        'contents' => json_decode($template, true)
                     )
                 );
-*/
+
                 $curtain_service->push_carousel_messages(
                     array(
                         'line_user_id' => $result->line_user_id,

@@ -179,10 +179,10 @@ if (!class_exists('curtain_service')) {
                 $box_contents = array();
                 if ( is_array($_box_contents) ) {
                     foreach ( $_box_contents as $_box_content ) {
-                        if ( is_array($_box_content) ) {
-                            $box_contents[] = $_box_content;
-                        } else {
+                        if ( is_string($_box_content) ) {
                             $box_contents[] = $this->text_content($_box_content,$_link_uri);
+                        } else {
+                            $box_contents[] = $_box_content;
                         }
                     }    
                 } else {
@@ -215,7 +215,8 @@ if (!class_exists('curtain_service')) {
                     [
                         "type" => "flex",
                         "altText" => $_contents['alt_text'],
-                        'contents' => $bubble_contents,
+                        //'contents' => $bubble_contents,
+                        'contents' => $_bubble_contents,
                     ]
                 ]
             ]);
