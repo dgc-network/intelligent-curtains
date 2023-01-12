@@ -314,7 +314,7 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($customer_order_number, $customer_order_status);
             }
             
-            //* Shopping Cart Items Create-Update-Delete */
+            /** Shopping Cart Item Editing*/
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
@@ -399,7 +399,7 @@ if (!class_exists('curtain_orders')) {
                 );
             }
 
-            //* Shopping Cart List */
+            /** Shopping Cart List */
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
@@ -413,15 +413,15 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_list">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_lisit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
-            $output .= '</form>';
+            //$output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right;">';
-            $output .= '<form method="post">';
+            //$output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
-            $output .= '</form>';
+            //$output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
 
@@ -444,7 +444,8 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td></td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '<input type="checkbox" value="1" name="_is_checkout_'.$index.'">';
+                    $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                 }
                 $output .= '<td>';
@@ -465,6 +466,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
+            $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
+            $output .= '</form>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
