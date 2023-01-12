@@ -196,7 +196,9 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
-            $_bubble_contents = $_contents['contents'];
+            $bubble_contents = array_replace($_contents['template'],$_contents['contents']);
+            //$_bubble_contents = $_contents['contents'];
+/*            
             $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
             $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
             $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
@@ -207,7 +209,7 @@ if (!class_exists('curtain_service')) {
             if ($hero_contents != array()) {$bubble_contents['hero'] = $hero_contents;}
             if ($body_contents != array()) {$bubble_contents['body'] = $body_contents;}
             if ($footer_contents != array()) {$bubble_contents['footer'] = $footer_contents;}
-
+*/
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
@@ -215,8 +217,8 @@ if (!class_exists('curtain_service')) {
                     [
                         "type" => "flex",
                         "altText" => $_contents['alt_text'],
-                        //'contents' => $bubble_contents,
-                        'contents' => $_bubble_contents,
+                        'contents' => $bubble_contents,
+                        //'contents' => $_bubble_contents,
                     ]
                 ]
             ]);

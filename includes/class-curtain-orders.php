@@ -56,6 +56,7 @@ if (!class_exists('curtain_orders')) {
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
+                        'template' => json_decode($template, true),
 /*                        
                         'contents' => array(
                             'header' => 'System Notification',
@@ -65,7 +66,15 @@ if (!class_exists('curtain_orders')) {
                             )
                         )                            
 */
-                        'contents' => json_decode($template, true)
+                        'contents' => array(
+                            "hero" => array(
+                                "type" => "image",
+                                "url" => "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip10.jpg",
+                                "size" => "full",
+                                "aspectMode" => "cover",
+                                "aspectRatio" => "320:213"                                        
+                            ),
+                        )
                     )
                 );
 
