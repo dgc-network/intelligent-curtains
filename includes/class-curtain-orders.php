@@ -370,7 +370,19 @@ if (!class_exists('curtain_orders')) {
             /** Shopping Cart List */
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
+                $where_condition = '';
+                foreach ($existing_columns as $existing_column) {
+                    $where_condition .= $existing_column.'='.$where;
+                    if (!end($existing_columns)) {
+                        $where_condition .= $existing_column.' OR ';
+                    }
+                }
+                if ($where_condition == '') {
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                } else {
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND ({$where_condition})", OBJECT );
+                }
                 unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
@@ -426,7 +438,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</td>';
                 $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                //$output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
                 $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
                 $output .= '<td>Width:'.$result->curtain_width;
                 if ($result->curtain_category_id==1){
@@ -434,8 +445,8 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $output .= '<br>Height:'.$result->curtain_height.'</td>';
                 }
-            $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
-                $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
+                $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
+                $output .= '<td style="text-align: center;">'.number_format_i18n($result->order_item_amount).'</td>';
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
                 } else {
@@ -552,6 +563,20 @@ if (!class_exists('curtain_orders')) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $wpdb->delete($table, $where);
+        }
+
+        public static function rows( $table, $fields = 'all' ) {
+            global $wpdb;
+            $table = $wpdb->prefix . $table;
+        
+            // Build an array of all field names for this table
+            // -------------------------------------------------------------------------
+            $existing_columns = $wpdb->get_col("DESC {$table}", 0);
+            $sql = implode( ', ', $existing_columns );
+            if ( 'all' === $fields ) {
+              return $wpdb->get_results( "SELECT $sql FROM {$table}" );
+            }
+            // Build a query for specific fields if these are passed in to the function
         }
 
         public function create_tables() {
