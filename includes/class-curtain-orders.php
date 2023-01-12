@@ -222,7 +222,10 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    $output .= '<td></td>';
+                    //$output .= '<td></td>';
+                    $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '</td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
@@ -230,42 +233,6 @@ if (!class_exists('curtain_orders')) {
             }
 
             //* Checkout */
-/*            
-            if( isset($_POST['_checkout_list']) ) {
-                if ($curtain_agent_id==0) {return 'You have to register as the agent before checkout!';}
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-                $output  = '<h2>Items Checkout - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
-                $output .= '<form method="post">';
-                $output .= '<div class="ui-widget">';
-                $output .= '<table id="orders" class="ui-widget ui-widget-content">';
-                $output .= '<thead><tr class="ui-widget-header ">';
-                $output .= '<th></th>';
-                $output .= '<th>date/time</th>';
-                $output .= '<th>category</th>';
-                $output .= '<th>model</th>';
-                $output .= '<th>spec</th>';
-                $output .= '<th>QTY</th>';
-                $output .= '<th>amount</th>';
-                $output .= '</tr></thead>';
-                $output .= '<tbody>';
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<tr>';
-                    $output .= '<td style="text-align:center;"><input type="checkbox" value="1" name="_is_checkout_'.$index.'"></td>';
-                    $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).' '.wp_date( get_option('time_format'), $result->create_timestamp ).'</td>';
-                    $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
-                    $output .= '<td style="text-align:center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                    $output .= '<td style="text-align:center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
-                    $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
-                    $output .= '<td style="text-align:center;">'.$result->order_item_amount.'</td>';
-                    $output .= '</tr>';
-                }
-                $output .= '</tbody></table></div>';
-                $output .= '<form method="post">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
-                $output .= '</form>';
-                return $output;
-            }
-*/
             if( isset($_POST['_checkout_submit']) ) {
                 $customer_order_number=time();
                 $customer_order_amount=0;
@@ -414,7 +381,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
-            //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_lisit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
@@ -435,6 +401,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>category</th>';
             $output .= '<th>model</th>';
             $output .= '<th>spec</th>';
+            $output .= '<th>dimension</th>';
             $output .= '<th>QTY</th>';
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
@@ -459,8 +426,15 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</td>';
                 $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                $output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
-                $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
+                //$output .= '<td style="text-align: center;">'.$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width.'</td>';
+                $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
+                $output .= '<td>Width:'.$result->curtain_width;
+                if ($result->curtain_category_id==1){
+                    $output .= '</td>';
+                } else {
+                    $output .= '<br>Height:'.$result->curtain_height.'</td>';
+                }
+            $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_amount.'</td>';
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
