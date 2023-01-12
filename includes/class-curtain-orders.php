@@ -429,6 +429,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<table id="orders" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
+            $output .= '<th></th>';
             $output .= '<th>date/time</th>';
             $output .= '<th>category</th>';
             $output .= '<th>model</th>';
@@ -443,9 +444,12 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td></td>';
+                    $output .= '<td></td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
                     $output .= '<input style="display:inline" type="checkbox" value="1" name="_is_checkout_'.$index.'">';
+                    $output .= '</td>';
+                    $output .= '<td style="text-align: center;">';
                     $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                 }
