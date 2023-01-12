@@ -383,7 +383,7 @@ if (!class_exists('curtain_orders')) {
                 if ($where_condition == '') {
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 } else {
-                    return $where_condition;
+                    //return $where_condition;
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND ({$where_condition})", OBJECT );
                 }
                 unset($_POST['_where']);
