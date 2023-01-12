@@ -372,9 +372,11 @@ if (!class_exists('curtain_orders')) {
                 $where='"%'.$_POST['_where'].'%"';
                 $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
                 $where_condition = '';
+                $x = count($existing_columns);
                 foreach ($existing_columns as $existing_column) {
-                    $where_condition .= $existing_column.'='.$where;
-                    if (!end($existing_columns)) {
+                    $where_condition .= $existing_column.'='.$_POST['_where'];
+                    $x = $x -1 ;
+                    if ($x > 0) {
                         $where_condition .= $existing_column.' OR ';
                     }
                 }
