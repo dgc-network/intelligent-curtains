@@ -205,7 +205,7 @@ if (!class_exists('curtain_orders')) {
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'template' => $template,
-                        'contents' => array()
+                        'contents' => $contents
                     )
                 );
 /*
