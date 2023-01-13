@@ -197,7 +197,7 @@ if (!class_exists('curtain_orders')) {
                 $template = $json_templates->get_json('Apparel');
                 $template = wp_unslash($template);
                 $template = json_decode($template, true);
-                return var_dump($template);
+                //return var_dump($template);
 
                 $curtain_service->push_flex_messages(
                     array(
