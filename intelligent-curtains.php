@@ -56,6 +56,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $curtain_service = new curtain_service();
