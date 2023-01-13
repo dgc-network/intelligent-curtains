@@ -30,6 +30,7 @@ if (!class_exists('curtain_orders')) {
             $json_templates = new json_templates();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
+
                 $template = '    {
                     "type": "bubble",
                     "body": {
@@ -50,17 +51,17 @@ if (!class_exists('curtain_orders')) {
                       ]
                     }
                   }
-              ';
+                ';
+
+                $contents = array(
+                    "type" => "carousel",
+                );
 
                 $template = $json_templates->get_json('Restaurant');
                 $template = $json_templates->get_json('Apparel');
-                //$template = wp_json_encode($template);
-                //$template = preg_replace( '/(^|[^\n\r])[\r\n](?![\n\r])/', '$1 ', $templates );
                 $template = wp_unslash($template);
-                //$template = stripslashes($template);
                 $template = json_decode($template, true);
-
-                //return var_dump($template);
+                return var_dump($template);
 
                 $curtain_service->push_flex_messages(
                     array(
