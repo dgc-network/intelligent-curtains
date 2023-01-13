@@ -52,8 +52,8 @@ if (!class_exists('curtain_orders')) {
                   }
               ';
 
-                $template = json_decode(wp_unslash($json_templates->get_json('Restaurant')), true);
-                return var_dump($template);
+                $template = json_decode(wp_json_encode(wp_unslash($json_templates->get_json('Restaurant'))), true);
+                //return var_dump($template);
 
                 $curtain_service->push_flex_messages(
                     array(
