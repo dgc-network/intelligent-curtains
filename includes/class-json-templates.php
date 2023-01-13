@@ -104,7 +104,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<span id="btn-edit-'.$result->json_template_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->json_template_title.'</td>';
-                $output .= '<td>'.$result->json_template_text.'</td>';
+                $output .= '<td>'.esc_html(wp_trim_words($result->json_template_text)).'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->json_template_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -120,7 +120,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<input type="hidden" value="'.$row->json_template_id.'" name="_json_template_id">';
-                $output .= '<label for="json-template-title">Template Title</label>';
+                $output .= '<label for="json-template-title">Title</label>';
                 $output .= '<input type="text" name="_json_template_title" value="'.$row->json_template_title.'" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
                 $output .= '<textarea name="_json_template_text" rows="10" cols="50">'.$row->json_template_text.'</textarea>';
@@ -135,7 +135,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<div id="dialog" title="Create new template">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="json-template-title">Template Title</label>';
+                $output .= '<label for="json-template-title">Title</label>';
                 $output .= '<input type="text" name="_json_template_title" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
                 $output .= '<textarea name="_json_template_text" rows="10" cols="50"></textarea>';
