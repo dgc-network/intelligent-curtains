@@ -56,10 +56,10 @@ if (!class_exists('curtain_orders')) {
                 //$template = wp_json_encode(wp_unslash($json_templates->get_json('Restaurant')));
 
                 $template = $json_templates->get_json('Restaurant');
-                $template = wp_json_encode($template);
+                //$template = wp_json_encode($template);
                 //$template = preg_replace( '/(^|[^\n\r])[\r\n](?![\n\r])/', '$1 ', $templates );
                 //$template = wp_unslash($templates);
-                //$template = json_decode($template, true);
+                $template = json_decode($template, true);
 
                 return var_dump($template);
 
