@@ -40,7 +40,7 @@ if (!class_exists('json_templates')) {
                 $this->insert_json_template(
                     array(
                         'json_template_title'=>$_POST['_json_template_title'],
-                        'json_template_text'=>esc_textarea($_POST['_json_template_text'])
+                        'json_template_text'=>$_POST['_json_template_text']
                     )
                 );
             }
@@ -49,7 +49,7 @@ if (!class_exists('json_templates')) {
                 $this->update_json_templates(
                     array(
                         'json_template_title'=>$_POST['_json_template_title'],
-                        'json_template_text'=>esc_textarea($_POST['_json_template_text'])
+                        'json_template_text'=>$_POST['_json_template_text']
                     ),
                     array(
                         'json_template_id'=>$_POST['_json_template_id'],
@@ -104,7 +104,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<span id="btn-edit-'.$result->json_template_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->json_template_title.'</td>';
-                $output .= '<td>'.wp_trim_words($result->json_template_text).'</td>';
+                $output .= '<td>'.wp_unslash(wp_trim_words($result->json_template_text)).'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->json_template_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -123,7 +123,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<label for="json-template-title">Title</label>';
                 $output .= '<input type="text" name="_json_template_title" value="'.$row->json_template_title.'" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
-                $output .= '<textarea name="_json_template_text" rows="10" cols="50">'.$row->json_template_text.'</textarea>';
+                $output .= '<textarea name="_json_template_text" rows="10" cols="50">'.wp_unslash($row->json_template_text).'</textarea>';
                 //$output .= '<input type="text" name="_json_template_text" value="'.$row->json_template_text.'" id="json-template-text" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
