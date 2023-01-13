@@ -37,7 +37,7 @@ if (!class_exists('curtain_remotes')) {
             }
 
             if( isset($_POST['_create']) ) {
-                $curtain_remotes->insert_curtain_remote(
+                $this->insert_curtain_remote(
                     array(
                         'curtain_remote_name'=>$_POST['_curtain_remote_name'],
                         'curtain_remote_price'=>$_POST['_curtain_remote_price']
@@ -46,7 +46,7 @@ if (!class_exists('curtain_remotes')) {
             }
             
             if( isset($_POST['_update']) ) {
-                $curtain_remotes->update_curtain_remotes(
+                $this->update_curtain_remotes(
                     array(
                         'curtain_remote_name'=>$_POST['_curtain_remote_name'],
                         'curtain_remote_price'=>$_POST['_curtain_remote_price']
@@ -59,7 +59,7 @@ if (!class_exists('curtain_remotes')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                $curtain_remotes->delete_curtain_remotes(
+                $this->delete_curtain_remotes(
                     array(
                         'curtain_remote_id'=>$_GET['_delete']
                     )

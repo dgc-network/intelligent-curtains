@@ -37,7 +37,7 @@ if (!class_exists('json_templates')) {
             }
 
             if( isset($_POST['_create']) ) {
-                $curtain_remotes->insert_json_template(
+                $this->insert_json_template(
                     array(
                         'json_template_title'=>$_POST['_json_template_title'],
                         'json_template_text'=>$_POST['_json_template_text']
@@ -46,7 +46,7 @@ if (!class_exists('json_templates')) {
             }
             
             if( isset($_POST['_update']) ) {
-                $curtain_remotes->update_json_templates(
+                $this->update_json_templates(
                     array(
                         'json_template_title'=>$_POST['_json_template_title'],
                         'json_template_text'=>$_POST['_json_template_text']
@@ -59,7 +59,7 @@ if (!class_exists('json_templates')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                $curtain_remotes->delete_json_templates(
+                $this->delete_json_templates(
                     array(
                         'json_template_id'=>$_GET['_delete']
                     )
@@ -123,7 +123,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<label for="json-template-title">Template Title</label>';
                 $output .= '<input type="text" name="_json_template_title" value="'.$row->json_template_title.'" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
-                $output .= '<textarea class="chatboxtextarea" name="_json_template_text">'.$row->json_template_text.'</textarea>';
+                $output .= '<textarea name="_json_template_text" rows="10" cols="50">'.$row->json_template_text.'</textarea>';
                 //$output .= '<input type="text" name="_json_template_text" value="'.$row->json_template_text.'" id="json-template-text" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
@@ -138,7 +138,7 @@ if (!class_exists('json_templates')) {
                 $output .= '<label for="json-template-title">Template Title</label>';
                 $output .= '<input type="text" name="_json_template_title" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
-                $output .= '<textarea class="chatboxtextarea" name="_json_template_text"></textarea>';
+                $output .= '<textarea name="_json_template_text" rows="10" cols="50"></textarea>';
                 //$output .= '<input type="text" name="_json_template_text" id="json-template-text" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
