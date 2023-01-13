@@ -53,10 +53,11 @@ if (!class_exists('curtain_orders')) {
               ';
 
                 $template = $json_templates->get_json('Restaurant');
+                $template = $json_templates->get_json('Apparel');
                 //$template = wp_json_encode($template);
                 //$template = preg_replace( '/(^|[^\n\r])[\r\n](?![\n\r])/', '$1 ', $templates );
-                //$template = wp_unslash($template);
-                $template = stripslashes($template);
+                $template = wp_unslash($template);
+                //$template = stripslashes($template);
                 $template = json_decode($template, true);
 
                 //return var_dump($template);
@@ -70,14 +71,14 @@ if (!class_exists('curtain_orders')) {
                         'contents' => array()
                     )
                 );
-
+/*
                 $curtain_service->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'template' => json_decode($template, true),
-/*                        
+                        
                         'contents' => array(
                             'header' => 'System Notification',
                             'body' => array(
@@ -85,7 +86,7 @@ if (!class_exists('curtain_orders')) {
                                 'Order Status: '.$system_status->get_name($customer_order_status)
                             )
                         )                            
-*/
+
                         'contents' => array(
                             "hero" => array(
                                 "type" => "image",
@@ -97,7 +98,8 @@ if (!class_exists('curtain_orders')) {
                         )
                     )
                 );
-
+*/                
+/*
                 $curtain_service->push_carousel_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
@@ -129,6 +131,7 @@ if (!class_exists('curtain_orders')) {
                         )
                     )
                 );
+*/                
             }    
         }
 
