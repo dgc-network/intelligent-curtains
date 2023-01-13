@@ -62,6 +62,7 @@ if (!class_exists('curtain_orders')) {
                                 "type"=> "box",
                                 "layout"=> "vertical",
                                 "contents"=> array(
+/*
                                     0=> array(
                                         "type"=> "image",
                                         "url"=> "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip1.jpg",
@@ -186,8 +187,9 @@ if (!class_exists('curtain_orders')) {
                                         "height"=> "25px",
                                         "width"=> "53px"
                                     )
+*/                                    
                                 ),
-                                "paddingAll"=> "0px"
+                                "paddingAll"=> "0px"                                
                             )
                         )
                     )
