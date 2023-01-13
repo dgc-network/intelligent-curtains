@@ -54,7 +54,143 @@ if (!class_exists('curtain_orders')) {
                 ';
 
                 $contents = array(
-                    "type" => "carousel",
+                    "type"=>  "carousel",
+                    "contents"=> array(
+                        0 => array(
+                            "type"=> "bubble",
+                            "body"=> array(
+                                "type"=> "box",
+                                "layout"=> "vertical",
+                                "contents"=> array(
+                                    0=> array(
+                                        "type"=> "image",
+                                        "url"=> "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip1.jpg",
+                                        "size"=> "full",
+                                        "aspectMode"=> "cover",
+                                        "aspectRatio"=> "2:3",
+                                        "gravity"=> "top"
+                                    ),
+                                    1=> array(
+                                        "type"=> "box",
+                                        "layout"=> "vertical",
+                                        "contents"=> array(
+                                            0=> array(
+                                                "type"=> "box",
+                                                "layout"=> "vertical",
+                                                "contents"=> array(
+                                                    0=> array(
+                                                        "type"=> "text",
+                                                        //"text"=> "Brown's T-shirts",
+                                                        "text"=> "System Notification",
+                                                        "size"=> "xl",
+                                                        "color"=> "#ffffff",
+                                                        "weight"=> "bold"
+                                                    )
+                                                )
+                                            ),
+                                            1=> array(
+                                                "type"=> "box",
+                                                "layout"=> "baseline",
+                                                "contents"=> array(
+                                                    0=> array(
+                                                        "type"=> "text",
+                                                        //"text"=> "¥35,800",
+                                                        "text"=> "Order No.",
+                                                        "color"=> "#ebebeb",
+                                                        "size"=> "sm",
+                                                        "flex"=> 0
+                                                    ),
+                                                    1=> array(
+                                                        "type"=> "text",
+                                                        //"text"=> "¥75,000",
+                                                        "text"=> $customer_order_number,
+                                                        "color"=> "#ffffffcc",
+                                                        //"decoration"=> "line-through",
+                                                        "gravity"=> "bottom",
+                                                        "flex"=> 0,
+                                                        "size"=> "sm",
+                                                        "spacing"=> "lg"
+                                                    ),
+                                                    2=> array(
+                                                        "type"=> "box",
+                                                        "layout"=> "vertical",
+                                                        "contents"=> array(
+                                                            0=> array(
+                                                                "type"=> "filler"
+                                                            ),
+                                                            1=> array(
+                                                                "type"=> "box",
+                                                                "layout"=> "baseline",
+                                                                "contents"=> array(
+                                                                    0=> array(
+                                                                        "type"=> "filler"
+                                                                    ),
+                                                                    1=> array(
+                                                                        "type"=> "icon",
+                                                                        "url"=> "https://scdn.line-apps.com/n/channel_devcenter/img/flexsnapshot/clip/clip14.png"
+                                                                    ),
+                                                                    2=> array(
+                                                                        "type"=> "text",
+                                                                        //"text"=> "Add to cart",
+                                                                        "text"=> "Go to order",
+                                                                        "color"=> "#ffffff",
+                                                                        "flex"=> 0,
+                                                                        "offsetTop"=> "-2px"
+                                                                    ),
+                                                                    3=> array(
+                                                                        "type"=> "filler"
+                                                                    )
+                                                                ),
+                                                                "spacing"=> "sm"
+                                                            ),
+                                                            2=> array(
+                                                                "type"=> "filler"
+                                                            )
+                                                        ),
+                                                        "borderWidth"=> "1px",
+                                                        "cornerRadius"=> "4px",
+                                                        "spacing"=> "sm",
+                                                        "borderColor"=> "#ffffff",
+                                                        "margin"=> "xxl",
+                                                        "height"=> "40px"
+                                                    )
+                                                )
+                                            ),
+                                            "position"=> "absolute",
+                                            "offsetBottom"=> "0px",
+                                            "offsetStart"=> "0px",
+                                            "offsetEnd"=> "0px",
+                                            "backgroundColor"=> "#03303Acc",
+                                            "paddingAll"=> "20px",
+                                            "paddingTop"=> "18px"
+                                        )
+                                    ),
+                                    2=> array(
+                                        "type"=> "box",
+                                        "layout"=> "vertical",
+                                        "contents"=> array(
+                                            0=> array(
+                                                "type"=> "text",
+                                                "text"=> "SALE",
+                                                "color"=> "#ffffff",
+                                                "align"=> "center",
+                                                "size"=> "xs",
+                                                "offsetTop"=> "3px"
+                                            )
+                                        ),
+                                        "position"=> "absolute",
+                                        "cornerRadius"=> "20px",
+                                        "offsetTop"=> "18px",
+                                        "backgroundColor"=> "#ff334b",
+                                        "offsetStart"=> "18px",
+                                        "height"=> "25px",
+                                        "width"=> "53px"
+                                    )
+                                ),
+                                "paddingAll"=> "0px"
+                            )
+                        )
+                    )
                 );
 
                 $template = $json_templates->get_json('Restaurant');
