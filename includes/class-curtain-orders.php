@@ -52,7 +52,7 @@ if (!class_exists('curtain_orders')) {
                   }
               ';
 
-                $template = wp_unslash($json_templates->get_json('Restaurant'));
+                $template = json_decode(wp_unslash($json_templates->get_json('Restaurant')), true);
                 return var_dump($template);
 
                 $curtain_service->push_flex_messages(
@@ -60,7 +60,7 @@ if (!class_exists('curtain_orders')) {
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'template' => json_decode($template, true),
+                        'template' => $template,
                         'contents' => array()
                     )
                 );
