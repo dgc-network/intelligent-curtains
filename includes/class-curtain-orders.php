@@ -53,6 +53,7 @@ if (!class_exists('curtain_orders')) {
               ';
 
                 $template = $json_templates->get_json('Restaurant');
+                return var_dump($template);
 
                 $curtain_service->push_flex_messages(
                     array(
