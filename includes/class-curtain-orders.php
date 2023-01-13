@@ -53,7 +53,7 @@ if (!class_exists('curtain_orders')) {
               ';
 
                 $template = wp_unslash($json_templates->get_json('Restaurant'));
-                //return var_dump($template);
+                return var_dump($template);
 
                 $curtain_service->push_flex_messages(
                     array(
