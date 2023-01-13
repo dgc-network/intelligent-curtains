@@ -27,6 +27,7 @@ if (!class_exists('curtain_orders')) {
             global $wpdb;
             $system_status = new system_status();
             $curtain_service = new curtain_service();
+            $json_templates = new json_templates();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
                 $template = '    {
@@ -50,6 +51,18 @@ if (!class_exists('curtain_orders')) {
                     }
                   }
               ';
+
+                $template = $json_templates->get_json('Restaurant');
+
+                $curtain_service->push_flex_messages(
+                    array(
+                        'line_user_id' => $result->line_user_id,
+                        'alt_text' => 'Order Number: '.$customer_order_number,
+                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
+                        'template' => json_decode($template, true),
+                        'contents' => array()
+                    )
+                );
 
                 $curtain_service->push_bubble_messages(
                     array(

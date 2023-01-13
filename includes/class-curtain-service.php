@@ -195,6 +195,21 @@ if (!class_exists('curtain_service')) {
             return $_contents;
         }
 
+        public function push_flex_messages( $_contents=array() ) {
+            $flex_contents = array_replace($_contents['template'],$_contents['contents']);
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => $_contents['alt_text'],
+                        'contents' => $flex_contents,
+                    ]
+                ]
+            ]);
+        }
+
         public function push_bubble_messages( $_contents=array() ) {
             $bubble_contents = array_replace($_contents['template'],$_contents['contents']);
             //$_bubble_contents = $_contents['contents'];
