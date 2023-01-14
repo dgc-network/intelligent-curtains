@@ -206,7 +206,7 @@ if (!class_exists('curtain_orders')) {
                 $template = wp_unslash($template);
                 $template = json_decode($template, true);
                 //return var_dump($template);
-                return var_dump($template["contents"][0]);
+                return var_dump($template["contents"][0]["body"]["contents"][0]["url"]);
 
                 $curtain_service->push_flex_messages(
                     array(
