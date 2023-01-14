@@ -196,7 +196,8 @@ if (!class_exists('curtain_service')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
-            $flex_contents = array_replace($_contents['template'],$_contents['contents']);
+            //$flex_contents = array_replace($_contents['template'],$_contents['contents']);
+            $flex_contents = $_contents['contents'];
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
                 'to' => $_contents['line_user_id'],
