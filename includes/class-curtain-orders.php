@@ -199,6 +199,7 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 $template = $json_templates->get_json('Restaurant');
+                
                 $template = $json_templates->get_json('Apparel');
                 $template = wp_unslash($template);
                 $contents = json_decode($template, true);
