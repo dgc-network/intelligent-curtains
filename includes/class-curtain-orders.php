@@ -208,7 +208,7 @@ if (!class_exists('curtain_orders')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][0]["contents"][0]["text"] = 'System Notification';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][0]["text"] = 'System Notification';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = 'System Notification';
-return var_dump($contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][2]["contents"]);
+return var_dump($contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][2]["contents"][1]["contents"][1]["text"]);
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][1]["contents"][1]["contents"][2]["text"] = 'System Notification';
                 $contents["contents"][1] = json_decode($see_more, true);
 
