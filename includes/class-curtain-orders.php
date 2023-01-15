@@ -204,7 +204,7 @@ if (!class_exists('curtain_orders')) {
                 $template = $json_templates->get_json('Apparel');
                 $template = wp_unslash($template);
                 $contents = json_decode($template, true);
-                $contents["contents"][0]["body"]["contents"][0]["url"] = "http://aihome.tw/wp-content/uploads/2022/10/客廳5-1.png";
+                //$contents["contents"][0]["body"]["contents"][0]["url"] = "http://aihome.tw/wp-content/uploads/2022/10/客廳5-1.png";
                 //return var_dump($contents["contents"][0]["body"]["contents"][1]["contents"][0]["contents"]["text"]);
                 $contents["contents"][0]["body"]["contents"][1]["contents"][0]["contents"][0]["text"] = 'System Notification';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][0]["text"] = 'Order No.: ';
