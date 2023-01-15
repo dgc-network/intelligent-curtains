@@ -209,7 +209,7 @@ if (!class_exists('curtain_orders')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][0]["contents"][0]["text"] = 'System Notification';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][0]["text"] = 'Order No.: ';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][1]["text"] = $customer_order_number;
-                //$contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][1]["decoration"] = 'none';
+                $contents["contents"][0]["body"]["contents"][1]["contents"][1]["contents"][1]["decoration"] = 'none';
 //return var_dump($contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]);
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["text"] = 'Go back order';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["type"] = 'uri';
