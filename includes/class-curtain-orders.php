@@ -199,6 +199,10 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 $template = $json_templates->get_json('Restaurant');
+                
+                $$see_more = $json_templates->get_json('See_More');
+                $$see_more = wp_unslash($see_more);
+                $$see_more = json_decode($see_more, true);
 
                 $link_uri = get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number;
                 $template = $json_templates->get_json('Apparel');
