@@ -61,7 +61,7 @@ if (!class_exists('curtain_users')) {
                     if (isset($_POST[$_checkbox])) {
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_POST['_line_user_id'], $result->wp_page_postid ), OBJECT );
                         if (is_null($permission) || !empty($wpdb->last_error)) {
-                            $this->insert_user_permission(
+                            $wp_pages->insert_user_permission(
                                 array(
                                     'line_user_id'   => $_POST['_line_user_id'],
                                     'wp_page_postid' => $result->wp_page_postid,
@@ -71,7 +71,7 @@ if (!class_exists('curtain_users')) {
                     } else {
                         $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_POST['_line_user_id'], $result->wp_page_postid ), OBJECT );
                         if (!(is_null($permission) || !empty($wpdb->last_error))) {
-                            $this->delete_user_permissions(
+                            $wp_pages->delete_user_permissions(
                                 array(
                                     'line_user_id'   => $_POST['_line_user_id'],
                                     'wp_page_postid' => $result->wp_page_postid,
@@ -231,19 +231,6 @@ if (!class_exists('curtain_users')) {
             $wpdb->delete($table, $where);
         }
 
-        public function insert_user_permission($data=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'user_permissions';
-            $data['create_timestamp'] = time();
-            $wpdb->insert($table, $data);
-        }
-
-        public function delete_user_permissions($where=[]) {
-            global $wpdb;
-            $table = $wpdb->prefix.'user_permissions';
-            $wpdb->delete($table, $where);
-        }
-
         public function get_id( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d OR line_user_id = %s", $_id, $_id ), OBJECT );
@@ -278,15 +265,6 @@ if (!class_exists('curtain_users')) {
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_user_id)
-            ) $charset_collate;";
-            dbDelta($sql);
-
-            $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
-                user_permission_id int NOT NULL AUTO_INCREMENT,
-                line_user_id varchar(50) NOT NULL,
-                wp_page_postid int NOT NULL,
-                create_timestamp int(10),
-                PRIMARY KEY (user_permission_id)
             ) $charset_collate;";
             dbDelta($sql);
         }

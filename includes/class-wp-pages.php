@@ -92,9 +92,9 @@ if (!class_exists('wp_pages')) {
                         'wp_page_id'=>$_GET['_delete']
                     )
                 );
-                $curtain_users->delete_user_permissions(
+                $this->delete_user_permissions(
                     array(
-                        'wp_page'=>$this->get_name($_GET['_delete'])
+                        'wp_page_postid'=>$this->get_postid($_GET['_delete'])
                     )
                 );
                 wp_delete_post($this->get_postid($_GET['_delete']), true);
@@ -190,6 +190,19 @@ if (!class_exists('wp_pages')) {
             $wpdb->delete($table, $where);
         }
 
+        public function insert_user_permission($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'user_permissions';
+            $data['create_timestamp'] = time();
+            $wpdb->insert($table, $data);
+        }
+
+        public function delete_user_permissions($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'user_permissions';
+            $wpdb->delete($table, $where);
+        }
+
         public function get_postid( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_id = %d", $_id ), OBJECT );
@@ -215,7 +228,16 @@ if (!class_exists('wp_pages')) {
                 update_timestamp int(10),
                 PRIMARY KEY (wp_page_id)
             ) $charset_collate;";
-            dbDelta($sql);            
+            dbDelta($sql);
+
+            $sql = "CREATE TABLE {$wpdb->prefix}user_permissions (
+                user_permission_id int NOT NULL AUTO_INCREMENT,
+                line_user_id varchar(50) NOT NULL,
+                wp_page_postid int NOT NULL,
+                create_timestamp int(10),
+                PRIMARY KEY (user_permission_id)
+            ) $charset_collate;";
+            dbDelta($sql);
         }
     }
     $my_class = new wp_pages();
