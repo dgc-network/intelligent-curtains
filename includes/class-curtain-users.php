@@ -281,7 +281,7 @@ if (!class_exists('curtain_users')) {
                 )
             );
 
-            $curtain_service->push_bubble_messages(
+            $wp_pages->push_bubble_messages(
                 array(
                     'line_user_id' => $_POST['to'],
                     'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$_POST['to'],

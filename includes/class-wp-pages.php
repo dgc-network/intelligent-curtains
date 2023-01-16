@@ -18,6 +18,191 @@ if (!class_exists('wp_pages')) {
             $this->create_tables();
         }
 
+        public function create_rich_menu( $_content=array() ) {
+            $line_bot_api = new line_bot_api();
+            $rick_menu_id = $line_bot_api->createRichMenu([
+                "size" => [
+                    "width" => 2500,
+                    "height" => 1686    
+                ],
+                "selected" => false,
+                "name" => "richmenu-a",
+                "chatBarText" => $_contents["chat_bar_text"],
+                "areas" => [
+                    [
+                        "bounds" => [
+                            "x" => 0,
+                            "y" => 0,
+                            "width" => 1250,
+                            "height" => 1686    
+                        ],
+                        "action" => [
+                            "type" => "uri",
+                            "uri" => "https://developers.line.biz/"    
+                        ]
+                    ],
+                    [
+                        "bounds" => [
+                            "x" => 1251,
+                            "y" => 0,
+                            "width" => 1250,
+                            "height" => 1686    
+                        ],
+                        "action" => [
+                            "type" => "richmenuswitch",
+                            "richMenuAliasId" => "richmenu-alias-b",
+                            "data" => "richmenu-changed-to-b"
+                        ]
+                    ]
+                ]
+            ]);
+
+            $image_path = '/path/to/image.jpeg';
+            $line_bot_api->uploadImageToRichMenu($rick_menu_id, $image_path);
+        }
+
+        public function push_imagemap_messages( $_contents=array() ) {
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "imagemap",
+                        "baseUrl" => $_contents["base_url"],
+                        "altText" => $_contents["alt_text"],
+                        "baseSize" => [
+                            "width" => 1040,
+                            "height" => 1040,
+                        ],
+                        "actions" => [
+                            [
+                                "type" => "uri",
+                                "linkUri" => $_contents["link_uri"],
+                                "area" => [
+                                    "x" => 0,
+                                    "y" => 0,
+                                    "width" => 1040,
+                                    "height" => 1040
+                                ]
+                            ],
+                        ],
+                    ]
+                ]
+            ]);
+        }
+
+        public function text_content( $_text_message, $_link_uri ) {
+            return array(
+                'type' => 'text',
+                'text' => $_text_message,
+                'wrap' => true,
+                'action' => array(
+                    'type' => 'uri',
+                    'label' => 'action',
+                    'uri' => $_link_uri
+                )
+            );
+        }
+
+        public function box_contents( $_box_contents=array(), $_link_uri='' ) {
+            $_contents = array();
+            if ($_box_contents!=array()) {
+
+                $box_contents = array();
+                if ( is_array($_box_contents) ) {
+                    foreach ( $_box_contents as $_box_content ) {
+                        if ( is_string($_box_content) ) {
+                            $box_contents[] = $this->text_content($_box_content,$_link_uri);
+                        } else {
+                            $box_contents[] = $_box_content;
+                        }
+                    }    
+                } else {
+                    $box_contents[] = $this->text_content($_box_contents,$_link_uri);
+                }
+                $_contents['type'] = 'box';
+                $_contents['layout'] = 'vertical';
+                $_contents['contents'] = $box_contents;
+            }            
+            return $_contents;
+        }
+
+        public function push_flex_messages( $_contents=array() ) {
+            //$flex_contents = array_replace($_contents['template'],$_contents['contents']);
+            $flex_contents = $_contents['contents'];
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => $_contents['alt_text'],
+                        'contents' => $flex_contents,
+                    ]
+                ]
+            ]);
+        }
+
+        public function push_bubble_messages( $_contents=array() ) {
+            //$bubble_contents = array_replace($_contents['template'],$_contents['contents']);
+            $_bubble_contents = $_contents['contents'];
+            
+            $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
+            $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
+            $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
+            $footer_contents = $this->box_contents($_bubble_contents['footer'], $_contents['link_uri']);
+            $bubble_contents = array();
+            $bubble_contents['type'] = 'bubble';
+            if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
+            if ($hero_contents != array()) {$bubble_contents['hero'] = $hero_contents;}
+            if ($body_contents != array()) {$bubble_contents['body'] = $body_contents;}
+            if ($footer_contents != array()) {$bubble_contents['footer'] = $footer_contents;}
+
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => $_contents['alt_text'],
+                        'contents' => $bubble_contents,
+                        //'contents' => $_bubble_contents,
+                    ]
+                ]
+            ]);
+        }
+
+        public function push_carousel_messages( $_contents=array() ) {
+            $_carousel_contents = $_contents['contents'];
+            $carousel_contents = array();
+            $carousel_contents['type'] = 'carousel';
+            foreach ( $_carousel_contents as $_bubble_contents ) {
+                $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
+                $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
+                $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
+                $footer_contents = $this->box_contents($_bubble_contents['footer'], $_contents['link_uri']);
+                $bubble_contents = array();
+                $bubble_contents['type'] = 'bubble';
+                if ($header_contents != array()) {$bubble_contents['header'] = $header_contents;}
+                if ($hero_contents != array()) {$bubble_contents['hero'] = $hero_contents;}
+                if ($body_contents != array()) {$bubble_contents['body'] = $body_contents;}
+                if ($footer_contents != array()) {$bubble_contents['footer'] = $footer_contents;}
+                $carousel_contents['contents'][]=$bubble_contents;
+            }
+            return var_dump($carousel_contents);
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_carousel_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => $_contents['alt_text'],
+                        "contents" => $carousel_contents,
+                    ]
+                ]
+            ]);
+        }
+
         public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {
             $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
             if( ! empty( $objPage ) ) {

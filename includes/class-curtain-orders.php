@@ -54,7 +54,7 @@ if (!class_exists('curtain_orders')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["uri"] = $link_uri;
                 $contents["contents"][1] = json_decode($see_more, true);
 
-                $curtain_service->push_flex_messages(
+                $wp_pages->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
@@ -621,7 +621,7 @@ if (!class_exists('curtain_orders')) {
                 $body[] = 'Order Number: '.$customer_order_number;
                 //$body[] = 'Order Status: Completed checkout but did not purchase yet';
                 $body[] = 'Order Status: '.$system_status->get_name($customer_order_status);
-                $curtain_service->push_bubble_messages(
+                $wp_pages->push_bubble_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
