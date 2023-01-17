@@ -33,9 +33,9 @@ if (!class_exists('curtain_orders')) {
 
                 $template = $json_templates->get_json('Restaurant');
 
-                $$see_more = $json_templates->get_json('See_More');
-                $$see_more = wp_unslash($see_more);
-                $$see_more = json_decode($see_more, true);
+                $see_more = $json_templates->get_json('See_More');
+                $see_more = wp_unslash($see_more);
+                $see_more = json_decode($see_more, true);
 
                 $link_uri = get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number;
                 $template = $json_templates->get_json('Apparel');
@@ -54,12 +54,11 @@ if (!class_exists('curtain_orders')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["uri"] = $link_uri;
                 $contents["contents"][1] = json_decode($see_more, true);
 
-                $wp_pages->push_bubble_messages(
+                $wp_pages->push_flex_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
                         'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'template' => $template,
                         'contents' => $contents
                     )
                 );
