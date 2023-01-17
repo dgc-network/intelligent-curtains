@@ -14,7 +14,7 @@ if (!class_exists('curtain_remotes')) {
             $this->_wp_page_title = 'Remotes';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[curtain-remote-list]');            
+            $wp_pages->create_page($this->_wp_page_title, 'curtain-remote-list');            
             add_shortcode( 'curtain-remote-list', array( $this, 'list_curtain_remotes' ) );
             $this->create_tables();
         }

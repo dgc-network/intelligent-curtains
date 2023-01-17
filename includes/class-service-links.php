@@ -14,7 +14,7 @@ if (!class_exists('service_links')) {
             $this->_wp_page_title = 'Links';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[service-link-list]', 'system');
+            $wp_pages->create_page($this->_wp_page_title, 'service-link-list', 'system');
             add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
             $this->create_tables();
             $this->init_service_links();

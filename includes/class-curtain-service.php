@@ -14,7 +14,7 @@ if (!class_exists('curtain_service')) {
             $this->_wp_page_title = 'Service';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[curtain-service]', 'system');
+            $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
             add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $this->create_tables();
         }
@@ -72,7 +72,7 @@ if (!class_exists('curtain_service')) {
             } else {
 
                 $output .= '<div style="font-weight:700; font-size:xxx-large;">售後服務/使用說明</div>';
-                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
+                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick; margin:50px;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
                 $output .= '<div class="wp-block-buttons">';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_category='view'", OBJECT );
                 foreach ( $results as $index=>$result ) {

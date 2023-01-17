@@ -14,7 +14,7 @@ if (!class_exists('curtain_orders')) {
             $this->_wp_page_title = 'Orders';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[shopping-item-list]', 'system');
+            $wp_pages->create_page($this->_wp_page_title, 'shopping-item-list', 'system');
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
@@ -58,7 +58,6 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'line_user_id' => $result->line_user_id,
                         'alt_text' => 'Order Number: '.$customer_order_number,
-                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
                         'contents' => $contents
                     )
                 );

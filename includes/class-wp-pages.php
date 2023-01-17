@@ -13,7 +13,7 @@ if (!class_exists('wp_pages')) {
         public function __construct() {
             $this->_wp_page_title = 'Pages';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $this->create_page($this->_wp_page_title, '[wp-page-list]', 'system');
+            $this->create_page($this->_wp_page_title, 'wp-page-list', 'system');
             add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
             $this->create_tables();
         }
@@ -128,7 +128,6 @@ if (!class_exists('wp_pages')) {
         }
 
         public function push_flex_messages( $_contents=array() ) {
-            //$flex_contents = array_replace($_contents['template'],$_contents['contents']);
             $flex_contents = $_contents['contents'];
             $line_bot_api = new line_bot_api();
             $line_bot_api->pushMessage([
@@ -144,9 +143,7 @@ if (!class_exists('wp_pages')) {
         }
 
         public function push_bubble_messages( $_contents=array() ) {
-            //$bubble_contents = array_replace($_contents['template'],$_contents['contents']);
-            $_bubble_contents = $_contents['contents'];
-            
+            $_bubble_contents = $_contents['contents'];            
             $header_contents = $this->box_contents($_bubble_contents['header'], $_contents['link_uri']);
             $hero_contents = $this->box_contents($_bubble_contents['hero'], $_contents['link_uri']);
             $body_contents = $this->box_contents($_bubble_contents['body'], $_contents['link_uri']);
@@ -166,7 +163,6 @@ if (!class_exists('wp_pages')) {
                         "type" => "flex",
                         "altText" => $_contents['alt_text'],
                         'contents' => $bubble_contents,
-                        //'contents' => $_bubble_contents,
                     ]
                 ]
             ]);
@@ -210,6 +206,9 @@ if (!class_exists('wp_pages')) {
                 return $objPage->ID;
             }
             
+            $alignfull = '<div class="wp-block-columns alignfull"><div class="wp-block-column">[';
+            $content = $alignfull.$content.']</div></div>';
+
             $page_id = wp_insert_post(
                 array(
                     'comment_status' => 'close',

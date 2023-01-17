@@ -14,7 +14,7 @@ if (!class_exists('system_status')) {
             $this->_wp_page_title = 'Status';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[system-status-list]', 'system');            
+            $wp_pages->create_page($this->_wp_page_title, 'system-status-list', 'system');            
             add_shortcode( 'system-status-list', array( $this, 'list_system_status' ) );
             $this->create_tables();
             $this->init_system_status();

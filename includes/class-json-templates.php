@@ -14,7 +14,7 @@ if (!class_exists('json_templates')) {
             $this->_wp_page_title = 'Templates';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[json-template-list]', 'system');
+            $wp_pages->create_page($this->_wp_page_title, 'json-template-list', 'system');
             add_shortcode( 'json-template-list', array( $this, 'list_json_templates' ) );
             $this->create_tables();
         }
@@ -67,7 +67,7 @@ if (!class_exists('json_templates')) {
 
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates WHERE curtain_remote_name LIKE {$where}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates WHERE json_template_title LIKE {$where}", OBJECT );
                 unset($_POST['_where']);
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates", OBJECT );

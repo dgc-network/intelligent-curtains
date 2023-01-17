@@ -14,7 +14,7 @@ if (!class_exists('curtain_users')) {
             $this->_wp_page_title = 'Users';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[curtain-user-list]');
+            $wp_pages->create_page($this->_wp_page_title, 'curtain-user-list');
             add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
             add_action( 'wp_ajax_send_chat', array( $this, 'send_chat' ) );
             add_action( 'wp_ajax_nopriv_send_chat', array( $this, 'send_chat' ) );
