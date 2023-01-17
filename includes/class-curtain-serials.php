@@ -21,7 +21,6 @@ if (!class_exists('serial_number')) {
 
         public function list_serial_number() {
             global $wpdb;
-            $wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
             $curtain_users = new curtain_users();
@@ -91,6 +90,7 @@ if (!class_exists('serial_number')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+            
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
@@ -131,7 +131,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
                 $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -149,7 +148,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
                 $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -157,7 +155,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_site_url().'/'.$wp_pages->get_link('Service').'/?serial_no='.$_id;
                 $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';

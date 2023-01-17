@@ -13,7 +13,7 @@ if (!class_exists('wp_pages')) {
         public function __construct() {
             $this->_wp_page_title = 'Pages';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $this->create_page($this->_wp_page_title, '[wp-page-list]');
+            $this->create_page($this->_wp_page_title, '[wp-page-list]', 'system');
             add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
             $this->create_tables();
         }
@@ -236,7 +236,6 @@ if (!class_exists('wp_pages')) {
         
         public function list_wp_pages() {
             global $wpdb;
-            $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            

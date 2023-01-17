@@ -21,7 +21,6 @@ if (!class_exists('curtain_models')) {
 
         public function list_curtain_models() {
             global $wpdb;
-            $wp_pages = new wp_pages();
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {

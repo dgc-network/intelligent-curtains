@@ -76,7 +76,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
-            $wp_pages = new wp_pages();
+            //$wp_pages = new wp_pages();
             $system_status = new system_status();
 
             if( isset($_GET['_id']) ) {
@@ -355,33 +355,6 @@ if (!class_exists('curtain_orders')) {
             }
 
             /** Shopping Cart List */
-            if( isset($_POST['_where']) ) {
-                $table = $wpdb->prefix.'order_items';
-                $where='"%'.$_POST['_where'].'%"';
-                get_search_results($table,$where);
-
-                $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
-                $where_condition = '';
-                $x = count($existing_columns);
-                foreach ($existing_columns as $existing_column) {
-                    $where_condition .= $existing_column.'="'.$_POST['_where'].'"';
-                    $x = $x -1 ;
-                    if ($x > 0) {
-                        $where_condition .= ' OR ';
-                    }
-                }
-                if ($where_condition == '') {
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                } else {
-                    //return $where_condition;
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND ({$where_condition})", OBJECT );
-                }
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-            }
-            //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agent_id ), OBJECT );            
-            
             $output  = '<h2>Cart</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -412,6 +385,33 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+
+            if( isset($_POST['_where']) ) {
+                $table = $wpdb->prefix.'order_items';
+                $where='"%'.$_POST['_where'].'%"';
+                get_search_results($table,$where);
+
+                $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
+                $where_condition = '';
+                $x = count($existing_columns);
+                foreach ($existing_columns as $existing_column) {
+                    $where_condition .= $existing_column.'="'.$_POST['_where'].'"';
+                    $x = $x -1 ;
+                    if ($x > 0) {
+                        $where_condition .= ' OR ';
+                    }
+                }
+                if ($where_condition == '') {
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                } else {
+                    //return $where_condition;
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND ({$where_condition})", OBJECT );
+                }
+                unset($_POST['_where']);
+            } else {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
+            }
+            
             $output .= '<form method="post">';
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {

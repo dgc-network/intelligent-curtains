@@ -14,14 +14,13 @@ if (!class_exists('json_templates')) {
             $this->_wp_page_title = 'Templates';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[json-template-list]');            
+            $wp_pages->create_page($this->_wp_page_title, '[json-template-list]', 'system');
             add_shortcode( 'json-template-list', array( $this, 'list_json_templates' ) );
             $this->create_tables();
         }
 
         public function list_json_templates() {
             global $wpdb;
-            $wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -124,7 +123,6 @@ if (!class_exists('json_templates')) {
                 $output .= '<input type="text" name="_json_template_title" value="'.$row->json_template_title.'" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
                 $output .= '<textarea name="_json_template_text" rows="10" cols="50">'.wp_unslash($row->json_template_text).'</textarea>';
-                //$output .= '<input type="text" name="_json_template_text" value="'.$row->json_template_text.'" id="json-template-text" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -139,7 +137,6 @@ if (!class_exists('json_templates')) {
                 $output .= '<input type="text" name="_json_template_title" id="json-template-title" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="json-template-text">JSON</label>';
                 $output .= '<textarea name="_json_template_text" rows="10" cols="50"></textarea>';
-                //$output .= '<input type="text" name="_json_template_text" id="json-template-text" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';

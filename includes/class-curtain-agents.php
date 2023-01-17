@@ -21,7 +21,6 @@ if (!class_exists('curtain_agents')) {
 
         public function list_curtain_agents() {
             global $wpdb;
-            $wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            

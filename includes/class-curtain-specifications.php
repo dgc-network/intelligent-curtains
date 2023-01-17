@@ -21,7 +21,6 @@ if (!class_exists('curtain_specifications')) {
 
         public function list_curtain_specifications() {
             global $wpdb;
-            $wp_pages = new wp_pages();
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
@@ -109,6 +108,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+            
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';

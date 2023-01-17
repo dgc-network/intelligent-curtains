@@ -14,7 +14,7 @@ if (!class_exists('service_links')) {
             $this->_wp_page_title = 'Links';
             $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, '[service-link-list]');
+            $wp_pages->create_page($this->_wp_page_title, '[service-link-list]', 'system');
             add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
             $this->create_tables();
             $this->init_service_links();
@@ -46,7 +46,6 @@ if (!class_exists('service_links')) {
 
         public function list_service_links() {
             global $wpdb;
-            $curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            

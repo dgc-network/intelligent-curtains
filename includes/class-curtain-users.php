@@ -98,7 +98,6 @@ if (!class_exists('curtain_users')) {
             $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
-
             $output .= '<div class="ui-widget">';
             $output .= '<table id="users" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
@@ -109,6 +108,7 @@ if (!class_exists('curtain_users')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';

@@ -21,7 +21,6 @@ if (!class_exists('curtain_remotes')) {
 
         public function list_curtain_remotes() {
             global $wpdb;
-            $wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -97,6 +96,7 @@ if (!class_exists('curtain_remotes')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+            
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
