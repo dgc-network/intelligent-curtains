@@ -88,6 +88,13 @@ if (!class_exists('curtain_orders')) {
                     $output = '<h3>You have to complete the agent registration first.</h3>';
                     $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼,<br>';
                     $output .= '完成經銷商註冊程序<br>';
+                    if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                        $output .= '<div>';
+                        $output .= '<form method="post">';
+                        $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
+                        $output .= '</form>';
+                        $output .= '</div>';            
+                    }
                     return $output;
                 } else {
                     $curtain_agent_id = $user->curtain_agent_id;
