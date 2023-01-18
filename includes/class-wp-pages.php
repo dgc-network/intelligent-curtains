@@ -202,7 +202,6 @@ if (!class_exists('wp_pages')) {
         public function create_page($title_of_the_page,$content,$category='admin',$parent_id = NULL ) {
             $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
             if( ! empty( $objPage ) ) {
-                //echo "Page already exists:" . $title_of_the_page . "<br/>";
                 return $objPage->ID;
             }
             
@@ -229,7 +228,6 @@ if (!class_exists('wp_pages')) {
                     'wp_page_category' => $category,
                 )
             );
-            //echo "Created page_id=". $page_id." for page '".$title_of_the_page. "'<br/>";
             return $page_id;
         }
         
@@ -325,15 +323,7 @@ if (!class_exists('wp_pages')) {
                 );
                 wp_delete_post($this->get_postid($_GET['_delete']), true);
             }
-/*
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_title LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages", OBJECT );
-            }
-*/            
+
             $output  = '<h2>Wordpress Pages</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

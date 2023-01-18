@@ -65,13 +65,6 @@ if (!class_exists('json_templates')) {
                 );
             }
 
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates WHERE json_template_title LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates", OBJECT );
-            }
             $output  = '<h2>json template</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -96,7 +89,15 @@ if (!class_exists('json_templates')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+
             $output .= '<tbody>';
+            if( isset($_POST['_where']) ) {
+                $where='"%'.$_POST['_where'].'%"';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates WHERE json_template_title LIKE {$where}", OBJECT );
+                unset($_POST['_where']);
+            } else {
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}json_templates", OBJECT );
+            }            
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

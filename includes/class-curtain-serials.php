@@ -21,6 +21,7 @@ if (!class_exists('serial_number')) {
 
         public function list_serial_number() {
             global $wpdb;
+            $wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
             $curtain_users = new curtain_users();
@@ -55,7 +56,7 @@ if (!class_exists('serial_number')) {
                     )
                 );
             }
-
+/*
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no LIKE {$where}", OBJECT );
@@ -63,6 +64,7 @@ if (!class_exists('serial_number')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number", OBJECT );
             }
+*/            
             $output  = '<h2>Serial Number</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -92,6 +94,7 @@ if (!class_exists('serial_number')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
+            $results = $wp_pages->get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

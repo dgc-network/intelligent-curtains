@@ -21,6 +21,7 @@ if (!class_exists('curtain_specifications')) {
 
         public function list_curtain_specifications() {
             global $wpdb;
+            $wp_pages = new wp_pages();
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
@@ -73,7 +74,7 @@ if (!class_exists('curtain_specifications')) {
                     )
                 );
             }
-
+/*
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE specification_description LIKE {$where}", OBJECT );
@@ -81,6 +82,7 @@ if (!class_exists('curtain_specifications')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications", OBJECT );
             }
+*/            
             $output  = '<h2>Curtain Specifications</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -110,6 +112,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
+            $results = $wp_pages->get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

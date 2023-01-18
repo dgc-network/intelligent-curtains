@@ -21,6 +21,7 @@ if (!class_exists('curtain_categories')) {
 
         public function list_curtain_categories() {
             global $wpdb;
+            $wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -62,7 +63,7 @@ if (!class_exists('curtain_categories')) {
                     )
                 );
             }
-
+/*
             global $wpdb;
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
@@ -71,6 +72,7 @@ if (!class_exists('curtain_categories')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_categories", OBJECT );
             }
+*/            
             $output  = '<h2>Curtain Categories</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -94,7 +96,9 @@ if (!class_exists('curtain_categories')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+
             $output .= '<tbody>';
+            $results = $wp_pages->get_search_results($wpdb->prefix.'curtain_categories', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
