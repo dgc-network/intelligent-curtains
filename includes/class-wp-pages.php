@@ -233,35 +233,38 @@ if (!class_exists('wp_pages')) {
             return $page_id;
         }
         
-        public function get_search_results( $table, $where=array(), $additions=array() ) {            
+        public function get_search_results( $table, $_where=array(), $_additions=array() ) {            
             global $wpdb;
             $results = array();
             $where_condition = '';
-            if ($where!=array()||$where!='') {
-                $existing_columns = $wpdb->get_col("DESC ".$table, 0);
-                $x = count($existing_columns);
-                foreach ($existing_columns as $existing_column) {
-                    $where_condition .= $existing_column.' LIKE "%'.$where.'%"';
-                    $x = $x - 1 ;
-                    if ($x > 0) {
-                        $where_condition .= ' OR ';
-                    }
+            if ($_where!=array()) {
+                if ($_where='' && $_additions==array()) {
+                    $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
+                } else {
+                    $existing_columns = $wpdb->get_col("DESC ".$table, 0);
+                    $x = count($existing_columns);
+                    foreach ($existing_columns as $existing_column) {
+                        $where_condition .= $existing_column.' LIKE "%'.$_where.'%"';
+                        $x = $x - 1 ;
+                        if ($x > 0) {
+                            $where_condition .= ' OR ';
+                        }
+                    }    
                 }
                 if ($where_condition != '') {
                     $where_condition = '( '.$where_condition.' )';
                 }
             }
 
-            if ($additions!=array()||$additions!='') {
+            if ($_additions!=array()) {
                 $x = 0;
-                foreach ($additions as $addition) {
+                foreach ($_additions as $addition) {
                     if ($x > 0) {
                         $where_condition .= ' AND ';
                     }
                     $where_condition .= $addition;
                     $x = $x + 1;
                 }
-
             }
 
             if ($where_condition == '') {
