@@ -238,7 +238,7 @@ if (!class_exists('wp_pages')) {
             $results = array();
             $where_condition = '';
             if ($_where!=array()) {
-                if ($_where='' && $_additions==array()) {
+                if ($_where=='' && $_additions==array()) {
                     $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
                 } else {
                     $existing_columns = $wpdb->get_col("DESC ".$table, 0);
