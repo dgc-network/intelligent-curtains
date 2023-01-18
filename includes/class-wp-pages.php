@@ -233,19 +233,15 @@ if (!class_exists('wp_pages')) {
             return $page_id;
         }
         
-        public function get_search_results( $table, $where=array(), $additions=array() ) {
-            
+        public function get_search_results( $table, $where=array(), $additions=array() ) {            
             global $wpdb;
             $results = array();
-            if ($where==array()||$where==''||$additions==array()||$additions=='') {
-                $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
-            } else {
+            $where_condition = '';
+            if ($where!=array()||$where!='') {
                 $existing_columns = $wpdb->get_col("DESC ".$table, 0);
-                $where_condition = '';
                 $x = count($existing_columns);
                 foreach ($existing_columns as $existing_column) {
-                    //$where_condition .= $existing_column.'="%'.$_POST['_where'].'%"';
-                    $where_condition .= $existing_column.' LIKE "%'.$_POST['_where'].'%"';
+                    $where_condition .= $existing_column.' LIKE "%'.$where.'%"';
                     $x = $x - 1 ;
                     if ($x > 0) {
                         $where_condition .= ' OR ';
@@ -254,7 +250,9 @@ if (!class_exists('wp_pages')) {
                 if ($where_condition != '') {
                     $where_condition = '( '.$where_condition.' )';
                 }
+            }
 
+            if ($additions!=array()||$additions!='') {
                 $x = 0;
                 foreach ($additions as $addition) {
                     if ($x > 0) {
@@ -264,12 +262,13 @@ if (!class_exists('wp_pages')) {
                     $x = $x + 1;
                 }
 
-                if ($where_condition == '') {
-                    $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
-                } else {
-                    $where_condition = ' WHERE '.$where_condition;
-                    $results = $wpdb->get_results( "SELECT * FROM ".$table.$where_condition, OBJECT );
-                }
+            }
+
+            if ($where_condition == '') {
+                $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
+            } else {
+                $where_condition = ' WHERE '.$where_condition;
+                $results = $wpdb->get_results( "SELECT * FROM ".$table.$where_condition, OBJECT );
             }
             return $results;
         }
