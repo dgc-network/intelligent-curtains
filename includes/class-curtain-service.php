@@ -37,7 +37,7 @@ if (!class_exists('curtain_service')) {
                 $contents = $json_templates->get_json('Apparel');
                 $contents = wp_unslash($contents);
                 $contents = json_decode($contents, true);
-/*                
+
                 //$contents["contents"][0]["body"]["contents"][0]["url"] = 'http://aihome.tw/wp-content/uploads/2022/10/客廳5-1.png';
                 $contents["contents"][0]["body"]["contents"][0]["url"] = 'https://lh3.googleusercontent.com/m3y0WMGmo6HbkBO_GrgNyVE1jgkQwu1r5qdWV1hoq5dMy8S82j7TLW6CPQlx83xYX0AFzW1A6cIkrV7AL8iyUDaBC-OrFMXjSdScM5HnF4Jxs8NA5IYBIjcNGC2N8GnmnY9nTD-XhRimNbwjrWdtZlBwHzAx8IvuYhWhllglb3ato0JqNT-lMd6Am8N1fcHlNQw7qJp0hIteqmkryy-PzZ9jDV5_hMH51Ck5I-u5v_cqFryEPi6glCpWek7REHOYBoKnaIH7KfJ5zrwy2otAlLuL9pbkL73nDW2O1cIPniUoy_Fzq3i1ve4LW4xWsz0DL_uQuZ5hm2UqyQM-RrvTJSlkPmuBGxuqRiPG99zihgFav6Oo6osO9oASXUU85WjNOX9B4PjeLLh6KFfAaxED3KpnfNge52fd1sQbefIcZo7qORrTTi7Ng1Cloly_9xm31y1dIo9oVYLUoO7iA3G7s1vrtmSmWF6SLF7KcKnflW6NvgdY5iNp9JKMvt2rpGUGzl6d_mmB3xQrUtWsvdz8ml4x3RzkwvaIhdUtTBcYm3RhfF1M-rOAEdLKy3JpUBkBDMFZJPB8Q46T9e0Uv5e_6bao_sxK-PGI1MRUw3UejLTVHFQS38sSqDjVeULazPLIVXfSzupSppQFH4qgqfUBbbpo1-8X1VAmIsMkSAj6oGo2XrPLg7hatQlbMh8X2hKR9BTz2vqh3nj8wqV0RAqseYtrXfb8xpKlu4lNWvNBpcTFQwEwDfNTaMLgR96MjXfdqZ6RuvrnGK8I0aWGxeC8jUsdTsw0lPAq4HVQkFoH2DtuBWPsETqm-tYaFqb93zL4-ofwyAWBnduClxbI_zvuJnhEEIoECtkuvnoWTcKfZOmyyP9aHxjOTqKAZkZdVDYvKw1sX1A2KfytsRi05attA_jdKJ3POAIXJwvvr6X2Dk82dg=w1064-h1418-no?authuser=0';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][0]["contents"][0]["text"] = 'Agent Registry';
@@ -50,7 +50,7 @@ if (!class_exists('curtain_service')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["label"] = 'action';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["uri"] = $link_uri;
                 $contents["contents"][1] = $see_more;
-*/
+
                 $wp_pages->push_flex_messages(
                     array(
                         'line_user_id' => $line_user_id,
