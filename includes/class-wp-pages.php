@@ -233,6 +233,34 @@ if (!class_exists('wp_pages')) {
             return $page_id;
         }
         
+        public function get_search_results( $table, $where=array() ) {
+            
+            global $wpdb;
+            $results = array();
+            if ($where==array()||$where=='') {
+                $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
+            } else {
+                $existing_columns = $wpdb->get_col("DESC ".$table, 0);
+                $where_condition = '';
+                $x = count($existing_columns);
+                foreach ($existing_columns as $existing_column) {
+                    //$where_condition .= $existing_column.'="%'.$_POST['_where'].'%"';
+                    $where_condition .= $existing_column.' LIKE "%'.$_POST['_where'].'%"';
+                    $x = $x -1 ;
+                    if ($x > 0) {
+                        $where_condition .= ' OR ';
+                    }
+                }
+                if ($where_condition == '') {
+                    $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
+                } else {
+                    $where_condition = ' WHERE '.$where_condition;
+                    $results = $wpdb->get_results( "SELECT * FROM ".$table.$where_condition, OBJECT );
+                }
+            }
+            return $results;
+        }
+        
         public function list_wp_pages() {
             global $wpdb;
 

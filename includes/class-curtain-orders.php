@@ -186,12 +186,10 @@ if (!class_exists('curtain_orders')) {
             //* Customer Orders List */
             if( isset($_POST['_customer_orders']) ) {
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
+                    $output  = '<h2>Customer Orders - All</h2>';
                 } else {
-                    if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                }
-                $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                    $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                }                    
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -204,7 +202,15 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Status</th>';
                 $output .= '<th></th>';
                 $output .= '</tr></thead>';
+
                 $output .= '<tbody>';
+                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
+                } else {
+                    if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
+                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+                }
+                //$results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
@@ -213,7 +219,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
-                    $output .= '<td style="text-align: center;">'.$result->customer_order_amount.'</td>';
+                    $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     $output .= '<td style="text-align: center;">';
                     $output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
@@ -390,7 +396,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
-
+/*
             if( isset($_POST['_where']) ) {
                 $table = $wpdb->prefix.'order_items';
                 $where='"%'.$_POST['_where'].'%"';
@@ -416,9 +422,10 @@ if (!class_exists('curtain_orders')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
             }
-            
+*/            
             $output .= '<form method="post">';
             $output .= '<tbody>';
+            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
