@@ -325,7 +325,7 @@ if (!class_exists('wp_pages')) {
                 );
                 wp_delete_post($this->get_postid($_GET['_delete']), true);
             }
-
+/*
             if( isset($_POST['_where']) ) {
                 $where='"%'.$_POST['_where'].'%"';
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages WHERE wp_page_title LIKE {$where}", OBJECT );
@@ -333,6 +333,7 @@ if (!class_exists('wp_pages')) {
             } else {
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}wp_pages", OBJECT );
             }
+*/            
             $output  = '<h2>Wordpress Pages</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -358,7 +359,9 @@ if (!class_exists('wp_pages')) {
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
+
             $output .= '<tbody>';
+            $results = $this->get_search_results($wpdb->prefix.'wp_pages', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

@@ -85,9 +85,12 @@ if (!class_exists('curtain_orders')) {
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
                 if ((is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) && !isset($_POST['_customer_orders'])) {
-                    $output = '<h3>You have to complete the agent registration first.</h3>';
-                    $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
-                    $output .= '<br>';
+                    if (!$curtain_users->is_admin($_SESSION['line_user_id'])){
+                        $output = '<h3>You have to complete the agent registration first.</h3>';
+                        $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
+                        $output .= '<br>';
+                    }
+/*
                     if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                         $output .= '<div>';
                         $output .= '<form method="post">';
@@ -95,6 +98,7 @@ if (!class_exists('curtain_orders')) {
                         $output .= '</form>';
                         $output .= '</div>';            
                     }
+*/
                     return $output;
                 } else {
                     $curtain_agent_id = $user->curtain_agent_id;
