@@ -84,15 +84,6 @@ if (!class_exists('curtain_users')) {
             }
         
             /** Curtain User List */
-/*            
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE display_name LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_users", OBJECT );
-            }
-*/            
             $output  = '<h2>Curtain Users</h2>';
             $output .= '<div style="text-align: right; margin: 5px;">';
             $output .= '<form method="post">';

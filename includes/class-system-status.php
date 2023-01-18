@@ -99,16 +99,8 @@ if (!class_exists('system_status')) {
                     )
                 );
             }
-/*
-            global $wpdb;
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}system_status WHERE system_status_title LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}system_status", OBJECT );
-            }
-*/            
+
+            /** List */
             $output  = '<h2>System Status</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

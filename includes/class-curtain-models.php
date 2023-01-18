@@ -72,15 +72,8 @@ if (!class_exists('curtain_models')) {
                     )
                 );
             }
-/*
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE model_description LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models", OBJECT );
-            }
-*/            
+
+            /** List */
             $output  = '<h2>Curtain Models</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

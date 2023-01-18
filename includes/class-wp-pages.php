@@ -324,6 +324,7 @@ if (!class_exists('wp_pages')) {
                 wp_delete_post($this->get_postid($_GET['_delete']), true);
             }
 
+            /** List */
             $output  = '<h2>Wordpress Pages</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

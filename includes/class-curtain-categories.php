@@ -63,16 +63,8 @@ if (!class_exists('curtain_categories')) {
                     )
                 );
             }
-/*
-            global $wpdb;
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_name LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_categories", OBJECT );
-            }
-*/            
+
+            /** List */
             $output  = '<h2>Curtain Categories</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

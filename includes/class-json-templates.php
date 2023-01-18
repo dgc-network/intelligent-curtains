@@ -65,6 +65,7 @@ if (!class_exists('json_templates')) {
                 );
             }
 
+            /** List */
             $output  = '<h2>json template</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';

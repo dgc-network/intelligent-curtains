@@ -65,15 +65,8 @@ if (!class_exists('curtain_remotes')) {
                     )
                 );
             }
-/*
-            if( isset($_POST['_where']) ) {
-                $where='"%'.$_POST['_where'].'%"';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_remotes WHERE curtain_remote_name LIKE {$where}", OBJECT );
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_remotes", OBJECT );
-            }
-*/            
+
+            /** List */
             $output  = '<h2>Curtain Remotes</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
