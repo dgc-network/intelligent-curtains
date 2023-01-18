@@ -204,13 +204,21 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr></thead>';
 
                 $output .= '<tbody>';
+/*                
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
                 } else {
                     if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
                     $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 }
-                //$results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
+*/                
+                $results = array();
+                $addition = array('"curtain_agent_id"='.$curtain_agent_id);
+                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                    $results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
+                } else {
+                    $results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $addition);
+                }
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
@@ -425,7 +433,10 @@ if (!class_exists('curtain_orders')) {
 */            
             $output .= '<form method="post">';
             $output .= '<tbody>';
-            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
+            //$results = array();
+            $addition = array('"curtain_agent_id"='.$curtain_agent_id, '"is_checkout"=0');
+            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $addition);
+            //$results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
