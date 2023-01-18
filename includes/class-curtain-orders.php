@@ -74,7 +74,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
-            //$wp_pages = new wp_pages();
+            $wp_pages = new wp_pages();
             $system_status = new system_status();
 
             if( isset($_GET['_id']) ) {
