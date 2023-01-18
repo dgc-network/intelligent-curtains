@@ -30,7 +30,7 @@ if (!class_exists('curtain_orders')) {
             $json_templates = new json_templates();
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
-
+/*
                 $template = $json_templates->get_json('Restaurant');
 
                 $see_more = $json_templates->get_json('See_More');
@@ -61,6 +61,7 @@ if (!class_exists('curtain_orders')) {
                         'contents' => $contents
                     )
                 );
+*/                
             }    
         }
 
