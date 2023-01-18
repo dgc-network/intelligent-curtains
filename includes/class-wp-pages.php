@@ -246,7 +246,7 @@ if (!class_exists('wp_pages')) {
                 foreach ($existing_columns as $existing_column) {
                     //$where_condition .= $existing_column.'="%'.$_POST['_where'].'%"';
                     $where_condition .= $existing_column.' LIKE "%'.$_POST['_where'].'%"';
-                    $x = $x -1 ;
+                    $x = $x - 1 ;
                     if ($x > 0) {
                         $where_condition .= ' OR ';
                     }
@@ -255,8 +255,13 @@ if (!class_exists('wp_pages')) {
                     $where_condition = '( '.$where_condition.' )';
                 }
 
+                $x = 0;
                 foreach ($additions as $addition) {
-                    $where_condition .= ' AND '.$addition;
+                    if ($x > 0) {
+                        $where_condition .= ' AND ';
+                    }
+                    $where_condition .= $addition;
+                    $x = $x + 1;
                 }
 
                 if ($where_condition == '') {

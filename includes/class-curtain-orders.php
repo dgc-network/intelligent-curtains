@@ -213,7 +213,7 @@ if (!class_exists('curtain_orders')) {
                 }
 */                
                 $results = array();
-                $addition = array('"curtain_agent_id"='.$curtain_agent_id);
+                $addition = array('curtain_agent_id='.$curtain_agent_id);
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
                 } else {
@@ -434,8 +434,8 @@ if (!class_exists('curtain_orders')) {
             $output .= '<form method="post">';
             $output .= '<tbody>';
             //$results = array();
-            $additions = array('"curtain_agent_id"='.$curtain_agent_id, '"is_checkout"=0');
-            return var_dump($additions);
+            $additions = array('curtain_agent_id='.$curtain_agent_id, 'is_checkout=0');
+            //return var_dump($additions);
             $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $additions);
             //$results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
