@@ -84,22 +84,13 @@ if (!class_exists('curtain_orders')) {
             $curtain_agent_id = 0;
             if( isset($_SESSION['line_user_id']) ) {
                 $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                if ((is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error)) && !isset($_POST['_customer_orders'])) {
+                if ( is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error) ) {
                     if (!$curtain_users->is_admin($_SESSION['line_user_id'])){
                         $output = '<h3>You have to complete the agent registration first.</h3>';
                         $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
                         $output .= '<br>';
+                        return $output;
                     }
-/*
-                    if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                        $output .= '<div>';
-                        $output .= '<form method="post">';
-                        $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
-                        $output .= '</form>';
-                        $output .= '</div>';            
-                    }
-*/
-                    return $output;
                 } else {
                     $curtain_agent_id = $user->curtain_agent_id;
                 }
@@ -208,14 +199,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr></thead>';
 
                 $output .= '<tbody>';
-/*                
-                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders", OBJECT );
-                } else {
-                    if ($curtain_agent_id==0) {return 'You have to register as the agent first!';}
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                }
-*/                
                 $results = array();
                 $addition = array('curtain_agent_id='.$curtain_agent_id);
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
@@ -283,8 +266,7 @@ if (!class_exists('curtain_orders')) {
                         'customer_order_number' => $customer_order_number,
                         'curtain_agent_id'      => $curtain_agent_id,
                         'customer_order_amount' => $customer_order_amount,
-                        'customer_order_status' => 'order01'
-                        // order01: completed the checkout but did not purchase yet
+                        'customer_order_status' => 'order01' // order01: Completed the checkout but did not purchase yet
                     )
                 );
 
@@ -408,40 +390,11 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
-/*
-            if( isset($_POST['_where']) ) {
-                $table = $wpdb->prefix.'order_items';
-                $where='"%'.$_POST['_where'].'%"';
-                get_search_results($table,$where);
 
-                $existing_columns = $wpdb->get_col("DESC {$wpdb->prefix}order_items", 0);
-                $where_condition = '';
-                $x = count($existing_columns);
-                foreach ($existing_columns as $existing_column) {
-                    $where_condition .= $existing_column.'="'.$_POST['_where'].'"';
-                    $x = $x -1 ;
-                    if ($x > 0) {
-                        $where_condition .= ' OR ';
-                    }
-                }
-                if ($where_condition == '') {
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
-                } else {
-                    //return $where_condition;
-                    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND ({$where_condition})", OBJECT );
-                }
-                unset($_POST['_where']);
-            } else {
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$curtain_agent_id} AND is_checkout=0", OBJECT );
-            }
-*/            
             $output .= '<form method="post">';
             $output .= '<tbody>';
-            //$results = array();
-            $additions = array('curtain_agent_id='.$curtain_agent_id, 'is_checkout=0');
-            //return var_dump($additions);
-            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $additions);
-            //$results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
+            $_additions = array('curtain_agent_id='.$curtain_agent_id, 'is_checkout=0');
+            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_additions);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
@@ -623,46 +576,7 @@ if (!class_exists('curtain_orders')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
-/*
-        function select_order_status() {
-            global $wpdb;
-            $customer_order_number = $_POST['number'];
-            $customer_order_status = $_POST['status'];
 
-            $this->update_customer_orders(
-                array(
-                    'customer_order_status'=>$customer_order_status,
-                ),
-                array(
-                    'customer_order_number'=>$customer_order_number
-                )
-            );
-
-            // Notice the admin about the order status
-            $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
-            foreach ( $results as $index=>$result ) {
-                $header = array();
-                $header[] = 'System Notification';
-                //$hero = array();
-                //$hero[] = 'System Notification';
-                $body = array();
-                $body[] = 'Order Number: '.$customer_order_number;
-                //$body[] = 'Order Status: Completed checkout but did not purchase yet';
-                $body[] = 'Order Status: '.$system_status->get_name($customer_order_status);
-                $wp_pages->push_bubble_messages(
-                    array(
-                        'line_user_id' => $result->line_user_id,
-                        'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number,
-                        'header' => 'System Notification',
-                        //'hero' => $hero,
-                        //'body' => $body
-                    )
-                );
-            }
-
-            wp_die();
-        }
-*/
         function select_category_id() {
             global $wpdb;
             $_id = $_POST['id'];
