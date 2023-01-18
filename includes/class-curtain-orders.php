@@ -434,8 +434,9 @@ if (!class_exists('curtain_orders')) {
             $output .= '<form method="post">';
             $output .= '<tbody>';
             //$results = array();
-            $addition = array('"curtain_agent_id"='.$curtain_agent_id, '"is_checkout"=0');
-            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $addition);
+            $additions = array('"curtain_agent_id"='.$curtain_agent_id, '"is_checkout"=0');
+            return var_dump($additions);
+            $results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $additions);
             //$results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';

@@ -258,7 +258,7 @@ if (!class_exists('wp_pages')) {
                 foreach ($additions as $addition) {
                     $where_condition .= ' AND '.$addition;
                 }
-                
+
                 if ($where_condition == '') {
                     $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
                 } else {
