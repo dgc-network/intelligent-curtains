@@ -37,7 +37,7 @@ if (!class_exists('curtain_orders')) {
                 $see_more = wp_unslash($see_more);
                 $see_more = json_decode($see_more, true);
 
-                $link_uri = get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number;
+                //$link_uri = get_permalink(get_page_by_title('Orders')).'/?_print='.$customer_order_number;
                 $template = $json_templates->get_json('Apparel');
                 $template = wp_unslash($template);
                 $contents = json_decode($template, true);
@@ -51,9 +51,9 @@ if (!class_exists('curtain_orders')) {
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["text"] = 'Go back order';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["type"] = 'uri';
                 $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["label"] = 'action';
-                $contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["uri"] = $link_uri;
+                //$contents["contents"][0]["body"]["contents"][1]["contents"][2]["contents"][1]["contents"][2]["action"]["uri"] = $link_uri;
                 $contents["contents"][1] = json_decode($see_more, true);
-/*
+
                 $wp_pages->push_flex_messages(
                     array(
                         'line_user_id' => $result->line_user_id,
@@ -61,7 +61,7 @@ if (!class_exists('curtain_orders')) {
                         'contents' => $contents
                     )
                 );
-*/                
+
             }    
         }
 
