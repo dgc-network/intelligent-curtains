@@ -12,9 +12,9 @@ if (!class_exists('curtain_models')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Models';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, 'curtain-model-list');            
+            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-model-list');            
             add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
             $this->create_tables();
         }

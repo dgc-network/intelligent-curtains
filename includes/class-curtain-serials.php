@@ -12,9 +12,9 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Serials';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, 'serial-number-list');            
+            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'serial-number-list');            
             add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
             $this->create_tables();
         }
@@ -127,7 +127,8 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<div style="display: flex;">';
@@ -144,14 +145,16 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                $output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
+                $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
                 $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';

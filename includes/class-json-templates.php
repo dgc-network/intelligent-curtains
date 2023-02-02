@@ -12,9 +12,9 @@ if (!class_exists('json_templates')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Templates';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, 'json-template-list', 'system');
+            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'json-template-list', 'system');
             add_shortcode( 'json-template-list', array( $this, 'list_json_templates' ) );
             $this->create_tables();
         }

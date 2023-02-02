@@ -12,9 +12,9 @@ if (!class_exists('curtain_users')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Users';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, 'curtain-user-list');
+            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-user-list');
             add_shortcode( 'curtain-user-list', array( $this, 'list_curtain_users' ) );
             add_action( 'wp_ajax_send_chat', array( $this, 'send_chat' ) );
             add_action( 'wp_ajax_nopriv_send_chat', array( $this, 'send_chat' ) );
@@ -278,7 +278,8 @@ if (!class_exists('curtain_users')) {
             $wp_pages->push_bubble_messages(
                 array(
                     'line_user_id' => $_POST['to'],
-                    'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$_POST['to'],
+                    //'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$_POST['to'],
+                    'link_uri' => get_option('Users').'?_id='.$_POST['to'],
                     'header' => $this->get_name($_POST['to']),
                     'body' => $_POST['message']
                 )

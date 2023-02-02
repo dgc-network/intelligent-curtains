@@ -12,8 +12,8 @@ if (!class_exists('wp_pages')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Pages';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $this->create_page($this->_wp_page_title, 'wp-page-list', 'system');
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            $this->_wp_page_postid = $this->create_page($this->_wp_page_title, 'wp-page-list', 'system');
             add_shortcode( 'wp-page-list', array( $this, 'list_wp_pages' ) );
             $this->create_tables();
         }
@@ -221,6 +221,8 @@ if (!class_exists('wp_pages')) {
                     'post_parent'    =>  $parent_id //'id_of_the_parent_page_if_it_available'
                 )
             );
+
+            add_option($title_of_the_page, get_permalink($page_id));
 
             $this->insert_wp_page(
                 array(

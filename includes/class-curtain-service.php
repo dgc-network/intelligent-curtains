@@ -12,9 +12,9 @@ if (!class_exists('curtain_service')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Service';
-            $this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
+            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
             $wp_pages = new wp_pages();
-            $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
+            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
             add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $this->create_tables();
         }
@@ -33,7 +33,8 @@ if (!class_exists('curtain_service')) {
                 $see_more = wp_unslash($see_more);
                 $see_more = json_decode($see_more, true);
 
-                $link_uri = get_permalink(get_page_by_title('Orders'));
+                //$link_uri = get_permalink(get_page_by_title('Orders'));
+                $link_uri = get_option('Orders');
                 $contents = $json_templates->get_json('Apparel');
                 $contents = wp_unslash($contents);
                 $contents = json_decode($contents, true);
@@ -177,7 +178,8 @@ if (!class_exists('curtain_service')) {
                                                     'line_user_id' => $profile['userId'],
                                                     'base_url' => $service_links->get_link('user_registry'),
                                                     'alt_text' => 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區',
-                                                    'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'],
+                                                    //'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'],
+                                                    'link_uri' => get_option('Service').'?_id='.$profile['userId'],
                                                     'body' => $body
                                                 )
                                             );
@@ -194,7 +196,8 @@ if (!class_exists('curtain_service')) {
                                                 'line_user_id' => $profile['userId'],
                                                 'base_url' => $service_links->get_link('registry_error'),
                                                 'alt_text' => 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊',
-                                                'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'].'&serial_no=',
+                                                //'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'].'&serial_no=',
+                                                'link_uri' => get_option('Service').'?_id='.$profile['userId'].'&serial_no=',
                                                 'body' => $body
                                             )
                                         );
@@ -218,7 +221,8 @@ if (!class_exists('curtain_service')) {
                                             $wp_pages->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
-                                                    'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
+                                                    //'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
+                                                    'link_uri' => get_option('Users').'?_id='.$result->line_user_id,
                                                     'header' => $profile['displayName'],
                                                     'body' => $message['text']
                                                 )
@@ -265,7 +269,8 @@ if (!class_exists('curtain_service')) {
                                             $wp_pages->push_bubble_messages(
                                                 array(
                                                     'line_user_id' => $result->line_user_id,
-                                                    'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
+                                                    //'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
+                                                    'link_uri' => get_option('Users').'?_id='.$result->line_user_id,
                                                     'header' => 'Aihome',
                                                     'body' => $string
                                                 )
