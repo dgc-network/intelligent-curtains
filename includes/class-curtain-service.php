@@ -284,16 +284,17 @@ if (!class_exists('curtain_service')) {
                                             array('line_user_id'=>$profile['userId'])
                                         );
                                         $this->agent_registry_notice($profile['userId']);
-/*
+
                                         $wp_pages->push_imagemap_messages(
                                             array(
                                                 'line_user_id' => $profile['userId'],
                                                 'base_url' => $service_links->get_link('agent_registry'),
                                                 'alt_text' => 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區',
-                                                'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$profile['userId']
+                                                //'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$profile['userId']
+                                                'link_uri' => get_option('Orders').'?_id='.$profile['userId']
                                             )
                                         );
-*/                                        
+
                                     }
                                 }
                                 break;
