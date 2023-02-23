@@ -43,8 +43,9 @@ function enqueue_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
-require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
+//require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-pages.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/general-helps.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
@@ -56,7 +57,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';
+//require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $curtain_service = new curtain_service();
