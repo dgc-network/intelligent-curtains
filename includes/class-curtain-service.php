@@ -139,7 +139,7 @@ if (!class_exists('curtain_service')) {
             $curtain_agents = new curtain_agents();
             $line_bot_api = new line_bot_api();
             $open_ai = new open_ai();
-            $business_central = new business_central();
+            //$business_central = new business_central();
 
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
