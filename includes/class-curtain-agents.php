@@ -205,6 +205,12 @@ if (!class_exists('curtain_agents')) {
             return $row->curtain_agent_id;
         }
 
+        public function get_agent_by_user( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_user_id = %d", $_id ), OBJECT );
+            return $row->curtain_agent_id;
+        }
+
         public function get_name( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d OR agent_number = %s", $_id, $_id ), OBJECT );

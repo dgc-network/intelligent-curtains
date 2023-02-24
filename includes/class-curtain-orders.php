@@ -78,6 +78,12 @@ if (!class_exists('curtain_orders')) {
             //$wp_pages = new wp_pages();
             $system_status = new system_status();
 
+            if ( !is_user_logged_in() ) {
+                return;
+            }
+            $user = wp_get_current_user();
+            $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
+/*
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];
             }
@@ -96,7 +102,7 @@ if (!class_exists('curtain_orders')) {
                     $curtain_agent_id = $user->curtain_agent_id;
                 }
             }
-
+*/
             //* Print Customer Order */
             if( isset($_POST['_status_submit']) ) {
                 $this->update_customer_orders(
