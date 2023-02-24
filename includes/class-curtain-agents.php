@@ -12,9 +12,6 @@ if (!class_exists('curtain_agents')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Agents';
-            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            //$wp_pages = new wp_pages();
-            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-agent-list');
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-agent-list');
             add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
             $this->create_tables();
@@ -106,7 +103,6 @@ if (!class_exists('curtain_agents')) {
             $output .= '</tr></thead>';
 
             $output .= '<tbody>';
-            //$results = $wp_pages->get_search_results($wpdb->prefix.'curtain_agents', $_POST['_where']);
             $results = general_helps::get_search_results($wpdb->prefix.'curtain_agents', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
@@ -188,6 +184,21 @@ if (!class_exists('curtain_agents')) {
             $wpdb->delete($table, $where);
         }
 
+        public function insert_agent_operator($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'agent_operators';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+            $wpdb->insert($table, $data);        
+            return $wpdb->insert_id;
+        }
+
+        public function delete_agent_operators($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'agent_operators';
+            $wpdb->delete($table, $where);
+        }
+
         public function get_id( $_name='' ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s OR agent_name = %s", $_name, $_name ), OBJECT );
@@ -196,7 +207,7 @@ if (!class_exists('curtain_agents')) {
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d OR agent_number = %s", $_id, $_id ), OBJECT );
             return $row->agent_name.'('.$row->agent_number.')';
         }
 
@@ -234,6 +245,16 @@ if (!class_exists('curtain_agents')) {
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_agent_id)
+            ) $charset_collate;";
+            dbDelta($sql);            
+
+            $sql = "CREATE TABLE `{$wpdb->prefix}agent_operators` (
+                agent_operator_id int NOT NULL AUTO_INCREMENT,
+                curtain_agent_id int NOT NULL,
+                curtain_user_id int NOT NULL,
+                create_timestamp int(10),
+                update_timestamp int(10),
+                PRIMARY KEY (agent_operator_id)
             ) $charset_collate;";
             dbDelta($sql);            
         }

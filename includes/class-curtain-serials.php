@@ -25,7 +25,7 @@ if (!class_exists('serial_number')) {
             //$wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
-            $curtain_users = new curtain_users();
+            //$curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -99,7 +99,9 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
-                $output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
+                //$output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
+                $user = get_userdata( $result->curtain_user_id );
+                $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';

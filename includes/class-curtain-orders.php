@@ -12,9 +12,6 @@ if (!class_exists('curtain_orders')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Orders';
-            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            //$wp_pages = new wp_pages();
-            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'shopping-item-list', 'system');
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'shopping-item-list', 'system');
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
@@ -70,7 +67,7 @@ if (!class_exists('curtain_orders')) {
 
         public function list_shopping_items() {
             global $wpdb;
-            $curtain_users = new curtain_users();
+            //$curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();

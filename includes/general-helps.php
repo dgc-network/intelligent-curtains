@@ -139,6 +139,36 @@ if (!class_exists('general_helps')) {
             }        
         }
 */
+        public static function push_imagemap_messages( $_contents=array() ) {
+            $line_bot_api = new line_bot_api();
+            $line_bot_api->pushMessage([
+                'to' => $_contents['line_user_id'],
+                'messages' => [
+                    [
+                        "type" => "imagemap",
+                        "baseUrl" => $_contents["base_url"],
+                        "altText" => $_contents["alt_text"],
+                        "baseSize" => [
+                            "width" => 1040,
+                            "height" => 1040,
+                        ],
+                        "actions" => [
+                            [
+                                "type" => "uri",
+                                "linkUri" => $_contents["link_uri"],
+                                "area" => [
+                                    "x" => 0,
+                                    "y" => 0,
+                                    "width" => 1040,
+                                    "height" => 1040
+                                ]
+                            ],
+                        ],
+                    ]
+                ]
+            ]);
+        }        
+
         public static function create_page($title_of_the_page, $content, $category='admin', $parent_id = NULL ) {
             $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
             if( ! empty( $objPage ) ) {

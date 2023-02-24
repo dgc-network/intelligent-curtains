@@ -12,9 +12,6 @@ if (!class_exists('curtain_service')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Service';
-            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            //$wp_pages = new wp_pages();
-            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-service', 'system');
             add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $this->create_tables();
@@ -65,6 +62,70 @@ if (!class_exists('curtain_service')) {
         }
 
         public function curtain_service() {
+
+            $curtain_agents = new curtain_agents();
+
+            if( isset($_GET['_id']) ) {
+                $display_name = str_replace('%20', ' ', $_GET['_name']);    
+                $array = get_users( array( 'meta_value' => $_GET['_id'] ));
+                if (empty($array)) {
+                    $user_id = wp_insert_user( array(
+                        'user_login' => $_GET['_id'],
+                        'user_pass' => $_GET['_id'],
+                        'display_name' => $display_name,
+                    ));
+                    $user = get_user_by( 'ID', $user_id );
+                    add_user_meta( $user_id, 'line_user_id', $_GET['_id']);
+                    // To-Do: add_user_meta( $user_id, 'wallet_address', $_GET['_wallet_address']);
+                }
+
+                $args = array(
+                    //'redirect'        => get_permalink( wc_get_page_id( 'myaccount' ) ),
+                    'value_username'  => $_GET['_id'],
+                    'value_password'  => $_GET['_id']
+                );
+                
+                $output  = '<div style="text-align:center;">';
+                $output .= '<p>This is an automatic process to help you to register into the system.</p>';
+                $output .= '<p>Please click the below Submit button to complete the registration.</p>';
+                $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
+				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
+				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
+				$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
+				$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
+				$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
+                $output .= '</form>';
+                $output .= '</div>';
+                return $output;
+            }
+
+            if ( is_user_logged_in() ) {
+
+                $user = wp_get_current_user();
+
+                if( isset($_GET['_agent_registration']) ) {
+                    $agent_number=$_GET['_agent_registration'];
+                    $output  = '<div style="text-align:center;">';
+                    $output .= '<p>This is a process to register '.$curtain_agents->get_name($agent_number).' as the operator.</p>';
+                    $output .= '<p>Please enetr the code and click the below Submit button to complete the registration.</p>';
+                    //$output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
+                    $output .= '</form>';
+                    $output .= '<input type="text" name="agent_code" />';
+                    $output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
+                    //$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
+                    //$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
+                    //$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
+                    //$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                    return $output;
+    
+                }
+            }
+        }
+
+
+        public function curtain_service_backup() {
             global $wpdb;
             $wp_pages = new wp_pages();
             $serial_number = new serial_number();
@@ -129,6 +190,142 @@ if (!class_exists('curtain_service')) {
             }
             $output .= '</div>';
             return $output;
+        }
+
+        public function init_webhook_events() {
+            $line_bot_api = new line_bot_api();
+            $open_ai_api = new open_ai_api();
+            $curtain_agents = new curtain_agents();
+
+            foreach ((array)$line_bot_api->parseEvents() as $event) {
+
+                $profile = $line_bot_api->getProfile($event['source']['userId']);
+                $display_name = str_replace(' ', '%20', $profile['displayName']);
+                $link_uri = get_option('Dashboard').'?_id='.$event['source']['userId'].'&_name='.$display_name;
+
+                $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
+                if (empty($array)) {
+/*
+                    if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                        $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                        $see_more = json_decode($see_more, true);
+                    }                    
+                    $see_more["body"]["contents"][0]["type"] = 'text';
+                    $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below link to register the system.';
+                    $see_more["body"]["contents"][1]["type"] = 'button';
+                    $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
+                    $see_more["body"]["contents"][1]["action"]["label"] = 'My cart';
+                    $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
+                        
+                    $context = stream_context_create(
+                        array(
+                            'http' => array(
+                                'method' => 'POST',
+                                'header' => array(
+                                    'Content-Type: application/json;',
+                                    'Authorization: Bearer '.$line_bot_api->channel_access_token
+                                ),
+                                'content' => json_encode(
+                                    array(
+                                        'replyToken' => $event['replyToken'],
+                                        "messages" => array(
+                                            array(
+                                                "type" => "flex",
+                                                "altText" => 'Welcome message',
+                                                'contents' => $see_more
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    );
+                    $contents = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
+*/                
+                    $line_bot_api->replyMessage([
+                        'replyToken' => $event['replyToken'],
+                        'messages' => [
+                            [
+                                "type" => "text",
+                                "text" => 'Please click the below link to register the system. '. $link_uri,
+                            ]
+                        ]
+                    ]);
+                    
+                } 
+
+                switch ($event['type']) {
+                    case 'message':
+                        $message = $event['message'];
+                        switch ($message['type']) {
+                            case 'text':
+
+                                /** Agent registration */
+                                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
+                                if (!(is_null($agent) || !empty($wpdb->last_error))) {
+                                    $link_uri = get_option('Service').'?_agent_registration='.$message['text'].'&_id='.$event['source']['userId'].'&_name='.$display_name;
+                                    $line_bot_api->replyMessage([
+                                        'replyToken' => $event['replyToken'],
+                                        'messages' => [
+                                            [
+                                                "type" => "text",
+                                                "text" => 'Please click the below link to register the system. '. $link_uri,
+                                            ]
+                                        ]
+                                    ]);
+    
+/*
+                                    $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
+                                    $curtain_agents->create_agent_operator(
+                                        array(
+                                            'curtain_agent_id'=>$curtain_agents->get_id($message['text']),
+                                            'curtain_user_id'=>$array[0]->ID
+                                        ),
+                                    );
+                                    //$this->agent_registry_notice($profile['userId']);
+
+                                    general_helps::push_imagemap_messages(
+                                        array(
+                                            'line_user_id' => $profile['userId'],
+                                            'base_url' => $service_links->get_link('agent_registry'),
+                                            'alt_text' => 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區',
+                                            'link_uri' => get_option('Orders').'?_id='.$profile['userId']
+                                        )
+                                    );
+*/
+                                }
+                                
+
+                                //** Open-AI auto reply */
+                                $param=array();
+                                $param["model"]="text-davinci-003";
+                                $param["prompt"]=$message['text'];
+                                $param["max_tokens"]=1000;
+                                $response = $open_ai_api->createCompletion($param);
+                                $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
+                                                        
+                                $line_bot_api->replyMessage([
+                                    'replyToken' => $event['replyToken'],
+                                    'messages' => [
+                                        [
+                                            'type' => 'text',
+                                            //'text' => $response
+                                            'text' => $string
+                                        ]                                                                    
+                                    ]
+                                ]);
+                                
+                                break;
+                            default:
+                                error_log('Unsupported message type: ' . $message['type']);
+                                break;
+                        }
+                        break;
+                    default:
+                        error_log('Unsupported event type: ' . $event['type']);
+                        break;
+                }
+            }
         }
 
         public function init_webhook() {
