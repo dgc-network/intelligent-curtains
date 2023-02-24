@@ -13,15 +13,16 @@ if (!class_exists('serial_number')) {
         public function __construct() {
             $this->_wp_page_title = 'Serials';
             //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $wp_pages = new wp_pages();
-            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'serial-number-list');            
+            //$wp_pages = new wp_pages();
+            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'serial-number-list');            
+            $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'serial-number-list');
             add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
             $this->create_tables();
         }
 
         public function list_serial_number() {
             global $wpdb;
-            $wp_pages = new wp_pages();
+            //$wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
             $curtain_users = new curtain_users();
@@ -87,7 +88,8 @@ if (!class_exists('serial_number')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            $results = $wp_pages->get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+            //$results = $wp_pages->get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+            $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

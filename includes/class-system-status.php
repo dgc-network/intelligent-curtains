@@ -13,8 +13,9 @@ if (!class_exists('system_status')) {
         public function __construct() {
             $this->_wp_page_title = 'Status';
             //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $wp_pages = new wp_pages();
-            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'system-status-list', 'system');            
+            //$wp_pages = new wp_pages();
+            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'system-status-list', 'system');            
+            $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'system-status-list', 'system');
             add_shortcode( 'system-status-list', array( $this, 'list_system_status' ) );
             $this->create_tables();
             $this->init_system_status();
@@ -53,7 +54,7 @@ if (!class_exists('system_status')) {
 
         public function list_system_status() {
             global $wpdb;
-            $wp_pages = new wp_pages();
+            //$wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -128,7 +129,8 @@ if (!class_exists('system_status')) {
             $output .= '</tr></thead>';
 
             $output .= '<tbody>';
-            $results = $wp_pages->get_search_results($wpdb->prefix.'system_status', $_POST['_where']);
+            //$results = $wp_pages->get_search_results($wpdb->prefix.'system_status', $_POST['_where']);
+            $results = general_helps::get_search_results($wpdb->prefix.'system_status', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

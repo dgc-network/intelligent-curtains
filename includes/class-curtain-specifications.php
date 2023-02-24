@@ -13,15 +13,16 @@ if (!class_exists('curtain_specifications')) {
         public function __construct() {
             $this->_wp_page_title = 'Specifications';
             //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $wp_pages = new wp_pages();
-            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-specification-list');            
+            //$wp_pages = new wp_pages();
+            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-specification-list');            
+            $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-specification-list');
             add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
             $this->create_tables();
         }
 
         public function list_curtain_specifications() {
             global $wpdb;
-            $wp_pages = new wp_pages();
+            //$wp_pages = new wp_pages();
             $curtain_categories = new curtain_categories();
 
             if( isset($_SESSION['line_user_id']) ) {
@@ -105,7 +106,8 @@ if (!class_exists('curtain_specifications')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            $results = $wp_pages->get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
+            //$results = $wp_pages->get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
+            $results = general_helps::get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

@@ -13,8 +13,9 @@ if (!class_exists('curtain_service')) {
         public function __construct() {
             $this->_wp_page_title = 'Service';
             //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $wp_pages = new wp_pages();
-            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
+            //$wp_pages = new wp_pages();
+            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-service', 'system');
+            $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-service', 'system');
             add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $this->create_tables();
         }

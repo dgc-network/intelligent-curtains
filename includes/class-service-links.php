@@ -13,8 +13,9 @@ if (!class_exists('service_links')) {
         public function __construct() {
             $this->_wp_page_title = 'Links';
             //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            $wp_pages = new wp_pages();
-            $this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'service-link-list', 'system');
+            //$wp_pages = new wp_pages();
+            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'service-link-list', 'system');
+            $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'service-link-list', 'system');
             add_shortcode( 'service-link-list', array( $this, 'list_service_links' ) );
             $this->create_tables();
             $this->init_service_links();
@@ -46,7 +47,7 @@ if (!class_exists('service_links')) {
 
         public function list_service_links() {
             global $wpdb;
-            $wp_pages = new wp_pages();
+            //$wp_pages = new wp_pages();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -123,7 +124,8 @@ if (!class_exists('service_links')) {
 
             $output .= '<tbody>';
             $_addition = array('service_link_category="view"');
-            $results = $wp_pages->get_search_results($wpdb->prefix.'service_links', $_POST['_where'], $_addition);
+            //$results = $wp_pages->get_search_results($wpdb->prefix.'service_links', $_POST['_where'], $_addition);
+            $results = general_helps::get_search_results($wpdb->prefix.'service_links', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
