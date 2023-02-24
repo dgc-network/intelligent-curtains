@@ -106,11 +106,11 @@ if (!class_exists('curtain_service')) {
 
                 if( isset($_GET['_agent_registration']) ) {
                     if( isset($_POST['_agent_submit']) ) {
-                        $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_POST['_agent_number'] ), OBJECT );            
+                        $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
                         if (is_null($agent) || !empty($wpdb->last_error)) {
                             return 'Wrong Code';
                         } else {
-                            $curtain_agents->create_agent_operator(
+                            $curtain_agents->insert_agent_operator(
                                 array(
                                     'curtain_agent_id'=>$curtain_agents->get_id($message['text']),
                                     'curtain_user_id'=>$user->ID
@@ -125,7 +125,8 @@ if (!class_exists('curtain_service')) {
                     $output .= '<p>Please enetr the code and click the below Submit button to complete the registration.</p>';
                     //$output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                    $output .= '<input type="text" name="_agent_number" />';
+                    $output .= '<input type="text" name="_agent_code" />';
+                    $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_registration'].'" />';
                     $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
                     //$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
                     //$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
