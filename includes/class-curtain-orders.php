@@ -109,40 +109,14 @@ if (!class_exists('curtain_orders')) {
                     $output  = '<div style="text-align:center;">';
                     $output .= '<p>This is a wrong code, please click the below Submit button to re-login the agent order system.</p>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                    //$output .= '<input type="text" name="_agent_code" />';
-                    //$output .= '<input type="hidden" name="_agent_number" value="'.$_POST['_agent_number'].'" />';
                     $output .= '<input type="submit" name="_agent_submit1" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</div>';
                     return $output;                        
                 }
             }
-            //return var_dump($user);
             $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
-            //$results= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}agent_operators");
-            //return var_dump($results);
-            
 
-/*
-            if( isset($_GET['_id']) ) {
-                $_SESSION['line_user_id'] = $_GET['_id'];
-            }
-
-            $curtain_agent_id = 0;
-            if( isset($_SESSION['line_user_id']) ) {
-                $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                if ( is_null($user->curtain_agent_id) || $user->curtain_agent_id==0 || !empty($wpdb->last_error) ) {
-                    if (!$curtain_users->is_admin($_SESSION['line_user_id'])){
-                        $output = '<h3>You have to complete the agent registration first.</h3>';
-                        $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
-                        $output .= '<br>';
-                        return $output;
-                    }
-                } else {
-                    $curtain_agent_id = $user->curtain_agent_id;
-                }
-            }
-*/
             //* Print Customer Order */
             if( isset($_POST['_status_submit']) ) {
                 $this->update_customer_orders(
@@ -249,10 +223,8 @@ if (!class_exists('curtain_orders')) {
                 $results = array();
                 $addition = array('curtain_agent_id='.$curtain_agent_id);
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    //$results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
                     $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
                 } else {
-                    //$results = $wp_pages->get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $addition);
                     $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
                 }
                 foreach ( $results as $index=>$result ) {
@@ -409,7 +381,8 @@ if (!class_exists('curtain_orders')) {
             }
 
             /** Shopping Cart List */
-            $output  = '<h2>Cart</h2>';
+            //$output  = '<h2>Cart</h2>';
+            $output  = '<h2>Shopping Cart - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
@@ -443,7 +416,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<form method="post">';
             $output .= '<tbody>';
             $_addition = array('curtain_agent_id='.$curtain_agent_id, 'is_checkout=0');
-            //$results = $wp_pages->get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
             $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
@@ -482,6 +454,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
+            $output .= '<input type="hidden" name="_agent_submit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
 
@@ -511,6 +484,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
+                $output .= '<input type="hidden" name="_agent_submit">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
                 $output .= '</form>';
                 $output .= '</div>';
@@ -539,6 +513,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
+                $output .= '<input type="hidden" name="_agent_submit">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
                 $output .= '</div>';
