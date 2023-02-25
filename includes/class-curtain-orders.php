@@ -83,7 +83,7 @@ if (!class_exists('curtain_orders')) {
             }
             $user = wp_get_current_user();
 
-            if( !isset($_POST['_agent_submit']) && !isset($_GET['_edit']) && !isset($_GET['_delete']) && !isset($_GET['_update']) ) {
+            if( !isset($_POST['_agent_submit']) && !isset($_POST['_add']) && !isset($_GET['_edit']) && !isset($_GET['_delete']) && !isset($_GET['_update']) && !isset($_GET['_close']) && !isset($_GET['_print']) && !isset($_POST['_checkout_submit']) && !isset($_GET['_status_submit']) && !isset($_POST['_customer_orders']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agents->get_agent_by_user($user->ID) ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
                     $output = '<h3>You have to complete the agent registration first.</h3>';
@@ -223,8 +223,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr></thead>';
 
                 $output .= '<tbody>';
-                $results = array();
-                $addition = array('curtain_agent_id='.$curtain_agent_id);
+                //$results = array();
+                $_addition = array('curtain_agent_id='.$curtain_agent_id);
 /*
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
@@ -391,7 +391,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input type="hidden" name="_agent_submit" value="true">';
+            //$output .= '<input type="hidden" name="_agent_submit" value="true">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
@@ -460,7 +460,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<input type="hidden" name="_agent_submit" value="true">';
+            //$output .= '<input type="hidden" name="_agent_submit" value="true">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
 
