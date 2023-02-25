@@ -83,7 +83,7 @@ if (!class_exists('curtain_orders')) {
             }
             $user = wp_get_current_user();
 
-            if( !isset($_POST['_agent_submit']) ) {
+            if( !isset($_POST['_agent_submit']) && !isset($_GET['_edit']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agents->get_agent_by_user($user->ID) ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
                     $output = '<h3>You have to complete the agent registration first.</h3>';
