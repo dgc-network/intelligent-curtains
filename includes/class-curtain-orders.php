@@ -102,6 +102,21 @@ if (!class_exists('curtain_orders')) {
                     return $output;    
                 }
             }
+
+            if( isset($_POST['_agent_number']) && isset($_POST['_agent_code']) ) {
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );
+                if ( is_null($row) || !empty($wpdb->last_error) ) {
+                    $output  = '<div style="text-align:center;">';
+                    $output .= '<p>This is a wrong code, please click the below Submit button to re-login the agent order system.</p>';
+                    $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                    //$output .= '<input type="text" name="_agent_code" />';
+                    $output .= '<input type="hidden" name="_agent_number" value="'.$_POST['_agent_number'].'" />';
+                    $output .= '<input type="submit" name="_agent_submit1" style="margin:3px;" value="Submit" />';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                    return $output;                        
+                }
+            }
             //return var_dump($user);
             $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
             //$results= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}agent_operators");
