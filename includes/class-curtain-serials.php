@@ -12,9 +12,6 @@ if (!class_exists('serial_number')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Serials';
-            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            //$wp_pages = new wp_pages();
-            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'serial-number-list');            
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'serial-number-list');
             add_shortcode( 'serial-number-list', array( $this, 'list_serial_number' ) );
             $this->create_tables();
@@ -22,10 +19,8 @@ if (!class_exists('serial_number')) {
 
         public function list_serial_number() {
             global $wpdb;
-            //$wp_pages = new wp_pages();
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
-            //$curtain_users = new curtain_users();
 
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
@@ -88,7 +83,6 @@ if (!class_exists('serial_number')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            //$results = $wp_pages->get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
@@ -99,7 +93,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
                 $output .= '<td>'.$result->specification.'</td>';
                 $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
-                //$output .= '<td>'.$curtain_users->get_name($result->curtain_user_id).'</td>';
                 $user = get_userdata( $result->curtain_user_id );
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
@@ -131,7 +124,6 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -149,7 +141,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
                 $output .= '<div id="qrcode1">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';
@@ -157,7 +148,6 @@ if (!class_exists('serial_number')) {
                 //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
                 $output .= '<div id="qrcode2" style="margin-top: 100px;">';
                 $output .= '<div id="qrcode_content">';
-                //$output .= get_permalink(get_page_by_title('Service')).'/?serial_no='.$_id;
                 $output .= get_option('Service').'?serial_no='.$_id;
                 $output .= '</div>';
                 $output .= '</div>';

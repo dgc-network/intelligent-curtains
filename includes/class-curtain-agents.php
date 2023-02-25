@@ -20,7 +20,7 @@ if (!class_exists('curtain_agents')) {
         public function list_curtain_agents() {
             global $wpdb;
             //$wp_pages = new wp_pages();
-
+/*
             if( isset($_SESSION['line_user_id']) ) {
                 $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
                 if (is_null($permission) || !empty($wpdb->last_error)) {
@@ -33,6 +33,10 @@ if (!class_exists('curtain_agents')) {
                     return 'You have not permission to access this page. You have to complete the registration first.';
                 }
             }
+*/
+            if ( !is_user_logged_in() ) return;
+            $user = wp_get_current_user();
+            if ( !$user->has_cap('manage_options') ) return;
 
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_agent(
