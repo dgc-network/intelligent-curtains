@@ -110,7 +110,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<p>This is a wrong code, please click the below Submit button to re-login the agent order system.</p>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     //$output .= '<input type="text" name="_agent_code" />';
-                    $output .= '<input type="hidden" name="_agent_number" value="'.$_POST['_agent_number'].'" />';
+                    //$output .= '<input type="hidden" name="_agent_number" value="'.$_POST['_agent_number'].'" />';
                     $output .= '<input type="submit" name="_agent_submit1" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</div>';
