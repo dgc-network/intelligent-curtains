@@ -454,7 +454,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            $output .= '<input type="hidden" name="_agent_submit">';
+            $output .= '<input type="hidden" name="_agent_submit" value="true">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
 
@@ -484,7 +484,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
-                $output .= '<input type="hidden" name="_agent_submit">';
+                $output .= '<input type="hidden" name="_agent_submit" value="true">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
                 $output .= '</form>';
                 $output .= '</div>';
@@ -513,7 +513,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
-                $output .= '<input type="hidden" name="_agent_submit">';
+                $output .= '<input type="hidden" name="_agent_submit" value="true">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
                 $output .= '</div>';
