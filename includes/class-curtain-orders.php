@@ -143,6 +143,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
+/*
                 if ($curtain_users->is_admin($_SESSION['line_user_id'])){
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'">';
@@ -155,6 +156,8 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 }
+*/
+                $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 $output .= '</tr>';
                 $output .= '</table>';
 
@@ -194,20 +197,13 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
-                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                }
+                //if ($curtain_users->is_admin($_SESSION['line_user_id'])){
+                //}
                 return $output;
             }
 
             //* Customer Orders List */
             if( isset($_POST['_customer_orders']) ) {
-/*
-                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $output  = '<h2>Customer Orders - All</h2>';
-                } else {
-                    $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
-                }                    
-*/                
                 $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
@@ -223,15 +219,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr></thead>';
 
                 $output .= '<tbody>';
-                //$results = array();
                 $_addition = array('curtain_agent_id='.$curtain_agent_id);
-/*
-                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
-                } else {
-                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
-                }
-*/                
                 $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
