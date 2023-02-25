@@ -82,6 +82,7 @@ if (!class_exists('curtain_orders')) {
                 return;
             }
             $user = wp_get_current_user();
+            return var_dump($user);
             $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
             $results= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}agent_operators");
             return var_dump($results);
