@@ -65,6 +65,7 @@ if (!class_exists('curtain_service')) {
 
             global $wpdb;
             $curtain_agents = new curtain_agents();
+            $serial_number = new serial_number();
 
             if( isset($_GET['_id']) ) {
                 $display_name = str_replace('%20', ' ', $_GET['_name']);    
