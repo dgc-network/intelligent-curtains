@@ -112,7 +112,7 @@ if (!class_exists('curtain_service')) {
                         } else {
                             $curtain_agents->insert_agent_operator(
                                 array(
-                                    'curtain_agent_id'=>$curtain_agents->get_id($message['text']),
+                                    'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
                                     'curtain_user_id'=>intval($user->ID)
                                 ),
                             );

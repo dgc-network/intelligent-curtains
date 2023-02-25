@@ -186,11 +186,16 @@ if (!class_exists('curtain_agents')) {
 
         public function insert_agent_operator($data=[]) {
             global $wpdb;
-            $table = $wpdb->prefix.'agent_operators';
-            $data['create_timestamp'] = time();
-            $data['update_timestamp'] = time();
-            $wpdb->insert($table, $data);        
-            return $wpdb->insert_id;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_agent_id = %d AND curtain_user_id = %d", $data['curtain_agent_id'], $data['curtain_user_id'] ), OBJECT );
+            if (is_null($row) || !empty($wpdb->last_error)) {
+                $table = $wpdb->prefix.'agent_operators';
+                $data['create_timestamp'] = time();
+                $data['update_timestamp'] = time();
+                $wpdb->insert($table, $data);        
+                return $wpdb->insert_id;    
+            } else {
+                return $row->agent_operator_id;
+            }
         }
 
         public function delete_agent_operators($where=[]) {
