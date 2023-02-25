@@ -381,7 +381,6 @@ if (!class_exists('curtain_orders')) {
             }
 
             /** Shopping Cart List */
-            //$output  = '<h2>Cart</h2>';
             $output  = '<h2>Shopping Cart - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
