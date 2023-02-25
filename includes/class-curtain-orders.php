@@ -83,6 +83,26 @@ if (!class_exists('curtain_orders')) {
             }
             $user = wp_get_current_user();
             $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
+            $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agents->get_agent_by_user($user->ID) ), OBJECT );
+            if ( is_null($agent) || !empty($wpdb->last_error) ) {
+                $output = '<h3>You have to complete the agent registration first.</h3>';
+                $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
+                $output .= '<br>';
+                return $output;
+            } else {
+                $output  = '<div style="text-align:center;">';
+                $output .= '<p>Please enetr the code and click the below Submit button to login the agent order system.</p>';
+                $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                $output .= '<input type="text" name="_agent_code" />';
+                $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_registration'].'" />';
+                $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
+                $output .= '</form>';
+                $output .= '</div>';
+                return $output;
+
+            }
+            
+
 /*
             if( isset($_GET['_id']) ) {
                 $_SESSION['line_user_id'] = $_GET['_id'];

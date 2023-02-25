@@ -121,17 +121,12 @@ if (!class_exists('curtain_service')) {
                     }
                     $agent_number=$_GET['_agent_registration'];
                     $output  = '<div style="text-align:center;">';
-                    $output .= '<p>This is a process to register '.$curtain_agents->get_name($agent_number).' as the operator.</p>';
+                    $output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name($agent_number).'.</p>';
                     $output .= '<p>Please enetr the code and click the below Submit button to complete the registration.</p>';
-                    //$output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<input type="text" name="_agent_code" />';
                     $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_registration'].'" />';
                     $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
-                    //$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
-                    //$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
-                    //$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
-                    //$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
                     $output .= '</form>';
                     $output .= '</div>';
                     return $output;
