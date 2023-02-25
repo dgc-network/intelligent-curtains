@@ -83,7 +83,7 @@ if (!class_exists('curtain_orders')) {
             }
             $user = wp_get_current_user();
             $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
-            $results= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_agents");
+            $results= $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}agent_operators");
             return var_dump($results);
             $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agents->get_agent_by_user($user->ID) ), OBJECT );
             if ( is_null($agent) || !empty($wpdb->last_error) ) {
