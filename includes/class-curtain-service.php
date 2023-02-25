@@ -138,6 +138,7 @@ if (!class_exists('curtain_service')) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                     if (is_null($row) || !empty($wpdb->last_error)) {
                         /** incorrect QR-code then display the admin link */
+                        $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
 /*                        
                         $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
@@ -170,7 +171,7 @@ if (!class_exists('curtain_service')) {
     
                         $result = $serial_number->update_serial_number(
                             //array('one_time_password'=>$six_digit_random_number),
-                            array('curtain_user_id'=>$user->ID),
+                            array('curtain_user_id'=>intval($user->ID)),
                             array('qr_code_serial_no'=>$qr_code_serial_no)
                         );
                     }
