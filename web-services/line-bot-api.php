@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action('init', 'line_bot_api::instance');
-line_bot_api::init();
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
 

@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
 }
 
 require_once plugin_dir_path( __DIR__ ).'web-services/line-bot-api.php';
+line_bot_api::init();
+
 require_once plugin_dir_path( __DIR__ ).'web-services/open-ai-api.php';
 
 require_once plugin_dir_path( __DIR__ ).'includes/fields-user-custom.php';
