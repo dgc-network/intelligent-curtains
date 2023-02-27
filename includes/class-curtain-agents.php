@@ -34,9 +34,9 @@ if (!class_exists('curtain_agents')) {
                 }
             }
 */
-            if ( !is_user_logged_in() ) return;
+            if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
-            if ( !$user->has_cap('manage_options') ) return;
+            if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_agent(
