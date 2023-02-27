@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action('init', 'line_bot_api::instance');
-//line_bot_api::instance();
+line_bot_api::init();
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
 
@@ -31,7 +31,7 @@ if (!class_exists('line_bot_api')) {
             return new self();
         }
 
-        static function init() {
+        public static function init() {
             if (false === ($channel_access_token = get_transient(self::TRANSIENT_KEY__TEMP_CHANNEL_ACCESS_TOKEN))) {
                 // If not, get it from the options table
                 $channel_access_token = general_helps::decrypt(get_option(self::OPTION_KEY__CHANNEL_ACCESS_TOKEN), self::ENCRYPT_PASSWORD);
