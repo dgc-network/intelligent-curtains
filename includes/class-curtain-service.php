@@ -67,6 +67,7 @@ if (!class_exists('curtain_service')) {
             $curtain_agents = new curtain_agents();
             $serial_number = new serial_number();
 
+            /** Line User ID registration and login into the system */
             if( isset($_GET['_id']) ) {
                 $display_name = str_replace('%20', ' ', $_GET['_name']);    
                 $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -105,6 +106,7 @@ if (!class_exists('curtain_service')) {
 
                 $user = wp_get_current_user();
 
+                /** Assign the User as the specified Agent Operators */
                 if( isset($_GET['_agent_registration']) ) {
                     if( isset($_POST['_agent_submit']) ) {
                         $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
@@ -133,12 +135,13 @@ if (!class_exists('curtain_service')) {
                     return $output;    
                 }
 
+                /** Assign the User for the specified serial number(QR Code) */
                 if( isset($_GET['serial_no']) ) {
                     $output = '<div style="text-align:center;">';
                     $qr_code_serial_no = $_GET['serial_no'];
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                    if (is_null($row) || !empty($wpdb->last_error)) {
-                        /** incorrect QR-code then display the admin link */
+                    /** incorrect QR-code then display the admin link */
+                    if (is_null($row) || !empty($wpdb->last_error)) {                        
                         $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
 /*                        
                         $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
@@ -153,13 +156,9 @@ if (!class_exists('curtain_service')) {
                         }
                         $output .= '</div>';                    
 */    
-                    } else {
-                        /** registration for QR-code */
-                        //$curtain_user_id=$row->curtain_user_id;
-                        //$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                        //if (!(is_null($user) || !empty($wpdb->last_error))) {
-                            $output .= 'Hi, '.$user->display_name.'<br>';
-                        //}
+                    /** registration for QR-code */
+                    } else {                        
+                        $output .= 'Hi, '.$user->display_name.'<br>';
                         $output .= '感謝您選購我們的電動窗簾<br>';
                         $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
                         if (!(is_null($model) || !empty($wpdb->last_error))) {
@@ -167,11 +166,8 @@ if (!class_exists('curtain_service')) {
                         }
                         $six_digit_random_number = random_int(100000, 999999);
                         $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                        //$output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
-                        //$output .= '</span>'.'完成註冊程序<br>';
     
-                        $result = $serial_number->update_serial_number(
-                            //array('one_time_password'=>$six_digit_random_number),
+                        $serial_number->update_serial_number(
                             array('curtain_user_id'=>intval($user->ID)),
                             array('qr_code_serial_no'=>$qr_code_serial_no)
                         );

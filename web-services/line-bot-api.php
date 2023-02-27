@@ -19,8 +19,27 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+add_action('init', 'general_helps::instance');
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
+
+        /**
+         * Actions that the Plugin runs before WordPress finishes loading and sending headers
+         */
+        static function instance() {
+            if (false === ($channel_access_token = get_transient(self::TRANSIENT_KEY__TEMP_CHANNEL_ACCESS_TOKEN))) {
+                // If not, get it from the options table
+                $channel_access_token = general_helps::decrypt(get_option(self::OPTION_KEY__CHANNEL_ACCESS_TOKEN), self::ENCRYPT_PASSWORD);
+            }
+            $this->channel_access_token = esc_html($channel_access_token);
+            // Add the Menu page at the top of the management interface
+            add_action('admin_menu', [$this, 'set_plugin_menu']);
+            // Operations performed at the beginning of each admin page, 
+            // before the page is rendered, the function for the Plugin to save preferences
+            add_action('admin_init', [$this, 'save_settings']);
+            //return new self();
+        }
+
         /**
          * Plunin Version
          */        
