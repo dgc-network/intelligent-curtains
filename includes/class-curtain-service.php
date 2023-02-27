@@ -83,14 +83,14 @@ if (!class_exists('curtain_service')) {
                 }
 
                 $args = array(
-                    //'redirect'        => get_permalink( wc_get_page_id( 'myaccount' ) ),
+                    'redirect'        => get_option('Service'),
                     'value_username'  => $_GET['_id'],
                     'value_password'  => $_GET['_id']
                 );
                 
                 $output  = '<div style="text-align:center;">';
-                $output .= '<p>This is an automatic process to help you to register into the system.</p>';
-                $output .= '<p>Please click the below Submit button to complete the registration.</p>';
+                $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
+                $output .= '<p>Please click the Submit button below to complete your registration.</p>';
                 $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
 				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
 				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';

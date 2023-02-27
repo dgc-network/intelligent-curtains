@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action('init', 'general_helps::instance');
+add_action('init', 'line_bot_api::instance');
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
 

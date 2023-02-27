@@ -1,13 +1,11 @@
 <?php
-
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 function user_custom_fields(WP_User $user) {
     ?>
-    <h2>potte.art Custom Fields</h2>
+    <h2>Custom Fields</h2>
         <table class="form-table">
             <tr>
                 <th><label for="line_user_id">Line User ID</label></th>
@@ -40,12 +38,12 @@ function user_custom_fields(WP_User $user) {
     add_action('edit_user_profile', 'user_custom_fields'); // editing another user
     add_action('user_new_form', 'user_custom_fields'); // creating a new user
     
-    function userMetaBirthdaySave($userId) {
+    function userMetaDataSave($userId) {
         if (current_user_can('edit_user', $userId)) {
             update_user_meta($userId, 'line_user_id', $_REQUEST['line_user_id']);
             update_user_meta($userId, 'wallet_address', $_REQUEST['wallet_address']);
         }    
     }
-    add_action('personal_options_update', 'userMetaBirthdaySave');
-    add_action('edit_user_profile_update', 'userMetaBirthdaySave');
-    add_action('user_register', 'userMetaBirthdaySave');
+    add_action('personal_options_update', 'userMetaDataSave');
+    add_action('edit_user_profile_update', 'userMetaDataSave');
+    add_action('user_register', 'userMetaDataSave');
