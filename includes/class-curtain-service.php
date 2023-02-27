@@ -251,23 +251,27 @@ if (!class_exists('curtain_service')) {
         }
 
         public function init_webhook_events() {
-            $line_bot_api = new line_bot_api();
+            //$line_bot_api = new line_bot_api();
             $open_ai_api = new open_ai_api();
             $curtain_agents = new curtain_agents();
 
-            foreach ((array)$line_bot_api->parseEvents() as $event) {
+            //foreach ((array)$line_bot_api->parseEvents() as $event) {
+            foreach ((array)line_bot_api::parseEvents() as $event) {
 
-                $profile = $line_bot_api->getProfile($event['source']['userId']);
+                //$profile = $line_bot_api->getProfile($event['source']['userId']);
+                $profile = line_bot_api::getProfile($event['source']['userId']);
                 $display_name = str_replace(' ', '%20', $profile['displayName']);
                 $link_uri = get_option('Dashboard').'?_id='.$event['source']['userId'].'&_name='.$display_name;
 
+                /** Line User ID registeration */
                 $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
                 if (empty($array)) {
-/*
+
                     if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
                         $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
                         $see_more = json_decode($see_more, true);
-                    }                    
+                    }
+/*                    
                     $see_more["body"]["contents"][0]["type"] = 'text';
                     $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below link to register the system.';
                     $see_more["body"]["contents"][1]["type"] = 'button';
@@ -299,7 +303,19 @@ if (!class_exists('curtain_service')) {
                         )
                     );
                     $contents = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
-*/                
+*/
+                    //$line_bot_api->replyMessage([
+                    line_bot_api::replyMessage([
+                        'replyToken' => $event['replyToken'],
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'Welcome message',
+                                'contents' => $see_more
+                            ]
+                        ]
+                    ]);
+/*                    
                     $line_bot_api->replyMessage([
                         'replyToken' => $event['replyToken'],
                         'messages' => [
@@ -309,7 +325,7 @@ if (!class_exists('curtain_service')) {
                             ]
                         ]
                     ]);
-                    
+*/                    
                 } 
 
                 switch ($event['type']) {
@@ -322,7 +338,8 @@ if (!class_exists('curtain_service')) {
                                 $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
                                 if (!(is_null($agent) || !empty($wpdb->last_error))) {
                                     $link_uri = get_option('Service').'?_agent_registration='.$message['text'].'&_id='.$event['source']['userId'].'&_name='.$display_name;
-                                    $line_bot_api->replyMessage([
+                                    //$line_bot_api->replyMessage([
+                                    line_bot_api::replyMessage([
                                         'replyToken' => $event['replyToken'],
                                         'messages' => [
                                             [
@@ -362,7 +379,8 @@ if (!class_exists('curtain_service')) {
                                 $response = $open_ai_api->createCompletion($param);
                                 $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
                                                         
-                                $line_bot_api->replyMessage([
+                                //$line_bot_api->replyMessage([
+                                line_bot_api::replyMessage([
                                     'replyToken' => $event['replyToken'],
                                     'messages' => [
                                         [

@@ -61,5 +61,6 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 $curtain_service = new curtain_service();
-$curtain_service->init_webhook();
+//$curtain_service->init_webhook();
+$curtain_service->init_webhook_events();
 ?>

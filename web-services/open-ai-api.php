@@ -18,8 +18,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-if (!class_exists('open_ai')) {
-    class open_ai {
+if (!class_exists('open_ai_api')) {
+    class open_ai_api {
 
         /** @var string */
         private $channelAccessToken;
