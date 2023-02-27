@@ -119,6 +119,17 @@ if (!class_exists('curtain_service')) {
                                     'curtain_user_id'=>intval($user->ID)
                                 ),
                             );
+
+                            line_bot_api::pushMessage([
+                                'to' => get_user_meta( $user->ID, 'line_user_id', TRUE ),
+                                'messages' => [
+                                    [
+                                        "type" => "text",
+                                        "text" => 'Please click the below link to register the system. ',
+                                    ]
+                                ]
+                            ]);
+        
                             return 'Success';
                         }
                     }
@@ -176,74 +187,6 @@ if (!class_exists('curtain_service')) {
                     return $output;        
                 }
             }
-        }
-
-
-        public function curtain_service_backup() {
-            global $wpdb;
-            $wp_pages = new wp_pages();
-            $serial_number = new serial_number();
-
-            if( isset($_GET['_id']) ) {
-                $_SESSION['line_user_id'] = $_GET['_id'];
-            }
-
-            $output = '<div style="text-align:center;">';
-            if( isset($_GET['serial_no']) ) {
-                $qr_code_serial_no = $_GET['serial_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    /** incorrect QR-code then display the admin link */
-                    $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                    $output .= '<div class="wp-block-buttons">';
-                    foreach ( $results as $index=>$result ) {
-                        if ($wp_pages->get_category($result->wp_page_postid)=='admin') {
-                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.get_permalink($result->wp_page_postid).'">'.get_the_title($result->wp_page_postid).'</a>';
-                            $output .= '</div>';    
-                        }
-                    }
-                    $output .= '</div>';                    
-
-                } else {
-                    /** registration for QR-code */
-                    $curtain_user_id=$row->curtain_user_id;
-                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                    if (!(is_null($user) || !empty($wpdb->last_error))) {
-                        $output .= 'Hi, '.$user->display_name.'<br>';
-                    }
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if (!(is_null($model) || !empty($wpdb->last_error))) {
-                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                    }
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
-                    $output .= '</span>'.'完成註冊程序<br>';
-
-                    $result = $serial_number->update_serial_number(
-                        array('one_time_password'=>$six_digit_random_number),
-                        array('qr_code_serial_no'=>$qr_code_serial_no)
-                    );
-                }
-    
-            } else {
-
-                $output .= '<div style="font-weight:700; font-size:xxx-large;">售後服務/使用說明</div>';
-                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick; margin:50px;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
-                $output .= '<div class="wp-block-buttons">';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_category='view'", OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                    $output .= '<a class="wp-block-button__link" href="'.$result->service_link_uri.'">'.$result->service_link_title.'</a>';
-                    $output .= '</div>';
-                }
-                $output .= '</div>';
-            }
-            $output .= '</div>';
-            return $output;
         }
 
         public function init_webhook_events() {
@@ -366,7 +309,6 @@ if (!class_exists('curtain_service')) {
 */
                                 }
                                 
-
                                 //** Open-AI auto reply */
                                 $param=array();
                                 $param["model"]="text-davinci-003";
@@ -400,7 +342,74 @@ if (!class_exists('curtain_service')) {
             }
         }
 
-        public function init_webhook() {
+        public function curtain_service_backup() {
+            global $wpdb;
+            $wp_pages = new wp_pages();
+            $serial_number = new serial_number();
+
+            if( isset($_GET['_id']) ) {
+                $_SESSION['line_user_id'] = $_GET['_id'];
+            }
+
+            $output = '<div style="text-align:center;">';
+            if( isset($_GET['serial_no']) ) {
+                $qr_code_serial_no = $_GET['serial_no'];
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                    /** incorrect QR-code then display the admin link */
+                    $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
+                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
+                    $output .= '<div class="wp-block-buttons">';
+                    foreach ( $results as $index=>$result ) {
+                        if ($wp_pages->get_category($result->wp_page_postid)=='admin') {
+                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                            $output .= '<a class="wp-block-button__link" href="'.get_permalink($result->wp_page_postid).'">'.get_the_title($result->wp_page_postid).'</a>';
+                            $output .= '</div>';    
+                        }
+                    }
+                    $output .= '</div>';                    
+
+                } else {
+                    /** registration for QR-code */
+                    $curtain_user_id=$row->curtain_user_id;
+                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
+                    if (!(is_null($user) || !empty($wpdb->last_error))) {
+                        $output .= 'Hi, '.$user->display_name.'<br>';
+                    }
+                    $output .= '感謝您選購我們的電動窗簾<br>';
+                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
+                    if (!(is_null($model) || !empty($wpdb->last_error))) {
+                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
+                    }
+                    $six_digit_random_number = random_int(100000, 999999);
+                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+                    $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
+                    $output .= '</span>'.'完成註冊程序<br>';
+
+                    $result = $serial_number->update_serial_number(
+                        array('one_time_password'=>$six_digit_random_number),
+                        array('qr_code_serial_no'=>$qr_code_serial_no)
+                    );
+                }
+    
+            } else {
+
+                $output .= '<div style="font-weight:700; font-size:xxx-large;">售後服務/使用說明</div>';
+                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick; margin:50px;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
+                $output .= '<div class="wp-block-buttons">';
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_category='view'", OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
+                    $output .= '<a class="wp-block-button__link" href="'.$result->service_link_uri.'">'.$result->service_link_title.'</a>';
+                    $output .= '</div>';
+                }
+                $output .= '</div>';
+            }
+            $output .= '</div>';
+            return $output;
+        }
+
+        public function init_webhook_backup() {
             global $wpdb;
             $serial_number = new serial_number();
             $wp_pages = new wp_pages();
