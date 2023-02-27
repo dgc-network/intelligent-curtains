@@ -21,20 +21,12 @@ if (!class_exists('serial_number')) {
             global $wpdb;
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
+            /** Check the permission */
+            if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
+            $user = wp_get_current_user();
+            if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
-                if (is_null($permission) || !empty($wpdb->last_error)) {
-                    if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access '.$_wp_page.' page. Please check to the administrators.';
-                    }
-                }
-            } else {
-                if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You have not permission to access this page. Please check to the administrators.';
-                }
-            }
-
+            /** Post the result */
             if( isset($_POST['_create']) ) {
                 $this->insert_serial_number(
                     array(

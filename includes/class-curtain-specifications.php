@@ -12,9 +12,6 @@ if (!class_exists('curtain_specifications')) {
          */
         public function __construct() {
             $this->_wp_page_title = 'Specifications';
-            //$this->_wp_page_postid = get_page_by_title($this->_wp_page_title)->ID;
-            //$wp_pages = new wp_pages();
-            //$this->_wp_page_postid = $wp_pages->create_page($this->_wp_page_title, 'curtain-specification-list');            
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-specification-list');
             add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
             $this->create_tables();
@@ -22,22 +19,12 @@ if (!class_exists('curtain_specifications')) {
 
         public function list_curtain_specifications() {
             global $wpdb;
-            //$wp_pages = new wp_pages();
-            $curtain_categories = new curtain_categories();
+            /** Check the permission */
+            if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
+            $user = wp_get_current_user();
+            if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            if( isset($_SESSION['line_user_id']) ) {
-                $permission = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s AND wp_page_postid= %d", $_SESSION['line_user_id'], $this->_wp_page_postid ), OBJECT );            
-                if (is_null($permission) || !empty($wpdb->last_error)) {
-                    if ( $_GET['_check_permission'] != 'false' ) {
-                        return 'You have not permission to access this page. Please check to the administrators.';
-                    }
-                }
-            } else {
-                if ( $_GET['_check_permission'] != 'false' ) {
-                    return 'You have not permission to access this page. Please check to the administrators.';
-                }
-            }
-
+            /** Post the result */
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_specification(
                     array(
@@ -106,7 +93,6 @@ if (!class_exists('curtain_specifications')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            //$results = $wp_pages->get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
             $results = general_helps::get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
