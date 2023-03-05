@@ -221,7 +221,7 @@ if (!class_exists('curtain_service')) {
                     $see_more["body"]["contents"][1]["type"] = 'button';
                     $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
                     $see_more["body"]["contents"][1]["action"]["label"] = 'Registration';
-                    $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
+                    //$see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
 /*                        
                     $context = stream_context_create(
                         array(
