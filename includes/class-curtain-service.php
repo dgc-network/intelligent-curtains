@@ -202,7 +202,7 @@ if (!class_exists('curtain_service')) {
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
                 //$profile = line_bot_api::getProfile($event['source']['userId']);
                 $display_name = str_replace(' ', '%20', $profile['displayName']);
-                $link_uri = get_option('Dashboard').'?_id='.$event['source']['userId'].'&_name='.$display_name;
+                $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_name='.$display_name;
 
                 /** Line User ID registration */
                 $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
@@ -212,9 +212,9 @@ if (!class_exists('curtain_service')) {
                         $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
                         $see_more = json_decode($see_more, true);
                     }
-                    $see_more["body"]["contents"][0]["action"]["label"] = 'Registration';
+                    //$see_more["body"]["contents"][0]["action"]["label"] = 'Registration';
                     //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-/*
+
                     $see_more["body"]["contents"][0]["type"] = 'text';
                     $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below link to register the system.';
 
@@ -222,7 +222,7 @@ if (!class_exists('curtain_service')) {
                     $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
                     $see_more["body"]["contents"][1]["action"]["label"] = 'Registration';
                     $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
-                        
+/*                        
                     $context = stream_context_create(
                         array(
                             'http' => array(
