@@ -248,6 +248,7 @@ if (!class_exists('curtain_service')) {
                     );
                     $contents = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
 */
+/*
                     $line_bot_api->replyMessage([
                     //line_bot_api::replyMessage([
                         'replyToken' => $event['replyToken'],
@@ -258,8 +259,8 @@ if (!class_exists('curtain_service')) {
                                 'contents' => $see_more
                             ]
                         ]
-                    ]);
-/*                    
+                    ]);                    
+*/                    
                     $line_bot_api->replyMessage([
                         'replyToken' => $event['replyToken'],
                         'messages' => [
@@ -269,7 +270,6 @@ if (!class_exists('curtain_service')) {
                             ]
                         ]
                     ]);
-*/                    
                 } 
 
                 switch ($event['type']) {

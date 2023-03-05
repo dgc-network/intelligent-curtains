@@ -134,7 +134,7 @@ if (!class_exists('general_helps')) {
         public static function create_page($title_of_the_page, $content, $category='admin', $parent_id = NULL ) {
             $objPage = get_page_by_title($title_of_the_page, 'OBJECT', 'page');
             if( ! empty( $objPage ) ) {
-                //add_option($title_of_the_page, get_permalink($objPage->ID));
+                add_option($title_of_the_page, get_permalink($objPage->ID));
                 return $objPage->ID;
             }
 
