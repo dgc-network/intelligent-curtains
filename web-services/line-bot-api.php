@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action('init', 'line_bot_api::instance');
+//add_action('init', 'line_bot_api::instance');
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
 
@@ -289,7 +289,8 @@ if (!class_exists('line_bot_api')) {
         /**
          * @return mixed
          */
-        public static function parseEvents() {
+        //public static function parseEvents() {
+        public function parseEvents() {
          
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 http_response_code(405);
@@ -313,7 +314,8 @@ if (!class_exists('line_bot_api')) {
          * @param string $userId
          * @return object
          */
-        public static function getProfile($userId) {
+        //public static function getProfile($userId) {
+        public function getProfile($userId) {
     
             $header = array(
                 'Content-Type: application/json',
@@ -344,7 +346,8 @@ if (!class_exists('line_bot_api')) {
          * @param array<string, mixed> $message
          * @return void
          */
-        public static function broadcastMessage($message) {
+        //public static function broadcastMessage($message) {
+        public function broadcastMessage($message) {
     
             $header = array(
                 'Content-Type: application/json',
@@ -370,7 +373,8 @@ if (!class_exists('line_bot_api')) {
          * @param array<string, mixed> $message
          * @return void
          */
-        public static function replyMessage($message) {
+        //public static function replyMessage($message) {
+        public function replyMessage($message) {
     
             $header = array(
                 'Content-Type: application/json',
@@ -396,7 +400,8 @@ if (!class_exists('line_bot_api')) {
          * @param array<string, mixed> $message
          * @return void
          */
-        public static function pushMessage($message) {
+        //public static function pushMessage($message) {
+        public function pushMessage($message) {
     
             $header = array(
                 'Content-Type: application/json',
