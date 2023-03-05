@@ -271,7 +271,7 @@ if (!class_exists('line_bot_api')) {
 
         /** @var string */
         public $channel_access_token;
-/*
+
         public function __construct() {
             //$this->channel_access_token = general_helps::decrypt(get_option(self::OPTION_KEY__CHANNEL_ACCESS_TOKEN), self::ENCRYPT_PASSWORD);
             if (false === ($channel_access_token = get_transient(self::TRANSIENT_KEY__TEMP_CHANNEL_ACCESS_TOKEN))) {
@@ -285,7 +285,7 @@ if (!class_exists('line_bot_api')) {
             // before the page is rendered, the function for the Plugin to save preferences
             add_action('admin_init', [$this, 'save_settings']);
         }
-*/
+
         /**
          * @return mixed
          */
