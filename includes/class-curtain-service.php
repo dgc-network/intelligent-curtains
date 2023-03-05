@@ -135,15 +135,7 @@ if (!class_exists('curtain_service')) {
                     }
                     $agent_number=$_GET['_agent_registration'];
 
-                    line_bot_api::pushMessage([
-                        'to' => get_user_meta( $user->ID, 'line_user_id', TRUE ),
-                        'messages' => [
-                            [
-                                "type" => "text",
-                                "text" => 'Please click the below link to register the system. ',
-                            ]
-                        ]
-                    ]);
+                    line_bot_api::init();
 
                     $output  = '<div style="text-align:center;">';
                     $output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name($agent_number).'.</p>';
