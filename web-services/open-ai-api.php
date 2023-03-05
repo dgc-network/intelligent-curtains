@@ -22,35 +22,35 @@ if (!class_exists('open_ai_api')) {
     class open_ai_api {
 
         /** @var string */
-        private $channelAccessToken;
+        private $channel_access_token;
         /** @var string */
         private $channelSecret;
     
         /**
-         * @param string $channelAccessToken
+         * @param string $channel_access_token
          * @param string $channelSecret
          */
     /*    
-        public function __construct($channelAccessToken, $channelSecret)
+        public function __construct($channel_access_token, $channelSecret)
         {
-            $this->channelAccessToken = $channelAccessToken;
+            $this->channel_access_token = $channel_access_token;
             $this->channelSecret = $channelSecret;
         }
     */
-        public function __construct($channelAccessToken='', $channelSecret='') {
+        public function __construct($channel_access_token='', $channelSecret='') {
     
-            if ($channelAccessToken==''||$channelSecret=='') {
+            if ($channel_access_token==''||$channelSecret=='') {
                 if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
                     $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
                     if ($config['OpenAI']['API_KEY'] == null || $config['OpenAI']['Orgnazation'] == null) {
                         error_log("config.ini uncompleted!", 0);
                     } else {
-                        $channelAccessToken = $config['OpenAI']['API_KEY'];
+                        $channel_access_token = $config['OpenAI']['API_KEY'];
                         $channelSecret = $config['OpenAI']['Orgnazation'];
                     }
                 }    
             } 
-            $this->channelAccessToken = $channelAccessToken;
+            $this->channel_access_token = $channel_access_token;
             $this->channelSecret = $channelSecret;
         }
     
@@ -62,7 +62,7 @@ if (!class_exists('open_ai_api')) {
     
             $header = array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channelAccessToken,
+                'Authorization: Bearer ' . $this->channel_access_token,
             );
     
             $context = stream_context_create([

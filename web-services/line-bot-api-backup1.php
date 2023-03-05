@@ -19,8 +19,31 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+//add_action('init', 'line_bot_api::instance');
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
+
+        /**
+         * Actions that the Plugin runs before WordPress finishes loading and sending headers
+         */
+        static function instance() {
+            return new self();
+        }
+
+        public static function init() {
+            if (false === ($channel_access_token = get_transient(self::TRANSIENT_KEY__TEMP_CHANNEL_ACCESS_TOKEN))) {
+                // If not, get it from the options table
+                $channel_access_token = general_helps::decrypt(get_option(self::OPTION_KEY__CHANNEL_ACCESS_TOKEN), self::ENCRYPT_PASSWORD);
+            }
+            $this->channel_access_token = esc_html($channel_access_token);
+            // Add the Menu page at the top of the management interface
+            add_action('admin_menu', [$this, 'set_plugin_menu']);
+            // Operations performed at the beginning of each admin page, 
+            // before the page is rendered, the function for the Plugin to save preferences
+            add_action('admin_init', [$this, 'save_settings']);
+            //return new self();
+        }
+
         /**
          * Plunin Version
          */        
@@ -266,6 +289,7 @@ if (!class_exists('line_bot_api')) {
         /**
          * @return mixed
          */
+        //public static function parseEvents() {
         public function parseEvents() {
          
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -274,33 +298,82 @@ if (!class_exists('line_bot_api')) {
             }
     
             $entityBody = file_get_contents('php://input');
-            
-    
+                
             if ($entityBody === false || strlen($entityBody) === 0) {
                 http_response_code(400);
                 error_log('Missing request body');
             }
-    /*
-            if (!hash_equals($this->sign($entityBody), $_SERVER['HTTP_X_LINE_SIGNATURE'])) {
-                http_response_code(400);
-                error_log('Invalid signature value');
-            }
-    */
+
             $data = json_decode($entityBody, true);
-    /*
-            if (!isset($data['events'])) {
-                http_response_code(400);
-                error_log('Invalid request body: missing events property');
-            }
-    */
+
             return $data['events'];
        
         }
 
         /**
+         * @param string $userId
+         * @return object
+         */
+        //public static function getProfile($userId) {
+        public function getProfile($userId) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'GET',
+                    'header' => implode("\r\n", $header),
+                    //'content' => json_encode($userId),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            $response = stripslashes($response);
+            $response = json_decode($response, true);
+            
+            return $response;
+        }
+    
+        /**
          * @param array<string, mixed> $message
          * @return void
          */
+        //public static function broadcastMessage($message) {
+        public function broadcastMessage($message) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'POST',
+                    'header' => implode("\r\n", $header),
+                    'content' => json_encode($message),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/message/broadcast', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+        }
+    
+        /**
+         * @param array<string, mixed> $message
+         * @return void
+         */
+        //public static function replyMessage($message) {
         public function replyMessage($message) {
     
             $header = array(
@@ -327,6 +400,7 @@ if (!class_exists('line_bot_api')) {
          * @param array<string, mixed> $message
          * @return void
          */
+        //public static function pushMessage($message) {
         public function pushMessage($message) {
     
             $header = array(
@@ -433,37 +507,6 @@ if (!class_exists('line_bot_api')) {
             if (strpos($http_response_header[0], '200') === false) {
                 error_log('Request failed: ' . $response);
             }
-        }
-    
-        /**
-         * @param string $userId
-         * @return object
-         */
-        public function getProfile($userId) {
-    
-            $header = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channel_access_token,
-            );
-    
-            $context = stream_context_create([
-                'http' => [
-                    'ignore_errors' => true,
-                    'method' => 'GET',
-                    'header' => implode("\r\n", $header),
-                    //'content' => json_encode($userId),
-                ],
-            ]);
-    
-            $response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
-            if (strpos($http_response_header[0], '200') === false) {
-                error_log('Request failed: ' . $response);
-            }
-    
-            $response = stripslashes($response);
-            $response = json_decode($response, true);
-            
-            return $response;
         }
     
         /**
@@ -614,3 +657,45 @@ if (!class_exists('line_bot_api')) {
         }
     }
 }
+
+/*
+ * This polyfill of hash_equals() is a modified edition of https://github.com/indigophp/hash-compat/tree/43a19f42093a0cd2d11874dff9d891027fc42214
+ *
+ * Copyright (c) 2015 Indigo Development Team
+ * Released under the MIT license
+ * https://github.com/indigophp/hash-compat/blob/43a19f42093a0cd2d11874dff9d891027fc42214/LICENSE
+ */
+if (!function_exists('hash_equals')) {
+    defined('USE_MB_STRING') or define('USE_MB_STRING', function_exists('mb_strlen'));
+
+    /**
+     * @param string $knownString
+     * @param string $userString
+     * @return bool
+     */
+    function hash_equals($knownString, $userString) {
+        
+        $strlen = function ($string) {
+            if (USE_MB_STRING) {
+                return mb_strlen($string, '8bit');
+            }
+
+            return strlen($string);
+        };
+
+        // Compare string lengths
+        if (($length = $strlen($knownString)) !== $strlen($userString)) {
+            return false;
+        }
+
+        $diff = 0;
+
+        // Calculate differences
+        for ($i = 0; $i < $length; $i++) {
+            $diff |= ord($knownString[$i]) ^ ord($userString[$i]);
+        }
+        return $diff === 0;
+    }
+}
+
+
