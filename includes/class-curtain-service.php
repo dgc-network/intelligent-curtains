@@ -204,7 +204,7 @@ if (!class_exists('curtain_service')) {
                 $display_name = str_replace(' ', '%20', $profile['displayName']);
                 $link_uri = get_option('Dashboard').'?_id='.$event['source']['userId'].'&_name='.$display_name;
 
-                /** Line User ID registeration */
+                /** Line User ID registration */
                 $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
                 if (empty($array)) {
 
