@@ -213,7 +213,7 @@ if (!class_exists('curtain_service')) {
                         $see_more = json_decode($see_more, true);
                     }
                     $see_more["body"]["contents"][0]["action"]["label"] = 'Registration';
-                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                    //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
 /*
                     $see_more["body"]["contents"][0]["type"] = 'text';
                     $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below link to register the system.';
