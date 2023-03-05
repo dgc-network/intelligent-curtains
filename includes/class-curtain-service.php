@@ -216,7 +216,7 @@ if (!class_exists('curtain_service')) {
                     //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
 
                     $see_more["body"]["contents"][0]["type"] = 'text';
-                    $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below link to register the system.';
+                    $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below button to register the system.';
 
                     $see_more["body"]["contents"][1]["type"] = 'button';
                     $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
