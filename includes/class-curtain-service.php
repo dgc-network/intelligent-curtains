@@ -280,7 +280,7 @@ if (!class_exists('curtain_service')) {
 
                                 /** Agent registration */
                                 $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
-                                if (!(is_null($agent) || !empty($wpdb->last_error))) {
+                                if (is_null($agent) || !empty($wpdb->last_error)) {
                                     $link_uri = get_option('Service').'?_agent_registration='.$message['text'].'&_id='.$event['source']['userId'].'&_name='.$display_name;
                                     $line_bot_api->replyMessage([
                                     //line_bot_api::replyMessage([
