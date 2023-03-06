@@ -139,7 +139,7 @@ if (!class_exists('curtain_service')) {
                                 ]
                             ]);
         
-                            wp_redirect( 'https://aihome.tw/toolbox/' );
+                            wp_safe_redirect( 'https://aihome.tw/toolbox/' );
                             exit;
                             //return 'Success';
                         }
