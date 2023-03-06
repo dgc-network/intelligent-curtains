@@ -202,7 +202,8 @@ if (!class_exists('curtain_service')) {
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
                 //$profile = line_bot_api::getProfile($event['source']['userId']);
                 $display_name = str_replace(' ', '%20', $profile['displayName']);
-                $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_name='.$display_name;
+                //$link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_name='.$display_name;
+                $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
 
                 /** Line User ID registration */
                 $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
@@ -212,7 +213,7 @@ if (!class_exists('curtain_service')) {
                         $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
                         $see_more = json_decode($see_more, true);
                     }
-                    $see_more["body"]["contents"][0]["action"]["label"] = 'Registration';
+                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
 /*
                     $see_more["body"]["contents"][0]["type"] = 'text';
@@ -248,7 +249,7 @@ if (!class_exists('curtain_service')) {
                     );
                     $contents = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
 */
-/*
+
                     $line_bot_api->replyMessage([
                     //line_bot_api::replyMessage([
                         'replyToken' => $event['replyToken'],
@@ -260,7 +261,7 @@ if (!class_exists('curtain_service')) {
                             ]
                         ]
                     ]);                    
-*/                    
+/*                    
                     $line_bot_api->replyMessage([
                         'replyToken' => $event['replyToken'],
                         'messages' => [
@@ -270,6 +271,7 @@ if (!class_exists('curtain_service')) {
                             ]
                         ]
                     ]);
+*/                    
                 } 
 
                 switch ($event['type']) {
