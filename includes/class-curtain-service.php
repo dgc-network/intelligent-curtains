@@ -140,7 +140,8 @@ if (!class_exists('curtain_service')) {
                             ]);
         
                             wp_redirect( 'https://aihome.tw/toolbox/' );
-                            return 'Success';
+                            exit;
+                            //return 'Success';
                         }
                     }
                     $agent_number=$_GET['_agent_no'];
