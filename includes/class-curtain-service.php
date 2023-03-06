@@ -224,13 +224,21 @@ if (!class_exists('curtain_service')) {
                                 /** Agent registration */
                                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
                                 if (is_null($row) || !empty($wpdb->last_error)) {
-                                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+                                    //$link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                                 } else {
-                                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$row->agent_number;
+                                    $link_uri = get_option('Service').'?_agent_no='.$row->agent_number;
                                 }
                                 
                                 /** Line User ID registration */
                                 $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
+                                if (empty($array)) {
+                                    if (is_null($row) || !empty($wpdb->last_error)) {
+                                        $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+                                    } else {
+                                        $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$row->agent_number;
+                                    }
+                                }
+
                                 if (empty($array) || !(is_null($row) || !empty($wpdb->last_error))) {
                 
                                     $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
