@@ -93,11 +93,15 @@ if (!class_exists('curtain_service')) {
                 $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
                 $output .= '<p>Please click the Submit button below to complete your registration.</p>';
                 $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
-				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
+                $output .= '<label for="display-name">Name:</label>';
+				$output .= '<input type="text" id="display-name" name="_display_name" value="'. $args['value_username'] .'" />';
+                $output .= '<label for="email">Email:</label>';
+				$output .= '<input type="text" id="email" name="_email" value="'. $args['value_username'] .'" />';
 				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
 				$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
 				$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
 				$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
+				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
                 $output .= '</form>';
                 $output .= '</div>';
                 return $output;
