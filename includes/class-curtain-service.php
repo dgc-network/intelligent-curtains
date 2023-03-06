@@ -88,7 +88,9 @@ if (!class_exists('curtain_service')) {
                     'value_username'  => $_GET['_id'],
                     'value_password'  => $_GET['_id']
                 );
-                
+
+                $link_uri = get_option('Service').'?_agent_no='.$_GET['_agent_no'];
+
                 $output  = '<div style="text-align:center;">';
                 $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
                 $output .= '<p>Please click the Submit button below to complete your registration.</p>';
@@ -100,7 +102,8 @@ if (!class_exists('curtain_service')) {
 				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
 				$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
 				$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
-				$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
+				//$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
+				$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $link_uri ).'" />';
 				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
                 $output .= '</form>';
                 $output .= '</div>';
