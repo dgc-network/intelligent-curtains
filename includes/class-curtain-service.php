@@ -93,10 +93,10 @@ if (!class_exists('curtain_service')) {
                 $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
                 $output .= '<p>Please click the Submit button below to complete your registration.</p>';
                 $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
-                $output .= '<label for="display-name">Name:</label>';
-				$output .= '<input type="text" id="display-name" name="_display_name" value="'. $args['value_username'] .'" />';
-                $output .= '<label for="email">Email:</label>';
-				$output .= '<input type="text" id="email" name="_email" value="'. $args['value_username'] .'" />';
+                //$output .= '<label for="display-name">Name:</label>';
+				//$output .= '<input type="text" id="display-name" name="_display_name" value="'. $args['value_username'] .'" />';
+                //$output .= '<label for="email">Email:</label>';
+				//$output .= '<input type="text" id="email" name="_email" value="'. $args['value_username'] .'" />';
 				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
 				$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
 				$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
@@ -112,7 +112,7 @@ if (!class_exists('curtain_service')) {
                 $user = wp_get_current_user();
 
                 /** Assign the User as the specified Agent Operators */
-                if( isset($_GET['_agent_registration']) ) {
+                if( isset($_GET['_agent_no']) ) {
                     if( isset($_POST['_agent_submit']) ) {
                         $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
                         if (is_null($agent) || !empty($wpdb->last_error)) {
@@ -139,13 +139,13 @@ if (!class_exists('curtain_service')) {
                             return 'Success';
                         }
                     }
-                    $agent_number=$_GET['_agent_registration'];
+                    $agent_number=$_GET['_agent_no'];
                     $output  = '<div style="text-align:center;">';
                     $output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name($agent_number).'.</p>';
                     $output .= '<p>Please enter the code and click the below Submit button to complete the registration.</p>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<input type="text" name="_agent_code" />';
-                    $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_registration'].'" />';
+                    $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_no'].'" />';
                     $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</div>';
@@ -196,87 +196,21 @@ if (!class_exists('curtain_service')) {
         }
 
         public function init_webhook_events() {
+            global $wpdb;
             $line_bot_api = new line_bot_api();
             $open_ai_api = new open_ai_api();
             $curtain_agents = new curtain_agents();
 
+            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                $see_more = json_decode($see_more, true);
+            }
+
             foreach ((array)$line_bot_api->parseEvents() as $event) {
-            //foreach ((array)line_bot_api::parseEvents() as $event) {
 
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
-                //$profile = line_bot_api::getProfile($event['source']['userId']);
-                $display_name = str_replace(' ', '%20', $profile['displayName']);
+                //$display_name = str_replace(' ', '%20', $profile['displayName']);
                 //$link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_name='.$display_name;
-                $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
-
-                /** Line User ID registration */
-                $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
-                if (empty($array)) {
-
-                    if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
-                        $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
-                        $see_more = json_decode($see_more, true);
-                    }
-                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
-                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-/*
-                    $see_more["body"]["contents"][0]["type"] = 'text';
-                    $see_more["body"]["contents"][0]["text"] = 'Hi, '.$profile['displayName'].', Please click the below button to register the system.';
-
-                    $see_more["body"]["contents"][1]["type"] = 'button';
-                    $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
-                    $see_more["body"]["contents"][1]["action"]["label"] = 'Registration';
-                    $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
-
-                    $context = stream_context_create(
-                        array(
-                            'http' => array(
-                                'method' => 'POST',
-                                'header' => array(
-                                    'Content-Type: application/json;',
-                                    'Authorization: Bearer '.$line_bot_api->channel_access_token
-                                ),
-                                'content' => json_encode(
-                                    array(
-                                        'replyToken' => $event['replyToken'],
-                                        "messages" => array(
-                                            array(
-                                                "type" => "flex",
-                                                "altText" => 'Welcome message',
-                                                'contents' => $see_more
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    );
-                    $contents = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
-*/
-
-                    $line_bot_api->replyMessage([
-                    //line_bot_api::replyMessage([
-                        'replyToken' => $event['replyToken'],
-                        'messages' => [
-                            [
-                                "type" => "flex",
-                                "altText" => 'Welcome message',
-                                'contents' => $see_more
-                            ]
-                        ]
-                    ]);                    
-/*                    
-                    $line_bot_api->replyMessage([
-                        'replyToken' => $event['replyToken'],
-                        'messages' => [
-                            [
-                                "type" => "text",
-                                "text" => 'Please click the below link to register the system. '. $link_uri,
-                            ]
-                        ]
-                    ]);
-*/                    
-                } 
 
                 switch ($event['type']) {
                     case 'message':
@@ -285,60 +219,53 @@ if (!class_exists('curtain_service')) {
                             case 'text':
 
                                 /** Agent registration */
-                                $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
-                                if (is_null($agent) || !empty($wpdb->last_error)) {
-                                    $link_uri = get_option('Service').'?_agent_registration='.$message['text'].'&_id='.$event['source']['userId'].'&_name='.$display_name;
+                                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
+                                if (is_null($row) || !empty($wpdb->last_error)) {
+                                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+                                } else {
+                                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$row->agent_number;
+                                }
+                                
+                                /** Line User ID registration */
+                                $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
+                                if (empty($array) || !(is_null($row) || !empty($wpdb->last_error))) {
+                
+                                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
+                                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                                    $line_bot_api->replyMessage([
+                                        'replyToken' => $event['replyToken'],
+                                        'messages' => [
+                                            [
+                                                "type" => "flex",
+                                                "altText" => 'Welcome message',
+                                                'contents' => $see_more
+                                            ]
+                                        ]
+                                    ]);        
+                                } else {
+
+                                    //** Open-AI auto reply */
+                                    $param=array();
+                                    $param["model"]="text-davinci-003";
+                                    $param["prompt"]=$message['text'];
+                                    $param["max_tokens"]=1000;
+                                    $response = $open_ai_api->createCompletion($param);
+                                    $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
+                                                            
                                     $line_bot_api->replyMessage([
                                     //line_bot_api::replyMessage([
                                         'replyToken' => $event['replyToken'],
                                         'messages' => [
                                             [
-                                                "type" => "text",
-                                                "text" => 'Please click the below link to register the system. '. $link_uri,
-                                            ]
+                                                'type' => 'text',
+                                                //'text' => $response
+                                                'text' => $string
+                                            ]                                                                    
                                         ]
                                     ]);
     
-/*
-                                    $array = get_users( array( 'meta_value' => $event['source']['userId'] ));
-                                    $curtain_agents->create_agent_operator(
-                                        array(
-                                            'curtain_agent_id'=>$curtain_agents->get_id($message['text']),
-                                            'curtain_user_id'=>$array[0]->ID
-                                        ),
-                                    );
-                                    //$this->agent_registry_notice($profile['userId']);
-
-                                    general_helps::push_imagemap_messages(
-                                        array(
-                                            'line_user_id' => $profile['userId'],
-                                            'base_url' => $service_links->get_link('agent_registry'),
-                                            'alt_text' => 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區',
-                                            'link_uri' => get_option('Orders').'?_id='.$profile['userId']
-                                        )
-                                    );
-*/
                                 }
-                                
-                                //** Open-AI auto reply */
-                                $param=array();
-                                $param["model"]="text-davinci-003";
-                                $param["prompt"]=$message['text'];
-                                $param["max_tokens"]=1000;
-                                $response = $open_ai_api->createCompletion($param);
-                                $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
-                                                        
-                                $line_bot_api->replyMessage([
-                                //line_bot_api::replyMessage([
-                                    'replyToken' => $event['replyToken'],
-                                    'messages' => [
-                                        [
-                                            'type' => 'text',
-                                            //'text' => $response
-                                            'text' => $string
-                                        ]                                                                    
-                                    ]
-                                ]);
+                
                                 
                                 break;
                             default:
