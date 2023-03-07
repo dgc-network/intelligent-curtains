@@ -94,7 +94,7 @@ if (!class_exists('curtain_orders')) {
                     return $output;
                 } else {
                     $output  = '<div style="text-align:center;">';
-                    $output .= '<h3>Please enetr the code and click the below Submit button to login the agent order system.</h3>';
+                    $output .= '<h3>Please enter the code and click the below Submit button to login the agent order system.</h3>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<input type="text" name="_agent_code" />';
                     $output .= '<input type="hidden" name="_agent_number" value="'.$row->agent_number.'" />';

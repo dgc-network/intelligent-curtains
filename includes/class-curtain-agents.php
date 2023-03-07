@@ -210,7 +210,13 @@ if (!class_exists('curtain_agents')) {
 
         public function get_name( $_id=0 ) {
             global $wpdb;
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d OR agent_number = %s", $_id, $_id ), OBJECT );
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $_id ), OBJECT );
+            return $row->agent_name.'('.$row->agent_number.')';
+        }
+
+        public function get_name_by_no( $_no='' ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_no ), OBJECT );
             return $row->agent_name.'('.$row->agent_number.')';
         }
 
