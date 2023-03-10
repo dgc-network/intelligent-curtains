@@ -121,6 +121,9 @@ if (!class_exists('curtain_service')) {
                         if (is_null($agent) || !empty($wpdb->last_error)) {
                             return 'Wrong Code';
                         } else {
+                            $_SESSION['_agent_number'] = $_POST['_agent_number'];
+                            $_SESSION['_agent_code'] = $_POST['_agent_code'];
+
                             $curtain_agents->insert_agent_operator(
                                 array(
                                     'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
