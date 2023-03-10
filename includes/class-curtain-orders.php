@@ -118,7 +118,8 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</div>';
                     return $output;                        
                 }
-                $curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
+                //$curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
+                $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
             } else {
 
                 $output  = '<div style="text-align:center;">';
