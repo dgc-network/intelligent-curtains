@@ -173,9 +173,9 @@ if (!class_exists('curtain_service')) {
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
                     $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
-                    $output .= '<input type="text" name="_display_name" />';
+                    $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
                     $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
-                    $output .= '<input type="text" name="_user_email" />';
+                    $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
                     $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
                     $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</fieldset>';
