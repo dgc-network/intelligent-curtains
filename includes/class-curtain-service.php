@@ -68,39 +68,39 @@ if (!class_exists('curtain_service')) {
             $serial_number = new serial_number();
             $line_bot_api = new line_bot_api();
 
-            /** Assign the User for the specified serial number(QR Code) */
-            if( isset($_GET['serial_no']) ) {
-                $output = '<div style="text-align:center;">';
-                $qr_code_serial_no = $_GET['serial_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                /** incorrect QR-code then display the admin link */
-                if (is_null($row) || !empty($wpdb->last_error)) {                        
-                    $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
-
-                /** registration for QR-code */
-                } else {                        
-                    $output .= 'Hi, '.$user->display_name.'<br>';
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if (!(is_null($model) || !empty($wpdb->last_error))) {
-                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                    }
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-
-                    $serial_number->update_serial_number(
-                        array('curtain_user_id'=>intval($user->ID)),
-                        array('qr_code_serial_no'=>$qr_code_serial_no)
-                    );
-                }
-                $output .= '</div>';
-                return $output;        
-            }
-
             if ( is_user_logged_in() ) {
 
                 $user = wp_get_current_user();
 
+                /** Assign the User for the specified serial number(QR Code) */
+                if( isset($_GET['serial_no']) ) {
+                    $output = '<div style="text-align:center;">';
+                    $qr_code_serial_no = $_GET['serial_no'];
+                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
+                    /** incorrect QR-code then display the admin link */
+                    if (is_null($row) || !empty($wpdb->last_error)) {                        
+                        $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
+    
+                    /** registration for QR-code */
+                    } else {                        
+                        $output .= 'Hi, '.$user->display_name.'<br>';
+                        $output .= '感謝您選購我們的電動窗簾<br>';
+                        $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
+                        if (!(is_null($model) || !empty($wpdb->last_error))) {
+                            $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
+                        }
+                        $six_digit_random_number = random_int(100000, 999999);
+                        $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+    
+                        $serial_number->update_serial_number(
+                            array('curtain_user_id'=>intval($user->ID)),
+                            array('qr_code_serial_no'=>$qr_code_serial_no)
+                        );
+                    }
+                    $output .= '</div>';
+                    return $output;        
+                }
+        
                 /** Assign the User as the specified Agent Operators */
                 if( isset($_GET['_agent_no']) ) {
                     if( isset($_POST['_agent_submit']) ) {
@@ -194,20 +194,12 @@ if (!class_exists('curtain_service')) {
                         $user_id = wp_insert_user( array(
                             'user_login' => $_GET['_id'],
                             'user_pass' => $_GET['_id'],
-                            //'display_name' => $display_name,
                         ));
                         $user = get_user_by( 'ID', $user_id );
                         add_user_meta( $user_id, 'line_user_id', $_GET['_id']);
                         // To-Do: add_user_meta( $user_id, 'wallet_address', $_GET['_wallet_address']);
                     }
-/*    
-                    $args = array(
-                        'redirect'        => get_option('Service'),
-                        'value_username'  => $_GET['_id'],
-                        'value_password'  => $_GET['_id']
-                    );
-*/    
-                    //$link_uri = get_option('Service').'?_agent_no='.$_GET['_agent_no'];
+
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
                     if (is_null($row) || !empty($wpdb->last_error)) {
                         $link_uri = get_option('Service').'?_id='.$_GET['_id'];
@@ -219,8 +211,6 @@ if (!class_exists('curtain_service')) {
                     $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
                     $output .= '<p>Please click the Submit button below to complete your registration.</p>';
                     $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
-                    //$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
-                    //$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
                     $output .= '<input type="hidden" name="log" value="'. $_GET['_id'] .'" />';
                     $output .= '<input type="hidden" name="pwd" value="'. $_GET['_id'] .'" />';
                     $output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
@@ -229,6 +219,13 @@ if (!class_exists('curtain_service')) {
                     $output .= '</form>';
                     $output .= '</div>';
                     return $output;
+
+                } else {
+                    $output = '<div style="text-align:center;">';
+                    $output .= '感謝您選購我們的電動窗簾<br>';
+                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+                    $output .= '</div>';
+                    return $output;        
                 }
             }
         }
