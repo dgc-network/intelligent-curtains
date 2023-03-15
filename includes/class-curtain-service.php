@@ -146,7 +146,7 @@ if (!class_exists('curtain_service')) {
                 }
 
                 /** Update the User account information */
-                if( isset($_GET['_user_profile']) ) {
+                if( isset($_GET['_id']) ) {
                     if( isset($_POST['_user_submit']) ) {
                         $users = get_users(array(
                             'meta_key'     => 'line_user_id',
@@ -176,7 +176,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_display_name" />';
                     $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
                     $output .= '<input type="text" name="_user_email" />';
-                    $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_user_profile'].'" />';
+                    $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
                     $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</fieldset>';
                     $output .= '</form>';
@@ -210,7 +210,7 @@ if (!class_exists('curtain_service')) {
                     //$link_uri = get_option('Service').'?_agent_no='.$_GET['_agent_no'];
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
                     if (is_null($row) || !empty($wpdb->last_error)) {
-                        $link_uri = get_option('Service').'?_user_profile='.$_GET['_id'];
+                        $link_uri = get_option('Service').'?_id='.$_GET['_id'];
                     } else {
                         $link_uri = get_option('Service').'?_agent_no='.$row->agent_number;
                     }
