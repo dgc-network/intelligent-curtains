@@ -68,48 +68,6 @@ if (!class_exists('curtain_service')) {
             $serial_number = new serial_number();
             $line_bot_api = new line_bot_api();
 
-            /** Line User ID registration and login into the system */
-            if( isset($_GET['_id']) ) {
-                $display_name = str_replace('%20', ' ', $_GET['_name']);    
-                $array = get_users( array( 'meta_value' => $_GET['_id'] ));
-                if (empty($array)) {
-                    $user_id = wp_insert_user( array(
-                        'user_login' => $_GET['_id'],
-                        'user_pass' => $_GET['_id'],
-                        'display_name' => $display_name,
-                    ));
-                    $user = get_user_by( 'ID', $user_id );
-                    add_user_meta( $user_id, 'line_user_id', $_GET['_id']);
-                    // To-Do: add_user_meta( $user_id, 'wallet_address', $_GET['_wallet_address']);
-                }
-
-                $args = array(
-                    'redirect'        => get_option('Service'),
-                    'value_username'  => $_GET['_id'],
-                    'value_password'  => $_GET['_id']
-                );
-
-                $link_uri = get_option('Service').'?_agent_no='.$_GET['_agent_no'];
-
-                $output  = '<div style="text-align:center;">';
-                $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
-                $output .= '<p>Please click the Submit button below to complete your registration.</p>';
-                $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
-                //$output .= '<label for="display-name">Name:</label>';
-				//$output .= '<input type="text" id="display-name" name="_display_name" value="'. $args['value_username'] .'" />';
-                //$output .= '<label for="email">Email:</label>';
-				//$output .= '<input type="text" id="email" name="_email" value="'. $args['value_username'] .'" />';
-				$output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
-				$output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
-				$output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
-				//$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $args['redirect'] ).'" />';
-				$output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $link_uri ).'" />';
-				$output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
-                $output .= '</form>';
-                $output .= '</div>';
-                return $output;
-            }
-
             if ( is_user_logged_in() ) {
 
                 $user = wp_get_current_user();
@@ -131,7 +89,6 @@ if (!class_exists('curtain_service')) {
                                 ),
                             );
 
-                            //line_bot_api::pushMessage([
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta( $user->ID, 'line_user_id', TRUE ),
                                 'messages' => [
@@ -143,9 +100,6 @@ if (!class_exists('curtain_service')) {
                             ]);
         
                             ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
-                            //wp_safe_redirect( 'https://aihome.tw/toolbox/' );
-                            //exit;
-                            //return 'Success';
                         }
                     }
                     $agent_number=$_GET['_agent_no'];
@@ -169,19 +123,7 @@ if (!class_exists('curtain_service')) {
                     /** incorrect QR-code then display the admin link */
                     if (is_null($row) || !empty($wpdb->last_error)) {                        
                         $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
-/*                        
-                        $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
-                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                        $output .= '<div class="wp-block-buttons">';
-                        foreach ( $results as $index=>$result ) {
-                            if ($wp_pages->get_category($result->wp_page_postid)=='admin') {
-                                $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                                $output .= '<a class="wp-block-button__link" href="'.get_permalink($result->wp_page_postid).'">'.get_the_title($result->wp_page_postid).'</a>';
-                                $output .= '</div>';    
-                            }
-                        }
-                        $output .= '</div>';                    
-*/    
+
                     /** registration for QR-code */
                     } else {                        
                         $output .= 'Hi, '.$user->display_name.'<br>';
@@ -201,6 +143,44 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                     return $output;        
                 }
+            } else {
+
+                /** Line User ID registration and login into the system */
+                if( isset($_GET['_id']) ) {
+                    $display_name = str_replace('%20', ' ', $_GET['_name']);    
+                    $array = get_users( array( 'meta_value' => $_GET['_id'] ));
+                    if (empty($array)) {
+                        $user_id = wp_insert_user( array(
+                            'user_login' => $_GET['_id'],
+                            'user_pass' => $_GET['_id'],
+                            'display_name' => $display_name,
+                        ));
+                        $user = get_user_by( 'ID', $user_id );
+                        add_user_meta( $user_id, 'line_user_id', $_GET['_id']);
+                        // To-Do: add_user_meta( $user_id, 'wallet_address', $_GET['_wallet_address']);
+                    }
+    
+                    $args = array(
+                        'redirect'        => get_option('Service'),
+                        'value_username'  => $_GET['_id'],
+                        'value_password'  => $_GET['_id']
+                    );
+    
+                    $link_uri = get_option('Service').'?_agent_no='.$_GET['_agent_no'];
+    
+                    $output  = '<div style="text-align:center;">';
+                    $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
+                    $output .= '<p>Please click the Submit button below to complete your registration.</p>';
+                    $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
+                    $output .= '<input type="hidden" name="log" value="'. $args['value_username'] .'" />';
+                    $output .= '<input type="hidden" name="pwd" value="'. $args['value_password'] .'" />';
+                    $output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
+                    $output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $link_uri ).'" />';
+                    $output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                    return $output;
+                }
             }
         }
 
@@ -218,8 +198,6 @@ if (!class_exists('curtain_service')) {
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
-                //$display_name = str_replace(' ', '%20', $profile['displayName']);
-                //$link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_name='.$display_name;
 
                 switch ($event['type']) {
                     case 'message':
@@ -258,9 +236,9 @@ if (!class_exists('curtain_service')) {
                                                 'contents' => $see_more
                                             ]
                                         ]
-                                    ]);        
-                                } else {
+                                    ]);
 
+                                } else {
                                     //** Open-AI auto reply */
                                     $param=array();
                                     $param["model"]="text-davinci-003";
@@ -270,7 +248,6 @@ if (!class_exists('curtain_service')) {
                                     $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
                                                             
                                     $line_bot_api->replyMessage([
-                                    //line_bot_api::replyMessage([
                                         'replyToken' => $event['replyToken'],
                                         'messages' => [
                                             [
