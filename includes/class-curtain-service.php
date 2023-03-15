@@ -148,8 +148,13 @@ if (!class_exists('curtain_service')) {
                 /** Update the User account information */
                 if( isset($_GET['_user_profile']) ) {
                     if( isset($_POST['_user_submit']) ) {
+                        $users = get_users(array(
+                            'meta_key'     => 'line_user_id',
+                            'meta_value'   => $_POST['_line_user_id'],
+                            'meta_compare' => '=',
+                        ));
                         $user_data = wp_update_user( array( 
-                            'ID' => $_POST['_user_id'], 
+                            'ID' => $users[0]->ID, 
                             'display_name' => $_POST['_display_name'], 
                             'user_email' => $_POST['_user_email'], 
                         ) );
@@ -171,7 +176,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_display_name" />';
                     $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
                     $output .= '<input type="text" name="_user_email" />';
-                    $output .= '<input type="hidden" name="_user_id" value="'.$_GET['_user_profile'].'" />';
+                    $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_user_profile'].'" />';
                     $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</fieldset>';
                     $output .= '</form>';
