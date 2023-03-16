@@ -93,6 +93,8 @@ if (!class_exists('curtain_service')) {
                             $output .= '<br>to_display_name: '.$author_obj->display_name;
                             $output .= '<br>to_line_id: '.get_user_meta($result->curtain_user_id, 'line_user_id', TRUE);
                             $link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
+                            $see_more["body"]["contents"][0]["type"] = 'text';
+                            $see_more["body"]["contents"][0]["text"] = $link_uri;
                             //$see_more["body"]["contents"][0]["action"]["label"] = $link_uri;
                             //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
 
