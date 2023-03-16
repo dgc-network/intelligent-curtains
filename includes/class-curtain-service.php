@@ -96,9 +96,10 @@ if (!class_exists('curtain_service')) {
                             $see_more["header"]["type"] = 'box';
                             $see_more["header"]["layout"] = 'vertical';
                             $see_more["header"]["contents"][0]["type"] = 'text';
-                            //$see_more["header"]["contents"][0]["text"] = 'Rover Chen';
                             $see_more["header"]["contents"][0]["text"] = $user->display_name;
-                            $see_more["body"]["contents"][0]["action"]["label"] = 'Chat message';
+                            $see_more["body"]["contents"][0]["type"] = 'text';
+                            $see_more["body"]["contents"][0]["text"] = $user->display_name;
+                            //$see_more["body"]["contents"][0]["action"]["label"] = 'Chat message';
                             //$see_more["body"]["contents"][0]["action"]["label"] = $link_uri;
                             //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
 
