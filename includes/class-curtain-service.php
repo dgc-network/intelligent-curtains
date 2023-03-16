@@ -34,15 +34,57 @@ if (!class_exists('curtain_service')) {
 
                 /** Reply the question */
                 if( isset($_GET['_chat_message']) ) {
+                    if( isset($_POST['_reply_submit']) ) {
+
+                        $output = '<div style="text-align:center;">';
+                        //$output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
+
+                        $message_id = $this->insert_chat_message(
+                            array(
+                                'chat_from' => $_POST['_reply_from'],
+                                'chat_to' => $_POST['_reply_to'],
+                                'chat_message'=> $_POST['_reply_message']
+                            )
+                        );                            
+                        $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
+
+                        $see_more["header"]["type"] = 'box';
+                        $see_more["header"]["layout"] = 'vertical';
+                        $see_more["header"]["contents"][0]["type"] = 'text';
+                        $see_more["header"]["contents"][0]["text"] = $user->display_name;
+                        $see_more["body"]["contents"][0]["type"] = 'text';
+                        $see_more["body"]["contents"][0]["text"] = $_POST['_reply_message'];
+                        $see_more["body"]["contents"][1]["type"] = 'button';
+                        $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
+                        $see_more["body"]["contents"][1]["action"]["label"] = 'Reply message';
+                        $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
+
+                        $line_bot_api->pushMessage([
+                            'to' => $_POST['_reply_to'],
+                            'messages' => [
+                                [
+                                    "type" => "flex",
+                                    "altText" => 'Reply message',
+                                    'contents' => $see_more
+                                ]
+                            ]
+                        ]);
+
+                        $output .= '<h3>Replied the answer to customer Line chat box already.</h3>';
+                        $output .= '</div>';
+                        return $output;    
+                    }
+                        
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_id = %d", $_GET['_chat_message'] ), OBJECT );
+                    $author_obj = get_user_by('id', $row->chat_from);
                     $output = '<div style="text-align:center;">';
                     $output .= '<h3>reply the question</h3>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
                     $output .= '<label style="text-align:left;" for="_chat_from">From: </label>';
-                    $output .= $row->chat_from;
+                    $output .= $author_obj->display_name;
                     $output .= '<label style="text-align:left;" for="_question">Question:</label>';
-                    $output .= '<p>'.$row->chat_message.'</p>';
+                    $output .= '<p style="text-align:left;>'.$row->chat_message.'</p>';
                     $output .= '<label style="text-align:left;" for="_reply_message">Answer:</label>';
                     $output .= '<textarea name="_reply_message" rows="10" cols="50"></textarea>';
                     $output .= '<input type="hidden" name="_reply_from" value="'.$row->chat_to.'" />';
