@@ -229,9 +229,10 @@ if (!class_exists('curtain_service')) {
                 /** Update the User account information */
                 if( isset($_GET['_id']) ) {
                     if( isset($_POST['_add_curtain']) ) {
-                        echo do_shortcode( '[qrcodescanner]' );
+                        $scan_result = do_shortcode( '[qrcodescanner]' );
+                        return $scan_result;
                     }
-                    
+
                     if( isset($_POST['_user_submit']) ) {
                         $users = get_users(array(
                             'meta_key'     => 'line_user_id',
