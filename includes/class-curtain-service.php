@@ -84,7 +84,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<label style="text-align:left;" for="_chat_from">From: </label>';
                     $output .= $author_obj->display_name;
                     $output .= '<label style="text-align:left;" for="_question">Question:</label>';
-                    $output .= '<p style="text-align:left;>'.$row->chat_message.'</p>';
+                    $output .= '<p style="text-align:left;">'.$row->chat_message.'</p>';
                     $output .= '<label style="text-align:left;" for="_reply_message">Answer:</label>';
                     $output .= '<textarea name="_reply_message" rows="10" cols="50"></textarea>';
                     $output .= '<input type="hidden" name="_reply_from" value="'.$row->chat_to.'" />';
