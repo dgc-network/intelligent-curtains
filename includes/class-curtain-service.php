@@ -47,14 +47,19 @@ if (!class_exists('curtain_service')) {
 
                         $see_more["header"]["type"] = 'box';
                         $see_more["header"]["layout"] = 'vertical';
+                        $see_more["header"]["backgroundColor"] = "#e3dee3";
                         $see_more["header"]["contents"][0]["type"] = 'text';
                         $see_more["header"]["contents"][0]["text"] = $user->display_name;
                         $see_more["body"]["contents"][0]["type"] = 'text';
                         $see_more["body"]["contents"][0]["text"] = $_POST['_reply_message'];
-                        $see_more["body"]["contents"][1]["type"] = 'button';
-                        $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
-                        $see_more["body"]["contents"][1]["action"]["label"] = 'Reply message';
-                        $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
+                        $see_more["body"]["contents"][0]["wrap"] = true;
+                        $see_more["footer"]["type"] = 'box';
+                        $see_more["footer"]["layout"] = 'vertical';
+                        $see_more["footer"]["backgroundColor"] = "#e3dee3";
+                        $see_more["footer"]["contents"][0]["type"] = 'button';
+                        $see_more["footer"]["contents"][0]["action"]["type"] = 'uri';
+                        $see_more["footer"]["contents"][0]["action"]["label"] = 'Reply message';
+                        $see_more["footer"]["contents"][0]["action"]["uri"] = $link_uri;
 
                         $line_bot_api->pushMessage([
                             'to' => $_POST['_reply_to'],
