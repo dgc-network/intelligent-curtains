@@ -94,8 +94,8 @@ if (!class_exists('curtain_service')) {
                             $output .= '<br>to_line_id: '.get_user_meta($result->curtain_user_id, 'line_user_id', TRUE);
                             $link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
                             $see_more["body"]["contents"][0]["action"]["label"] = $link_uri;
-                            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-/*
+                            //$see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
                                 'messages' => [
@@ -106,7 +106,7 @@ if (!class_exists('curtain_service')) {
                                     ]
                                 ]
                             ]);
-*/
+/*
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta( $result->curtain_user_id, 'line_user_id', TRUE ),
                                 'messages' => [
@@ -118,7 +118,7 @@ if (!class_exists('curtain_service')) {
                             ]);
 
                         }
-
+*/
                         //$output = '<div style="text-align:center;">';
                         $output .= '<h3>Will reply your question on Line chat box soon.</h3>';
                         $output .= '</div>';
