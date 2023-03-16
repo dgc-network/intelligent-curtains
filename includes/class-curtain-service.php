@@ -228,6 +228,10 @@ if (!class_exists('curtain_service')) {
 
                 /** Update the User account information */
                 if( isset($_GET['_id']) ) {
+                    if( isset($_POST['_add_curtain']) ) {
+                        echo do_shortcode( '[qrcodescanner]' );
+                    }
+                    
                     if( isset($_POST['_user_submit']) ) {
                         $users = get_users(array(
                             'meta_key'     => 'line_user_id',
@@ -259,6 +263,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
                     $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
                     $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
+                    $output .= '<input type="submit" name="_add_curtain" style="margin:3px;" value="Add Curtain" />';
                     $output .= '</fieldset>';
                     $output .= '</form>';
                     $output .= '</div>';
