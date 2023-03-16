@@ -62,7 +62,6 @@ if (!class_exists('curtain_service')) {
         }
 
         public function curtain_service() {
-
             global $wpdb;
             $curtain_agents = new curtain_agents();
             $serial_number = new serial_number();
@@ -79,7 +78,7 @@ if (!class_exists('curtain_service')) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
                     /** incorrect QR-code then display the admin link */
                     if (is_null($row) || !empty($wpdb->last_error)) {                        
-                        $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
+                        $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
     
                     /** registration for QR-code */
                     } else {                        
@@ -89,13 +88,22 @@ if (!class_exists('curtain_service')) {
                         if (!(is_null($model) || !empty($wpdb->last_error))) {
                             $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
                         }
-                        $six_digit_random_number = random_int(100000, 999999);
-                        $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-    
                         $serial_number->update_serial_number(
                             array('curtain_user_id'=>intval($user->ID)),
                             array('qr_code_serial_no'=>$qr_code_serial_no)
                         );
+                        //$six_digit_random_number = random_int(100000, 999999);
+                        //$output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+                        $output .= '<h3>請問一下</h3>';
+                        $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                        $output .= '<fieldset>';
+                        $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
+                        $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
+                        $output .= '<input type="hidden" name="_chat_user_id" value="'.get_user_meta($user->ID, 'line_user_id').'" />';
+                        $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
+                        $output .= '</fieldset>';
+                        $output .= '</form>';
+    
                     }
                     $output .= '</div>';
                     return $output;        
@@ -318,253 +326,6 @@ if (!class_exists('curtain_service')) {
                         break;
                 }
             }
-        }
-
-        public function curtain_service_backup() {
-            global $wpdb;
-            $wp_pages = new wp_pages();
-            $serial_number = new serial_number();
-
-            if( isset($_GET['_id']) ) {
-                $_SESSION['line_user_id'] = $_GET['_id'];
-            }
-
-            $output = '<div style="text-align:center;">';
-            if( isset($_GET['serial_no']) ) {
-                $qr_code_serial_no = $_GET['serial_no'];
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-                if (is_null($row) || !empty($wpdb->last_error)) {
-                    /** incorrect QR-code then display the admin link */
-                    $output .= '<div style="font-weight:700; font-size:xx-large;">售後服務管理系統</div>';
-                    $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}user_permissions WHERE line_user_id = %s", $_SESSION['line_user_id'] ), OBJECT );
-                    $output .= '<div class="wp-block-buttons">';
-                    foreach ( $results as $index=>$result ) {
-                        if ($wp_pages->get_category($result->wp_page_postid)=='admin') {
-                            $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                            $output .= '<a class="wp-block-button__link" href="'.get_permalink($result->wp_page_postid).'">'.get_the_title($result->wp_page_postid).'</a>';
-                            $output .= '</div>';    
-                        }
-                    }
-                    $output .= '</div>';                    
-
-                } else {
-                    /** registration for QR-code */
-                    $curtain_user_id=$row->curtain_user_id;
-                    $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE curtain_user_id = %d", $row->curtain_user_id ), OBJECT );            
-                    if (!(is_null($user) || !empty($wpdb->last_error))) {
-                        $output .= 'Hi, '.$user->display_name.'<br>';
-                    }
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                    if (!(is_null($model) || !empty($wpdb->last_error))) {
-                        $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                    }
-                    $six_digit_random_number = random_int(100000, 999999);
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '在我們的官方帳號聊天室中輸入六位數字密碼,<br>'.'<span style="font-size:24px;color:blue;">'.$six_digit_random_number;
-                    $output .= '</span>'.'完成註冊程序<br>';
-
-                    $result = $serial_number->update_serial_number(
-                        array('one_time_password'=>$six_digit_random_number),
-                        array('qr_code_serial_no'=>$qr_code_serial_no)
-                    );
-                }
-    
-            } else {
-
-                $output .= '<div style="font-weight:700; font-size:xxx-large;">售後服務/使用說明</div>';
-                $output .= '<div style="font-weight:700; font-size:xx-large; color:firebrick; margin:50px;">簡單三步驟，開啟Siri語音控制窗簾。</div>';
-                $output .= '<div class="wp-block-buttons">';
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}service_links WHERE service_link_category='view'", OBJECT );
-                foreach ( $results as $index=>$result ) {
-                    $output .= '<div class="wp-block-button" style="margin: 10px;">';
-                    $output .= '<a class="wp-block-button__link" href="'.$result->service_link_uri.'">'.$result->service_link_title.'</a>';
-                    $output .= '</div>';
-                }
-                $output .= '</div>';
-            }
-            $output .= '</div>';
-            return $output;
-        }
-
-        public function init_webhook_backup() {
-            global $wpdb;
-            $serial_number = new serial_number();
-            $wp_pages = new wp_pages();
-            $service_links = new service_links();
-            $curtain_users = new curtain_users();
-            $curtain_agents = new curtain_agents();
-            $line_bot_api = new line_bot_api();
-            $open_ai = new open_ai();
-            //$business_central = new business_central();
-
-            foreach ((array)$line_bot_api->parseEvents() as $event) {
-
-                $profile = $line_bot_api->getProfile($event['source']['userId']);
-
-                $data=array();
-                $data['line_user_id']=$profile['userId'];
-                $data['display_name']=$profile['displayName'];
-                $curtain_users->insert_curtain_user($data);
-
-                switch ($event['type']) {
-                    case 'message':
-                        $message = $event['message'];
-                        switch ($message['type']) {
-                            case 'text':
-                                $six_digit_random_number = $message['text'];
-                                if( strlen( $six_digit_random_number ) == 6 ) {
-                                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE one_time_password = %s", $six_digit_random_number ), OBJECT );            
-                                    if (!(is_null($row) || !empty($wpdb->last_error))) {
-                                        //** continue the process if the 6 digit number is correct, register the qr code */
-                                        $user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE line_user_id = %s", $profile['userId'] ), OBJECT );            
-                                        if (!(is_null($user) || !empty($wpdb->last_error))) {
-
-                                            $serial_number->update_serial_number(
-                                                array('curtain_user_id'=>$user->curtain_user_id),
-                                                array('one_time_password'=>$six_digit_random_number)
-                                            );
-                                            
-                                            $body = array();
-                                            $body[] = 'Hi, '.$profile['displayName'];
-                                            $body[] = 'QR Code 已經完成註冊';
-                                            $body[] = '請點擊連結進入售後服務區';
-
-                                            $wp_pages->push_imagemap_messages(
-                                                array(
-                                                    'line_user_id' => $profile['userId'],
-                                                    'base_url' => $service_links->get_link('user_registry'),
-                                                    'alt_text' => 'Hi, '.$profile['displayName'].'QR Code 已經完成註冊'.'請點擊連結進入售後服務區',
-                                                    //'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'],
-                                                    'link_uri' => get_option('Service').'?_id='.$profile['userId'],
-                                                    'body' => $body
-                                                )
-                                            );
-                                        }
-                                    } else {
-                                        //** continue the process if the 6 digit number is incorrect */
-                                        $body = array();
-                                        $body[] = 'Hi, '.$profile['displayName'];
-                                        $body[] = '您輸入的六位數字'.$message['text'].'有錯誤';
-                                        $body[] = '請重新輸入正確數字已完成 QR Code 註冊';
-
-                                        $wp_pages->push_imagemap_messages(
-                                            array(
-                                                'line_user_id' => $profile['userId'],
-                                                'base_url' => $service_links->get_link('registry_error'),
-                                                'alt_text' => 'Hi, '.$profile['displayName'].'您輸入的六位數字'.$message['text'].'有誤'.'請重新輸入正確數字已完成 QR Code 註冊',
-                                                //'link_uri' => get_permalink(get_page_by_title('Service')).'/?_id='.$profile['userId'].'&serial_no=',
-                                                'link_uri' => get_option('Service').'?_id='.$profile['userId'].'&serial_no=',
-                                                'body' => $body
-                                            )
-                                        );
-
-                                    }
-                                } else {
-                                    //** if the message is not the six digit message */
-                                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
-                                    if (is_null($agent) || !empty($wpdb->last_error)) {
-                                        //** send message to line_bot */
-                                        $this->insert_chat_message(
-                                            array(
-                                                'chat_from' =>$profile['userId'],
-                                                'chat_to'   =>'line_bot',
-                                                'chat_message'=>$message['text']
-                                            )
-                                        );
-
-                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
-                                        foreach ( $results as $index=>$result ) {
-                                            $wp_pages->push_bubble_messages(
-                                                array(
-                                                    'line_user_id' => $result->line_user_id,
-                                                    //'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'link_uri' => get_option('Users').'?_id='.$result->line_user_id,
-                                                    'header' => $profile['displayName'],
-                                                    'body' => $message['text']
-                                                )
-                                            );
-                                        }
-
-                                        //** Open-AI auto reply */
-                                        $param=array();
-                                        $param["model"]="text-davinci-003";
-                                        $param["prompt"]=$message['text'];
-                                        $param["max_tokens"]=300;
-                                        //$param["temperature"]=0;
-                                        //$param["top_p"]=1;
-                                        //$param["n"]=1;
-                                        //$param["stream"]=false;
-                                        //$param["logprobs"]=null;
-                                        //$param["stop"]="\n";
-                                        $response = $open_ai->createCompletion($param);
-                                        $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
-                                        //$response = $business_central->getItems();
-                                                                
-                                        $line_bot_api->pushMessage([
-                                            'to' => $_contents['line_user_id'],
-                                            'messages' => [
-                                                [
-                                                    'type' => 'text',
-                                                    //'text' => $response
-                                                    'text' => $string
-                                                ]                                                                    
-                                            ]
-                                        ]);
-
-                                        //** send auto-reply message to line_bot */
-                                        $this->insert_chat_message(
-                                            array(
-                                                'chat_from' =>'line_bot',
-                                                'chat_to'   =>$profile['userId'],
-                                                'chat_message'=>$string
-                                            )
-                                        );
-
-                                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
-                                        foreach ( $results as $index=>$result ) {
-                                            $wp_pages->push_bubble_messages(
-                                                array(
-                                                    'line_user_id' => $result->line_user_id,
-                                                    //'link_uri' => get_permalink(get_page_by_title('Users')).'/?_id='.$result->line_user_id,
-                                                    'link_uri' => get_option('Users').'?_id='.$result->line_user_id,
-                                                    'header' => 'Aihome',
-                                                    'body' => $string
-                                                )
-                                            );
-                                        }
-
-                                    } else {
-                                        /** Agent registration */
-                                        $curtain_users->update_curtain_users(
-                                            array('curtain_agent_id'=>$curtain_agents->get_id($message['text'])),
-                                            array('line_user_id'=>$profile['userId'])
-                                        );
-                                        $this->agent_registry_notice($profile['userId']);
-
-                                        $wp_pages->push_imagemap_messages(
-                                            array(
-                                                'line_user_id' => $profile['userId'],
-                                                'base_url' => $service_links->get_link('agent_registry'),
-                                                'alt_text' => 'Hi, '.$profile['displayName'].', 您已經完成經銷商註冊, 請點擊連結進入訂貨服務區',
-                                                //'link_uri' => get_permalink(get_page_by_title('Orders')).'/?_id='.$profile['userId']
-                                                'link_uri' => get_option('Orders').'?_id='.$profile['userId']
-                                            )
-                                        );
-
-                                    }
-                                }
-                                break;
-                            default:
-                                error_log('Unsupported message type: ' . $message['type']);
-                                break;
-                        }
-                        break;
-                    default:
-                        error_log('Unsupported event type: ' . $event['type']);
-                        break;
-                }    
-            }            
         }
 
         public function insert_chat_message($data=[]) {
