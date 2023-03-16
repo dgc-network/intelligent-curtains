@@ -102,7 +102,7 @@ if (!class_exists('curtain_service')) {
                             $see_more["body"]["contents"][0]["text"] = $_POST['_chat_message'];
                             $see_more["body"]["contents"][1]["type"] = 'button';
                             $see_more["body"]["contents"][1]["action"]["label"] = 'Chat message';
-                            $see_more["body"]["contents"][]["action"]["uri"] = $link_uri;
+                            $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
 
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
