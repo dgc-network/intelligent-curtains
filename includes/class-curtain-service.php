@@ -115,6 +115,7 @@ if (!class_exists('curtain_service')) {
                             $see_more["header"]["contents"][0]["text"] = $user->display_name;
                             $see_more["body"]["contents"][0]["type"] = 'text';
                             $see_more["body"]["contents"][0]["text"] = $_POST['_chat_message'];
+                            $see_more["body"]["contents"][0]["wrap"] = true;
                             $see_more["footer"]["type"] = 'box';
                             $see_more["footer"]["layout"] = 'vertical';
                             $see_more["footer"]["backgroundColor"] = "#e3dee3";
