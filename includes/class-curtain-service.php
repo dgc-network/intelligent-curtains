@@ -67,12 +67,36 @@ if (!class_exists('curtain_service')) {
             $serial_number = new serial_number();
             $line_bot_api = new line_bot_api();
 
+            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                $see_more = json_decode($see_more, true);
+            }
+
             if ( is_user_logged_in() ) {
 
                 $user = wp_get_current_user();
 
                 /** Assign the User for the specified serial number(QR Code) */
                 if( isset($_GET['serial_no']) ) {
+                    if( isset($_POST['_chat_submit']) ) {
+
+                        $see_more["body"]["contents"][0]["action"]["label"] = 'Thanks for your question. Will reply you soon';
+                        $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                        $line_bot_api->replyMessage([
+                            'replyToken' => $event['replyToken'],
+                            'messages' => [
+                                [
+                                    "type" => "flex",
+                                    "altText" => 'Chat message',
+                                    'contents' => $see_more
+                                ]
+                            ]
+                        ]);
+
+                        return 'Will reply your question on Line chat box';
+
+                    }
+                        
                     $output = '<div style="text-align:center;">';
                     $qr_code_serial_no = $_GET['serial_no'];
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
@@ -94,12 +118,13 @@ if (!class_exists('curtain_service')) {
                         );
                         //$six_digit_random_number = random_int(100000, 999999);
                         //$output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                        $output .= '<h3>請問一下</h3>';
+                        //$output .= '<h3>請問一下</h3>';
                         $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                         $output .= '<fieldset>';
                         $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
                         $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
-                        $output .= '<input type="hidden" name="_chat_user_id" value="'.get_user_meta($user->ID, 'line_user_id').'" />';
+                        $output .= '<input type="hidden" name="_chat_user_id" value="'.get_user_meta($user->ID, 'line_user_id', TRUE).'" />';
+                        $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
                         $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
                         $output .= '</fieldset>';
                         $output .= '</form>';
