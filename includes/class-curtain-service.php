@@ -101,6 +101,7 @@ if (!class_exists('curtain_service')) {
                             $see_more["body"]["contents"][0]["type"] = 'text';
                             $see_more["body"]["contents"][0]["text"] = $_POST['_chat_message'];
                             $see_more["body"]["contents"][1]["type"] = 'button';
+                            $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
                             $see_more["body"]["contents"][1]["action"]["label"] = 'Chat message';
                             $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
 
