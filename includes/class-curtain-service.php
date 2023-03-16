@@ -37,8 +37,9 @@ if (!class_exists('curtain_service')) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_id = %d", $_GET['_chat_message'] ), OBJECT );
                     $output = '<div style="text-align:center;">';
                     $output .= '<h3>reply the question</h3>';
-                    $output .= 'From    : '.$row->chat_from;
-                    $output .= 'Question: '.$row->chat_message;
+                    $output .= '<p>From    : '.$row->chat_from.'</p>';
+                    $output .= '<p>Question:</p>';
+                    $output .= '<p>'.$row->chat_message.'</p>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
                     $output .= '<label style="text-align:left;" for="_reply_message">Answer:</label>';
