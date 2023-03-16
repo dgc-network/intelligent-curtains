@@ -80,21 +80,27 @@ if (!class_exists('curtain_service')) {
                 if( isset($_GET['serial_no']) ) {
                     if( isset($_POST['_chat_submit']) ) {
 
-                        $see_more["body"]["contents"][0]["action"]["label"] = 'Thanks for your question. Will reply you soon';
-                        $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-                        $line_bot_api->replyMessage([
-                            'replyToken' => $event['replyToken'],
-                            'messages' => [
-                                [
-                                    "type" => "flex",
-                                    "altText" => 'Chat message',
-                                    'contents' => $see_more
+                        $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_agent_id = %d", $_POST['_curtain_agent_id'] ), OBJECT );
+                        foreach ( $results as $result ) {
+                            $link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
+                            $see_more["body"]["contents"][0]["action"]["label"] = $link_uri;
+                            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
+                                'messages' => [
+                                    [
+                                        "type" => "flex",
+                                        "altText" => 'Chat message',
+                                        'contents' => $see_more
+                                    ]
                                 ]
-                            ]
-                        ]);
+                            ]);    
+                        }
 
-                        return 'Will reply your question on Line chat box';
-
+                        $output = '<div style="text-align:center;">';
+                        $output .= '<h3>Will reply your question on Line chat box soon.</h3>';
+                        $output .= '</div>';
+                        return $output;    
                     }
                         
                     $output = '<div style="text-align:center;">';
@@ -116,14 +122,12 @@ if (!class_exists('curtain_service')) {
                             array('curtain_user_id'=>intval($user->ID)),
                             array('qr_code_serial_no'=>$qr_code_serial_no)
                         );
-                        //$six_digit_random_number = random_int(100000, 999999);
-                        //$output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                        //$output .= '<h3>請問一下</h3>';
+
                         $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                         $output .= '<fieldset>';
                         $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
                         $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
-                        $output .= '<input type="hidden" name="_chat_user_id" value="'.get_user_meta($user->ID, 'line_user_id', TRUE).'" />';
+                        $output .= '<input type="hidden" name="_chat_user_id" value="'.$user->ID.'" />';
                         $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
                         $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
                         $output .= '</fieldset>';
