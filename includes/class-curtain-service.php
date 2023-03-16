@@ -76,14 +76,15 @@ if (!class_exists('curtain_service')) {
                     }
                         
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_id = %d", $_GET['_chat_message'] ), OBJECT );
-                    $author_obj = get_user_by('id', $row->chat_from);
+                    //$author_obj = get_user_by('id', $row->chat_from);
+                    $author_objs = get_users( array( 'meta_value' => $row->chat_from ));
                     $output = '<div style="text-align:center;">';
                     $output .= '<h3>reply the question</h3>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
-                    $output .= '<label style="text-align:left;" for="_chat_from">From: </label>';
+                    $output .= '<label style="text-align:left;" for="_chat_from">From: '.$author_objs[0]->display_name.'</label>';
                     //$output .= $author_obj->display_name;
-                    $output .= $row->chat_from;
+                    //$output .= $row->chat_from;
                     $output .= '<label style="text-align:left;" for="_question">Question:</label>';
                     $output .= '<p style="text-align:left;">'.$row->chat_message.'</p>';
                     $output .= '<label style="text-align:left;" for="_reply_message">Answer:</label>';
