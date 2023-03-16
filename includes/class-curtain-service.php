@@ -95,6 +95,7 @@ if (!class_exists('curtain_service')) {
                             $link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
                             $see_more["body"]["contents"][0]["action"]["label"] = $link_uri;
                             $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+/*
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
                                 'messages' => [
@@ -104,7 +105,18 @@ if (!class_exists('curtain_service')) {
                                         'contents' => $see_more
                                     ]
                                 ]
-                            ]);    
+                            ]);
+*/
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta( $result->curtain_user_id, 'line_user_id', TRUE ),
+                                'messages' => [
+                                    [
+                                        "type" => "text",
+                                        "text" => 'Please click the below link to register the system. ',
+                                    ]
+                                ]
+                            ]);
+
                         }
 
                         //$output = '<div style="text-align:center;">';
