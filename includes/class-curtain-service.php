@@ -35,10 +35,7 @@ if (!class_exists('curtain_service')) {
                 /** Reply the question */
                 if( isset($_GET['_chat_message']) ) {
                     if( isset($_POST['_reply_submit']) ) {
-
                         $output = '<div style="text-align:center;">';
-                        //$output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
-
                         $message_id = $this->insert_chat_message(
                             array(
                                 'chat_from' => $_POST['_reply_from'],
@@ -76,22 +73,18 @@ if (!class_exists('curtain_service')) {
                     }
                         
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}chat_messages WHERE message_id = %d", $_GET['_chat_message'] ), OBJECT );
-                    //$author_obj = get_user_by('id', $row->chat_from);
                     $author_objs = get_users( array( 'meta_value' => $row->chat_from ));
                     $output = '<div style="text-align:center;">';
                     $output .= '<h3>reply the question</h3>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
                     $output .= '<label style="text-align:left;" for="_chat_from">From: '.$author_objs[0]->display_name.'</label>';
-                    //$output .= $author_obj->display_name;
-                    //$output .= $row->chat_from;
                     $output .= '<label style="text-align:left;" for="_question">Question:</label>';
                     $output .= '<p style="text-align:left;">'.$row->chat_message.'</p>';
                     $output .= '<label style="text-align:left;" for="_reply_message">Answer:</label>';
                     $output .= '<textarea name="_reply_message" rows="10" cols="50"></textarea>';
                     $output .= '<input type="hidden" name="_reply_from" value="'.$row->chat_to.'" />';
                     $output .= '<input type="hidden" name="_reply_to" value="'.$row->chat_from.'" />';
-                    //$output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
                     $output .= '<input type="submit" name="_reply_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</fieldset>';
                     $output .= '</form>';
@@ -102,14 +95,10 @@ if (!class_exists('curtain_service')) {
                 /** Assign the User for the specified serial number(QR Code) */
                 if( isset($_GET['serial_no']) ) {
                     if( isset($_POST['_chat_submit']) ) {
-
                         $output = '<div style="text-align:center;">';
                         $output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_agent_id = %d", $_POST['_curtain_agent_id'] ), OBJECT );
                         foreach ( $results as $result ) {
-                            //$author_obj = get_user_by('id', $result->curtain_user_id);
-                            //$link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
-
                             $message_id = $this->insert_chat_message(
                                 array(
                                     'chat_from' => get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE),
@@ -127,7 +116,7 @@ if (!class_exists('curtain_service')) {
                             $see_more["body"]["contents"][0]["text"] = $_POST['_chat_message'];
                             $see_more["body"]["contents"][1]["type"] = 'button';
                             $see_more["body"]["contents"][1]["action"]["type"] = 'uri';
-                            $see_more["body"]["contents"][1]["action"]["label"] = 'Chat message';
+                            $see_more["body"]["contents"][1]["action"]["label"] = 'Reply message';
                             $see_more["body"]["contents"][1]["action"]["uri"] = $link_uri;
 
                             $line_bot_api->pushMessage([
