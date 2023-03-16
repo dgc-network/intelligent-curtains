@@ -81,19 +81,21 @@ if (!class_exists('curtain_service')) {
                     if( isset($_POST['_chat_submit']) ) {
 
                         $output = '<div style="text-align:center;">';
-                        //$output .= '<br>chat_user_id: '.$_POST['_chat_user_id'];
-                        //$output .= '<br>chat_display_name: '.$user->display_name;
-                        //$output .= '<br>curtain_agent_id: '.$_POST['_curtain_agent_id'];
                         $output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
                         $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_agent_id = %d", $_POST['_curtain_agent_id'] ), OBJECT );
                         foreach ( $results as $result ) {
-                            $author_obj = get_user_by('id', $result->curtain_user_id);
-                            //$output .= '<br>';
-                            //$output .= '<br>to_agent_id: '.$result->curtain_user_id;
-                            //$output .= '<br>to_display_name: '.$author_obj->display_name;
-                            //$output .= '<br>to_line_id: '.get_user_meta($result->curtain_user_id, 'line_user_id', TRUE);
-                            $link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
-                            $link_uri = 'http://aihome.tw/service/?_chat_message=99';
+                            //$author_obj = get_user_by('id', $result->curtain_user_id);
+                            //$link_uri = get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE);
+
+                            $message_id = $this->insert_chat_message(
+                                array(
+                                    'chat_from' => get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE),
+                                    'chat_to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
+                                    'chat_message'=> $_POST['_chat_message']
+                                )
+                            );                            
+                            $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
+
                             $see_more["header"]["type"] = 'box';
                             $see_more["header"]["layout"] = 'vertical';
                             $see_more["header"]["contents"][0]["type"] = 'text';
@@ -115,20 +117,9 @@ if (!class_exists('curtain_service')) {
                                     ]
                                 ]
                             ]);
-/*
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta( $result->curtain_user_id, 'line_user_id', TRUE ),
-                                'messages' => [
-                                    [
-                                        "type" => "text",
-                                        "text" => 'Please click the below link to register the system. ',
-                                    ]
-                                ]
-                            ]);
-*/
+
                         }
 
-                        //$output = '<div style="text-align:center;">';
                         $output .= '<h3>Will reply the question to your Line chat box soon.</h3>';
                         $output .= '</div>';
                         return $output;    
