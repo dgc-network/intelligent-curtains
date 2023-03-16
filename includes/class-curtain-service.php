@@ -116,9 +116,9 @@ if (!class_exists('curtain_service')) {
                                     ]
                                 ]
                             ]);
-
-                        }
 */
+                        }
+
                         //$output = '<div style="text-align:center;">';
                         $output .= '<h3>Will reply your question on Line chat box soon.</h3>';
                         $output .= '</div>';
