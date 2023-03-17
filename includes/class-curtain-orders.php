@@ -79,7 +79,7 @@ if (!class_exists('curtain_orders')) {
             if ( !is_user_logged_in() ) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
                 //echo do_shortcode( '[qrcodescanner]' );
-                return '{{DataSymbolScanner}}';
+                //return '{{DataSymbolScanner}}';
             }
             $user = wp_get_current_user();
 
@@ -96,10 +96,13 @@ if (!class_exists('curtain_orders')) {
                 }
                 $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
             } else {
+
+                echo do_shortcode( '[qr-scanner-redirect]' );
+/*
+
                 ?><script>window.location.replace("https://aihome.tw/scanner/");</script><?php
                 //echo do_shortcode( '[qrcodescanner]' );
                 return '{{DataSymbolScanner}}';
-/*
                 $output  = '<div style="text-align:center;">';
                 $output .= '<h3>You have to complete the agent registration first.</h3>';
                 $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
