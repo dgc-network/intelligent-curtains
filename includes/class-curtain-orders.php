@@ -173,7 +173,10 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Status:</td>';
                 if($user->has_cap('manage_options')){
                     $output .= '<td>';
+                    $output .= '<form method="post">';
                     $output .= '<select name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
+                    $output .= '<input type="submit" name="_status_submit" style="margin:3px;" value="Submit" />';
+                    $output .= '</form>';
                     $output .= '</td>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
