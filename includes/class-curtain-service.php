@@ -264,7 +264,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
                     $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
                     $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
-                    $output .= '<input type="submit" name="_add_curtain" style="margin:3px;" value="Add Curtain" />';
+                    //$output .= '<input type="submit" name="_add_curtain" style="margin:3px;" value="Add Curtain" />';
                     $output .= '</fieldset>';
                     $output .= '</form>';
                     $output .= '</div>';

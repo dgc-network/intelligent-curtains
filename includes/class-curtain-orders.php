@@ -67,7 +67,6 @@ if (!class_exists('curtain_orders')) {
 
         public function list_shopping_items() {
             global $wpdb;
-            //$curtain_users = new curtain_users();
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
@@ -75,38 +74,14 @@ if (!class_exists('curtain_orders')) {
             $curtain_specifications = new curtain_specifications();
             $serial_number = new serial_number();
             $curtain_service = new curtain_service();
-            //$wp_pages = new wp_pages();
             $system_status = new system_status();
 
             if ( !is_user_logged_in() ) {
-                return;
+                do_shortcode( '[qrcodescanner]' );
+                //return;
             }
             $user = wp_get_current_user();
-/*
-            if( !isset($_POST['_agent_submit']) && !isset($_POST['_add']) && !isset($_GET['_edit']) && !isset($_GET['_delete']) && !isset($_GET['_update']) && !isset($_GET['_close']) && !isset($_GET['_print']) && !isset($_POST['_checkout_submit']) && !isset($_GET['_status_submit']) && !isset($_POST['_customer_orders']) ) {
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $curtain_agents->get_agent_by_user($user->ID) ), OBJECT );
-                if ( is_null($row) || !empty($wpdb->last_error) ) {
-                    $output  = '<div style="text-align:center;">';
-                    $output .= '<h3>You have to complete the agent registration first.</h3>';
-                    $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
-                    $output .= '<br>';
-                    $output .= '</div>';
-                    return $output;
-                } else {
-                    $output  = '<div style="text-align:center;">';
-                    $output .= '<h3>Please enter the code and click the below Submit button to login the agent order system.</h3>';
-                    $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                    $output .= '<input type="text" name="_agent_code" />';
-                    $output .= '<input type="hidden" name="_agent_number" value="'.$row->agent_number.'" />';
-                    $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
-                    $output .= '</form>';
-                    $output .= '</div>';
-                    return $output;    
-                }
-            }
-*/
-            //if( isset($_POST['_agent_number']) && isset($_POST['_agent_code']) ) {
-            //    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );
+
             if( isset($_SESSION['_agent_number']) && isset($_SESSION['_agent_code']) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
@@ -118,16 +93,17 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</div>';
                     return $output;                        
                 }
-                //$curtain_agent_id = $curtain_agents->get_agent_by_user($user->ID);
                 $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
             } else {
-
+                do_shortcode( '[qrcodescanner]' );
+/*
                 $output  = '<div style="text-align:center;">';
                 $output .= '<h3>You have to complete the agent registration first.</h3>';
                 $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
                 $output .= '<br>';
                 $output .= '</div>';
                 return $output;
+*/                
             }
 
             //* Print Customer Order */
