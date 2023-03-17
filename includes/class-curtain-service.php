@@ -275,7 +275,6 @@ if (!class_exists('curtain_service')) {
 
                 /** Line User ID registration and login into the system */
                 if( isset($_GET['_id']) ) {
-                    //$display_name = str_replace('%20', ' ', $_GET['_name']);    
                     $array = get_users( array( 'meta_value' => $_GET['_id'] ));
                     if (empty($array)) {
                         $user_id = wp_insert_user( array(

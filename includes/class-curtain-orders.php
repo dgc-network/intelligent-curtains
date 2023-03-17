@@ -78,7 +78,7 @@ if (!class_exists('curtain_orders')) {
 
             if ( !is_user_logged_in() ) {
                 do_shortcode( '[qrcodescanner]' );
-                //return;
+                return;
             }
             $user = wp_get_current_user();
 
@@ -96,6 +96,7 @@ if (!class_exists('curtain_orders')) {
                 $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
             } else {
                 do_shortcode( '[qrcodescanner]' );
+                return;
 /*
                 $output  = '<div style="text-align:center;">';
                 $output .= '<h3>You have to complete the agent registration first.</h3>';
