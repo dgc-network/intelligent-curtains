@@ -77,8 +77,8 @@ if (!class_exists('curtain_orders')) {
             $system_status = new system_status();
 
             if ( !is_user_logged_in() ) {
-                echo do_shortcode( '[qrcodescanner]' );
-                return;
+                //echo do_shortcode( '[qrcodescanner]' );
+                return '{{DataSymbolScanner}}';
             }
             $user = wp_get_current_user();
 
@@ -95,8 +95,8 @@ if (!class_exists('curtain_orders')) {
                 }
                 $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
             } else {
-                echo do_shortcode( '[qrcodescanner]' );
-                return;
+                //echo do_shortcode( '[qrcodescanner]' );
+                return '{{DataSymbolScanner}}';
 /*
                 $output  = '<div style="text-align:center;">';
                 $output .= '<h3>You have to complete the agent registration first.</h3>';
