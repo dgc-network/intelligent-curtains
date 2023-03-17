@@ -33,7 +33,7 @@ if (!class_exists('curtain_orders')) {
             //$wp_pages = new wp_pages();
             //$json_templates = new json_templates();
             $link_uri = get_option('Orders').'?_print='.$customer_order_number;
-            $order_status = 'Order No.: '.$customer_order_number.' Status has been changed to '.$system_status->get_name($customer_order_status);
+            $order_status = 'Order status has been changed to '.$system_status->get_name($customer_order_status);
 
             $all_users = get_users();
             //$specific_users = array();
@@ -45,7 +45,7 @@ if (!class_exists('curtain_orders')) {
                     $this->see_more["header"]["layout"] = 'vertical';
                     $this->see_more["header"]["backgroundColor"] = "#e3dee3";
                     $this->see_more["header"]["contents"][0]["type"] = 'text';
-                    $this->see_more["header"]["contents"][0]["text"] = 'System Notification';
+                    $this->see_more["header"]["contents"][0]["text"] = 'Order No.: '.$customer_order_number;
 
                     $this->see_more["body"]["contents"][0]["type"] = 'text';
                     $this->see_more["body"]["contents"][0]["text"] = $order_status;
@@ -64,7 +64,7 @@ if (!class_exists('curtain_orders')) {
                         'messages' => [
                             [
                                 "type" => "flex",
-                                "altText" => 'Reply message',
+                                "altText" => 'System Notification',
                                 'contents' => $this->see_more
                             ]
                         ]
