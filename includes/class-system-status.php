@@ -201,6 +201,7 @@ if (!class_exists('system_status')) {
 
         public function select_options( $_code=0 ) {
             global $wpdb;
+            $output = '<select>';
             //$output = '<option value="0">-- Select an option --</option>';
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}system_status", OBJECT );
             foreach ($results as $index => $result) {
@@ -213,6 +214,7 @@ if (!class_exists('system_status')) {
                 $output .= '</option>';        
             }
             //$output .= '<option value="0">-- Remove this --</option>';
+            $output = '</select>';
             return $output;
         }
 
