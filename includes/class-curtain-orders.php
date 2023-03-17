@@ -30,17 +30,13 @@ if (!class_exists('curtain_orders')) {
             global $wpdb;
             $system_status = new system_status();
             $line_bot_api = new line_bot_api();
-            //$wp_pages = new wp_pages();
-            //$json_templates = new json_templates();
+
             $link_uri = get_option('Orders').'?_print='.$customer_order_number;
             $order_status = 'Order status has been changed to '.$system_status->get_name($customer_order_status);
 
             $all_users = get_users();
-            //$specific_users = array();
             foreach($all_users as $user){
                 if($user->has_cap('manage_options')){
-                    //$specific_users[] = $user;
-
                     $this->see_more["header"]["type"] = 'box';
                     $this->see_more["header"]["layout"] = 'vertical';
                     $this->see_more["header"]["backgroundColor"] = "#e3dee3";
