@@ -77,7 +77,7 @@ if (!class_exists('curtain_orders')) {
             $system_status = new system_status();
 
             if ( !is_user_logged_in() ) {
-                ?><script>window.location.replace("https://aihome.tw/scanner/");</script><?php
+                echo do_shortcode( '[qr-scanner-redirect]' );
                 //echo do_shortcode( '[qrcodescanner]' );
                 return '{{DataSymbolScanner}}';
             }
