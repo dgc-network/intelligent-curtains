@@ -171,7 +171,11 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
-                $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                if($user->has_cap('manage_options')){
+                    $output .= '<td>'.$system_status->select_options($row->customer_order_status).'</td>';
+                } else {
+                    $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                }
                 $output .= '</tr>';
                 $output .= '</table>';
 
@@ -186,7 +190,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Amount</th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
-                
+
                 $x=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE customer_order_number={$row->customer_order_number}", OBJECT );
                 foreach ( $results as $index=>$result ) {
