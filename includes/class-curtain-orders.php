@@ -172,7 +172,9 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
                 if($user->has_cap('manage_options')){
-                    $output .= '<td>'.$system_status->select_options($row->customer_order_status).'</td>';
+                    $output .= '<td>';
+                    $output .= '<select name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
+                    $output .= '</td>';
                 } else {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 }
