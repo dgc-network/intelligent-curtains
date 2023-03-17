@@ -7,8 +7,7 @@ if (!class_exists('curtain_service')) {
     class curtain_service {
         private $_wp_page_title;
         private $_wp_page_postid;
-        private $_line_user_id;
-        private $_see_more;
+        private $see_more;
         /**
          * Class constructor
          */

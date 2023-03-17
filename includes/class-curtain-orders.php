@@ -7,6 +7,7 @@ if (!class_exists('curtain_orders')) {
     class curtain_orders {
         private $_wp_page_title;
         private $_wp_page_postid;
+        private $see_more;
         /**
          * Class constructor
          */
@@ -19,13 +20,58 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
             add_shortcode( 'shopping-item-list', array( $this, 'list_shopping_items' ) );
             $this->create_tables();
+            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                $this->see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                $this->see_more = json_decode($this->see_more, true);
+            }
         }
 
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
-            $wp_pages = new wp_pages();
-            $json_templates = new json_templates();
+            $line_bot_api = new line_bot_api();
+            //$wp_pages = new wp_pages();
+            //$json_templates = new json_templates();
+            $link_uri = get_option('Orders').'?_print='.$customer_order_number;
+            $order_status = 'Order No.: '.$customer_order_number.' Status has been changed to '.$system_status->get_name($customer_order_status);
+
+            $all_users = get_users();
+            //$specific_users = array();
+            foreach($all_users as $user){
+                if($user->has_cap('manage_options')){
+                    //$specific_users[] = $user;
+
+                    $this->see_more["header"]["type"] = 'box';
+                    $this->see_more["header"]["layout"] = 'vertical';
+                    $this->see_more["header"]["backgroundColor"] = "#e3dee3";
+                    $this->see_more["header"]["contents"][0]["type"] = 'text';
+                    $this->see_more["header"]["contents"][0]["text"] = 'System Notification';
+
+                    $this->see_more["body"]["contents"][0]["type"] = 'text';
+                    $this->see_more["body"]["contents"][0]["text"] = $order_status;
+                    $this->see_more["body"]["contents"][0]["wrap"] = true;
+
+                    $this->see_more["footer"]["type"] = 'box';
+                    $this->see_more["footer"]["layout"] = 'vertical';
+                    $this->see_more["footer"]["backgroundColor"] = "#e3dee3";
+                    $this->see_more["footer"]["contents"][0]["type"] = 'button';
+                    $this->see_more["footer"]["contents"][0]["action"]["type"] = 'uri';
+                    $this->see_more["footer"]["contents"][0]["action"]["label"] = 'Go back Order';
+                    $this->see_more["footer"]["contents"][0]["action"]["uri"] = $link_uri;
+
+                    $line_bot_api->pushMessage([
+                        'to' => get_user_meta($user->ID, 'line_user_id', TRUE),
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'Reply message',
+                                'contents' => $this->see_more
+                            ]
+                        ]
+                    ]);
+                }            
+            }
+/*
             $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_users WHERE is_admin = %d", 1 ), OBJECT );
             foreach ( $results as $index=>$result ) {
 
@@ -63,6 +109,7 @@ if (!class_exists('curtain_orders')) {
                 );
 
             }    
+*/            
         }
 
         public function list_shopping_items() {
@@ -78,8 +125,6 @@ if (!class_exists('curtain_orders')) {
 
             if ( !is_user_logged_in() ) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
-                //echo do_shortcode( '[qrcodescanner]' );
-                //return '{{DataSymbolScanner}}';
             }
             $user = wp_get_current_user();
 
@@ -95,21 +140,9 @@ if (!class_exists('curtain_orders')) {
                     return $output;                        
                 }
                 $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
+
             } else {
-
                 echo do_shortcode( '[qr-scanner-redirect]' );
-/*
-
-                ?><script>window.location.replace("https://aihome.tw/scanner/");</script><?php
-                //echo do_shortcode( '[qrcodescanner]' );
-                return '{{DataSymbolScanner}}';
-                $output  = '<div style="text-align:center;">';
-                $output .= '<h3>You have to complete the agent registration first.</h3>';
-                $output .= '請利用<i class="fa-solid fa-desktop"></i>電腦上的Line, 在我們的官方帳號聊天室中輸入經銷商代碼, 完成經銷商註冊程序<br>';
-                $output .= '<br>';
-                $output .= '</div>';
-                return $output;
-*/                
             }
 
             //* Print Customer Order */
@@ -138,20 +171,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
                 $output .= '<td>Status:</td>';
-/*
-                if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                    $output .= '<form method="post">';
-                    $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'">';
-                    $output .= '<td>';
-                    $output .= '<select name="_customer_order_status" id="select-order-status">'.$system_status->select_options($row->customer_order_status).'</select>';
-                    //$output .= '<span id="btn-check"><i class="fa-solid fa-check"></i></span>';
-                    $output .= '<input class="wp-block-button__link" type="submit" value="Submit" name="_status_submit">';
-                    $output .= '</td>';
-                    $output .= '</form>';
-                } else {
-                    $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
-                }
-*/
                 $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 $output .= '</tr>';
                 $output .= '</table>';
@@ -167,6 +186,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Amount</th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
+                
                 $x=0;
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE customer_order_number={$row->customer_order_number}", OBJECT );
                 foreach ( $results as $index=>$result ) {
@@ -192,8 +212,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
-                //if ($curtain_users->is_admin($_SESSION['line_user_id'])){
-                //}
                 return $output;
             }
 
