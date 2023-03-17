@@ -7,6 +7,8 @@ if (!class_exists('curtain_service')) {
     class curtain_service {
         private $_wp_page_title;
         private $_wp_page_postid;
+        private $_line_user_id;
+        private $_see_more;
         /**
          * Class constructor
          */
@@ -15,6 +17,10 @@ if (!class_exists('curtain_service')) {
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-service', 'system');
             add_shortcode( 'curtain-service', array( $this, 'curtain_service' ) );
             $this->create_tables();
+            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                $this->see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                $this->see_more = json_decode($this->see_more, true);
+            }
         }
 
         public function curtain_service() {
@@ -32,7 +38,7 @@ if (!class_exists('curtain_service')) {
 
                 $user = wp_get_current_user();
 
-                /** Reply the question */
+                /** Agent to Reply the question from customer */
                 if( isset($_GET['_chat_message']) ) {
                     if( isset($_POST['_reply_submit']) ) {
                         $output = '<div style="text-align:center;">';
@@ -44,6 +50,7 @@ if (!class_exists('curtain_service')) {
                             )
                         );                            
                         $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
+                        //$link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id.'&_id='.$this->_line_user_id;
 
                         $see_more["header"]["type"] = 'box';
                         $see_more["header"]["layout"] = 'vertical';
@@ -97,7 +104,7 @@ if (!class_exists('curtain_service')) {
                     return $output;    
                 }
 
-                /** Assign the User for the specified serial number(QR Code) */
+                /** Assign the User for the specified serial number(QR Code) and ask the question as well */
                 if( isset($_GET['serial_no']) ) {
                     if( isset($_POST['_chat_submit']) ) {
                         $output = '<div style="text-align:center;">';
@@ -112,6 +119,7 @@ if (!class_exists('curtain_service')) {
                                 )
                             );                            
                             $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
+                            //$link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id.'&_id='.$this->_line_user_id;
 
                             $see_more["header"]["type"] = 'box';
                             $see_more["header"]["layout"] = 'vertical';
@@ -139,7 +147,6 @@ if (!class_exists('curtain_service')) {
                                     ]
                                 ]
                             ]);
-
                         }
 
                         $output .= '<h3>Will reply the question to your Line chat box soon.</h3>';
@@ -228,11 +235,6 @@ if (!class_exists('curtain_service')) {
 
                 /** Update the User account information */
                 if( isset($_GET['_id']) ) {
-                    if( isset($_POST['_add_curtain']) ) {
-                        $scan_result = do_shortcode( '[qrcodescanner]' );
-                        return $scan_result;
-                    }
-
                     if( isset($_POST['_user_submit']) ) {
                         $users = get_users(array(
                             'meta_key'     => 'line_user_id',
