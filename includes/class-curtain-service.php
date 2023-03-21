@@ -306,9 +306,13 @@ if (!class_exists('curtain_service')) {
                     return $output;
 
                 } else {
+                    $one_time_password = random_int(100000, 999999);
+                    add_option('_one_time_password', $one_time_password);
+
                     $output = '<div style="text-align:center;">';
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
+                    $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>, 完成註冊/登入作業<br>';
                     $output .= '</div>';
                     return $output;        
                 }
