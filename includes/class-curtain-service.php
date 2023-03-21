@@ -333,7 +333,8 @@ if (!class_exists('curtain_service')) {
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
-                if ($event['message']['text']=='a999999') {
+                //if ($event['message']['text']=='a999999') {
+                if ($event['message']['text']==get_option('_one_time_password')) {
 
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                     $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
