@@ -49,7 +49,6 @@ if (!class_exists('curtain_service')) {
                             )
                         );                            
                         $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
-                        //$link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id.'&_id='.$this->_line_user_id;
 
                         $see_more["header"]["type"] = 'box';
                         $see_more["header"]["layout"] = 'vertical';
@@ -118,7 +117,6 @@ if (!class_exists('curtain_service')) {
                                 )
                             );                            
                             $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
-                            //$link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id.'&_id='.$this->_line_user_id;
 
                             $see_more["header"]["type"] = 'box';
                             $see_more["header"]["layout"] = 'vertical';
@@ -295,8 +293,8 @@ if (!class_exists('curtain_service')) {
                     }
 
                     $output  = '<div style="text-align:center;">';
-                    $output .= '<p>This is an automated process to assist you in registering for the system.</p>';
-                    $output .= '<p>Please click the Submit button below to complete your registration.</p>';
+                    $output .= '<p>This is an automated process that helps you register for the system. ';
+                    $output .= 'Please click the Submit button below to complete your registration.</p>';
                     $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
                     $output .= '<input type="hidden" name="log" value="'. $_GET['_id'] .'" />';
                     $output .= '<input type="hidden" name="pwd" value="'. $_GET['_id'] .'" />';
@@ -372,7 +370,7 @@ if (!class_exists('curtain_service')) {
                                     }
                                 }
 
-                                if (empty($array) || !(is_null($row) || !empty($wpdb->last_error)) || (intval($message['text'])==99999999)) {
+                                if (empty($array) || !(is_null($row) || !empty($wpdb->last_error))) {
                 
                                     $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
                                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
