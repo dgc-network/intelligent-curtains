@@ -86,10 +86,10 @@ if (!class_exists('curtain_orders')) {
             $user = wp_get_current_user();
 
             if( isset($_SESSION['_agent_number']) && isset($_SESSION['_agent_code']) ) {
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
                     $output  = '<div style="text-align:center;">';
-                    $output .= '<h3>This is a wrong code, please click the below Submit button to re-login the agent order system.</h3>';
+                    $output .= '<h3>This is a wrong code, please click the Submit button below to re-login the agent order system.</h3>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<input type="submit" name="_agent_submit1" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
