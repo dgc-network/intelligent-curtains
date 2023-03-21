@@ -30,6 +30,7 @@ if (!class_exists('curtain_agents')) {
                 $this->insert_curtain_agent(
                     array(
                         'agent_number'=>$_POST['_agent_number'],
+                        'agent_password'=>$_POST['_agent_password'],
                         'agent_name'=>$_POST['_agent_name'],
                         'agent_address'=>$_POST['_agent_address'],
                         'contact1'=>$_POST['_contact1'],
@@ -44,6 +45,7 @@ if (!class_exists('curtain_agents')) {
                 $this->update_curtain_agents(
                     array(
                         'agent_number'=>$_POST['_agent_number'],
+                        'agent_password'=>$_POST['_agent_password'],
                         'agent_name'=>$_POST['_agent_name'],
                         'agent_address'=>$_POST['_agent_address'],
                         'contact1'=>$_POST['_contact1'],
@@ -122,6 +124,8 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<input type="hidden" value="'.$row->curtain_agent_id.'" name="_curtain_agent_id">';
                 $output .= '<label for="agent-number">Agent Number</label>';
                 $output .= '<input type="text" name="_agent_number" value="'.$row->agent_number.'" id="agent-number" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="agent-password">Agent Password</label>';
+                $output .= '<input type="text" name="_agent_password" value="'.$row->agent_password.'" id="agent-password" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="agent-name">Agent Name</label>';
                 $output .= '<input type="text" name="_agent_name" value="'.$row->agent_name.'" id="agent-name" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="contact1">Contact</label>';
@@ -140,6 +144,8 @@ if (!class_exists('curtain_agents')) {
                 $output .= '<fieldset>';
                 $output .= '<label for="agent-number">Agent Number</label>';
                 $output .= '<input type="text" name="_agent_number" id="agent-number" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="agent-password">Agent Password</label>';
+                $output .= '<input type="text" name="_agent_password" id="agent-password" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="agent-name">Agent Name</label>';
                 $output .= '<input type="text" name="_agent_name" id="agent-name" class="text ui-widget-content ui-corner-all"';
                 $output .= '<label for="contact1">Contact</label>';
@@ -245,6 +251,7 @@ if (!class_exists('curtain_agents')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_agents` (
                 curtain_agent_id int NOT NULL AUTO_INCREMENT,
                 agent_number varchar(5) UNIQUE,
+                agent_password varchar(20),
                 agent_name varchar(50),
                 agent_address varchar(250),
                 contact1 varchar(20),
