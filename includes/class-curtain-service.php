@@ -331,6 +331,22 @@ if (!class_exists('curtain_service')) {
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
+                if ($event['message']['text']=='a999999') {
+
+                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
+                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                    $line_bot_api->replyMessage([
+                        'replyToken' => $event['replyToken'],
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'Welcome message',
+                                'contents' => $see_more
+                            ]
+                        ]
+                    ]);
+                }
 
                 switch ($event['type']) {
                     case 'message':
