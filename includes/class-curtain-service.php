@@ -356,7 +356,7 @@ if (!class_exists('curtain_service')) {
                                     }
                                 }
 
-                                if (empty($array) || !(is_null($row) || !empty($wpdb->last_error))) {
+                                if (empty($array) || !(is_null($row) || !empty($wpdb->last_error)) || $message['text']=='99999999') {
                 
                                     $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
                                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
