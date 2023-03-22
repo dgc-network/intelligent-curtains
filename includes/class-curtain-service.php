@@ -312,7 +312,7 @@ if (!class_exists('curtain_service')) {
                     $output = '<div style="text-align:center;">';
                     $output .= '感謝您選購我們的電動窗簾<br>';
                     $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>, 完成註冊/登入作業<br>';
+                    $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>完成註冊/登入作業<br>';
                     $output .= '</div>';
                     return $output;        
                 }
@@ -333,9 +333,8 @@ if (!class_exists('curtain_service')) {
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
                 $profile = $line_bot_api->getProfile($event['source']['userId']);
-                //if ($event['message']['text']=='a999999') {
+                
                 if ($event['message']['text']==get_option('_one_time_password')) {
-
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                     $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
