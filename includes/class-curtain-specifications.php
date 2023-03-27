@@ -19,6 +19,8 @@ if (!class_exists('curtain_specifications')) {
 
         public function list_curtain_specifications() {
             global $wpdb;
+            $curtain_categories = new curtain_categories();
+
             /** Check the permission */
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
