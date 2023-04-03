@@ -84,9 +84,13 @@ if (!class_exists('curtain_orders')) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
             }
             $user = wp_get_current_user();
+            $_agent_number = get_user_meta( $user->ID, 'agent_number', TRUE );
+            $_agent_code = get_user_meta( $user->ID, 'agent_code', TRUE );
 
-            if( isset($_SESSION['_agent_number']) && isset($_SESSION['_agent_code']) ) {
-                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
+            //if( isset($_SESSION['_agent_number']) && isset($_SESSION['_agent_code']) ) {
+            //    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
+            if( isset($_agent_number) && isset($_agent_code) ) {
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_agent_number, $_agent_code ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
                     $output  = '<div style="text-align:center;">';
                     $output .= '<h3>This is a wrong code, please click the Submit button below to re-login the agent order system.</h3>';
@@ -96,7 +100,8 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</div>';
                     return $output;                        
                 }
-                $curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
+                //$curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
+                $curtain_agent_id = $curtain_agents->get_id($_agent_number);
 
             } else {
                 echo do_shortcode( '[qr-scanner-redirect]' );

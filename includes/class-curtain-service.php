@@ -206,6 +206,8 @@ if (!class_exists('curtain_service')) {
                         } else {
                             $_SESSION['_agent_number'] = $_POST['_agent_number'];
                             $_SESSION['_agent_code'] = $_POST['_agent_code'];
+                            update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                            update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
 
                             $curtain_agents->insert_agent_operator(
                                 array(
