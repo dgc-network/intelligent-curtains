@@ -204,8 +204,8 @@ if (!class_exists('curtain_service')) {
         
                             return 'Wrong Code';
                         } else {
-                            $_SESSION['_agent_number'] = $_POST['_agent_number'];
-                            $_SESSION['_agent_code'] = $_POST['_agent_code'];
+                            //$_SESSION['_agent_number'] = $_POST['_agent_number'];
+                            //$_SESSION['_agent_code'] = $_POST['_agent_code'];
                             update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
                             update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
 
@@ -338,7 +338,7 @@ if (!class_exists('curtain_service')) {
                 
                 if ($event['message']['text']==get_option('_one_time_password')) {
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
-                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
+                    $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
                     $line_bot_api->replyMessage([
                         'replyToken' => $event['replyToken'],
@@ -378,7 +378,7 @@ if (!class_exists('curtain_service')) {
 
                                 if (empty($array) || !(is_null($row) || !empty($wpdb->last_error))) {
                 
-                                    $see_more["body"]["contents"][0]["action"]["label"] = 'Login/Registration';
+                                    $see_more["body"]["contents"][0]["action"]["label"] = 'Agent Login/Registration';
                                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
                                     $line_bot_api->replyMessage([
                                         'replyToken' => $event['replyToken'],
