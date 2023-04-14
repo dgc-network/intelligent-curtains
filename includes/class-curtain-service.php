@@ -394,19 +394,22 @@ if (!class_exists('curtain_service')) {
                                 } else {
                                     //** Open-AI auto reply */
                                     $param=array();
+                                    $param["messages"][0]["content"]=$message['text'];
+                                    $response = $open_ai_api->createChatCompletion($param);
+/*
                                     $param["model"]="text-davinci-003";
                                     $param["prompt"]=$message['text'];
                                     $param["max_tokens"]=1000;
                                     $response = $open_ai_api->createCompletion($param);
                                     $string = preg_replace("/\n\r|\r\n|\n|\r/", '', $response['text']);
-                                                            
+*/                                                            
                                     $line_bot_api->replyMessage([
                                         'replyToken' => $event['replyToken'],
                                         'messages' => [
                                             [
                                                 'type' => 'text',
-                                                //'text' => $response
-                                                'text' => $string
+                                                'text' => $response
+                                                //'text' => $string
                                             ]                                                                    
                                         ]
                                     ]);

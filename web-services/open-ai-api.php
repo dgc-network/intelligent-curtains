@@ -71,6 +71,45 @@ if (!class_exists('open_ai_api')) {
             $data = json_decode($response, true);
             return $data['choices'][0];
         }
+
+        /**
+         * @param array<string, mixed> $param
+         * @return void
+         */
+        public function createChatCompletion($param) {
+    
+            $param["model"]="gpt-3.5-turbo";
+            $param["messages"][0]["role"]="user";
+            $param['temperature']=1.0;
+            $param['max_tokens']=4000;
+            $param['frequency_penalty']=0;
+            $param['presence_penalty']=0;
+
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->openai_api_key,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'POST',
+                    'header' => implode("\r\n", $header),
+                    'content' => json_encode($param),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.openai.com/v1/chat/completions', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            //return $response;
+            $data = json_decode($response, true);
+            //$response = preg_replace("/\n\r|\r\n|\n|\r/", '', $data['choices'][0]['message']['content']);
+            $response = $data['choices'][0]['message']['content'];
+            return $response;
+        }
     }
 }
 
