@@ -22,36 +22,24 @@ if (!class_exists('open_ai_api')) {
     class open_ai_api {
 
         /** @var string */
-        private $channel_access_token;
-        /** @var string */
-        private $channelSecret;
+        private $openai_api_key;
     
         /**
-         * @param string $channel_access_token
-         * @param string $channelSecret
+         * @param string $openai_api_key
          */
-    /*    
-        public function __construct($channel_access_token, $channelSecret)
-        {
-            $this->channel_access_token = $channel_access_token;
-            $this->channelSecret = $channelSecret;
-        }
-    */
-        public function __construct($channel_access_token='', $channelSecret='') {
+        public function __construct($openai_api_key='') {
     
-            if ($channel_access_token==''||$channelSecret=='') {
+            if ($openai_api_key=='') {
                 if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
                     $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
-                    if ($config['OpenAI']['API_KEY'] == null || $config['OpenAI']['Orgnazation'] == null) {
+                    if ($config['OpenAI']['API_KEY'] == null) {
                         error_log("config.ini uncompleted!", 0);
                     } else {
-                        $channel_access_token = $config['OpenAI']['API_KEY'];
-                        $channelSecret = $config['OpenAI']['Orgnazation'];
+                        $openai_api_key = $config['OpenAI']['API_KEY'];
                     }
                 }    
             } 
-            $this->channel_access_token = $channel_access_token;
-            $this->channelSecret = $channelSecret;
+            $this->openai_api_key = $openai_api_key;
         }
     
         /**
@@ -62,7 +50,7 @@ if (!class_exists('open_ai_api')) {
     
             $header = array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channel_access_token,
+                'Authorization: Bearer ' . $this->openai_api_key,
             );
     
             $context = stream_context_create([
