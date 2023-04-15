@@ -72,13 +72,6 @@ if (!class_exists('line_bot_api')) {
          * @param string $channelAccessToken
          * @param string $channelSecret
          */
-    /*    
-        public function __construct($channelAccessToken, $channelSecret)
-        {
-            $this->channelAccessToken = $channelAccessToken;
-            $this->channelSecret = $channelSecret;
-        }
-    */
         public function __construct($channelAccessToken='', $channelSecret='') {
     
             if ($channelAccessToken==''||$channelSecret=='') {
@@ -128,6 +121,32 @@ if (!class_exists('line_bot_api')) {
     */
             return $data['events'];
        
+        }
+    
+        /**
+         * @param array<string, mixed> $message
+         * @return void
+         */
+        public function broadcastMessage($message) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'POST',
+                    'header' => implode("\r\n", $header),
+                    'content' => json_encode($message),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/message/broadcast', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
         }
     
         /**
