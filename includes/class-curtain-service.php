@@ -71,9 +71,11 @@ if (!class_exists('curtain_service')) {
                         $line_bot_api->broadcastMessage([
                             'messages' => [
                                 [
-                                    "type" => "flex",
-                                    "altText" => 'Broadcast message',
-                                    'contents' => $see_more
+                                    "type" => "text",
+                                    'text' => $see_more
+                                    //"type" => "flex",
+                                    //"altText" => 'Broadcast message',
+                                    //'contents' => $see_more
                                 ]
                             ]
                         ]);
