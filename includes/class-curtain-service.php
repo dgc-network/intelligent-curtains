@@ -319,7 +319,8 @@ if (!class_exists('curtain_service')) {
                             echo 'Error.';
                         } else {
                             // Success!
-                            echo 'User profile updated.';
+                            //echo 'User profile updated.';
+                            ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
                         }
                     }
 
