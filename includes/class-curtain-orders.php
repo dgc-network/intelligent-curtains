@@ -189,7 +189,11 @@ if (!class_exists('curtain_orders')) {
 
             //* Customer Orders List */
             if( isset($_POST['_customer_orders']) ) {
-                $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                if($user->has_cap('manage_options')){
+                    $output  = '<h2>Customer Orders - All</h2>';
+                } else {
+                    $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
+                }
                 $output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -205,7 +209,11 @@ if (!class_exists('curtain_orders')) {
 
                 $output .= '<tbody>';
                 $_addition = array('curtain_agent_id='.$curtain_agent_id);
-                $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
+                if($user->has_cap('manage_options')){
+                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
+                } else {
+                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
+                }
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
@@ -271,7 +279,7 @@ if (!class_exists('curtain_orders')) {
                 );
 
                 // Notice the admin about the order status
-                //$this->order_status_notice($customer_order_number, 'order01');
+                $this->order_status_notice($customer_order_number, 'order01');
             }
             
             /** Shopping Cart Item Editing*/
