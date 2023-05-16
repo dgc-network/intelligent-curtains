@@ -120,6 +120,44 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
+            if( isset($_GET['_qrcode']) ) {
+                $_id = $_GET['_qrcode'];
+                $output = '<div id="dialog" title="QR Code">';
+                $output .= '<div id="qrcode">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_option('Service').'?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<div style="display: flex;">';
+                $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+                $output .= $print_me;
+                $output .= '<span> </span>';
+                $output .= '<span>'.$_id.'</span>';
+                $output .= '</div>';
+                $output .= '</div>';
+                
+                $output .= '<br><br><br><br><br>';                
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
+                $output .= '<div class="print-me-'.$_id.'">';
+                //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
+                $output .= '<div id="qrcode1">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_option('Service').'?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
+                $output .= '<div id="qrcode2" style="margin-top: 100px;">';
+                $output .= '<div id="qrcode_content">';
+                $output .= get_option('Service').'?serial_no='.$_id;
+                $output .= '</div>';
+                $output .= '</div>';
+                $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                $output .= '</div>';                
+                return $output;
+            }
+
+
             if( isset($_POST['_serial_submit']) ) {
                 //$_id = $_POST['_serials'];
                 //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
@@ -156,48 +194,12 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$user->display_name.'</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    //$output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
 
-                if( isset($_GET['_qrcode']) ) {
-                    $_id = $_GET['_qrcode'];
-                    $output .= '<div id="dialog" title="QR Code">';
-                    $output .= '<div id="qrcode">';
-                    $output .= '<div id="qrcode_content">';
-                    $output .= get_option('Service').'?serial_no='.$_id;
-                    $output .= '</div>';
-                    $output .= '</div>';
-                    $output .= '<div style="display: flex;">';
-                    $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
-                    $output .= $print_me;
-                    $output .= '<span> </span>';
-                    $output .= '<span>'.$_id.'</span>';
-                    $output .= '</div>';
-                    $output .= '</div>';
-                    
-                    $output .= '<br><br><br><br><br>';                
-                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
-                    $output .= '<div class="print-me-'.$_id.'">';
-                    //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
-                    $output .= '<div id="qrcode1">';
-                    $output .= '<div id="qrcode_content">';
-                    $output .= get_option('Service').'?serial_no='.$_id;
-                    $output .= '</div>';
-                    $output .= '</div>';
-                    $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
-                    //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
-                    $output .= '<div id="qrcode2" style="margin-top: 100px;">';
-                    $output .= '<div id="qrcode_content">';
-                    $output .= get_option('Service').'?serial_no='.$_id;
-                    $output .= '</div>';
-                    $output .= '</div>';
-                    $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
-                    $output .= '</div>';                
-                }
-    
                 return $output;
     
             }
