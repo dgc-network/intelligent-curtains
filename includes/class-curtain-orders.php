@@ -120,9 +120,10 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
-            if( isset($_GET['_serials']) ) {
-                $_id = $_GET['_serials'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
+            if( isset($_POST['_serial_submit']) ) {
+                //$_id = $_POST['_serials'];
+                //$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
+                $curtain_agent_id = $_POST['_curtain_agent_id'];
 
                 $output  = '<h2>Serial Number</h2>';
                 $output .= '<div class="ui-widget">';
@@ -140,7 +141,8 @@ if (!class_exists('curtain_orders')) {
                 
                 $output .= '<tbody>';
                 //$results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$row->curtain_agent_id}", OBJECT );
+                //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$row->curtain_agent_id}", OBJECT );
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
@@ -159,6 +161,43 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
+
+                if( isset($_GET['_qrcode']) ) {
+                    $_id = $_GET['_qrcode'];
+                    $output .= '<div id="dialog" title="QR Code">';
+                    $output .= '<div id="qrcode">';
+                    $output .= '<div id="qrcode_content">';
+                    $output .= get_option('Service').'?serial_no='.$_id;
+                    $output .= '</div>';
+                    $output .= '</div>';
+                    $output .= '<div style="display: flex;">';
+                    $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+                    $output .= $print_me;
+                    $output .= '<span> </span>';
+                    $output .= '<span>'.$_id.'</span>';
+                    $output .= '</div>';
+                    $output .= '</div>';
+                    
+                    $output .= '<br><br><br><br><br>';                
+                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
+                    $output .= '<div class="print-me-'.$_id.'">';
+                    //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
+                    $output .= '<div id="qrcode1">';
+                    $output .= '<div id="qrcode_content">';
+                    $output .= get_option('Service').'?serial_no='.$_id;
+                    $output .= '</div>';
+                    $output .= '</div>';
+                    $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+                    //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
+                    $output .= '<div id="qrcode2" style="margin-top: 100px;">';
+                    $output .= '<div id="qrcode_content">';
+                    $output .= get_option('Service').'?serial_no='.$_id;
+                    $output .= '</div>';
+                    $output .= '</div>';
+                    $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+                    $output .= '</div>';                
+                }
+    
                 return $output;
     
             }
@@ -237,7 +276,7 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 }
-                $output .= '<form method="post">';
+                //$output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
@@ -268,7 +307,11 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '<form method="post">';
+                    $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$result->curtain_agent_id.'">';
+                    $output .= '<input type="submit" name="_serial_submit" value="Serials">';
+                    //$output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '</form>';
                     $output .= '</td>';
                     $output .= '</tr>';
                 }
