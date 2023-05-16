@@ -120,6 +120,49 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
+            if( isset($_GET['_serials']) ) {
+                $_id = $_GET['_serials'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
+
+                $output  = '<h2>Serial Number</h2>';
+                $output .= '<div class="ui-widget">';
+                $output .= '<table class="ui-widget ui-widget-content">';
+                $output .= '<thead><tr class="ui-widget-header ">';
+                $output .= '<th></th>';
+                $output .= '<th>serial_no</th>';
+                $output .= '<th>model</th>';
+                $output .= '<th>spec</th>';
+                $output .= '<th>agent</th>';
+                $output .= '<th>user</th>';
+                $output .= '<th>update_time</th>';
+                $output .= '<th></th>';
+                $output .= '</tr></thead>';
+                
+                $output .= '<tbody>';
+                //$results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$row->curtain_agent_id}", OBJECT );
+                foreach ( $results as $index=>$result ) {
+                    $output .= '<tr>';
+                    $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="btn-qrcode-'.$result->qr_code_serial_no.'"><i class="fa-solid fa-qrcode"></i></span>';
+                    $output .= '</td>';
+                    $output .= '<td>'.$result->qr_code_serial_no.'</td>';
+                    $output .= '<td>'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                    $output .= '<td>'.$result->specification.'</td>';
+                    $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
+                    $user = get_userdata( $result->curtain_user_id );
+                    $output .= '<td>'.$user->display_name.'</td>';
+                    $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                    $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '</td>';
+                    $output .= '</tr>';
+                }
+                $output .= '</tbody></table></div>';
+                return $output;
+    
+            }
+
             if( isset($_GET['_print']) ) {
                 $_id = $_GET['_print'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
