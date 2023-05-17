@@ -122,7 +122,7 @@ if (!class_exists('curtain_orders')) {
 
             if( isset($_GET['_qrcode']) ) {
                 $_id = $_GET['_qrcode'];
-                $output = '<div id="dialog" title="QR Code">';
+                $output  = '<div id="dialog" title="QR Code">';
                 $output .= '<div id="qrcode">';
                 $output .= '<div id="qrcode_content">';
                 $output .= get_option('Service').'?serial_no='.$_id;
@@ -309,11 +309,17 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     $output .= '<td style="text-align: center;">';
+                    //$cart_page_url = get_permalink( wc_get_page_id( 'cart' ) );
+                    //wp_redirect( $serials_page_url );
+                    $serials_page_url = 'https://aihome.tw/serials/?_curtain_agent_id='.$result->curtain_agent_id;
+                    $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-print">'.'</a>';
+/*
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$result->curtain_agent_id.'">';
                     $output .= '<input type="submit" name="_serial_submit" value="Serials">';
                     //$output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '</form>';
+*/
                     $output .= '</td>';
                     $output .= '</tr>';
                 }
