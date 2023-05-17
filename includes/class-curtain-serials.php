@@ -75,7 +75,12 @@ if (!class_exists('serial_number')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+            if( isset($_GET['_curtain_agent_id']) ) {
+                $curtain_agent_id = $_GET['_curtain_agent_id'];
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
+            } else {
+                $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+            }
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

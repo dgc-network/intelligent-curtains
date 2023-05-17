@@ -87,8 +87,6 @@ if (!class_exists('curtain_orders')) {
             $_agent_number = get_user_meta( $user->ID, 'agent_number', TRUE );
             $_agent_code = get_user_meta( $user->ID, 'agent_code', TRUE );
 
-            //if( isset($_SESSION['_agent_number']) && isset($_SESSION['_agent_code']) ) {
-            //    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_SESSION['_agent_number'], $_SESSION['_agent_code'] ), OBJECT );
             if( isset($_agent_number) && isset($_agent_code) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_agent_number, $_agent_code ), OBJECT );
                 if ( is_null($row) || !empty($wpdb->last_error) ) {
@@ -100,7 +98,6 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</div>';
                     return $output;                        
                 }
-                //$curtain_agent_id = $curtain_agents->get_id($_SESSION['_agent_number']);
                 $curtain_agent_id = $curtain_agents->get_id($_agent_number);
 
             } else {
@@ -119,7 +116,7 @@ if (!class_exists('curtain_orders')) {
                 );
                 $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
-
+/*
             if( isset($_GET['_qrcode']) ) {
                 $_id = $_GET['_qrcode'];
                 $output  = '<div id="dialog" title="QR Code">';
@@ -203,7 +200,7 @@ if (!class_exists('curtain_orders')) {
                 return $output;
     
             }
-
+*/
             if( isset($_GET['_print']) ) {
                 $_id = $_GET['_print'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
@@ -278,7 +275,6 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $output  = '<h2>Customer Orders - '.$curtain_agents->get_name($curtain_agent_id).'</h2>';
                 }
-                //$output .= '<form method="post">';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
@@ -312,7 +308,7 @@ if (!class_exists('curtain_orders')) {
                     //$cart_page_url = get_permalink( wc_get_page_id( 'cart' ) );
                     //wp_redirect( $serials_page_url );
                     $serials_page_url = 'https://aihome.tw/serials/?_curtain_agent_id='.$result->curtain_agent_id;
-                    $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-print">'.'</a>';
+                    $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
 /*
                     $output .= '<form method="post">';
                     $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$result->curtain_agent_id.'">';
