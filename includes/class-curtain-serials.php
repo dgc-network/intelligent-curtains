@@ -75,12 +75,21 @@ if (!class_exists('serial_number')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
+            
+            if( isset($_GET['_customer_order_number']) ) {
+                $customer_order_number = $_GET['_customer_order_number'];
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE customer_order_number={$customer_order_number}", OBJECT );
+            } else {
+                $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+            }
+/*
             if( isset($_GET['_curtain_agent_id']) ) {
                 $curtain_agent_id = $_GET['_curtain_agent_id'];
                 $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE curtain_agent_id={$curtain_agent_id}", OBJECT );
             } else {
                 $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             }
+*/            
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
@@ -95,6 +104,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                $output .= '<span id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
@@ -191,6 +201,7 @@ if (!class_exists('serial_number')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}serial_number` (
                 serial_number_id int NOT NULL AUTO_INCREMENT,
                 qr_code_serial_no varchar(50) UNIQUE,
+                customer_order_number varchar(20),
                 curtain_model_id int(10),
                 specification varchar(10),
                 curtain_agent_id int(10),
