@@ -30,6 +30,7 @@ if (!class_exists('serial_number')) {
             if( isset($_POST['_create']) ) {
                 $this->insert_serial_number(
                     array(
+                        'customer_order_number'=>$_POST['_customer_order_number'],
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
                         'specification'=>$_POST['_specification'],
                         'curtain_agent_id'=>$_POST['_curtain_agent_id']

@@ -104,6 +104,14 @@ if (!class_exists('curtain_orders')) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
             }
 
+            if( isset($_GET['_repack']) ) {
+                $this->delete_customer_orders(
+                    array(
+                        'customer_order_amount'=>$_GET['_repack']
+                    )
+                );
+            }
+
             //* Print Customer Order */
             if( isset($_POST['_status_submit']) ) {
                 $this->update_customer_orders(
@@ -442,7 +450,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
-            //$output .= '<input type="hidden" name="_agent_submit" value="true">';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
 
