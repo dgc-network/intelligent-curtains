@@ -37,6 +37,19 @@ if (!class_exists('serial_number')) {
                 );
             }
 
+            if( isset($_POST['_update']) ) {
+                $this->update_serial_number(
+                    array(
+                        //'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'customer_order_number'=>$_POST['_customer_order_number'],
+                        //'curtain_agent_id'=>$_POST['_curtain_agent_id']
+                    ),
+                    array(
+                        'serial_number_id'=>$_GET['_delete']
+                    )
+                );
+            }
+
             if( isset($_GET['_delete']) ) {
                 $this->delete_serial_number(
                     array(
@@ -104,7 +117,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
-                $output .= '<span id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
@@ -122,6 +135,24 @@ if (!class_exists('serial_number')) {
                 $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options().'</select>';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
+                $output .= '</form>';
+                $output .= '</div>';
+            }
+
+            if( isset($_GET['_edit']) ) {
+                $_id = $_GET['_edit'];
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE serial_number={$_id}", OBJECT );
+                $output .= '<div id="dialog" title="Serial_no update">';
+                $output .= '<form method="post">';
+                $output .= '<fieldset>';
+                $output .= '<label for="customer_order_number">Order Number</label>';
+                $output .= '<input type="text" name="_customer_order_number" id="customer_order_number" value="'.$row->customer_order_number.'" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="curtain_model_id">Model</label>';                    
+                $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
+                $output .= '<label for="curtain_agent_id">Agent</label>';
+                $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+                $output .= '</fieldset>';
+                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
                 $output .= '</div>';
             }
