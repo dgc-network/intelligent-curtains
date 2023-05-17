@@ -45,7 +45,7 @@ if (!class_exists('serial_number')) {
                         //'curtain_agent_id'=>$_POST['_curtain_agent_id']
                     ),
                     array(
-                        'serial_number_id'=>$_GET['_delete']
+                        'serial_number_id'=>$_POST['_serial_number_id']
                     )
                 );
             }
@@ -141,12 +141,13 @@ if (!class_exists('serial_number')) {
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE serial_number={$_id}", OBJECT );
+                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}serial_number WHERE serial_number_id={$_id}", OBJECT );
                 $output .= '<div id="dialog" title="Serial_no update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
                 $output .= '<label for="customer_order_number">Order Number</label>';
                 $output .= '<input type="text" name="_customer_order_number" id="customer_order_number" value="'.$row->customer_order_number.'" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="hidden" name="_serial_number_id" value="'.$row->serial_number_id.'">';
                 $output .= '<label for="curtain_model_id">Model</label>';                    
                 $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
                 $output .= '<label for="curtain_agent_id">Agent</label>';
