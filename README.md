@@ -14,7 +14,7 @@ git remote add origin <Repository_Location>
 
 You can call origin whatever you like, really, but origin is the standard name for Git remote repositories. <Repository_Location> is the URL to your remote repository. For example, if I had a new project called MyNewProject that I wanted to push to GitLab, I'd perform:
 
-git remote add origin https://gitlab.com/Harmelodic/MyNewProject.git
+git remote add origin https://gitlab.com/dgc-network/intelligent-curtains.git
 
 You can then "push" your changes from your local machine to your remote repo using the following command:
 
