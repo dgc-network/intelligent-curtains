@@ -1,6 +1,8 @@
 # Intelligent curtains
 
-# Issuing
+# Unlink the git from folder
+
+Issuing
 
 git remote rm origin
 will delete the config settings from .git/config.
@@ -10,7 +12,9 @@ Then issue
 rm .git/FETCH_HEAD
 to get rid of the FETCH_HEAD which still points to github.
 
-# To register a project as a local Git repository the first thing you need to do is perform the following command at your project root:
+# Link the git from folder
+
+To register a project as a local Git repository the first thing you need to do is perform the following command at your project root:
 
 git init
 This will create a .git folder at your project root and will allow you to start using Git in that repository.
