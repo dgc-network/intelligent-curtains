@@ -31,8 +31,8 @@ if (!class_exists('curtain_categories')) {
                         'curtain_category_name'=>$_POST['_curtain_category_name'],
                         'min_width'=>$_POST['_min_width'],
                         'max_width'=>$_POST['_max_width'],
-                        'min_length'=>$_POST['_min_length'],
-                        'max_length'=>$_POST['_max_length'],
+                        'min_height'=>$_POST['_min_height'],
+                        'max_height'=>$_POST['_max_height'],
                     )
                 );
             }
@@ -42,8 +42,8 @@ if (!class_exists('curtain_categories')) {
                     array(
                         'min_width'=>$_POST['_min_width'],
                         'max_width'=>$_POST['_max_width'],
-                        'min_length'=>$_POST['_min_length'],
-                        'max_length'=>$_POST['_max_length'],
+                        'min_height'=>$_POST['_min_height'],
+                        'max_height'=>$_POST['_max_height'],
                         'curtain_category_name'=>$_POST['_curtain_category_name']
                     ),
                     array(
@@ -96,8 +96,8 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<span id="btn-edit-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
-                $output .= '<td>'.$result->min_width.'</td>';
-                $output .= '<td>'.$result->max_width.'</td>';
+                $output .= '<td style="text-align: center;">'.$result->min_width.'cm</td>';
+                $output .= '<td style="text-align: center;">'.$result->max_width.'cm</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_category_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -119,10 +119,10 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<input type="text" name="_min_width" value="'.$row->min_width.'" id="min-width" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="max-width">Width Max.(cm)</label>';
                 $output .= '<input type="text" name="_max_width" value="'.$row->max_width.'" id="max-width" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="min-length">Length Min.(cm)</label>';
-                $output .= '<input type="text" name="_min_length" value="'.$row->min_length.'" id="min-length" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="max-length">Length Max.(cm)</label>';
-                $output .= '<input type="text" name="_max_length" value="'.$row->max_length.'" id="max-length" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-height">Height Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_height" value="'.$row->min_height.'" id="min-height" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-height">Height Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_height" value="'.$row->max_height.'" id="max-height" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -139,10 +139,10 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<input type="text" name="_min_width" id="min-width" class="text ui-widget-content ui-corner-all">';
                 $output .= '<label for="max-width">Width Max.(cm)</label>';
                 $output .= '<input type="text" name="_max_width" id="max-width" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="min-length">Length Min.(cm)</label>';
-                $output .= '<input type="text" name="_min_length" id="min-length" class="text ui-widget-content ui-corner-all">';
-                $output .= '<label for="max-length">Length Max.(cm)</label>';
-                $output .= '<input type="text" name="_max_length" id="max-length" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-height">Height Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_height" id="min-height" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-height">Height Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_height" id="max-height" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -179,6 +179,30 @@ if (!class_exists('curtain_categories')) {
             return $row->curtain_category_name;
         }
 
+        public function get_min_width( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            return $row->min_width;
+        }
+
+        public function get_max_width( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            return $row->max_width;
+        }
+
+        public function get_min_height( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            return $row->min_height;
+        }
+
+        public function get_max_height( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            return $row->max_height;
+        }
+
         public function select_options( $_id=0 ) {
             global $wpdb;
             $output = '<option value="0">-- Select an option --</option>';
@@ -206,8 +230,8 @@ if (!class_exists('curtain_categories')) {
                 curtain_category_name varchar(50),
                 min_width int,
                 max_width int,
-                min_length int,
-                max_length int,
+                min_height int,
+                max_height int,
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_category_id)
