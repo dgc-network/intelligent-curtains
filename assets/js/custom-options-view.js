@@ -78,6 +78,8 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
+        $("#curtain-width").empty();
+        $("#curtain-height").empty();
 
         jQuery.ajax({
             type: 'POST',
@@ -100,8 +102,10 @@ jQuery(document).ready(function($) {
                     $("#select-specification-id").append(specifications[x]);
                 }
 
-                $('#curtain-width').val('Width: min('+response.min_width+'),max('+response.max_width+')').change();
-                $('#curtain-height').val('Height: min('+response.min_height+'),max('+response.max_height+')').change();
+                //$('#curtain-width').val('Width: min('+response.min_width+'),max('+response.max_width+')').change();
+                //$('#curtain-height').val('Height: min('+response.min_height+'),max('+response.max_height+')').change();
+                $('#curtain-width').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                $('#curtain-height').append('Height: min('+response.min_height+'),max('+response.max_height+')');
             },
             error: function(error){
                 alert(error);
