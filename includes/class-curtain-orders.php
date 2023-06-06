@@ -469,16 +469,16 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<label for="select-specification-id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_specification_id, $row->curtain_category_id).'</select>';
                 //$output .= '<label for="curtain-dimension">Dimension</label>';
-                $output .= '<label for="curtain-width">Width: min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</label>';
+                $output .= '<label id="curtain-width" for="curtain-width">Width: min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</label>';
                 //$output .= '<div style="display: flex;">';
                 //$output .= '<span>Width:</span>';
-                $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-width" class="text ui-widget-content ui-corner-all">';
                 //$output .= '<span>min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</span>';
                 //$output .= '</div>';
-                $output .= '<label for="curtain-width">Height: min('.$curtain_categories->get_min_height($row->curtain_category_id).'),max('.$curtain_categories->get_max_height($row->curtain_category_id).')</label>';
+                $output .= '<label id="curtain-height" for="curtain-height">Height: min('.$curtain_categories->get_min_height($row->curtain_category_id).'),max('.$curtain_categories->get_max_height($row->curtain_category_id).')</label>';
                 //$output .= '<div style="display: flex;">';
                 //$output .= '<span>Height:</span>';
-                $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-dimension" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-height" class="text ui-widget-content ui-corner-all">';
                 //$output .= '<span>min('.$curtain_categories->get_min_height($row->curtain_category_id).'),max('.$curtain_categories->get_max_height($row->curtain_category_id).')</span>';
                 //$output .= '</div>';
                 $output .= '<label for="order_item_qty">QTY</label>';
@@ -604,6 +604,7 @@ if (!class_exists('curtain_orders')) {
 
         function select_category_id() {
             global $wpdb;
+            $curtain_categories = new curtain_categories();
             $_id = $_POST['id'];
 
             $models = array();
@@ -624,8 +625,12 @@ if (!class_exists('curtain_orders')) {
 
             $response = array();
             $response['currenttime'] = wp_date( get_option('time_format'), time() );
-            $response['models'] = $models;;
-            $response['specifications'] = $specifications;;
+            $response['models'] = $models;
+            $response['specifications'] = $specifications;
+            $response['min_width'] = $curtain_categories->get_min_width($_id);
+            $response['max_width'] = $curtain_categories->get_max_width($_id);
+            $response['min_height'] = $curtain_categories->get_min_height($_id);
+            $response['max_height'] = $curtain_categories->get_max_height($_id);
             echo json_encode( $response );
 
             wp_die();

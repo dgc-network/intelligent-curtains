@@ -99,6 +99,9 @@ jQuery(document).ready(function($) {
                 for (let x in specifications) {
                     $("#select-specification-id").append(specifications[x]);
                 }
+
+                $('#curtain-width').val('Width: min('+response.min_width+'),max('+response.max_width+')').change();
+                $('#curtain-height').val('Height: min('+response.min_height+'),max('+response.max_height+')').change();
             },
             error: function(error){
                 alert(error);
