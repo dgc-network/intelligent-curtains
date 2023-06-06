@@ -95,7 +95,8 @@ if (!class_exists('curtain_specifications')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            $results = general_helps::get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
+            //$results = general_helps::get_search_results($wpdb->prefix.'curtain_specifications', $_POST['_where']);
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications ORDER BY curtain_category_id", OBJECT );
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
