@@ -78,8 +78,8 @@ jQuery(document).ready(function($) {
         var val = $(this).val();
         $("#select-model-id").empty();
         $("#select-specification-id").empty();
-        $("#curtain-width").empty();
-        $("#curtain-height").empty();
+        $("#curtain-width-label").empty();
+        $("#curtain-height-label").empty();
 
         jQuery.ajax({
             type: 'POST',
