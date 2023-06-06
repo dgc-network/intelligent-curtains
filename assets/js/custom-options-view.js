@@ -112,7 +112,6 @@ jQuery(document).ready(function($) {
                     $('#curtain-height-label').show();
                     $('#curtain-height').show();
                 }
-
             },
             error: function(error){
                 alert(error);
