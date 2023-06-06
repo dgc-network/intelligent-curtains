@@ -102,10 +102,15 @@ jQuery(document).ready(function($) {
                     $("#select-specification-id").append(specifications[x]);
                 }
 
-                //$('#curtain-width').val('Width: min('+response.min_width+'),max('+response.max_width+')').change();
-                //$('#curtain-height').val('Height: min('+response.min_height+'),max('+response.max_height+')').change();
                 $('#curtain-width').append('Width: min('+response.min_width+'),max('+response.max_width+')');
                 $('#curtain-height').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+
+                if (val==1) {
+                    $('#curtain-height').hide();
+                } else {
+                    $('#curtain-height').show();
+                }
+
             },
             error: function(error){
                 alert(error);
