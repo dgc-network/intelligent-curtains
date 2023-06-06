@@ -28,7 +28,11 @@ if (!class_exists('curtain_categories')) {
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_category(
                     array(
-                        'curtain_category_name'=>$_POST['_curtain_category_name']
+                        'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'min_width'=>$_POST['_min_width'],
+                        'max_width'=>$_POST['_max_width'],
+                        'min_length'=>$_POST['_min_length'],
+                        'max_length'=>$_POST['_max_length'],
                     )
                 );
             }
@@ -36,6 +40,10 @@ if (!class_exists('curtain_categories')) {
             if( isset($_POST['_update']) ) {
                 $this->update_curtain_categories(
                     array(
+                        'min_width'=>$_POST['_min_width'],
+                        'max_width'=>$_POST['_max_width'],
+                        'min_length'=>$_POST['_min_length'],
+                        'max_length'=>$_POST['_max_length'],
                         'curtain_category_name'=>$_POST['_curtain_category_name']
                     ),
                     array(
@@ -74,6 +82,8 @@ if (!class_exists('curtain_categories')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>category</th>';
+            $output .= '<th>min.</th>';
+            $output .= '<th>max.</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
@@ -86,6 +96,8 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<span id="btn-edit-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
+                $output .= '<td>'.$result->min_width.'</td>';
+                $output .= '<td>'.$result->max_width.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_category_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -103,6 +115,14 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<input type="hidden" value="'.$row->curtain_category_id.'" name="_curtain_category_id">';
                 $output .= '<label for="curtain-category-name">Category Name</label>';
                 $output .= '<input type="text" name="_curtain_category_name" value="'.$row->curtain_category_name.'" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-width">Width Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_width" value="'.$row->min_width.'" id="min-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-width">Width Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_width" value="'.$row->max_width.'" id="max-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-length">Length Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_length" value="'.$row->min_length.'" id="min-length" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-length">Length Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_length" value="'.$row->max_length.'" id="max-length" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -115,6 +135,14 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<fieldset>';
                 $output .= '<label for="curtain-category-name">Category Name</label>';
                 $output .= '<input type="text" name="_curtain_category_name" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-width">Width Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_width" id="min-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-width">Width Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_width" id="max-width" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="min-length">Length Min.(cm)</label>';
+                $output .= '<input type="text" name="_min_length" id="min-length" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="max-length">Length Max.(cm)</label>';
+                $output .= '<input type="text" name="_max_length" id="max-length" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
                 $output .= '</form>';
@@ -176,6 +204,10 @@ if (!class_exists('curtain_categories')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_categories` (
                 curtain_category_id int NOT NULL AUTO_INCREMENT,
                 curtain_category_name varchar(50),
+                min_width int,
+                max_width int,
+                min_length int,
+                max_length int,
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_category_id)
