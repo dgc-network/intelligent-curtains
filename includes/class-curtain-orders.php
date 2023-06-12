@@ -309,9 +309,9 @@ if (!class_exists('curtain_orders')) {
                 $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
                 if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                    $amount = $m_price + $r_price + $width/100 * $s_price * $qty;
+                    $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
                 } else {
-                    $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
+                    $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
                 }
                 $this->insert_shopping_item(
                     array(
