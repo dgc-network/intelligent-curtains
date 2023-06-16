@@ -82,7 +82,7 @@ if (!class_exists('curtain_remotes')) {
             $output .= '</tr></thead>';
             
             $output .= '<tbody>';
-            $results = general_helps::get_search_results($wpdb->prefix.'customer_remotes', $_POST['_where']);
+            $results = general_helps::get_search_results($wpdb->prefix.'curtain_remotes', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
