@@ -112,6 +112,14 @@ if (!class_exists('curtain_orders')) {
                 );
             }
 
+            if( isset($_GET['_delete_customer_order']) ) {
+                $this->delete_customer_orders(
+                    array(
+                        'customer_order_number'=>$_GET['_delete_customer_order']
+                    )
+                );
+            }
+
             //* Print Customer Order */
             if( isset($_POST['_status_submit']) ) {
                 $this->update_customer_orders(
@@ -125,8 +133,8 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
             }
 
-            if( isset($_GET['_print']) ) {
-                $_id = $_GET['_print'];
+            if( isset($_GET['_print_customer_order']) ) {
+                $_id = $_GET['_print_customer_order'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
                 $output  = '<div style="text-align:center;"><h2>Customer Orders</h2></div>';
                 $output .= '<div class="ui-widget">';
@@ -161,6 +169,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Dimension</th>';
                 $output .= '<th>QTY</th>';
                 $output .= '<th>Amount</th>';
+                $output .= '<th></th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
 
@@ -187,7 +196,11 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
                 $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
-                $output .= '</tr>';
+                $output .= '<td style="text-align: center;">';
+                $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
+                $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
+                $output .= '</td>';
+            $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
             }
@@ -221,7 +234,7 @@ if (!class_exists('curtain_orders')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-print-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
+                    $output .= '<span id="btn-print-customer-order-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '</td>';
                     $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$result->customer_order_number.'</td>';
@@ -229,12 +242,17 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="btn-del-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '</td>';
+/*
+                    $output .= '<td style="text-align: center;">';
                     //$cart_page_url = get_permalink( wc_get_page_id( 'cart' ) );
                     //wp_redirect( $serials_page_url );
                     //$serials_page_url = 'https://aihome.tw/serials/?_curtain_agent_id='.$result->curtain_agent_id;
                     $serials_page_url = 'https://aihome.tw/serials/?_customer_order_number='.$result->customer_order_number;
                     $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
                     $output .= '</td>';
+*/
                     $output .= '</tr>';
                 }
                 $output .= '</tbody></table></div>';
@@ -266,6 +284,7 @@ if (!class_exists('curtain_orders')) {
                             $serial_number->insert_serial_number(
                                 array(
                                     'customer_order_number'=>$customer_order_number,
+                                    'order_item_id'=>$result->curtain_order_id,
                                     'curtain_model_id'=>$result->curtain_model_id,
                                     'specification'   =>$curtain_specifications->get_name($result->curtain_specification_id).$result->curtain_width,
                                     'curtain_agent_id'=>$result->curtain_agent_id
@@ -291,7 +310,7 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($customer_order_number, 'order01');
             }
             
-            /** Shopping Cart Item Editing*/
+            /** Shopping Cart Item Create and Editing*/
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
