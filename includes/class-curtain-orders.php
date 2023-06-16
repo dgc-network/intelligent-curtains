@@ -241,9 +241,11 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
-                    $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-del-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-trash-can"></i></span>';
-                    $output .= '</td>';
+                    if($user->has_cap('manage_options')){
+                        $output .= '<td style="text-align: center;">';
+                        $output .= '<span id="btn-del-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-trash-can"></i></span>';
+                        $output .= '</td>';
+                    }
 /*
                     $output .= '<td style="text-align: center;">';
                     //$cart_page_url = get_permalink( wc_get_page_id( 'cart' ) );
