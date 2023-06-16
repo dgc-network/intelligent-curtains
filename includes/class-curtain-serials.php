@@ -117,7 +117,7 @@ if (!class_exists('serial_number')) {
                 $user = get_userdata( $result->curtain_user_id );
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                if($user->has_cap('manage_options')){
+                if(wp_get_current_user()->has_cap('manage_options')){
                     $output .= '<td style="text-align: center;">';
                     $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
