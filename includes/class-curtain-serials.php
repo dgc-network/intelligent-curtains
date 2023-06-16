@@ -24,7 +24,7 @@ if (!class_exists('serial_number')) {
             /** Check the permission */
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
-            if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
+            //if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
             /** Post the result */
             if( isset($_POST['_create']) ) {
@@ -41,8 +41,9 @@ if (!class_exists('serial_number')) {
             if( isset($_POST['_update']) ) {
                 $this->update_serial_number(
                     array(
-                        //'curtain_model_id'=>$_POST['_curtain_model_id'],
                         'customer_order_number'=>$_POST['_customer_order_number'],
+                        'order_item_id'=>$_POST['_order_item_id'],
+                        //'curtain_model_id'=>$_POST['_curtain_model_id'],
                         //'curtain_agent_id'=>$_POST['_curtain_agent_id']
                     ),
                     array(
@@ -64,7 +65,7 @@ if (!class_exists('serial_number')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -116,10 +117,12 @@ if (!class_exists('serial_number')) {
                 $user = get_userdata( $result->curtain_user_id );
                 $output .= '<td>'.$user->display_name.'</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
-                $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
-                $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
-                $output .= '</td>';
+                if($user->has_cap('manage_options')){
+                    $output .= '<td style="text-align: center;">';
+                    $output .= '<span id="btn-del-'.$result->serial_number_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->serial_number_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                    $output .= '</td>';
+                }
                 $output .= '</tr>';
             }
             $output .= '</tbody></table></div>';
@@ -146,13 +149,17 @@ if (!class_exists('serial_number')) {
                 $output .= '<div id="dialog" title="Serial_no update">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="customer_order_number">Order Number</label>';
-                $output .= '<input type="text" name="_customer_order_number" id="customer_order_number" value="'.$row->customer_order_number.'" class="text ui-widget-content ui-corner-all">';
                 $output .= '<input type="hidden" name="_serial_number_id" value="'.$row->serial_number_id.'">';
-                $output .= '<label for="curtain_model_id">Model</label>';                    
+                $output .= '<label for="customer_order_number">Customer Order Number</label>';
+                $output .= '<input type="text" name="_customer_order_number" id="customer_order_number" value="'.$row->customer_order_number.'" class="text ui-widget-content ui-corner-all">';
+                $output .= '<label for="order_item_id">Order Item ID</label>';
+                $output .= '<input type="text" name="_order_item_id" id="order_item_id" value="'.$row->order_item_id.'" class="text ui-widget-content ui-corner-all">';
+/*                
+                $output .= '<label for="curtain_model_id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
                 $output .= '<label for="curtain_agent_id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
+*/
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';

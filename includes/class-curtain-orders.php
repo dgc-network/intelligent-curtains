@@ -191,16 +191,16 @@ if (!class_exists('curtain_orders')) {
                     }
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
                     $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
+                    $output .= '<td style="text-align: center;">';
+                    $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
+                    $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
+                    $output .= '</td>';
                     $output .= '</tr>';
                 }
                 $output .= '<tr>';
                 $output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
                 $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
-                $output .= '<td style="text-align: center;">';
-                $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
-                $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
-                $output .= '</td>';
-            $output .= '</tr>';
+                $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
             }
