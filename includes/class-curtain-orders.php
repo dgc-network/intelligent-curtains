@@ -371,9 +371,9 @@ if (!class_exists('curtain_orders')) {
                 $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
                 $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
                 if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                    $amount = $m_price + $r_price + $width/100 * $s_price * $qty;
+                    $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
                 } else {
-                    $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
+                    $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
                 }
                 $this->update_order_items(
                     array(
@@ -583,16 +583,19 @@ if (!class_exists('curtain_orders')) {
 
         function order_item_dialog_get_data() {
             global $wpdb;
+            $curtain_categories = new curtain_categories();
+
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
             $response = array();
             $response["order_item_qty"] = $row->order_item_qty;
-            $response["curtain_agent_id"] = $row->curtain_agent_id;
             $response["curtain_category_id"] = $row->curtain_category_id;
+            $response["select_categories"] = $curtain_categories->select_options();
             $response["curtain_model_id"] = $row->curtain_model_id;
+            $response["curtain_agent_id"] = $row->curtain_agent_id;
 /*
-            $course_outline = array();
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}course_sessions WHERE course_id={$_id}", OBJECT );
+            $select_category = array();
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE course_id={$_id}", OBJECT );
             foreach ( $results as $index=>$result ) {
                 $session = array();
                 $session["session_id"] = $result->session_id;
