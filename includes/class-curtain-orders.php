@@ -14,6 +14,10 @@ if (!class_exists('curtain_orders')) {
         public function __construct() {
             $this->_wp_page_title = 'Orders';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'shopping-item-list', 'system');
+            add_action( 'wp_ajax_order_item_dialog_get_data', array( $this, 'order_item_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_order_item_dialog_get_data', array( $this, 'order_item_dialog_get_data' ) );
+            add_action( 'wp_ajax_order_item_dialog_save_data', array( $this, 'order_item_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_order_item_dialog_save_data', array( $this, 'order_item_dialog_save_data' ) );
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
@@ -269,7 +273,7 @@ if (!class_exists('curtain_orders')) {
                 foreach ( $results as $index=>$result ) {
                     $_is_checkout = '_is_checkout_'.$index;
                     if ( $_POST[$_is_checkout]==1 ) {
-                        $this->update_shopping_items(
+                        $this->update_order_items(
                             array(
                                 'customer_order_number'=>$customer_order_number,
                                 'is_checkout'=>1
@@ -334,7 +338,7 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
                 }
-                $this->insert_shopping_item(
+                $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$curtain_agent_id,
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
@@ -371,7 +375,7 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $amount = $m_price + $r_price + $width/100 * $height/100 * $s_price * $qty;
                 }
-                $this->update_shopping_items(
+                $this->update_order_items(
                     array(
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
@@ -390,7 +394,7 @@ if (!class_exists('curtain_orders')) {
             }
 
             if( isset($_GET['_delete']) ) {
-                $this->delete_shopping_items(
+                $this->delete_order_items(
                     array(
                         'curtain_order_id'=>$_GET['_delete']
                     )
@@ -577,6 +581,61 @@ if (!class_exists('curtain_orders')) {
             return $output;
         }
 
+        function order_item_dialog_get_data() {
+            global $wpdb;
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["order_item_qty"] = $row->order_item_qty;
+            $response["curtain_agent_id"] = $row->curtain_agent_id;
+            $response["curtain_category_id"] = $row->curtain_category_id;
+            $response["curtain_model_id"] = $row->curtain_model_id;
+/*
+            $course_outline = array();
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}course_sessions WHERE course_id={$_id}", OBJECT );
+            foreach ( $results as $index=>$result ) {
+                $session = array();
+                $session["session_id"] = $result->session_id;
+                $session["session_title"] = $result->session_title;
+                array_push($course_outline, $session);
+            }
+            $response["course_outline"] = $course_outline;
+*/
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function order_item_dialog_save_data() {
+            if( $_POST['_curtain_order_id']=='' ) {
+                //$user = wp_get_current_user();
+                $this->insert_order_item(
+                    array(
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        //'course_owner'=>$user->ID
+                    )
+                );
+            } else {
+                $this->update_order_items(
+                    array(
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_curtain_order_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
+        }
+
         public function insert_customer_order($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'customer_orders';
@@ -599,7 +658,7 @@ if (!class_exists('curtain_orders')) {
             $wpdb->delete($table, $where);
         }
 
-        public function insert_shopping_item($data=[]) {
+        public function insert_order_item($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['create_timestamp'] = time();
@@ -608,14 +667,14 @@ if (!class_exists('curtain_orders')) {
             return $wpdb->insert_id;
         }
 
-        public function update_shopping_items($data=[], $where=[]) {
+        public function update_order_items($data=[], $where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $data['update_timestamp'] = time();
             $wpdb->update($table, $data, $where);
         }
 
-        public function delete_shopping_items($where=[]) {
+        public function delete_order_items($where=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'order_items';
             $wpdb->delete($table, $where);
