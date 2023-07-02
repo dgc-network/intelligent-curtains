@@ -133,8 +133,10 @@ jQuery(document).ready(function($) {
                     $("#order-item-id").val(id);
                     $("#order-item-qty").val(response.order_item_qty);
                     //$("#curtain-category-id").val(response.curtain_category_id);
-                    $("#curtain-category-id").append(response.select_categories);
-                    $("#curtain-model-id").val(response.curtain_model_id);
+                    //$("#curtain-category-id").append(response.select_categories);
+                    $("#curtain-category-id").append(response.curtain_category_id);
+                    //$("#curtain-model-id").val(response.curtain_model_id);
+                    $("#curtain-model-id").append(response.curtain_model_id);
                     $("#curtain-agent-id").val(response.curtain_agent_id);
 /*                    
                     for(index=0;index<10;index++) {
