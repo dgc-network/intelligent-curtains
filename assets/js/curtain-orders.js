@@ -22,6 +22,48 @@ jQuery(document).ready(function($) {
 
     });
     
+    $("#curtain-category-id").change(function() {
+        var val = $(this).val();
+        $("#curtain-model-id").empty();
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'select_category_id',
+                'id': val,
+            },
+            success: function (response) {
+                current_time = response.currenttime;
+                models = response.models;
+                specifications = response.specifications;
+
+                for (let x in models) {
+                    $("#curtain-model-id").append(models[x]);
+                }
+    
+                for (let x in specifications) {
+                    $("#select-specification-id").append(specifications[x]);
+                }
+
+                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+
+                if (val==1) {
+                    $('#curtain-height-label').hide();
+                    $('#curtain-height').hide();
+                } else {
+                    $('#curtain-height-label').show();
+                    $('#curtain-height').show();
+                }
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+
+    });
+    
     $("#select-category-id").change(function() {
         var val = $(this).val();
         $("#select-model-id").empty();
