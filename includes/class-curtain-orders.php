@@ -485,7 +485,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input type="hidden" id="order-item-id">';
             $output .= '<label for="curtain-category-id">Curtain Category</label>';
             $output .= '<select id="curtain-category-id"></select>';
-            $output .= '<label for="curtain-model-id">Model</label>';
+            $output .= '<label for="curtain-model-id">Curtain Model</label>';
             $output .= '<select id="curtain-model-id"></select>';
             //$output .= '<label for="curtain-remote-id">Remote</label>';
             //$output .= '<select id="curtain-remote-id"></select>';
@@ -584,14 +584,17 @@ if (!class_exists('curtain_orders')) {
         function order_item_dialog_get_data() {
             global $wpdb;
             $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
 
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
             $response = array();
             $response["order_item_qty"] = $row->order_item_qty;
-            $response["curtain_category_id"] = $row->curtain_category_id;
-            $response["select_categories"] = $curtain_categories->select_options();
-            $response["curtain_model_id"] = $row->curtain_model_id;
+            //$response["curtain_category_id"] = $row->curtain_category_id;
+            //$response["select_categories"] = $curtain_categories->select_options($_POST['_curtain_category_id']);
+            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
+            //$response["curtain_model_id"] = $row->curtain_model_id;
+            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_model_id);
             $response["curtain_agent_id"] = $row->curtain_agent_id;
 /*
             $select_category = array();
