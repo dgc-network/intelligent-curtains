@@ -51,7 +51,7 @@ jQuery(document).ready(function($) {
         }     
 */            
     });
-
+/*
     $("#select-order-status-backup").change(function() {
         var status = $(this).val();
         var number = $("#select-order-number").val();
@@ -118,8 +118,9 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    
+*/    
     /* Cart Button */
+/*    
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         $(this).css('color', 'cornflowerblue');
@@ -133,7 +134,7 @@ jQuery(document).ready(function($) {
     $('[id^="cart-btn"]').on( "click", function() {
         window.location.assign("orders")
     });
-
+*/
     /* Button */    
     $('[id^="btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
@@ -156,14 +157,14 @@ jQuery(document).ready(function($) {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-*/        
+        
     $('[id^="btn-qrcode-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(11);
         window.location.replace("?_qrcode=" + id);
     });
-
+*/
     /* Chat Button */
     $('[id^="btn-chat-"]').on( "click", function(e) {
         id = this.id;
@@ -214,21 +215,23 @@ jQuery(document).ready(function($) {
     });
 
     /* Delete Customer Order Button */
+/*    
     $('[id^="btn-del-customer-order-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(23);        
         window.location.replace("?_delete_customer_order=" + id);
     });
-
+*/
     /* Print Customer Order Button */
+/*    
     $('[id^="btn-print-customer-order-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(25);        
         window.location.replace("?_print_customer_order=" + id);
     });
-
+*/
     /* QR Code */
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()

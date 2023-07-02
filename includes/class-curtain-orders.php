@@ -403,7 +403,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             //$output .= '<input type="hidden" name="_agent_submit" value="true">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
@@ -470,9 +470,51 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
+            $output .= '<td colspan="10"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td>';
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
+
+            /** Order Item Dialog */
+            $output .= '<div id="order-item-dialog" title="Order Item dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="order-item-id">';
+            $output .= '<label for="select-category-id">Curtain Category</label>';
+            $output .= '<select id="select-category-id"></select>';
+            $output .= '<label for="select-model-id">Model</label>';
+            $output .= '<select id="select-model-id"></select>';
+            $output .= '<label for="select-remote-id">Remote</label>';
+            $output .= '<select id="select-remote-id"></select>';
+            $output .= '<label for="select-specification-id">Specification</label>';
+            $output .= '<select id="select-specification-id"></select>';
+/*
+            $output .= '<label id="curtain-width-label" for="curtain-width">Width: min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</label>';
+            $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-width" class="text ui-widget-content ui-corner-all">';
+            if ($row->curtain_category_id!=1) {
+                $output .= '<label id="curtain-height-label" for="curtain-height">Height: min('.$curtain_categories->get_min_height($row->curtain_category_id).'),max('.$curtain_categories->get_max_height($row->curtain_category_id).')</label>';
+                $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-height" class="text ui-widget-content ui-corner-all">';    
+            }
+*/
+            $output .= '<label for="order-item-qty">QTY</label>';
+            $output .= '<input type="text" id="order-item-qty" class="text ui-widget-content ui-corner-all">';
+/*
+            $output .= '<input type="hidden" id="course-id">';
+            $output .= '<label for="course-title">Course Title</label>';
+            $output .= '<input type="text" id="course-title" class="text ui-widget-content ui-corner-all">';
+            $output .= '<label for="course-info">Course Info</label>';
+            $output .= '<textarea id="course-info" rows="3" cols="62"></textarea>';
+            $output .= '<div>';
+            $output .= '<div style="display:inline-block; width:48%; margin-right:5px;">';
+            $output .= '<label for="course-price">Course Price</label>';
+            $output .= '<input type="text" id="course-price" class="text ui-widget-content ui-corner-all">';
+            $output .= '</div>';
+            $output .= '<div style="display:inline-block; width:50%; ">';
+            $output .= '<label for="course-period">Course Period(min.)</label>';
+            $output .= '<input type="text" id="course-period" class="text ui-widget-content ui-corner-all">';
+            $output .= '</div>';
+            $output .= '</div>';
+*/            
+            $output .= '</fieldset>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
