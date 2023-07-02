@@ -129,12 +129,13 @@ jQuery(document).ready(function($) {
                 '_id': id,
             },
             success: function (response) {
+                    
+                    $("#order-item-id").val(id);
+                    $("#order-item-qty").val(response.order_item_qty);
+                    $("#curtain-category-id").val(response.curtain_category_id);
+                    $("#curtain-model-id").val(response.curtain_model_id);
+                    $("#curtain-agent-id").val(response.curtain_agent_id);
 /*                    
-                    $("#course-id").val(id);
-                    $("#course-title").val(response.course_title);
-                    $("#course-info").val(response.course_info);
-                    $("#course-price").val(response.course_price);
-                    $("#course-period").val(response.course_period);
                     for(index=0;index<10;index++) {
                         $("#session-edit-"+index).empty();
                         $("#session-title-"+index).empty();
@@ -213,16 +214,16 @@ jQuery(document).ready(function($) {
     });
 
     $("#order-item-dialog").dialog({
-        width: 800,
+        width: 600,
         modal: true,
         autoOpen: false,
         buttons: {
             "Save": function() {
-                var course_id = $("#course-id").val();
-                var course_title = $("#course-title").val();
-                var course_info = $("#course-info").val();
-                var course_price = $("#course-price").val();
-                var course_period = $("#course-period").val();
+                var order_item_id = $("#order-item-id").val();
+                var order_item_qty = $("#order-item-qty").val();
+                var curtain_category_id = $("#curtain-category-id").val();
+                var curtain_model_id = $("#curtain-model-id").val();
+                var curtain_agent_id = $("#curtain-agent-id").val();
 
                 jQuery.ajax({
                     type: 'POST',
@@ -230,11 +231,11 @@ jQuery(document).ready(function($) {
                     dataType: "json",
                     data: {
                         'action': 'order_item_dialog_save_data',
-                        '_course_id': course_id,
-                        '_course_title': course_title,
-                        '_course_info': course_info,
-                        '_course_price': course_price,
-                        '_course_period': course_period,
+                        '_order_item_id': order_item_id,
+                        '_order_item_qty': order_item_qty,
+                        '_curtain_category_id': curtain_category_id,
+                        '_curtain_model_id': curtain_model_id,
+                        '_curtain_agent_id': curtain_agent_id,
                     },
                     success: function (response) {
                         window.location.replace("?_update=");

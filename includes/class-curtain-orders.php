@@ -483,14 +483,14 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="order-item-id">';
-            $output .= '<label for="select-category-id">Curtain Category</label>';
-            $output .= '<select id="select-category-id"></select>';
-            $output .= '<label for="select-model-id">Model</label>';
-            $output .= '<select id="select-model-id"></select>';
-            $output .= '<label for="select-remote-id">Remote</label>';
-            $output .= '<select id="select-remote-id"></select>';
-            $output .= '<label for="select-specification-id">Specification</label>';
-            $output .= '<select id="select-specification-id"></select>';
+            $output .= '<label for="curtain-category-id">Curtain Category</label>';
+            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '<label for="curtain-model-id">Model</label>';
+            $output .= '<select id="curtain-model-id"></select>';
+            //$output .= '<label for="curtain-remote-id">Remote</label>';
+            //$output .= '<select id="curtain-remote-id"></select>';
+            //$output .= '<label for="curtain-specification-id">Specification</label>';
+            //$output .= '<select id="curtain-specification-id"></select>';
 /*
             $output .= '<label id="curtain-width-label" for="curtain-width">Width: min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</label>';
             $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-width" class="text ui-widget-content ui-corner-all">';
