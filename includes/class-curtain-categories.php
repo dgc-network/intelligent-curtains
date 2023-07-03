@@ -114,14 +114,14 @@ if (!class_exists('curtain_categories')) {
             /** Category Dialog */
             $output .= '<div id="category-dialog" title="Category dialog">';
             $output .= '<fieldset>';
-            $output .= '<input type="hidden" id="curtain-category-id">';
+            $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
             $output .= '<input type="text" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
-            $output .= '<input type="checkbox" id="hide-specification" class="text ui-widget-content ui-corner-all">';
-            $output .= '<label for="curtain-category-id">Hide Specification</label>';
-            //$output .= '<select id="curtain-category-id"></select>';
+            $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide Specification.';
+            $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide Width.';
+            $output .= '<input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide Height.';
             $output .= '</fieldset>';
-
+/*
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$_id}", OBJECT );
@@ -164,14 +164,12 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
+*/            
             return $output;
         }
 
         function category_dialog_get_data() {
             global $wpdb;
-            //$curtain_categories = new curtain_categories();
-            //$curtain_models = new curtain_models();
-
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             $response = array();
