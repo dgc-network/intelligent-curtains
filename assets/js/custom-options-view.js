@@ -51,120 +51,18 @@ jQuery(document).ready(function($) {
         }     
 */            
     });
-/*
-    $("#select-order-status-backup").change(function() {
-        var status = $(this).val();
-        var number = $("#select-order-number").val();
-
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_order_status',
-                'number': number,
-                'status': status,
-            },
-            success: function (response) {
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
-
-    });
-    
-    $("#select-category-id").change(function() {
-        var val = $(this).val();
-        $("#select-model-id").empty();
-        $("#select-specification-id").empty();
-        $("#curtain-width-label").empty();
-        $("#curtain-height-label").empty();
-
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_category_id',
-                'id': val,
-            },
-            success: function (response) {
-                current_time = response.currenttime;
-                models = response.models;
-                specifications = response.specifications;
-
-                for (let x in models) {
-                    $("#select-model-id").append(models[x]);
-                }
-    
-                for (let x in specifications) {
-                    $("#select-specification-id").append(specifications[x]);
-                }
-
-                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
-                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
-
-                if (val==1) {
-                    $('#curtain-height-label').hide();
-                    $('#curtain-height').hide();
-                } else {
-                    $('#curtain-height-label').show();
-                    $('#curtain-height').show();
-                }
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
-    });
-*/    
-    /* Cart Button */
-/*    
-    $('[id^="cart-btn"]').mouseover(function() {
-        $(this).css('cursor', 'pointer');
-        $(this).css('color', 'cornflowerblue');
-    });
-        
-    $('[id^="cart-btn"]').mouseout(function() {
-        $(this).css('cursor', 'default');
-        $(this).css('color', 'black');
-    });
-        
-    $('[id^="cart-btn"]').on( "click", function() {
-        window.location.assign("orders")
-    });
-*/
     /* Button */    
     $('[id^="btn-"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
-        $(this).css('color', 'cornflowerblue');
+        //$(this).css('color', 'cornflowerblue');
+        $(this).css('color', 'red');
     });
         
     $('[id^="btn-"]').mouseout(function() {
         $(this).css('cursor', 'default');
         $(this).css('color', 'black');
     });
-
-    /* QR Code Button */
-/*    
-    $('[id^="btn-qrcode-"]').mouseover(function() {
-        $(this).css('cursor', 'pointer');
-        $(this).css('color', 'cornflowerblue');
-    });
-        
-    $('[id^="btn-qrcode-"]').mouseout(function() {
-        $(this).css('cursor', 'default');
-        $(this).css('color', 'black');
-    });
-        
-    $('[id^="btn-qrcode-"]').on( "click", function() {
-        id = this.id;
-        // strip the first part of the element id to leave the numeric ID
-        id = id.substring(11);
-        window.location.replace("?_qrcode=" + id);
-    });
-*/
+    
     /* Chat Button */
     $('[id^="btn-chat-"]').on( "click", function(e) {
         id = this.id;
@@ -214,24 +112,6 @@ jQuery(document).ready(function($) {
         }        
     });
 
-    /* Delete Customer Order Button */
-/*    
-    $('[id^="btn-del-customer-order-"]').on( "click", function() {
-        id = this.id;
-        // strip the first part of the element id to leave the numeric ID
-        id = id.substring(23);        
-        window.location.replace("?_delete_customer_order=" + id);
-    });
-*/
-    /* Print Customer Order Button */
-/*    
-    $('[id^="btn-print-customer-order-"]').on( "click", function() {
-        id = this.id;
-        // strip the first part of the element id to leave the numeric ID
-        id = id.substring(25);        
-        window.location.replace("?_print_customer_order=" + id);
-    });
-*/
     /* QR Code */
     $('#qrcode').qrcode({
         text: $("#qrcode_content").text()
@@ -251,8 +131,6 @@ jQuery(document).ready(function($) {
     $( "#dialog" ).dialog({
         modal: true,
         close: function() {
-            //form[ 0 ].reset();
-            //allFields.removeClass( "ui-state-error" );
             window.location.replace("?_close=");
         }
     });

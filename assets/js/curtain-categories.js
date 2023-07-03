@@ -3,15 +3,6 @@ jQuery(document).ready(function($) {
     /**
      * Category Dialog and Buttons
      */
-/*    
-    $('[id^="btn-del-category-"]').on( "click", function() {
-        id = this.id;
-        id = id.substring(17);
-        if (window.confirm("Are you sure you want to delete this record?")) {
-            window.location.replace("?_course_delete=" + id);
-        }        
-    });
-*/
     $('[id^="btn-category"]').on( "click", function() {
         id = this.id;
         id = id.substring(13);
@@ -43,12 +34,19 @@ jQuery(document).ready(function($) {
     });
 
     $("#category-dialog").dialog({
-        width: 600,
+        width: 500,
         modal: true,
         autoOpen: false,
         buttons: {
             "Save": function() {
                 var curtain_category_name = $("#curtain-category-name").val();
+                var hide_specification = $("#hide-specification").val();
+                var hide_width = $("#hide-width").val();
+                var min_width = $("#min-width").val();
+                var max_width = $("#max-width").val();
+                var hide_height = $("#hide-height").val();
+                var min_height = $("#min-height").val();
+                var max_height = $("#max-height").val();
 
                 jQuery.ajax({
                     type: 'POST',
