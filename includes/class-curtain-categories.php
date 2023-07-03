@@ -97,7 +97,8 @@ if (!class_exists('curtain_categories')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                //$output .= '<span id="btn-edit-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-category-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->min_width.'cm</td>';
@@ -116,11 +117,24 @@ if (!class_exists('curtain_categories')) {
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
-            $output .= '<input type="text" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
+            $output .= '<input type="text" id="curtain-category-name" />';
             $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide Specification.';
+            $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide Width.';
+            $output .= '<div>';
+            $output .= '<input type="text" id="min-width" style="display:inline-block; width:48%; " />';
+            $output .= '<input type="text" id="max-width" style="display:inline-block; width:50%; " />';
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide Height.';
+            $output .= '<div>';
+            $output .= '<input type="text" id="min-height" style="display:inline-block; width:48%; " />';
+            $output .= '<input type="text" id="max-height" style="display:inline-block; width:50%; " />';
+            $output .= '</div>';
+            $output .= '</div>';
             $output .= '</fieldset>';
+            $output .= '</div>';
 /*
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];

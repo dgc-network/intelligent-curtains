@@ -3,6 +3,7 @@ jQuery(document).ready(function($) {
     /**
      * Category Dialog and Buttons
      */
+/*    
     $('[id^="btn-del-category-"]').on( "click", function() {
         id = this.id;
         id = id.substring(17);
@@ -10,7 +11,7 @@ jQuery(document).ready(function($) {
             window.location.replace("?_course_delete=" + id);
         }        
     });
-
+*/
     $('[id^="btn-category"]').on( "click", function() {
         id = this.id;
         id = id.substring(13);
@@ -26,6 +27,13 @@ jQuery(document).ready(function($) {
                     
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
+                $("#hide-specification").val(response.hide_specification);
+                $("#hide-width").val(response.hide_width);
+                $("#min-width").val(response.min_width);
+                $("#max-width").val(response.max_width);
+                $("#hide-height").val(response.hide_height);
+                $("#min-height").val(response.min_height);
+                $("#max-height").val(response.max_height);
                 $("#category-dialog").dialog('open');
             },
             error: function(error){
@@ -49,6 +57,13 @@ jQuery(document).ready(function($) {
                     data: {
                         'action': 'category_dialog_save_data',
                         '_curtain_category_name': curtain_category_name,
+                        '_hide_specification': hide_specification,
+                        '_hide_width': hide_width,
+                        '_min_width': min_width,
+                        '_max_width': max_width,
+                        '_hide_height': hide_height,
+                        '_min_height': min_height,
+                        '_max_height': max_height,
                     },
                     success: function (response) {
                         window.location.replace("?_update=");
