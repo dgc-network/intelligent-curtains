@@ -11,10 +11,14 @@ if (!class_exists('curtain_categories')) {
          * Class constructor
          */
         public function __construct() {
+            $this->create_tables();
             $this->_wp_page_title = 'Categories';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-category-list');
             add_shortcode( 'curtain-category-list', array( $this, 'list_curtain_categories' ) );
-            $this->create_tables();
+            add_action( 'wp_ajax_category_dialog_get_data', array( $this, 'category_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_category_dialog_get_data', array( $this, 'category_dialog_get_data' ) );
+            add_action( 'wp_ajax_category_dialog_save_data', array( $this, 'category_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_category_dialog_save_data', array( $this, 'category_dialog_save_data' ) );
         }
 
         public function list_curtain_categories() {
@@ -66,7 +70,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -104,7 +108,19 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '<tr><td colspan="6"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
+
+            /** Category Dialog */
+            $output .= '<div id="category-dialog" title="Category dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="curtain-category-id">';
+            $output .= '<label for="curtain-category-name">Category Name</label>';
+            $output .= '<input type="text" id="curtain-category-name" class="text ui-widget-content ui-corner-all">';
+            $output .= '<input type="checkbox" id="hide-specification" class="text ui-widget-content ui-corner-all">';
+            $output .= '<label for="curtain-category-id">Hide Specification</label>';
+            //$output .= '<select id="curtain-category-id"></select>';
+            $output .= '</fieldset>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -149,6 +165,63 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        function category_dialog_get_data() {
+            global $wpdb;
+            //$curtain_categories = new curtain_categories();
+            //$curtain_models = new curtain_models();
+
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_category_name"] = $row->curtain_category_name;
+            $response["hide_specification"] = $row->hide_specification;
+            $response["hide_width"] = $row->hide_width;
+            $response["min_width"] = $row->min_width;
+            $response["max_width"] = $row->max_width;
+            $response["hide_height"] = $row->hide_height;
+            $response["min_height"] = $row->min_height;
+            $response["max_height"] = $row->max_height;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function category_dialog_save_data() {
+            if( $_POST['_curtain_category_id']=='' ) {
+                $this->insert_curtain_category(
+                    array(
+                        'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'hide_specification'=>$_POST['_hide_specification'],
+                        'hide_width'=>$_POST['_hide_width'],
+                        'min_width'=>$_POST['_min_width'],
+                        'max_width'=>$_POST['_max_width'],
+                        'hide_height'=>$_POST['_hide_height'],
+                        'min_height'=>$_POST['_min_height'],
+                        'max_height'=>$_POST['_max_height'],
+                    )
+                );
+            } else {
+                $this->update_curtain_categories(
+                    array(
+                        'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'hide_specification'=>$_POST['_hide_specification'],
+                        'hide_width'=>$_POST['_hide_width'],
+                        'min_width'=>$_POST['_min_width'],
+                        'max_width'=>$_POST['_max_width'],
+                        'hide_height'=>$_POST['_hide_height'],
+                        'min_height'=>$_POST['_min_height'],
+                        'max_height'=>$_POST['_max_height'],
+                    ),
+                    array(
+                        'curtain_category_id'=>$_POST['_curtain_category_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
         }
 
         public function insert_curtain_category($data=[]) {
@@ -228,8 +301,11 @@ if (!class_exists('curtain_categories')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_categories` (
                 curtain_category_id int NOT NULL AUTO_INCREMENT,
                 curtain_category_name varchar(50),
+                hide_specification int(1),
+                hide_width int(1),
                 min_width int,
                 max_width int,
+                hide_height int(1),
                 min_height int,
                 max_height int,
                 create_timestamp int(10),

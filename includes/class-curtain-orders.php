@@ -427,8 +427,8 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>date/time</th>';
             $output .= '<th>category</th>';
             $output .= '<th>model</th>';
-            $output .= '<th>spec</th>';
-            $output .= '<th>dimension</th>';
+            //$output .= '<th>spec</th>';
+            //$output .= '<th>dimension</th>';
             $output .= '<th>QTY</th>';
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
@@ -456,13 +456,13 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</td>';
                 $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
-                $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
-                $output .= '<td>Width:'.$result->curtain_width;
-                if ($result->curtain_category_id==1){
-                    $output .= '</td>';
-                } else {
-                    $output .= '<br>Height:'.$result->curtain_height.'</td>';
-                }
+                //$output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
+                //$output .= '<td>Width:'.$result->curtain_width;
+                //if ($result->curtain_category_id==1){
+                //    $output .= '</td>';
+                //} else {
+                //    $output .= '<br>Height:'.$result->curtain_height.'</td>';
+                //}
                 $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
                 $output .= '<td style="text-align: center;">'.number_format_i18n($result->order_item_amount).'</td>';
                 if ( $result->is_checkout==1 ) {
@@ -474,7 +474,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<td colspan="10"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td>';
+            $output .= '<tr><td colspan="8"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';

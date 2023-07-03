@@ -39,9 +39,11 @@ function enqueue_scripts() {
 
     wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-orders', plugins_url( '/assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
+    wp_enqueue_script( 'curtain-categories', plugins_url( '/assets/js/curtain-categories.js' , __FILE__ ), array( 'jquery' ), time() );
     // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
     wp_localize_script( 'custom-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-orders', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
+    wp_localize_script( 'curtain-categories', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
