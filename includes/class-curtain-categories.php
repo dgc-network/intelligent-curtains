@@ -86,8 +86,8 @@ if (!class_exists('curtain_categories')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>category</th>';
-            $output .= '<th>min.</th>';
-            $output .= '<th>max.</th>';
+            $output .= '<th>Spec</th>';
+            $output .= '<th>Width</th>';
             $output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
@@ -101,8 +101,12 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<span id="btn-category-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
-                $output .= '<td style="text-align: center;">'.$result->min_width.'cm</td>';
-                $output .= '<td style="text-align: center;">'.$result->max_width.'cm</td>';
+                if ($result->hide_specification==1) {
+                    $output .= '<td style="text-align: center;">'.$result->hide_specification.'</td>';
+                } else {
+                    $output .= '<td></td>';
+                }
+                $output .= '<td style="text-align: center;">'.$result->min_width.'cm ~ '.$result->max_width.'cm</td>';
                 $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_category_id.'"><i class="fa-regular fa-trash-can"></i></span>';
@@ -122,15 +126,17 @@ if (!class_exists('curtain_categories')) {
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide Width.';
             $output .= '<div>';
-            $output .= '<input type="text" id="min-width" style="display:inline-block; width:48%; " />';
-            $output .= '<input type="text" id="max-width" style="display:inline-block; width:50%; " />';
+            $output .= '<input type="text" id="min-width" style="display:inline-block; width:48%; margin-right:5px;" />';
+            $output .= '~';
+            $output .= '<input type="text" id="max-width" style="display:inline-block; width:48%; margin-left:5px;" />';
             $output .= '</div>';
             $output .= '</div>';
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide Height.';
             $output .= '<div>';
-            $output .= '<input type="text" id="min-height" style="display:inline-block; width:48%; " />';
-            $output .= '<input type="text" id="max-height" style="display:inline-block; width:50%; " />';
+            $output .= '<input type="text" id="min-height" style="display:inline-block; width:48%; margin-right:5px;" />';
+            $output .= '~';
+            $output .= '<input type="text" id="max-height" style="display:inline-block; width:48%; margin-left:5px;" />';
             $output .= '</div>';
             $output .= '</div>';
             $output .= '</fieldset>';
