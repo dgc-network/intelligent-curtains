@@ -126,9 +126,10 @@ if (!class_exists('curtain_categories')) {
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide Width.';
             $output .= '<div>';
-            $output .= '<input type="text" id="min-width" style="display:inline-block; width:48%; margin-right:5px;" />';
-            $output .= '~';
-            $output .= '<input type="text" id="max-width" style="display:inline-block; width:48%; margin-left:5px;" />';
+            $output .= '<input type="text" id="min-width" style="display:inline-block; width:45%;" />';
+            $output .= 'cm ~ ';
+            $output .= '<input type="text" id="max-width" style="display:inline-block; width:45%;" />';
+            $output .= 'cm';
             $output .= '</div>';
             $output .= '</div>';
             $output .= '<div>';
