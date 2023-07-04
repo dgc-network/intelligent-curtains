@@ -86,10 +86,10 @@ if (!class_exists('curtain_categories')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>category</th>';
+            $output .= '<th>remote</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>width</th>';
             $output .= '<th>height</th>';
-            //$output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
@@ -104,29 +104,37 @@ if (!class_exists('curtain_categories')) {
                 $models_page_url = '/models/?_curtain_category_id='.$result->curtain_category_id;
                 $output .= '<td><a href="'.$models_page_url.'">'.$result->curtain_category_name.'</a></td>';
 
+                if ($result->hide_remote==1) {
+                    $output .= '<td style="text-align: center;">N/A</td>';
+                } else {
+                    $remotes_page_url = '/remotes/?_curtain_category_id='.$result->curtain_category_id;
+                    $output .= '<td style="text-align: center;"><a href="'.$remotes_page_url.'">remote</a></td>';
+                }
+
                 if ($result->hide_specification==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $specs_page_url = '/specifications/?_curtain_category_id='.$result->curtain_category_id;
                     $output .= '<td style="text-align: center;"><a href="'.$specs_page_url.'">spec</a></td>';
                 }
+
                 if ($result->hide_width==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $output .= '<td style="text-align: center;">'.$result->min_width.'cm ~ '.$result->max_width.'cm</td>';
                 }
+
                 if ($result->hide_height==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $output .= '<td style="text-align: center;">'.$result->min_height.'cm ~ '.$result->max_height.'cm</td>';
                 }
-                //$output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_category_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="6"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="7"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
 
             /** Category Dialog */
