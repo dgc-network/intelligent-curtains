@@ -177,8 +177,13 @@ jQuery(document).ready(function($) {
                 $("#curtain-category-id").append(response.curtain_category_id);
                 $("#curtain-model-id").empty();
                 $("#curtain-model-id").append(response.curtain_model_id);
+                $("#curtain-remote-id").empty();
+                $("#curtain-remote-id").append(response.curtain_remote_id);
+                $("#curtain-specification-id").empty();
+                $("#curtain-specification-id").append(response.curtain_specification_id);
+                $("#curtain-width").val(response.curtain_width);
+                $("#curtain-height").val(response.curtain_height);
                 $("#order-item-qty").val(response.order_item_qty);
-                $("#curtain-agent-id").val(response.curtain_agent_id);
 
                 $("#order-item-dialog").dialog('open');
             },
@@ -197,8 +202,11 @@ jQuery(document).ready(function($) {
                 var order_item_id = $("#order-item-id").val();
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_model_id = $("#curtain-model-id").val();
+                var curtain_remote_id = $("#curtain-remote-id").val();
+                var curtain_specification_id = $("#curtain-specification-id").val();
+                var curtain_width = $("#curtain-width").val();
+                var curtain_height = $("#curtain-height").val();
                 var order_item_qty = $("#order-item-qty").val();
-                var curtain_agent_id = $("#curtain-agent-id").val();
 
                 jQuery.ajax({
                     type: 'POST',
@@ -209,8 +217,11 @@ jQuery(document).ready(function($) {
                         '_order_item_id': order_item_id,
                         '_curtain_category_id': curtain_category_id,
                         '_curtain_model_id': curtain_model_id,
+                        '_curtain_remote_id': curtain_remote_id,
+                        '_curtain_specification_id': curtain_specification_id,
+                        '_curtain_width': curtain_width,
+                        '_curtain_height': curtain_height,
                         '_order_item_qty': order_item_qty,
-                        '_curtain_agent_id': curtain_agent_id,
                     },
                     success: function (response) {
                         window.location.replace("?_update=");
