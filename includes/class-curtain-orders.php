@@ -162,6 +162,13 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
                 }
                 $output .= '</tr>';
+                $output .= '<tr>';
+                $output .= '<td>Contact:</td><td>'.$curtain_agents->get_contact($row->curtain_agent_id).'</td>';
+                $output .= '<td>Phone:</td><td>'.$curtain_agents->get_phone($row->curtain_agent_id).'</td>';
+                $output .= '</tr>';
+                $output .= '<tr>';
+                $output .= '<td>Address:</td><td colspan="3">'.$curtain_agents->get_address($row->curtain_agent_id).'</td>';
+                $output .= '</tr>';
                 $output .= '</table>';
 
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
@@ -186,13 +193,25 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                     $output .= '<td>'.$curtain_models->get_description($result->curtain_model_id);
                     $output .= '<br>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
-                    $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
-                    $output .= '<td>Width:'.$result->curtain_width;
-                    if ($result->curtain_category_id==1){
-                        $output .= '</td>';
+                    if ($curtain_categories->is_specification_hided($result->curtain_category_id)) {
+                        $output .= '<td style="text-align:center;">N/A</td>';
                     } else {
-                        $output .= '<br>Height:'.$result->curtain_height.'</td>';
+                        $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
                     }
+
+                    $output .= '<td>';
+                    if ($curtain_categories->is_width_hided($result->curtain_category_id)) {
+                        $output .= '';
+                    } else {
+                        $output .= 'Width:'.$result->curtain_width;
+                    }
+                    if ($curtain_categories->is_height_hided($result->curtain_category_id)) {
+                        $output .= '';
+                    } else {
+                        $output .= '<br>Height:'.$result->curtain_height;
+                    }
+                    $output .= '</td>';
+
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
                     $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
                     $output .= '<td style="text-align: center;">';

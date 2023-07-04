@@ -282,7 +282,7 @@ if (!class_exists('curtain_categories')) {
             return $row->curtain_category_name;
         }
 
-        public function is_hided_specification( $_id=0 ) {
+        public function is_specification_hided( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             if ($row->hide_specification==1) {
@@ -292,7 +292,7 @@ if (!class_exists('curtain_categories')) {
             }
         }
 
-        public function is_hided_width( $_id=0 ) {
+        public function is_width_hided( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             if ($row->hide_width==1) {
@@ -302,7 +302,7 @@ if (!class_exists('curtain_categories')) {
             }
         }
 
-        public function is_hided_height( $_id=0 ) {
+        public function is_height_hided( $_id=0 ) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             if ($row->hide_height==1) {
