@@ -265,9 +265,9 @@ jQuery(document).ready(function($) {
         buttons: {
             "Save": function() {
                 var order_item_id = $("#order-item-id").val();
-                var order_item_qty = $("#order-item-qty").val();
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_model_id = $("#curtain-model-id").val();
+                var order_item_qty = $("#order-item-qty").val();
                 var curtain_agent_id = $("#curtain-agent-id").val();
 
                 jQuery.ajax({
@@ -277,9 +277,9 @@ jQuery(document).ready(function($) {
                     data: {
                         'action': 'order_item_dialog_save_data',
                         '_order_item_id': order_item_id,
-                        '_order_item_qty': order_item_qty,
                         '_curtain_category_id': curtain_category_id,
                         '_curtain_model_id': curtain_model_id,
+                        '_order_item_qty': order_item_qty,
                         '_curtain_agent_id': curtain_agent_id,
                     },
                     success: function (response) {
