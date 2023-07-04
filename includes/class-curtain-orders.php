@@ -544,8 +544,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<div id="dialog" title="Create new item">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                $output .= '<label for="select-category-id">Curtain Category</label>';
-                $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options().'</select>';
+                $output .= '<label for="curtain-category-id">Curtain Category</label>';
+                $output .= '<select name="_curtain_category_id" id="curtain-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options().'</select>';
                 $output .= '<label for="select-remote-id">Remote</label>';
