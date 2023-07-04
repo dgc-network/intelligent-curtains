@@ -90,8 +90,14 @@ if (!class_exists('curtain_models')) {
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
+            if( isset($_GET['_curtain_category_id']) ) {
+                $curtain_category_id = $_GET['_curtain_category_id'];
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$curtain_category_id}", OBJECT );
+            } else {
+                $results = general_helps::get_search_results($wpdb->prefix.'curtain_models', $_POST['_where']);
+            }
+            //$results = general_helps::get_search_results($wpdb->prefix.'curtain_models', $_POST['_where']);
             $output .= '<tbody>';
-            $results = general_helps::get_search_results($wpdb->prefix.'curtain_models', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';

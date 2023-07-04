@@ -101,16 +101,14 @@ if (!class_exists('curtain_categories')) {
                 //$output .= '<span id="btn-edit-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '<span id="btn-category-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
-                //$output .= '<td>'.$result->curtain_category_name.'</td>';
                 $models_page_url = '/models/?_curtain_category_id='.$result->curtain_category_id;
                 $output .= '<td><a href="'.$models_page_url.'">'.$result->curtain_category_name.'</a></td>';
 
                 if ($result->hide_specification==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
-                    //$output .= '<td style="text-align: center;">'.$result->hide_specification.'</td>';
                     $specs_page_url = '/specifications/?_curtain_category_id='.$result->curtain_category_id;
-                    $output .= '<td><a href="'.$specs_page_url.'">specification</a></td>';
+                    $output .= '<td style="text-align: center;"><a href="'.$specs_page_url.'">spec</a></td>';
                 }
                 if ($result->hide_width==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';

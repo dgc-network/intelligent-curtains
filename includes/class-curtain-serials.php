@@ -91,9 +91,13 @@ if (!class_exists('serial_number')) {
             
             $output .= '<tbody>';
             
-            if( isset($_GET['_customer_order_number']) ) {
-                $customer_order_number = $_GET['_customer_order_number'];
-                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE customer_order_number={$customer_order_number}", OBJECT );
+            //if( isset($_GET['_customer_order_number']) ) {
+            //    $customer_order_number = $_GET['_customer_order_number'];
+            //    $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE customer_order_number={$customer_order_number}", OBJECT );
+            
+            if( isset($_GET['_order_item_id']) ) {
+                $order_item_id = $_GET['_order_item_id'];
+                $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}serial_number WHERE order_item_id={$order_item_id}", OBJECT );
             } else {
                 $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             }

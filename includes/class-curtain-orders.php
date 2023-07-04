@@ -193,7 +193,9 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                     $output .= '<td>'.$curtain_models->get_description($result->curtain_model_id);
                     $output .= '<br>'.$curtain_remotes->get_name($result->curtain_remote_id).'</td>';
-                    if ($curtain_categories->is_specification_hided($result->curtain_category_id)==false) {
+                    if ($curtain_categories->is_specification_hided($result->curtain_category_id)) {
+                        $output .= '<td></td>';
+                    } else {
                         $output .= '<td>'.$curtain_specifications->get_description($result->curtain_specification_id).'</td>';
                     }
 
