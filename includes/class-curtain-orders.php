@@ -630,7 +630,7 @@ if (!class_exists('curtain_orders')) {
             $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
             $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
             //if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-            if ($curtain_categories->is_height_hidden($_POST['_curtain_category_id'])){
+            if ($curtain_categories->is_height_hided($_POST['_curtain_category_id'])){
                 $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
             } else {
                 $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
@@ -683,11 +683,11 @@ if (!class_exists('curtain_orders')) {
 
             $_id = $_POST['id'];
             $response = array();
+            $response["curtain_model_id"] = $curtain_models->select_options($_id);
+            $response["curtain_specification_id"] = $curtain_specifications->select_options($_id);
             $response["is_specification_hided"] = $curtain_categories->is_specification_hided($_id);
             $response["is_width_hided"] = $curtain_categories->is_width_hided($_id);
             $response["is_height_hided"] = $curtain_categories->is_height_hided($_id);
-            $response["curtain_model_id"] = $curtain_models->select_options($_id);
-            $response["curtain_specification_id"] = $curtain_specifications->select_options($_id);
             $response['min_width'] = $curtain_categories->get_min_width($_id);
             $response['max_width'] = $curtain_categories->get_max_width($_id);
             $response['min_height'] = $curtain_categories->get_min_height($_id);
