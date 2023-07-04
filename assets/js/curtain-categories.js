@@ -129,7 +129,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#agent-dialog").dialog({
-        width: 500,
+        width: 450,
         modal: true,
         autoOpen: false,
         buttons: {
