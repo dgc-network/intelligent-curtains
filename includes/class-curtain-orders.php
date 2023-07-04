@@ -446,10 +446,10 @@ if (!class_exists('curtain_orders')) {
 
             $output .= '<form method="post">';
             $output .= '<tbody>';
-            //$_addition = array('curtain_agent_id='.$this->curtain_agent_id, 'is_checkout=0');
-            //$results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id} AND is_checkout=0", OBJECT );                
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id}", OBJECT );                
+            $_addition = array('curtain_agent_id='.$this->curtain_agent_id, 'is_checkout=0');
+            $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id} AND is_checkout=0", OBJECT );                
+            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id}", OBJECT );                
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
@@ -607,6 +607,8 @@ if (!class_exists('curtain_orders')) {
             $width = 1;
             $height = 1;
             $qty = 1;
+            $amount = 0;
+            
             if (is_numeric($_POST['_curtain_width'])) {
                 $width = $_POST['_curtain_width'];
             }
