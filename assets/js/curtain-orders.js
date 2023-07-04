@@ -178,8 +178,8 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 $("#curtain-model-id").empty();
                 $("#curtain-model-id").append(response.curtain_model_id);
-                $("#curtain-remote-id").empty();
-                $("#curtain-remote-id").append(response.curtain_remote_id);
+                //$("#curtain-remote-id").empty();
+                //$("#curtain-remote-id").append(response.curtain_remote_id);
                 $("#curtain-specification-id").empty();
                 $("#curtain-specification-id").append(response.curtain_specification_id);
                 $('#curtain-width-label').empty();
