@@ -34,6 +34,7 @@ jQuery(document).ready(function($) {
                 'id': val,
             },
             success: function (response) {
+/*                
                 current_time = response.currenttime;
                 models = response.models;
                 specifications = response.specifications;
@@ -45,8 +46,17 @@ jQuery(document).ready(function($) {
                 for (let x in specifications) {
                     $("#select-specification-id").append(specifications[x]);
                 }
+*/
+                $("#curtain-model-id").empty();
+                $("#curtain-model-id").append(response.curtain_model_id);
+                //$("#curtain-remote-id").empty();
+                //$("#curtain-remote-id").append(response.curtain_remote_id);
+                $("#curtain-specification-id").empty();
+                $("#curtain-specification-id").append(response.curtain_specification_id);
 
+                $('#curtain-width-label').empty();
                 $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                $('#curtain-height-label').empty();
                 $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
 
                 if (val==1) {
@@ -181,7 +191,9 @@ jQuery(document).ready(function($) {
                 $("#curtain-remote-id").append(response.curtain_remote_id);
                 $("#curtain-specification-id").empty();
                 $("#curtain-specification-id").append(response.curtain_specification_id);
+                $('#curtain-width-label').empty();
                 $("#curtain-width").val(response.curtain_width);
+                $('#curtain-height-label').empty();
                 $("#curtain-height").val(response.curtain_height);
                 $("#order-item-qty").val(response.order_item_qty);
 

@@ -660,6 +660,46 @@ if (!class_exists('curtain_orders')) {
             wp_die();
         }
 
+        function select_category_id() {
+            global $wpdb;
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
+            $_id = $_POST['id'];
+
+            $models = array();
+            $models[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
+            }
+            $models[] = '<option value="0">-- Remove this --</option>';
+
+            $specifications = array();
+            $specifications[] = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_category_id={$_id}" , OBJECT );
+            foreach ($results as $index => $result) {
+                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
+            }
+            $specifications[] = '<option value="0">-- Remove this --</option>';
+
+            $response = array();
+            //$response['currenttime'] = wp_date( get_option('time_format'), time() );
+            //$response['models'] = $models;
+            //$response['specifications'] = $specifications;
+            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_model_id);
+            //$response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
+            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_specification_id);
+            $response['min_width'] = $curtain_categories->get_min_width($_id);
+            $response['max_width'] = $curtain_categories->get_max_width($_id);
+            $response['min_height'] = $curtain_categories->get_min_height($_id);
+            $response['max_height'] = $curtain_categories->get_max_height($_id);
+            echo json_encode( $response );
+            wp_die();
+        }
+        
         public function insert_customer_order($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'customer_orders';
@@ -739,40 +779,6 @@ if (!class_exists('curtain_orders')) {
                 PRIMARY KEY (curtain_order_id)
             ) $charset_collate;";
             dbDelta($sql);
-        }
-
-        function select_category_id() {
-            global $wpdb;
-            $curtain_categories = new curtain_categories();
-            $_id = $_POST['id'];
-
-            $models = array();
-            $models[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $models[] = '<option value="'.$result->curtain_model_id.'">'.$result->curtain_model_name.'('.$result->model_description.')</option>';
-            }
-            $models[] = '<option value="0">-- Remove this --</option>';
-
-            $specifications = array();
-            $specifications[] = '<option value="0">-- Select an option --</option>';
-            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_category_id={$_id}" , OBJECT );
-            foreach ($results as $index => $result) {
-                $specifications[] = '<option value="'.$result->curtain_specification_id.'">'.$result->curtain_specification_name.'('.$result->specification_description.')</option>';
-            }
-            $specifications[] = '<option value="0">-- Remove this --</option>';
-
-            $response = array();
-            $response['currenttime'] = wp_date( get_option('time_format'), time() );
-            $response['models'] = $models;
-            $response['specifications'] = $specifications;
-            $response['min_width'] = $curtain_categories->get_min_width($_id);
-            $response['max_width'] = $curtain_categories->get_max_width($_id);
-            $response['min_height'] = $curtain_categories->get_min_height($_id);
-            $response['max_height'] = $curtain_categories->get_max_height($_id);
-            echo json_encode( $response );
-
-            wp_die();
         }
     }
     $my_class = new curtain_orders();
