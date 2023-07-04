@@ -609,6 +609,11 @@ if (!class_exists('curtain_orders')) {
         }
 
         function order_item_dialog_save_data() {
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
             $width = 1;
             $height = 1;
             $qty = 1;
