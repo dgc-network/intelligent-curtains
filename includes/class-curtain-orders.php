@@ -421,7 +421,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             //$output .= '<input type="hidden" name="_agent_submit" value="true">';
-            //$output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
