@@ -17,6 +17,9 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
+                if (response.hide_remote==1) {
+                    $('#hide-remote').prop('checked', true);
+                }            
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
                 }            
@@ -46,6 +49,10 @@ jQuery(document).ready(function($) {
             "Save": function() {
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_category_name = $("#curtain-category-name").val();
+                var hide_remote = 0;
+                if ($('#hide-remote').is(":checked")) {
+                    hide_remote = 1;
+                }
                 var hide_specification = 0;
                 if ($('#hide-specification').is(":checked")) {
                     hide_specification = 1;
@@ -71,6 +78,7 @@ jQuery(document).ready(function($) {
                         'action': 'category_dialog_save_data',
                         '_curtain_category_id': curtain_category_id,
                         '_curtain_category_name': curtain_category_name,
+                        '_hide_remote': hide_remote,
                         '_hide_specification': hide_specification,
                         '_hide_width': hide_width,
                         '_min_width': min_width,

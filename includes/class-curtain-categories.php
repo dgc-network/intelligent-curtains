@@ -135,6 +135,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
             $output .= '<input type="text" id="curtain-category-name" />';
+            $output .= '<input type="checkbox" id="hide-remote" style="display:inline-block; width:5%; " /> Hide the Remote.';
             $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.';
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.';
@@ -156,7 +157,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '</div>';
             $output .= '</fieldset>';
             $output .= '</div>';
-/*
+
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$_id}", OBJECT );
@@ -199,7 +200,7 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-*/            
+            
             return $output;
         }
 
@@ -209,6 +210,7 @@ if (!class_exists('curtain_categories')) {
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             $response = array();
             $response["curtain_category_name"] = $row->curtain_category_name;
+            $response["hide_remote"] = $row->hide_remote;
             $response["hide_specification"] = $row->hide_specification;
             $response["hide_width"] = $row->hide_width;
             $response["min_width"] = $row->min_width;
@@ -225,6 +227,7 @@ if (!class_exists('curtain_categories')) {
                 $this->insert_curtain_category(
                     array(
                         'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'hide_remote'=>$_POST['_hide_remote'],
                         'hide_specification'=>$_POST['_hide_specification'],
                         'hide_width'=>$_POST['_hide_width'],
                         'min_width'=>$_POST['_min_width'],
@@ -238,6 +241,7 @@ if (!class_exists('curtain_categories')) {
                 $this->update_curtain_categories(
                     array(
                         'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'hide_remote'=>$_POST['_hide_remote'],
                         'hide_specification'=>$_POST['_hide_specification'],
                         'hide_width'=>$_POST['_hide_width'],
                         'min_width'=>$_POST['_min_width'],
@@ -283,6 +287,16 @@ if (!class_exists('curtain_categories')) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             return $row->curtain_category_name;
+        }
+
+        public function is_remote_hided( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            if ($row->hide_remote==1) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         public function is_specification_hided( $_id=0 ) {
@@ -364,11 +378,12 @@ if (!class_exists('curtain_categories')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_categories` (
                 curtain_category_id int NOT NULL AUTO_INCREMENT,
                 curtain_category_name varchar(50),
-                hide_specification int(1),
-                hide_width int(1),
+                hide_remote tinyint,
+                hide_specification tinyint,
+                hide_width tinyint,
                 min_width int,
                 max_width int,
-                hide_height int(1),
+                hide_height tinyint,
                 min_height int,
                 max_height int,
                 create_timestamp int(10),

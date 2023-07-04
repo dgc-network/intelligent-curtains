@@ -78,6 +78,14 @@ jQuery(document).ready(function($) {
                 $("#curtain-height").val(response.curtain_height);
                 $("#order-item-qty").val(response.order_item_qty);
 
+                if (response.is_remote_hided) {
+                    $('#curtain-remote-label').hide();
+                    $('#curtain-remote-id').hide();
+                } else {
+                    $('#curtain-remote-label').show();
+                    $('#curtain-remote-id').show();
+                }
+
                 if (response.is_specification_hided) {
                     $('#curtain-specification-label').hide();
                     $('#curtain-specification-id').hide();
