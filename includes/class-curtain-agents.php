@@ -77,7 +77,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -127,19 +127,29 @@ if (!class_exists('curtain_agents')) {
             $output .= '<div id="agent-dialog" title="Agent dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-agent-id" />';
+            $output .= '<div id="agent-zone1">';
+            $output .= '<div id="agent-zone1-left" style="display:inline-block; width:45%; margin-right:5px;">';
             $output .= '<label for="curtain-agent-number">Agent Number</label>';
             $output .= '<input type="text" id="curtain-agent-number" />';
+            $output .= '</div>';
+            $output .= '<div id="agent-zone1-right" style="display:inline-block; width:45%;">';
             $output .= '<label for="curtain-agent-password">Agent Password</label>';
             $output .= '<input type="text" id="curtain-agent-password" />';
+            $output .= '</div>';
+            $output .= '</div>';
             $output .= '<label for="curtain-agent-name">Agent Name</label>';
-            $output .= '<input type="text" id="curtain-agent-name" />';
+            $output .= '<input type="text" id="curtain-agent-name" size="50" />';
+            $output .= '<div id="agent-zone2">';
+            $output .= '<div id="agent-zone2-left" style="display:inline-block; width:45%; margin-right:5px;">';
             $output .= '<label for="curtain-agent-contact1">Contact</label>';
+            $output .= '</div>';
+            $output .= '<div id="agent-zone1-right" style="display:inline-block; width:45%;">';
             $output .= '<input type="text" id="curtain-agent-contact1" />';
             $output .= '<label for="curtain-agent-phone1">Phone</label>';
-            $output .= '<input type="text" id="curtain-agent-phone1" />';
+            $output .= '</div>';
+            $output .= '</div>';
             $output .= '<label for="curtain-agent-address">Agent Address</label>';
-            $output .= '<input type="text" id="curtain-agent-address" />';
-
+            $output .= '<input type="text" id="curtain-agent-address" size="50" />';
             $output .= '</fieldset>';
             $output .= '</div>';
 

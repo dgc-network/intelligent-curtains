@@ -103,7 +103,7 @@ jQuery(document).ready(function($) {
      */
     $('[id^="btn-agent"]').on( "click", function() {
         id = this.id;
-        id = id.substring(13);
+        id = id.substring(10);
         jQuery.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
@@ -129,7 +129,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#agent-dialog").dialog({
-        width: 400,
+        width: 500,
         modal: true,
         autoOpen: false,
         buttons: {
