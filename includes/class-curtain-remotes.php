@@ -11,10 +11,14 @@ if (!class_exists('curtain_remotes')) {
          * Class constructor
          */
         public function __construct() {
+            $this->create_tables();
             $this->_wp_page_title = 'Remotes';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-remote-list');
             add_shortcode( 'curtain-remote-list', array( $this, 'list_curtain_remotes' ) );
-            $this->create_tables();
+            add_action( 'wp_ajax_remote_dialog_get_data', array( $this, 'remote_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_remote_dialog_get_data', array( $this, 'remote_dialog_get_data' ) );
+            add_action( 'wp_ajax_remote_dialog_save_data', array( $this, 'remote_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_remote_dialog_save_data', array( $this, 'remote_dialog_save_data' ) );
         }
 
         public function list_curtain_remotes() {
@@ -60,7 +64,7 @@ if (!class_exists('curtain_remotes')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -86,7 +90,8 @@ if (!class_exists('curtain_remotes')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->curtain_remote_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                //$output .= '<span id="btn-edit-'.$result->curtain_remote_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-remote-'.$result->curtain_remote_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_remote_name.'</td>';
                 $output .= '<td>'.$result->curtain_remote_price.'</td>';
@@ -96,7 +101,19 @@ if (!class_exists('curtain_remotes')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '<tr><td colspan="5"><div id="btn-remote" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
+
+            /** Remote Dialog */
+            $output .= '<div id="remote-dialog" title="Remote dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="curtain-remote-id" />';
+            $output .= '<label for="curtain-remote-name">Remote Name</label>';
+            $output .= '<input type="text" id="curtain-remote-name" />';
+            $output .= '<label for="curtain-remote-price">Remote Price</label>';
+            $output .= '<input type="text" id="curtain-remote-price" />';
+            $output .= '</fieldset>';
+            $output .= '</div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -129,6 +146,42 @@ if (!class_exists('curtain_remotes')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        function remote_dialog_get_data() {
+            global $wpdb;
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_remotes WHERE curtain_remote_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_remote_name"] = $row->curtain_remote_name;
+            $response["curtain_remote_price"] = $row->curtain_remote_price;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function remote_dialog_save_data() {
+            if( $_POST['_curtain_remote_id']=='' ) {
+                $this->insert_curtain_remote(
+                    array(
+                        'curtain_remote_name'=>$_POST['_curtain_remote_name'],
+                        'curtain_remote_price'=>$_POST['_curtain_remote_price']
+                    )
+                );
+            } else {
+                $this->update_curtain_remotes(
+                    array(
+                        'curtain_remote_name'=>$_POST['_curtain_remote_name'],
+                        'curtain_remote_price'=>$_POST['_curtain_remote_price']
+                    ),
+                    array(
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
         }
 
         public function insert_curtain_remote($data=[]) {

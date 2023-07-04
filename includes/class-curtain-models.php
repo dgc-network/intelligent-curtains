@@ -191,7 +191,6 @@ if (!class_exists('curtain_models')) {
             $response["curtain_model_name"] = $row->curtain_model_name;
             $response["model_description"] = $row->model_description;
             $response["model_price"] = $row->model_price;
-            //$response["curtain_category_id"] = $row->curtain_category_id;
             $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
             $response["curtain_vendor_name"] = $row->curtain_vendor_name;
             echo json_encode( $response );

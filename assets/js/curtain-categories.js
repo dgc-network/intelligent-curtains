@@ -321,4 +321,66 @@ jQuery(document).ready(function($) {
 
     $("#specification-dialog").dialog('close');        
 
+    /**
+     * Remote Dialog and Buttons
+     */
+    $('[id^="btn-remote"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(11);
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'remote_dialog_get_data',
+                '_id': id,
+            },
+            success: function (response) {                    
+                $("#curtain-remote-id").val(id);
+                $("#curtain-remote-name").val(response.curtain_remote_name);
+                $("#curtain-remote-price").val(response.curtain_remote_price);
+                $("#remote-dialog").dialog('open');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+
+    $("#remote-dialog").dialog({
+        width: 300,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var curtain_remote_id = $("#curtain-remote-id").val();
+                var curtain_remote_name = $("#curtain-remote-name").val();
+                var curtain_remote_price = $("#curtain-remote-price").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'remote_dialog_save_data',
+                        '_curtain_remote_id': curtain_remote_id,
+                        '_curtain_remote_name': curtain_remote_name,
+                        '_curtain_remote_price': curtain_remote_price,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#remote-dialog").dialog('close');        
+
 });
