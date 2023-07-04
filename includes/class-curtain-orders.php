@@ -677,6 +677,7 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             $response["curtain_model_id"] = $curtain_models->select_options($_id);
             $response["curtain_specification_id"] = $curtain_specifications->select_options($_id);
+            $response["is_remote_hided"] = $curtain_categories->is_remote_hided($_id);
             $response["is_specification_hided"] = $curtain_categories->is_specification_hided($_id);
             $response["is_width_hided"] = $curtain_categories->is_width_hided($_id);
             $response["is_height_hided"] = $curtain_categories->is_height_hided($_id);
