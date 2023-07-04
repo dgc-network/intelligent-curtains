@@ -40,8 +40,14 @@ jQuery(document).ready(function($) {
             "Save": function() {
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_category_name = $("#curtain-category-name").val();
-                var hide_specification = $("#hide-specification").val();
-                alert(hide_specification);
+                //var hide_specification = $("#hide-specification").val();
+                var hide_specification = 0;
+                if ($('#hide-specification').is(":checked")) {
+                    hide_specification = 1;
+                }
+                //var atLeastOneIsChecked = $('#checkArray:checkbox:checked').length > 0;
+//there should be no space between identifier and selector
+                //alert(hide_specification);
                 var hide_width = $("#hide-width").val();
                 var min_width = $("#min-width").val();
                 var max_width = $("#max-width").val();
