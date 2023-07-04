@@ -241,4 +241,76 @@ jQuery(document).ready(function($) {
 
     $("#model-dialog").dialog('close');        
 
+    /**
+     * Specification Dialog and Buttons
+     */
+    $('[id^="btn-specification"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(18);
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'specification_dialog_get_data',
+                '_id': id,
+            },
+            success: function (response) {                    
+                $("#curtain-specification-id").val(id);
+                $("#curtain-specification-name").val(response.curtain_specification_name);
+                $("#specification-description").val(response.specification_description);
+                $("#specification-price").val(response.specification_price);
+                $("#specification-unit").val(response.specification_unit);
+                $("#curtain-category-id").empty();
+                $("#curtain-category-id").append(response.curtain_category_id);
+                $("#specification-dialog").dialog('open');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+
+    $("#specification-dialog").dialog({
+        width: 300,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var curtain_specification_id = $("#curtain-specification-id").val();
+                var curtain_specification_name = $("#curtain-specification-name").val();
+                var specification_description = $("#specification-description").val();
+                var specification_price = $("#specification-price").val();
+                var specification_unit = $("#specification-unit").val();
+                var curtain_category_id = $("#curtain-category-id").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'specification_dialog_save_data',
+                        '_curtain_specification_id': curtain_specification_id,
+                        '_curtain_specification_name': curtain_specification_name,
+                        '_specification_description': specification_description,
+                        '_specification_price': specification_price,
+                        '_specification_unit': specification_unit,
+                        '_curtain_category_id': curtain_category_id,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#specification-dialog").dialog('close');        
+
 });

@@ -11,10 +11,14 @@ if (!class_exists('curtain_specifications')) {
          * Class constructor
          */
         public function __construct() {
+            $this->create_tables();
             $this->_wp_page_title = 'Specifications';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-specification-list');
             add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
-            $this->create_tables();
+            add_action( 'wp_ajax_specification_dialog_get_data', array( $this, 'specification_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_specification_dialog_get_data', array( $this, 'specification_dialog_get_data' ) );
+            add_action( 'wp_ajax_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
         }
 
         public function list_curtain_specifications() {
@@ -105,7 +109,8 @@ if (!class_exists('curtain_specifications')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->curtain_specification_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                //$output .= '<span id="btn-edit-'.$result->curtain_specification_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-specification-'.$result->curtain_specification_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_specification_name.'</td>';
                 $output .= '<td>'.$result->specification_description.'</td>';
@@ -119,7 +124,25 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '<tr><td colspan="8"><div id="btn-specification" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
+
+            /** Specification Dialog */
+            $output .= '<div id="specification-dialog" title="Specification dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="curtain-specification-id" />';
+            $output .= '<label for="curtain-specification-name">Specification</label>';
+            $output .= '<input type="text" id="curtain-specification-name" />';
+            $output .= '<label for="specification-description">Description</label>';
+            $output .= '<input type="text" id="specification-description" />';
+            $output .= '<label for="specification-price">Price</label>';
+            $output .= '<input type="text" id="specification-price" />';
+            $output .= '<label for="specification-unit">Unit</label>';
+            $output .= '<input type="text" id="specification-unit" />';
+            $output .= '<label for="curtain-category-id">Curtain Category</label>';
+            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '</fieldset>';
+            $output .= '</div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -177,6 +200,52 @@ if (!class_exists('curtain_specifications')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        function specification_dialog_get_data() {
+            global $wpdb;
+            $curtain_categories = new curtain_categories();
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_specification_name"] = $row->curtain_specification_name;
+            $response["specification_description"] = $row->specification_description;
+            $response["specification_price"] = $row->specification_price;
+            $response["specification_unit"] = $row->specification_unit;
+            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function specification_dialog_save_data() {
+            if( $_POST['_curtain_specification_id']=='' ) {
+                $this->insert_curtain_specification(
+                    array(
+                        'curtain_specification_name'=>$_POST['_curtain_specification_name'],
+                        'specification_description'=>$_POST['_specification_description'],
+                        'specification_price'=>$_POST['_specification_price'],
+                        'specification_unit'=>$_POST['_specification_unit'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                    )
+                );
+            } else {
+                $this->update_curtain_specifications(
+                    array(
+                        'curtain_specification_name'=>$_POST['_curtain_specification_name'],
+                        'specification_description'=>$_POST['_specification_description'],
+                        'specification_price'=>$_POST['_specification_price'],
+                        'specification_unit'=>$_POST['_specification_unit'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                    ),
+                    array(
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
         }
 
         public function insert_curtain_specification($data=[]) {
