@@ -11,10 +11,14 @@ if (!class_exists('curtain_models')) {
          * Class constructor
          */
         public function __construct() {
+            $this->create_tables();
             $this->_wp_page_title = 'Models';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-model-list');
             add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
-            $this->create_tables();
+            add_action( 'wp_ajax_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
+            add_action( 'wp_ajax_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
         }
 
         public function list_curtain_models() {
@@ -67,7 +71,7 @@ if (!class_exists('curtain_models')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
@@ -96,12 +100,12 @@ if (!class_exists('curtain_models')) {
             } else {
                 $results = general_helps::get_search_results($wpdb->prefix.'curtain_models', $_POST['_where']);
             }
-            //$results = general_helps::get_search_results($wpdb->prefix.'curtain_models', $_POST['_where']);
             $output .= '<tbody>';
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                //$output .= '<span id="btn-edit-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-model-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td style="text-align: center;">'.$result->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->model_description.'</td>';
@@ -113,7 +117,25 @@ if (!class_exists('curtain_models')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '<tr><td colspan="7"><div id="btn-model" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
+
+            /** Model Dialog */
+            $output .= '<div id="model-dialog" title="Model dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="curtain-model-id" />';
+            $output .= '<label for="curtain-model-name">Model Name</label>';
+            $output .= '<input type="text" id="curtain-model-name" />';
+            $output .= '<label for="model-description">Description</label>';
+            $output .= '<input type="text" id="model-description" />';
+            $output .= '<label for="model-price">Price</label>';
+            $output .= '<input type="text" id="model-price" />';
+            $output .= '<label for="curtain-category-id">Curtain Category</label>';
+            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '<label for="curtain-vendor-name">Curtain Vendor</label>';
+            $output .= '<input type="text" id="curtain-vendor-name" />';
+            $output .= '</fieldset>';
+            $output .= '</div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -158,6 +180,51 @@ if (!class_exists('curtain_models')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        function model_dialog_get_data() {
+            global $wpdb;
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_model_name"] = $row->curtain_model_name;
+            $response["model_description"] = $row->model_description;
+            $response["model_price"] = $row->model_price;
+            $response["curtain_category_id"] = $row->curtain_category_id;
+            $response["curtain_vendor_name"] = $row->curtain_vendor_name;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function model_dialog_save_data() {
+            if( $_POST['_curtain_model_id']=='' ) {
+                $this->insert_curtain_model(
+                    array(
+                        'curtain_model_name'=>$_POST['_curtain_model_name'],
+                        'model_description'=>$_POST['_model_description'],
+                        'model_price'=>$_POST['_model_price'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_vendor_name'=>$_POST['_curtain_vendor_name']
+                    )
+                );
+            } else {
+                $this->update_curtain_models(
+                    array(
+                        'curtain_model_name'=>$_POST['_curtain_model_name'],
+                        'model_description'=>$_POST['_model_description'],
+                        'model_price'=>$_POST['_model_price'],
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_vendor_name'=>$_POST['_curtain_vendor_name']
+                    ),
+                    array(
+                        'curtain_model_id'=>$_POST['_curtain_model_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
         }
 
         public function insert_curtain_model($data=[]) {

@@ -209,9 +209,7 @@ jQuery(document).ready(function($) {
                 $("#curtain-remote-id").append(response.curtain_remote_id);
                 $("#curtain-specification-id").empty();
                 $("#curtain-specification-id").append(response.curtain_specification_id);
-                //$('#curtain-width-label').empty();
                 $("#curtain-width").val(response.curtain_width);
-                //$('#curtain-height-label').empty();
                 $("#curtain-height").val(response.curtain_height);
                 $("#order-item-qty").val(response.order_item_qty);
 

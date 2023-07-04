@@ -172,4 +172,63 @@ jQuery(document).ready(function($) {
 
     $("#agent-dialog").dialog('close');        
 
+    /**
+     * Model Dialog and Buttons
+     */
+    $('[id^="btn-model"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(10);
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'model_dialog_get_data',
+                '_id': id,
+            },
+            success: function (response) {                    
+                $("#curtain-model-id").val(id);
+                $("#curtain-model-name").val(response.curtain_model_name);
+                $("#model-dialog").dialog('open');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+
+    $("#model-dialog").dialog({
+        width: 300,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var curtain_model_id = $("#curtain-model-id").val();
+                var curtain_model_name = $("#curtain-model-name").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'model_dialog_save_data',
+                        '_curtain_model_id': curtain_model_id,
+                        '_curtain_model_name': curtain_model_name,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#model-dialog").dialog('close');        
+
 });
