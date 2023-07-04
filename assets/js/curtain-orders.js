@@ -112,7 +112,8 @@ jQuery(document).ready(function($) {
     /* Cart Button */
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
-        $(this).css('color', 'cornflowerblue');
+        //$(this).css('color', 'cornflowerblue');
+        $(this).css('color', 'red');
     });
         
     $('[id^="cart-btn"]').mouseout(function() {
@@ -172,14 +173,13 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
                     
-                    $("#order-item-id").val(id);
-                    $("#order-item-qty").val(response.order_item_qty);
-                    //$("#curtain-category-id").val(response.curtain_category_id);
-                    //$("#curtain-category-id").append(response.select_categories);
-                    $("#curtain-category-id").append(response.curtain_category_id);
-                    //$("#curtain-model-id").val(response.curtain_model_id);
-                    $("#curtain-model-id").append(response.curtain_model_id);
-                    $("#curtain-agent-id").val(response.curtain_agent_id);
+                $("#order-item-id").val(id);
+                $("#curtain-category-id").empty();
+                $("#curtain-category-id").append(response.curtain_category_id);
+                $("#curtain-model-id").empty();
+                $("#curtain-model-id").append(response.curtain_model_id);
+                $("#order-item-qty").val(response.order_item_qty);
+                $("#curtain-agent-id").val(response.curtain_agent_id);
 /*                    
                     for(index=0;index<10;index++) {
                         $("#session-edit-"+index).empty();

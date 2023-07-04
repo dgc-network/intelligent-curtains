@@ -88,7 +88,8 @@ if (!class_exists('curtain_categories')) {
             $output .= '<th>category</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>width</th>';
-            $output .= '<th>update_time</th>';
+            $output .= '<th>height</th>';
+            //$output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
@@ -101,17 +102,22 @@ if (!class_exists('curtain_categories')) {
                 $output .= '<span id="btn-category-'.$result->curtain_category_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
-                if ($result->hide_specification!=1) {
+                if ($result->hide_specification==1) {
+                    $output .= '<td></td>';
+                } else {
                     $output .= '<td style="text-align: center;">'.$result->hide_specification.'</td>';
-                } else {
-                    $output .= '<td></td>';
                 }
-                if ($result->hide_width!=1) {
+                if ($result->hide_width==1) {
+                    $output .= '<td></td>';
+                } else {
                     $output .= '<td style="text-align: center;">'.$result->min_width.'cm ~ '.$result->max_width.'cm</td>';
-                } else {
-                    $output .= '<td></td>';
                 }
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                if ($result->hide_height==1) {
+                    $output .= '<td></td>';
+                } else {
+                    $output .= '<td style="text-align: center;">'.$result->min_height.'cm ~ '.$result->max_height.'cm</td>';
+                }
+                //$output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_category_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
