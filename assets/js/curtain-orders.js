@@ -171,8 +171,7 @@ jQuery(document).ready(function($) {
                 'action': 'order_item_dialog_get_data',
                 '_id': id,
             },
-            success: function (response) {
-                    
+            success: function (response) {                    
                 $("#order-item-id").val(id);
                 $("#curtain-category-id").empty();
                 $("#curtain-category-id").append(response.curtain_category_id);
@@ -180,76 +179,7 @@ jQuery(document).ready(function($) {
                 $("#curtain-model-id").append(response.curtain_model_id);
                 $("#order-item-qty").val(response.order_item_qty);
                 $("#curtain-agent-id").val(response.curtain_agent_id);
-/*                    
-                    for(index=0;index<10;index++) {
-                        $("#session-edit-"+index).empty();
-                        $("#session-title-"+index).empty();
-                        $("#session-del-"+index).empty();
-                    }
-                    $("#session-add").empty();
-                    $.each(response.course_outline, function (index, value) {
-                        $("#session-edit-"+index).append('<span id="btn-edit-session-'+value.session_id+'"><i class="fa-regular fa-pen-to-square"></i></span>');
-                        $("#session-title-"+index).append('<a href="/blocks/?_block_list='+value.session_id+'">'+value.session_title+'</a>');
-                        $("#session-del-"+index).append('<span id="btn-del-session-'+value.session_id+'"><i class="fa-regular fa-trash-can"></i></span>');
-                    });
-                    $("#session-add").append('<div id="btn-add-session-'+id+'" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div>');
-    
-                    $('[id^="btn-"]').mouseover(function() {
-                        $(this).css('cursor', 'pointer');
-                        $(this).css('color', 'red');
-                    });
-                        
-                    $('[id^="btn-"]').mouseout(function() {
-                        $(this).css('cursor', 'default');
-                        $(this).css('color', 'black');
-                    });
-                
-                    $('[id^="btn-del-session-"]').on( "click", function() {
-                        id = this.id;
-                        id = id.substring(16);
-                        if (window.confirm("Are you sure you want to delete this record?")) {
-                            window.location.replace("?_session_delete=" + id);
-                        }        
-                    });
-    
-                    $('[id^="btn-add-session-"]').on( "click", function() {
-                        id = this.id;
-                        id = id.substring(16);
-                        $("#course-id").val(id);
-                        $("#session-id").val('');
-                        $("#session-title").val('');
-                        $("#session-release-date").val('');
-                        $("#session-release-time").val('08:00');
-                        $("#session-visibility").val('');
-                        $("#session-dialog").dialog('open');
-                    });
-                
-                    $('[id^="btn-edit-session-"]').on( "click", function() {
-                        id = this.id;
-                        id = id.substring(17);
-                        jQuery.ajax({
-                            type: 'POST',
-                            url: ajax_object.ajax_url,
-                            dataType: "json",
-                            data: {
-                                'action': 'session_dialog_get_data',
-                                '_id': id,
-                            },
-                            success: function (response) {
-                                $("#session-id").val(id);
-                                $("#course-id").val(response.course_id);
-                                $("#session-title").val(response.session_title);
-                                $("#session-release-date").val(response.session_release_date);
-                                $("#session-release-time").val(response.session_release_time);
-                                $("#session-visibility").val(response.session_visibility);
-                                $("#session-dialog").dialog('open');
-                            },
-                            error: function(error){
-                                alert(error);
-                            }
-                        });
-                    });
-*/                
+
                 $("#order-item-dialog").dialog('open');
             },
             error: function(error){
