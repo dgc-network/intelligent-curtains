@@ -11,10 +11,14 @@ if (!class_exists('curtain_agents')) {
          * Class constructor
          */
         public function __construct() {
+            $this->create_tables();
             $this->_wp_page_title = 'Agents';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-agent-list');
             add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
-            $this->create_tables();
+            add_action( 'wp_ajax_agent_dialog_get_data', array( $this, 'agent_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_agent_dialog_get_data', array( $this, 'agent_dialog_get_data' ) );
+            add_action( 'wp_ajax_agent_dialog_save_data', array( $this, 'agent_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_agent_dialog_save_data', array( $this, 'agent_dialog_save_data' ) );
         }
 
         public function list_curtain_agents() {
@@ -92,7 +96,8 @@ if (!class_exists('curtain_agents')) {
             $output .= '<th>name</th>';
             $output .= '<th>contact</th>';
             $output .= '<th>phone</th>';
-            $output .= '<th>update_time</th>';
+            $output .= '<th>address</th>';
+            //$output .= '<th>update_time</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
@@ -101,19 +106,42 @@ if (!class_exists('curtain_agents')) {
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
-                $output .= '<span id="btn-edit-'.$result->curtain_agent_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                //$output .= '<span id="btn-edit-'.$result->curtain_agent_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
+                $output .= '<span id="btn-agent-'.$result->curtain_agent_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td style="text-align: center;">'.$result->agent_number.'</td>';
                 $output .= '<td>'.$result->agent_name.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->contact1.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->phone1.'</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td>'.$result->agent_address.'</td>';
+                //$output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_agent_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
                 $output .= '</tr>';
             }
+            $output .= '<tr><td colspan="7"><div id="btn-agent" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
+
+            /** Agent Dialog */
+            $output .= '<div id="agent-dialog" title="Agent dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="curtain-agent-id" />';
+            $output .= '<label for="curtain-agent-number">Agent Number</label>';
+            $output .= '<input type="text" id="curtain-agent-number" />';
+            $output .= '<label for="curtain-agent-password">Agent Password</label>';
+            $output .= '<input type="text" id="curtain-agent-password" />';
+            $output .= '<label for="curtain-agent-name">Agent Name</label>';
+            $output .= '<input type="text" id="curtain-agent-name" />';
+            $output .= '<label for="curtain-agent-contact1">Contact</label>';
+            $output .= '<input type="text" id="curtain-agent-contact1" />';
+            $output .= '<label for="curtain-agent-phone1">Phone</label>';
+            $output .= '<input type="text" id="curtain-agent-phone1" />';
+            $output .= '<label for="curtain-agent-address">Agent Address</label>';
+            $output .= '<input type="text" id="curtain-agent-address" />';
+
+            $output .= '</fieldset>';
+            $output .= '</div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -158,6 +186,49 @@ if (!class_exists('curtain_agents')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        function agent_dialog_get_data() {
+            global $wpdb;
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_agent_name"] = $row->curtain_agent_name;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function agent_dialog_save_data() {
+            if( $_POST['_curtain_agent_id']=='' ) {
+                $this->insert_curtain_agent(
+                    array(
+                        'agent_number'=>$_POST['_curtain_agent_number'],
+                        'agent_password'=>$_POST['_curtain_agent_password'],
+                        'agent_name'=>$_POST['_curtain_agent_name'],
+                        'contact1'=>$_POST['_curtain_agent_contact1'],
+                        'phone1'=>$_POST['_curtain_agent_phone1'],
+                        'agent_address'=>$_POST['_curtain_agent_address'],
+                    )
+                );
+            } else {
+                $this->update_curtain_agents(
+                    array(
+                        'agent_number'=>$_POST['_curtain_agent_number'],
+                        'agent_password'=>$_POST['_curtain_agent_password'],
+                        'agent_name'=>$_POST['_curtain_agent_name'],
+                        'contact1'=>$_POST['_curtain_agent_contact1'],
+                        'phone1'=>$_POST['_curtain_agent_phone1'],
+                        'agent_address'=>$_POST['_curtain_agent_address'],
+                    ),
+                    array(
+                        'curtain_agent_id'=>$_POST['_curtain_agent_id']
+                    )
+                );
+            }
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
         }
 
         public function insert_curtain_agent($data=[]) {

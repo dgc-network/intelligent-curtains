@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+/*
     $("#select-order-status-backup").change(function() {
         var status = $(this).val();
         var number = $("#select-order-number").val();
@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
         });
 
     });
-    
+*/    
     $("#curtain-category-id").change(function() {
         var val = $(this).val();
         $("#curtain-model-id").empty();
@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
         });
 
     });
-    
+/*    
     $("#select-category-id").change(function() {
         var val = $(this).val();
         $("#select-model-id").empty();
@@ -108,7 +108,7 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    
+*/    
     /* Cart Button */
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');

@@ -153,7 +153,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '</div>';
             $output .= '</fieldset>';
             $output .= '</div>';
-
+/*
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$_id}", OBJECT );
@@ -196,7 +196,7 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-            
+*/            
             return $output;
         }
 
@@ -280,6 +280,36 @@ if (!class_exists('curtain_categories')) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             return $row->curtain_category_name;
+        }
+
+        public function is_hided_specification( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            if ($row->hide_specification==1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function is_hided_width( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            if ($row->hide_width==1) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function is_hided_height( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            if ($row->hide_height==1) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         public function get_min_width( $_id=0 ) {

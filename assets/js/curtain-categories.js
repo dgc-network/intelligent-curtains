@@ -98,4 +98,78 @@ jQuery(document).ready(function($) {
 
     $("#category-dialog").dialog('close');        
 
+    /**
+     * Agent Dialog and Buttons
+     */
+    $('[id^="btn-agent"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(13);
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'agent_dialog_get_data',
+                '_id': id,
+            },
+            success: function (response) {                    
+                $("#curtain-agent-id").val(id);
+                $("#curtain-agent-number").val(response.curtain_agent_number);
+                $("#curtain-agent-password").val(response.curtain_agent_password);
+                $("#curtain-agent-name").val(response.curtain_agent_name);
+                $("#curtain-agent-contact1").val(response.curtain_agent_contact1);
+                $("#curtain-agent-phone1").val(response.curtain_agent_phone1);
+                $("#curtain-agent-address").val(response.curtain_agent_address);
+                $("#agent-dialog").dialog('open');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+
+    $("#agent-dialog").dialog({
+        width: 400,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var curtain_agent_id = $("#curtain-agent-id").val();
+                var curtain_agent_number = $("#curtain-agent-number").val();
+                var curtain_agent_password = $("#curtain-agent-password").val();
+                var curtain_agent_name = $("#curtain-agent-name").val();
+                var curtain_agent_contact1 = $("#curtain-agent-contact1").val();
+                var curtain_agent_phone1 = $("#curtain-agent-phone1").val();
+                var curtain_agent_address = $("#curtain-agent-address").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'agent_dialog_save_data',
+                        '_curtain_agent_id': curtain_agent_id,
+                        '_curtain_agent_number': curtain_agent_number,
+                        '_curtain_agent_password': curtain_agent_password,
+                        '_curtain_agent_name': curtain_agent_name,
+                        '_curtain_agent_contact1': curtain_agent_contact1,
+                        '_curtain_agent_phone1': curtain_agent_phone1,
+                        '_curtain_agent_address': curtain_agent_address,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#agent-dialog").dialog('close');        
+
 });
