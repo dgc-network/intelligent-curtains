@@ -1,27 +1,5 @@
 jQuery(document).ready(function($) {
-/*
-    $("#select-order-status-backup").change(function() {
-        var status = $(this).val();
-        var number = $("#select-order-number").val();
 
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_order_status',
-                'number': number,
-                'status': status,
-            },
-            success: function (response) {
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
-
-    });
-*/    
     /* Cart Button */
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
@@ -231,5 +209,25 @@ jQuery(document).ready(function($) {
 
     });
 
+    $("#customer-order-status").change(function() {
+        var customer_order_status = $(this).val();
+        var customer_order_number = $("#customer-order-number").val();
 
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'select_order_status',
+                '_customer_order_number': customer_order_number,
+                '_customer_order_status': customer_order_status,
+            },
+            success: function (response) {
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+    
 });

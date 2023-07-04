@@ -17,6 +17,10 @@ if (!class_exists('curtain_orders')) {
             $this->_wp_page_title = 'Orders';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'shopping-item-list', 'system');
             add_shortcode( 'shopping-item-list', array( $this, 'list_order_items' ) );
+            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+                $this->see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+                $this->see_more = json_decode($this->see_more, true);
+            }
             add_action( 'wp_ajax_order_item_dialog_get_data', array( $this, 'order_item_dialog_get_data' ) );
             add_action( 'wp_ajax_nopriv_order_item_dialog_get_data', array( $this, 'order_item_dialog_get_data' ) );
             add_action( 'wp_ajax_order_item_dialog_save_data', array( $this, 'order_item_dialog_save_data' ) );
@@ -25,10 +29,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_select_category_id', array( $this, 'select_category_id' ) );
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
-            if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
-                $this->see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
-                $this->see_more = json_decode($this->see_more, true);
-            }
+            add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
+            add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
         }
 
         public function order_status_notice($customer_order_number, $customer_order_status) {
@@ -154,9 +156,9 @@ if (!class_exists('curtain_orders')) {
                 if($user->has_cap('manage_options')){
                     $output .= '<td>';
                     $output .= '<form method="post" style="display:flex;">';
-                    $output .= '<select name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
-                    $output .= '<input type="hidden" name="_customer_order_number" value="'.$row->customer_order_number.'" />';
-                    $output .= '<input type="submit" name="_status_submit" style="margin:3px;" value="Submit" />';
+                    $output .= '<select id="customer-order-status" name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
+                    $output .= '<input type="hidden" id="customer-order-number" name="_customer_order_number" value="'.$row->customer_order_number.'" />';
+                    //$output .= '<input type="submit" name="_status_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</td>';
                 } else {
@@ -683,6 +685,23 @@ if (!class_exists('curtain_orders')) {
             $response['max_width'] = $curtain_categories->get_max_width($_id);
             $response['min_height'] = $curtain_categories->get_min_height($_id);
             $response['max_height'] = $curtain_categories->get_max_height($_id);
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function select_order_status() {
+
+            $this->update_customer_orders(
+                array(
+                    'customer_order_status'=>$_POST['_customer_order_status'],
+                ),
+                array(
+                    'customer_order_number'=>$_POST['_customer_order_number'],
+                )
+            );
+            $this->order_status_notice($_POST['_customer_order_number'], $_POST['_customer_order_status']);
+
+            $response = array();
             echo json_encode( $response );
             wp_die();
         }
