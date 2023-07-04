@@ -184,13 +184,15 @@ if (!class_exists('curtain_models')) {
 
         function model_dialog_get_data() {
             global $wpdb;
+            $curtain_categories = new curtain_categories();
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $_id ), OBJECT );
             $response = array();
             $response["curtain_model_name"] = $row->curtain_model_name;
             $response["model_description"] = $row->model_description;
             $response["model_price"] = $row->model_price;
-            $response["curtain_category_id"] = $row->curtain_category_id;
+            //$response["curtain_category_id"] = $row->curtain_category_id;
+            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
             $response["curtain_vendor_name"] = $row->curtain_vendor_name;
             echo json_encode( $response );
             wp_die();

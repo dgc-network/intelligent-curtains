@@ -17,17 +17,14 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
-                //$("#hide-specification").val(response.hide_specification);
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
                 }            
-                //$("#hide-width").val(response.hide_width);
                 if (response.hide_width==1) {
                     $('#hide-width').prop('checked', true);
                 }            
                 $("#min-width").val(response.min_width);
                 $("#max-width").val(response.max_width);
-                //$("#hide-height").val(response.hide_height);
                 if (response.hide_height==1) {
                     $('#hide-height').prop('checked', true);
                 }            
@@ -189,6 +186,11 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-model-id").val(id);
                 $("#curtain-model-name").val(response.curtain_model_name);
+                $("#model-description").val(response.model_description);
+                $("#model-price").val(response.model_price);
+                $("#curtain-category-id").empty();
+                $("#curtain-category-id").append(response.curtain_category_id);
+                $("#curtain-vendor-name").val(response.curtain_vendor_name);
                 $("#model-dialog").dialog('open');
             },
             error: function(error){
@@ -205,6 +207,10 @@ jQuery(document).ready(function($) {
             "Save": function() {
                 var curtain_model_id = $("#curtain-model-id").val();
                 var curtain_model_name = $("#curtain-model-name").val();
+                var model_description = $("#model-description").val();
+                var model_price = $("#model-price").val();
+                var curtain_category_id = $("#curtain-category-id").val();
+                var curtain_vendor_name = $("#curtain-vendor-name").val();
 
                 jQuery.ajax({
                     type: 'POST',
@@ -214,6 +220,10 @@ jQuery(document).ready(function($) {
                         'action': 'model_dialog_save_data',
                         '_curtain_model_id': curtain_model_id,
                         '_curtain_model_name': curtain_model_name,
+                        '_model_description': model_description,
+                        '_model_price': model_price,
+                        '_curtain_category_id': curtain_category_id,
+                        '_curtain_vendor_name': curtain_vendor_name,
                     },
                     success: function (response) {
                         window.location.replace("?_update=");
