@@ -128,7 +128,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-agent-id" />';
             $output .= '<div id="agent-zone1">';
-            $output .= '<div id="agent-zone1-left" style="display:inline-block; width:45%; margin-right:5px;">';
+            $output .= '<div id="agent-zone1-left" style="display:inline-block; width:45%; margin-right:10px;">';
             $output .= '<label for="curtain-agent-number">Agent Number</label>';
             $output .= '<input type="text" id="curtain-agent-number" />';
             $output .= '</div>';
@@ -139,10 +139,10 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
 
             $output .= '<label for="curtain-agent-name">Agent Name</label>';
-            $output .= '<input type="text" id="curtain-agent-name" size="45" />';
+            $output .= '<input type="text" id="curtain-agent-name" size="40" />';
 
             $output .= '<div id="agent-zone2">';
-            $output .= '<div id="agent-zone2-left" style="display:inline-block; width:45%; margin-right:5px;">';
+            $output .= '<div id="agent-zone2-left" style="display:inline-block; width:45%; margin-right:10px;">';
             $output .= '<label for="curtain-agent-contact1">Contact</label>';
             $output .= '<input type="text" id="curtain-agent-contact1" />';
             $output .= '</div>';
@@ -153,7 +153,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
 
             $output .= '<label for="curtain-agent-address">Agent Address</label>';
-            $output .= '<input type="text" id="curtain-agent-address" size="45" />';
+            $output .= '<input type="text" id="curtain-agent-address" size="40" />';
             $output .= '</fieldset>';
             $output .= '</div>';
 
