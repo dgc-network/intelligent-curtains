@@ -135,8 +135,8 @@ if (!class_exists('curtain_categories')) {
             $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
             $output .= '<input type="text" id="curtain-category-name" />';
-            $output .= '<input type="checkbox" id="hide-remote" style="display:inline-block; width:5%; " /> Hide the Remote.';
-            $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.';
+            $output .= '<input type="checkbox" id="hide-remote" style="display:inline-block; width:5%; " /> Hide the Remote.<br>';
+            $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.<br>';
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.';
             $output .= '<div id="show-width">';

@@ -219,6 +219,11 @@ jQuery(document).ready(function($) {
 
     });
 
+    var prev_val;
+    $('#customer-order-status').focus(function() {
+        prev_val = $(this).val();
+    });
+
     $("#customer-order-status").change(function() {
         if (window.confirm("Are you sure you want to change the status?")) {
             var customer_order_status = $(this).val();
@@ -239,7 +244,9 @@ jQuery(document).ready(function($) {
                     alert(error);
                 }
             });
-        }        
+        } else {
+            $(this).val(prev_val);
+        }
     });
     
 });
