@@ -450,8 +450,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<tbody>';
             $_addition = array('curtain_agent_id='.$this->curtain_agent_id, 'is_checkout=0');
             $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
-            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id} AND is_checkout=0", OBJECT );                
-            //$results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_agent_id={$this->curtain_agent_id}", OBJECT );                
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {
@@ -632,6 +630,7 @@ if (!class_exists('curtain_orders')) {
             if( $_POST['_order_item_id']=='' ) {
                 $this->insert_order_item(
                     array(
+                        'curtain_agent_id'=>$this->curtain_agent_id,
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
                         'curtain_remote_id'=>$_POST['_curtain_remote_id'],
@@ -640,7 +639,6 @@ if (!class_exists('curtain_orders')) {
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
                         'order_item_amount'=>$amount,
-                        'curtain_agent_id'=>$this->curtain_agent_id,
                         'is_checkout'=>0
                     )
                 );
