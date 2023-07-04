@@ -74,7 +74,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_add">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right">';
