@@ -20,12 +20,17 @@ jQuery(document).ready(function($) {
                 //$("#hide-specification").val(response.hide_specification);
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
-                    //$("#hide-specification:checkbox:checked").length > 0;
                 }            
-                $("#hide-width").val(response.hide_width);
+                //$("#hide-width").val(response.hide_width);
+                if (response.hide_width==1) {
+                    $('#hide-width').prop('checked', true);
+                }            
                 $("#min-width").val(response.min_width);
                 $("#max-width").val(response.max_width);
-                $("#hide-height").val(response.hide_height);
+                //$("#hide-height").val(response.hide_height);
+                if (response.hide_height==1) {
+                    $('#hide-height').prop('checked', true);
+                }            
                 $("#min-height").val(response.min_height);
                 $("#max-height").val(response.max_height);
                 $("#category-dialog").dialog('open');
