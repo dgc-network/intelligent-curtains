@@ -94,8 +94,8 @@ if (!class_exists('curtain_remotes')) {
                 $output .= '<span id="btn-remote-'.$result->curtain_remote_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_remote_name.'</td>';
-                $output .= '<td>'.$result->curtain_remote_price.'</td>';
-                $output .= '<td>'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
+                $output .= '<td style="text-align: center;">'.$result->curtain_remote_price.'</td>';
+                $output .= '<td style="text-align: center;">'.wp_date( get_option('date_format'), $result->update_timestamp ).' '.wp_date( get_option('time_format'), $result->update_timestamp ).'</td>';
                 $output .= '<td style="text-align: center;">';
                 $output .= '<span id="btn-del-'.$result->curtain_remote_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                 $output .= '</td>';
