@@ -22,121 +22,6 @@ jQuery(document).ready(function($) {
 
     });
 */    
-    $("#curtain-category-id").change(function() {
-        var val = $(this).val();
-        $("#curtain-model-id").empty();
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_category_id',
-                'id': val,
-            },
-            success: function (response) {
-/*                
-                current_time = response.currenttime;
-                models = response.models;
-                specifications = response.specifications;
-
-                for (let x in models) {
-                    $("#curtain-model-id").append(models[x]);
-                }
-    
-                for (let x in specifications) {
-                    $("#select-specification-id").append(specifications[x]);
-                }
-*/
-                $("#curtain-model-id").empty();
-                $("#curtain-model-id").append(response.curtain_model_id);
-                //$("#curtain-remote-id").empty();
-                //$("#curtain-remote-id").append(response.curtain_remote_id);
-                $("#curtain-specification-id").empty();
-                $("#curtain-specification-id").append(response.curtain_specification_id);
-
-                $('#curtain-width-label').empty();
-                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
-                $('#curtain-height-label').empty();
-                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
-
-                // if (val==1) {
-                
-                if (response.is_specification_hided) {
-                    $('#curtain-specification-label').hide();
-                    $('#curtain-specification-id').hide();
-                } else {
-                    $('#curtain-specification-label').show();
-                    $('#curtain-specification-id').show();
-                }
-
-                if (response.is_width_hided) {
-                    $('#curtain-width-label').hide();
-                    $('#curtain-width').hide();
-                } else {
-                    $('#curtain-width-label').show();
-                    $('#curtain-width').show();
-                }
-
-                if (response.is_height_hided) {
-                    $('#curtain-height-label').hide();
-                    $('#curtain-height').hide();
-                } else {
-                    $('#curtain-height-label').show();
-                    $('#curtain-height').show();
-                }
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
-
-    });
-/*    
-    $("#select-category-id").change(function() {
-        var val = $(this).val();
-        $("#select-model-id").empty();
-        $("#select-specification-id").empty();
-        $("#curtain-width-label").empty();
-        $("#curtain-height-label").empty();
-
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_category_id',
-                'id': val,
-            },
-            success: function (response) {
-                current_time = response.currenttime;
-                models = response.models;
-                specifications = response.specifications;
-
-                for (let x in models) {
-                    $("#select-model-id").append(models[x]);
-                }
-    
-                for (let x in specifications) {
-                    $("#select-specification-id").append(specifications[x]);
-                }
-
-                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
-                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
-
-                if (val==1) {
-                    $('#curtain-height-label').hide();
-                    $('#curtain-height').hide();
-                } else {
-                    $('#curtain-height-label').show();
-                    $('#curtain-height').show();
-                }
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
-    });
-*/    
     /* Cart Button */
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
@@ -201,8 +86,9 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {                    
                 $("#order-item-id").val(id);
-                $("#curtain-category-id").empty();
-                $("#curtain-category-id").append(response.curtain_category_id);
+                //$("#curtain-category-id").empty();
+                //$("#curtain-category-id").append(response.curtain_category_id);
+                $("#curtain-category-id").val(response.curtain_category_id);
                 $("#curtain-model-id").empty();
                 $("#curtain-model-id").append(response.curtain_model_id);
                 $("#curtain-remote-id").empty();
@@ -290,5 +176,61 @@ jQuery(document).ready(function($) {
     });
 
     $("#order-item-dialog").dialog('close');        
+
+    $("#curtain-category-id").change(function() {
+        var val = $(this).val();
+        $("#curtain-model-id").empty();
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'select_category_id',
+                'id': val,
+            },
+            success: function (response) {
+                $("#curtain-model-id").empty();
+                $("#curtain-model-id").append(response.curtain_model_id);
+                //$("#curtain-remote-id").empty();
+                //$("#curtain-remote-id").append(response.curtain_remote_id);
+                $("#curtain-specification-id").empty();
+                $("#curtain-specification-id").append(response.curtain_specification_id);
+
+                $('#curtain-width-label').empty();
+                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                $('#curtain-height-label').empty();
+                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+
+                if (response.is_specification_hided) {
+                    $('#curtain-specification-label').hide();
+                    $('#curtain-specification-id').hide();
+                } else {
+                    $('#curtain-specification-label').show();
+                    $('#curtain-specification-id').show();
+                }
+
+                if (response.is_width_hided) {
+                    $('#curtain-width-label').hide();
+                    $('#curtain-width').hide();
+                } else {
+                    $('#curtain-width-label').show();
+                    $('#curtain-width').show();
+                }
+
+                if (response.is_height_hided) {
+                    $('#curtain-height-label').hide();
+                    $('#curtain-height').hide();
+                } else {
+                    $('#curtain-height-label').show();
+                    $('#curtain-height').show();
+                }
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+
+    });
+
 
 });

@@ -608,7 +608,7 @@ if (!class_exists('curtain_orders')) {
             $height = 1;
             $qty = 1;
             $amount = 0;
-            
+
             if (is_numeric($_POST['_curtain_width'])) {
                 $width = $_POST['_curtain_width'];
             }
@@ -630,7 +630,6 @@ if (!class_exists('curtain_orders')) {
             if( $_POST['_order_item_id']=='' ) {
                 $this->insert_order_item(
                     array(
-                        'curtain_agent_id'=>$this->curtain_agent_id,
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
                         'curtain_model_id'=>$_POST['_curtain_model_id'],
                         'curtain_remote_id'=>$_POST['_curtain_remote_id'],
@@ -639,6 +638,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
                         'order_item_amount'=>$amount,
+                        'curtain_agent_id'=>$this->curtain_agent_id,
                         'is_checkout'=>0
                     )
                 );
