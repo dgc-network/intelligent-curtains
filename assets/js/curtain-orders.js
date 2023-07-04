@@ -59,7 +59,25 @@ jQuery(document).ready(function($) {
                 $('#curtain-height-label').empty();
                 $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
 
-                if (val==1) {
+                // if (val==1) {
+                
+                if (response.is_specification_hided) {
+                    $('#curtain-specification-label').hide();
+                    $('#curtain-specification-id').hide();
+                } else {
+                    $('#curtain-specification-label').show();
+                    $('#curtain-specification-id').show();
+                }
+
+                if (response.is_width_hided) {
+                    $('#curtain-width-label').hide();
+                    $('#curtain-width').hide();
+                } else {
+                    $('#curtain-width-label').show();
+                    $('#curtain-width').show();
+                }
+
+                if (response.is_height_hided) {
                     $('#curtain-height-label').hide();
                     $('#curtain-height').hide();
                 } else {
