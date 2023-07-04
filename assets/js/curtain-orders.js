@@ -29,7 +29,9 @@ jQuery(document).ready(function($) {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(23);        
-        window.location.replace("?_delete_customer_order=" + id);
+        if (window.confirm("Are you sure you want to delete this record?")) {
+            window.location.replace("?_delete_customer_order=" + id);
+        }        
     });
 
     /* Print Customer Order Button */
@@ -210,24 +212,26 @@ jQuery(document).ready(function($) {
     });
 
     $("#customer-order-status").change(function() {
-        var customer_order_status = $(this).val();
-        var customer_order_number = $("#customer-order-number").val();
-
-        jQuery.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'select_order_status',
-                '_customer_order_number': customer_order_number,
-                '_customer_order_status': customer_order_status,
-            },
-            success: function (response) {
-            },
-            error: function(error){
-                alert(error);
-            }
-        });
+        if (window.confirm("Are you sure you want to change the status?")) {
+            var customer_order_status = $(this).val();
+            var customer_order_number = $("#customer-order-number").val();
+    
+            jQuery.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'select_order_status',
+                    '_customer_order_number': customer_order_number,
+                    '_customer_order_status': customer_order_status,
+                },
+                success: function (response) {
+                },
+                error: function(error){
+                    alert(error);
+                }
+            });
+        }        
     });
     
 });
