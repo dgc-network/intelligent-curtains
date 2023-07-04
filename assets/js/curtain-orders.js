@@ -215,6 +215,30 @@ jQuery(document).ready(function($) {
                 $("#curtain-height").val(response.curtain_height);
                 $("#order-item-qty").val(response.order_item_qty);
 
+                if (response.is_specification_hided) {
+                    $('#curtain-specification-label').hide();
+                    $('#curtain-specification-id').hide();
+                } else {
+                    $('#curtain-specification-label').show();
+                    $('#curtain-specification-id').show();
+                }
+
+                if (response.is_width_hided) {
+                    $('#curtain-width-label').hide();
+                    $('#curtain-width').hide();
+                } else {
+                    $('#curtain-width-label').show();
+                    $('#curtain-width').show();
+                }
+
+                if (response.is_height_hided) {
+                    $('#curtain-height-label').hide();
+                    $('#curtain-height').hide();
+                } else {
+                    $('#curtain-height-label').show();
+                    $('#curtain-height').show();
+                }
+
                 $("#order-item-dialog").dialog('open');
             },
             error: function(error){
@@ -224,7 +248,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#order-item-dialog").dialog({
-        width: 600,
+        width: 300,
         modal: true,
         autoOpen: false,
         buttons: {
