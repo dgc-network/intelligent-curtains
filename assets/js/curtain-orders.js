@@ -86,9 +86,8 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {                    
                 $("#order-item-id").val(id);
-                //$("#curtain-category-id").empty();
-                //$("#curtain-category-id").append(response.curtain_category_id);
-                $("#curtain-category-id").val(response.curtain_category_id);
+                $("#curtain-category-id").empty();
+                $("#curtain-category-id").append(response.curtain_category_id);
                 $("#curtain-model-id").empty();
                 $("#curtain-model-id").append(response.curtain_model_id);
                 $("#curtain-remote-id").empty();
