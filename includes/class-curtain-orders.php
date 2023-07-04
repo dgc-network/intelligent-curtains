@@ -588,9 +588,9 @@ if (!class_exists('curtain_orders')) {
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
             $response = array();
             $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
-            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_model_id);
+            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_model_id, $_id);
             $response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
-            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_specification_id);
+            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_specification_id, $_id);
             $response["curtain_width"] = $row->curtain_width;
             $response["curtain_height"] = $row->curtain_height;
             $response["order_item_qty"] = $row->order_item_qty;
@@ -689,9 +689,9 @@ if (!class_exists('curtain_orders')) {
             //$response['currenttime'] = wp_date( get_option('time_format'), time() );
             //$response['models'] = $models;
             //$response['specifications'] = $specifications;
-            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_model_id);
+            $response["curtain_model_id"] = $curtain_models->select_options(0, $_id);
             //$response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
-            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_specification_id);
+            $response["curtain_specification_id"] = $curtain_specifications->select_options(0, $_id);
             $response['min_width'] = $curtain_categories->get_min_width($_id);
             $response['max_width'] = $curtain_categories->get_max_width($_id);
             $response['min_height'] = $curtain_categories->get_min_height($_id);
