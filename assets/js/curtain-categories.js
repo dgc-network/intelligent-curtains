@@ -19,7 +19,8 @@ jQuery(document).ready(function($) {
                 $("#curtain-category-name").val(response.curtain_category_name);
                 //$("#hide-specification").val(response.hide_specification);
                 if (response.hide_specification==1) {
-                    $("#hide-specification:checkbox:checked").length > 0;
+                    $('#hide-specification').prop('checked', true);
+                    //$("#hide-specification:checkbox:checked").length > 0;
                 }            
                 $("#hide-width").val(response.hide_width);
                 $("#min-width").val(response.min_width);
