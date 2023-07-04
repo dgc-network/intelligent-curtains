@@ -137,19 +137,23 @@ if (!class_exists('curtain_agents')) {
             $output .= '<input type="text" id="curtain-agent-password" />';
             $output .= '</div>';
             $output .= '</div>';
+
             $output .= '<label for="curtain-agent-name">Agent Name</label>';
-            $output .= '<input type="text" id="curtain-agent-name" size="50" />';
+            $output .= '<input type="text" id="curtain-agent-name" size="45" />';
+
             $output .= '<div id="agent-zone2">';
             $output .= '<div id="agent-zone2-left" style="display:inline-block; width:45%; margin-right:5px;">';
             $output .= '<label for="curtain-agent-contact1">Contact</label>';
-            $output .= '</div>';
-            $output .= '<div id="agent-zone1-right" style="display:inline-block; width:45%;">';
             $output .= '<input type="text" id="curtain-agent-contact1" />';
+            $output .= '</div>';
+            $output .= '<div id="agent-zone2-right" style="display:inline-block; width:45%;">';
             $output .= '<label for="curtain-agent-phone1">Phone</label>';
+            $output .= '<input type="text" id="curtain-agent-phone1" />';
             $output .= '</div>';
             $output .= '</div>';
+
             $output .= '<label for="curtain-agent-address">Agent Address</label>';
-            $output .= '<input type="text" id="curtain-agent-address" size="50" />';
+            $output .= '<input type="text" id="curtain-agent-address" size="45" />';
             $output .= '</fieldset>';
             $output .= '</div>';
 
@@ -203,7 +207,12 @@ if (!class_exists('curtain_agents')) {
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $_id ), OBJECT );
             $response = array();
-            $response["curtain_agent_name"] = $row->curtain_agent_name;
+            $response["curtain_agent_number"] = $row->agent_number;
+            $response["curtain_agent_password"] = $row->agent_password;
+            $response["curtain_agent_name"] = $row->agent_name;
+            $response["curtain_agent_contact1"] = $row->contact1;
+            $response["curtain_agent_phone1"] = $row->phone1;
+            $response["curtain_agent_address"] = $row->agent_address;
             echo json_encode( $response );
             wp_die();
         }
