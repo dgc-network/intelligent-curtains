@@ -103,17 +103,17 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</td>';
                 $output .= '<td>'.$result->curtain_category_name.'</td>';
                 if ($result->hide_specification==1) {
-                    $output .= '<td></td>';
+                    $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $output .= '<td style="text-align: center;">'.$result->hide_specification.'</td>';
                 }
                 if ($result->hide_width==1) {
-                    $output .= '<td></td>';
+                    $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $output .= '<td style="text-align: center;">'.$result->min_width.'cm ~ '.$result->max_width.'cm</td>';
                 }
                 if ($result->hide_height==1) {
-                    $output .= '<td></td>';
+                    $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $output .= '<td style="text-align: center;">'.$result->min_height.'cm ~ '.$result->max_height.'cm</td>';
                 }
@@ -134,7 +134,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<input type="text" id="curtain-category-name" />';
             $output .= '<input type="checkbox" id="hide-specification" value="1" style="display:inline-block; width:5%; " /> Hide the Specification.';
             $output .= '<div>';
-            $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.';
+            $output .= '<input type="checkbox" id="hide-width" value="1" style="display:inline-block; width:5%; " /> Hide the Width.';
             $output .= '<div id="show-width">';
             $output .= '<input type="text" id="min-width" style="display:inline-block; width:25%;" />';
             $output .= ' cm ~ ';
@@ -143,7 +143,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '<div>';
-            $output .= '<input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.';
+            $output .= '<input type="checkbox" id="hide-height" value="1" style="display:inline-block; width:5%; " /> Hide the Height.';
             $output .= '<div id="show-height">';
             $output .= '<input type="text" id="min-height" style="display:inline-block; width:25%;" />';
             $output .= ' cm ~ ';
@@ -153,7 +153,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '</div>';
             $output .= '</fieldset>';
             $output .= '</div>';
-/*
+
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id={$_id}", OBJECT );
@@ -196,7 +196,7 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-*/            
+            
             return $output;
         }
 

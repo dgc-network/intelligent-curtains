@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#category-dialog").dialog({
-        width: 500,
+        width: 400,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -41,6 +41,7 @@ jQuery(document).ready(function($) {
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_category_name = $("#curtain-category-name").val();
                 var hide_specification = $("#hide-specification").val();
+                alert(hide_specification);
                 var hide_width = $("#hide-width").val();
                 var min_width = $("#min-width").val();
                 var max_width = $("#max-width").val();
