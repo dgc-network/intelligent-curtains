@@ -132,9 +132,9 @@ if (!class_exists('curtain_categories')) {
             $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
             $output .= '<input type="text" id="curtain-category-name" />';
-            $output .= '<input type="checkbox" id="hide-specification" value="1" style="display:inline-block; width:5%; " /> Hide the Specification.';
+            $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.';
             $output .= '<div>';
-            $output .= '<input type="checkbox" id="hide-width" value="1" style="display:inline-block; width:5%; " /> Hide the Width.';
+            $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.';
             $output .= '<div id="show-width">';
             $output .= '<input type="text" id="min-width" style="display:inline-block; width:25%;" />';
             $output .= ' cm ~ ';
@@ -143,7 +143,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '</div>';
             $output .= '</div>';
             $output .= '<div>';
-            $output .= '<input type="checkbox" id="hide-height" value="1" style="display:inline-block; width:5%; " /> Hide the Height.';
+            $output .= '<input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.';
             $output .= '<div id="show-height">';
             $output .= '<input type="text" id="min-height" style="display:inline-block; width:25%;" />';
             $output .= ' cm ~ ';
