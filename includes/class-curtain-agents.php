@@ -139,7 +139,7 @@ if (!class_exists('curtain_agents')) {
             $output .= '</div>';
 
             $output .= '<label for="curtain-agent-name">Agent Name</label>';
-            $output .= '<input type="text" id="curtain-agent-name" size="40" />';
+            $output .= '<input type="text" id="curtain-agent-name" size="100%" />';
 
             $output .= '<div id="agent-zone2">';
             $output .= '<div id="agent-zone2-left" style="display:inline-block; width:45%; margin-right:10px;">';
