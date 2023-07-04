@@ -178,15 +178,22 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 $("#curtain-model-id").empty();
                 $("#curtain-model-id").append(response.curtain_model_id);
-                //$("#curtain-remote-id").empty();
-                //$("#curtain-remote-id").append(response.curtain_remote_id);
+                $("#curtain-remote-id").empty();
+                $("#curtain-remote-id").append(response.curtain_remote_id);
                 $("#curtain-specification-id").empty();
                 $("#curtain-specification-id").append(response.curtain_specification_id);
-
                 $('#curtain-width-label').empty();
                 $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
                 $('#curtain-height-label').empty();
                 $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+
+                if (response.is_remote_hided) {
+                    $('#curtain-remote-label').hide();
+                    $('#curtain-remote-id').hide();
+                } else {
+                    $('#curtain-remote-label').show();
+                    $('#curtain-remote-id').show();
+                }
 
                 if (response.is_specification_hided) {
                     $('#curtain-specification-label').hide();
@@ -219,11 +226,6 @@ jQuery(document).ready(function($) {
 
     });
 
-    var prev_val;
-    $('#customer-order-status').focus(function() {
-        prev_val = $(this).val();
-    });
-
     $("#customer-order-status").change(function() {
         if (window.confirm("Are you sure you want to change the status?")) {
             var customer_order_status = $(this).val();
@@ -244,8 +246,6 @@ jQuery(document).ready(function($) {
                     alert(error);
                 }
             });
-        } else {
-            $(this).val(prev_val);
         }
     });
     
