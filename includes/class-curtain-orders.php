@@ -537,8 +537,8 @@ if (!class_exists('curtain_orders')) {
             }            
             $output .= '<tr>';
             $output .= '<td><input type="hidden" id="order-item-id" /></td>';
-            $output .= '<td id="parts-id-add"></td>';
-            $output .= '<td id="parts-qty-add" style="text-align: center;"></td>';
+            $output .= '<td id="parts-id-add"><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
+            $output .= '<td id="parts-qty-add" style="text-align: center;"><input type="text" size="12" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
             $output .= '</tbody></table></div>';
 

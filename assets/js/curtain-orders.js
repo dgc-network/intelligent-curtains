@@ -260,7 +260,7 @@ jQuery(document).ready(function($) {
         }        
     });
 
-    $('[id^="btn-sub-items"]').on( "click", function() {
+    $('[id^="btn-sub-items-"]').on( "click", function() {
         id = this.id;
         id = id.substring(14);
         jQuery.ajax({
@@ -272,7 +272,7 @@ jQuery(document).ready(function($) {
                 '_id': id,
             },
             success: function (response) {                    
-                $("#sub-item-id").val(id);
+                $("#order-item-id").val(id);
                 for(index=0;index<10;index++) {
                     $("#parts-id-"+index).empty();
                     $("#parts-qty-"+index).empty();
@@ -287,8 +287,8 @@ jQuery(document).ready(function($) {
                     $("#parts-qty-"+index).append(value.parts_qty);
                     $("#parts-del-"+index).append('<span id="btn-del-sub-item-'+value.sub_item_id+'"><i class="fa-regular fa-trash-can"></i></span>');
                 });
-                $("#parts-id-add").append('<select id="parts-id">'+response.parts_options+'</select>');
-                $("#parts-qty-add").append('<input type="text" size="12" id="parts-qty" value="1" />');
+                //$("#parts-id-add").append('<select id="parts-id">'+response.parts_options+'</select>');
+                //$("#parts-qty-add").append('<input type="text" size="12" id="parts-qty" value="1" />');
 
                 $('[id^="btn-"]').mouseover(function() {
                     $(this).css('cursor', 'pointer');
