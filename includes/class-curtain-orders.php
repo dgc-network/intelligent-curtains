@@ -527,7 +527,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<tbody>';
             $x = 0;
             while ($x<10) {
-                $output .= '<tr>';
+                $output .= '<tr style="display:none;">';
                 $output .= '<td></td>';
                 $output .= '<td id="parts-id-'.$x.'"></td>';
                 $output .= '<td id="parts-qty-'.$x.'" style="text-align: center;"></td>';

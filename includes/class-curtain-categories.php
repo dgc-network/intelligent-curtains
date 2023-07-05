@@ -403,7 +403,7 @@ if (!class_exists('curtain_categories')) {
                     } else {
                         $output .= '<option value="'.$sub_parts->curtain_model_id.'">';
                     }
-                    $output .= $sub_parts->curtain_model_name;
+                    $output .= $sub_parts->model_description.'('.$sub_parts->curtain_model_name.')';
                     $output .= '</option>';        
                 }
             }
