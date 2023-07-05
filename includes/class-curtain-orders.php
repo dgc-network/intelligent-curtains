@@ -488,7 +488,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="8"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="9"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
@@ -759,7 +759,7 @@ if (!class_exists('curtain_orders')) {
             }
             $response = array();
             $response["sub_item_list"] = $sub_item_list;
-            $response["parts_options"] = $$curtain_categories->parts_options();
+            $response["parts_options"] = $curtain_categories->parts_options();
             echo json_encode( $response );
             wp_die();
         }
