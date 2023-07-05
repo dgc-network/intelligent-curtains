@@ -523,7 +523,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>QTY</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
-
             $output .= '<tbody>';
             $x = 0;
             while ($x<10) {
@@ -537,12 +536,11 @@ if (!class_exists('curtain_orders')) {
             }            
             $output .= '<tr>';
             $output .= '<td><input type="hidden" id="order-item-id" /></td>';
-            //$output .= '<td id="parts-id-add"><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
-            //$output .= '<td id="parts-qty-add" style="text-align: center;"><input type="text" size="12" id="parts-qty" value="1" /></td>';
             $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
             $output .= '<td><input type="text" size="12" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
-            $output .= '</tbody></table></div>';
+            $output .= '</tbody></table>';
+            $output .= '</div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -746,13 +744,14 @@ if (!class_exists('curtain_orders')) {
         function sub_items_dialog_get_data() {
             global $wpdb;
             $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
 
             $_id = $_POST['_id'];
             $sub_item_list = array();
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sub_items WHERE order_item_id={$_id}", OBJECT );                
             foreach ( $results as $index=>$result ) {
                 $value = array();
-                $value["parts_id"] = $result->parts_id;
+                $value["parts_id"] = $curtain_models->get_description($result->parts_id);
                 $value["parts_qty"] = $result->parts_qty;
                 array_push($sub_item_list, $value);
             }
