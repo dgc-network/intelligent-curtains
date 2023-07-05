@@ -321,7 +321,9 @@ jQuery(document).ready(function($) {
         autoOpen: false,
         buttons: {
             "Save": function() {
-                var sub_item_id = $("#sub-item-id").val();
+                //var sub_item_id = $("#sub-item-id").val();
+                var parts_id = $("#parts-id").val();
+                var parts_qty = $("#parts-qty").val();
                 var order_item_id = $("#order-item-id").val();
 
                 jQuery.ajax({
@@ -330,7 +332,8 @@ jQuery(document).ready(function($) {
                     dataType: "json",
                     data: {
                         'action': 'sub_items_dialog_save_data',
-                        '_sub_item_id': sub_item_id,
+                        '_parts_id': parts_id,
+                        '_parts_qty': parts_qty,
                         '_order_item_id': order_item_id,
                     },
                     success: function (response) {

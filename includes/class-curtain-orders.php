@@ -246,8 +246,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th></th>';
-                $output .= '<th>Date</th>';
                 $output .= '<th>Order No.</th>';
+                $output .= '<th>Date</th>';
                 $output .= '<th>Agent</th>';
                 $output .= '<th>Amount</th>';
                 $output .= '<th>Status</th>';
@@ -267,8 +267,8 @@ if (!class_exists('curtain_orders')) {
                     //$output .= '<span id="btn-print-customer-order-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '<span id="btn-print-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
-                    $output .= '<td>'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
-                    $output .= '<td>'.$result->customer_order_number.'</td>';
+                    $output .= '<td style="text-align: center;">'.$result->customer_order_number.'</td>';
+                    $output .= '<td style="text-align: center;">'.wp_date( get_option('date_format'), $result->create_timestamp ).'</td>';
                     $output .= '<td>'.$curtain_agents->get_name($result->curtain_agent_id).'</td>';
                     $output .= '<td style="text-align: center;">'.number_format_i18n($result->customer_order_amount).'</td>';
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
@@ -515,7 +515,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</div>';
 
             /** Sub Item Dialog */
-            $output .= '<div id="sub-items-dialog" title="Sub Item dialog">';
+            $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
@@ -536,7 +536,7 @@ if (!class_exists('curtain_orders')) {
                 $x += 1;
             }            
             $output .= '<tr>';
-            $output .= '<td></td>';
+            $output .= '<td><input type="hidden" id="order-item-id" /></td>';
             $output .= '<td id="parts-id-add"></td>';
             $output .= '<td id="parts-qty-add" style="text-align: center;"></td>';
             $output .= '</tr>';
@@ -744,9 +744,6 @@ if (!class_exists('curtain_orders')) {
         function sub_items_dialog_get_data() {
             global $wpdb;
             $curtain_categories = new curtain_categories();
-            $curtain_models = new curtain_models();
-            $curtain_remotes = new curtain_remotes();
-            $curtain_specifications = new curtain_specifications();
 
             $_id = $_POST['_id'];
             $sub_item_list = array();
@@ -765,14 +762,35 @@ if (!class_exists('curtain_orders')) {
         }
 
         function sub_items_dialog_save_data() {
-            $curtain_categories = new curtain_categories();
-            $curtain_models = new curtain_models();
-            $curtain_remotes = new curtain_remotes();
-            $curtain_specifications = new curtain_specifications();
+
+            if( $_POST['_sub_item_id']=='' ) {
+                $this->insert_sub_item(
+                    array(
+                        'order_item_id'=>$_POST['_order_item_id'],
+                        'parts_id'=>$_POST['_parts_id'],
+                        'parts_qty'=>$_POST['_parts_qty'],
+                    )
+                );
+            }
 
             $response = array();
             echo json_encode( $response );
             wp_die();
+        }
+
+        public function delete_sub_items($where=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'sub_items';
+            $wpdb->delete($table, $where);
+        }
+
+        public function insert_sub_item($data=[]) {
+            global $wpdb;
+            $table = $wpdb->prefix.'sub_items';
+            $data['create_timestamp'] = time();
+            $data['update_timestamp'] = time();
+            $wpdb->insert($table, $data);
+            return $wpdb->insert_id;
         }
 
         public function insert_customer_order($data=[]) {
