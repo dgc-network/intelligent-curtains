@@ -287,7 +287,25 @@ jQuery(document).ready(function($) {
                     $("#parts-del-"+index).append('<span id="btn-del-sub-item-'+value.sub_item_id+'"><i class="fa-regular fa-trash-can"></i></span>');
                 });
                 $("#parts-id-add").append('<select id="parts-id">'+response.parts_id_options+'</select>');
-                $("#parts-qty-add").append('<input type="text" size="12" id="parts-qty" value="1">');
+                $("#parts-qty-add").append('<input type="text" size="12" id="parts-qty" value="1" />');
+
+                $('[id^="btn-"]').mouseover(function() {
+                    $(this).css('cursor', 'pointer');
+                    $(this).css('color', 'red');
+                });
+                    
+                $('[id^="btn-"]').mouseout(function() {
+                    $(this).css('cursor', 'default');
+                    $(this).css('color', 'black');
+                });
+            
+                $('[id^="btn-del-sub-item-"]').on( "click", function() {
+                    id = this.id;
+                    id = id.substring(17);
+                    if (window.confirm("Are you sure you want to delete this record?")) {
+                        window.location.replace("?_sub_item_delete=" + id);
+                    }        
+                });
 
                 $("#sub-items-dialog").dialog('open');
             },

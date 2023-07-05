@@ -515,7 +515,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</div>';
 
             /** Sub Item Dialog */
-            $output .= '<div id="sub-item-dialog" title="Sub Item dialog">';
+            $output .= '<div id="sub-items-dialog" title="Sub Item dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
@@ -528,6 +528,7 @@ if (!class_exists('curtain_orders')) {
             $x = 0;
             while ($x<10) {
                 $output .= '<tr>';
+                $output .= '<td></td>';
                 $output .= '<td id="parts-id-'.$x.'"></td>';
                 $output .= '<td id="parts-qty-'.$x.'" style="text-align: center;"></td>';
                 $output .= '<td id="parts-del-'.$x.'" style="text-align: center;"></td>';
@@ -535,6 +536,7 @@ if (!class_exists('curtain_orders')) {
                 $x += 1;
             }            
             $output .= '<tr>';
+            $output .= '<td></td>';
             $output .= '<td id="parts-id-add"></td>';
             $output .= '<td id="parts-qty-add" style="text-align: center;"></td>';
             $output .= '</tr>';
