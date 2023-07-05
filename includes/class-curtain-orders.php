@@ -514,7 +514,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</fieldset>';
             $output .= '</div>';
 
-            /** Sub Item Dialog */
+            /** Sub Items Dialog */
             $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
@@ -537,8 +537,10 @@ if (!class_exists('curtain_orders')) {
             }            
             $output .= '<tr>';
             $output .= '<td><input type="hidden" id="order-item-id" /></td>';
-            $output .= '<td id="parts-id-add"><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
-            $output .= '<td id="parts-qty-add" style="text-align: center;"><input type="text" size="12" id="parts-qty" value="1" /></td>';
+            //$output .= '<td id="parts-id-add"><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
+            //$output .= '<td id="parts-qty-add" style="text-align: center;"><input type="text" size="12" id="parts-qty" value="1" /></td>';
+            $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
+            $output .= '<td><input type="text" size="12" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
             $output .= '</tbody></table></div>';
 
