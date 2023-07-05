@@ -163,6 +163,7 @@ if (!class_exists('curtain_categories')) {
             $output .= ' cm';
             $output .= '</div>';
             $output .= '</div>';
+            $output .= '<input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> Allow to support as the parts in sub-item.<br>';
             $output .= '</fieldset>';
             $output .= '</div>';
 
@@ -218,6 +219,7 @@ if (!class_exists('curtain_categories')) {
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             $response = array();
             $response["curtain_category_name"] = $row->curtain_category_name;
+            $response["allow_parts"] = $row->allow_parts;
             $response["hide_remote"] = $row->hide_remote;
             $response["hide_specification"] = $row->hide_specification;
             $response["hide_width"] = $row->hide_width;
@@ -235,6 +237,7 @@ if (!class_exists('curtain_categories')) {
                 $this->insert_curtain_category(
                     array(
                         'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'allow_parts'=>$_POST['_allow_parts'],
                         'hide_remote'=>$_POST['_hide_remote'],
                         'hide_specification'=>$_POST['_hide_specification'],
                         'hide_width'=>$_POST['_hide_width'],
@@ -249,6 +252,7 @@ if (!class_exists('curtain_categories')) {
                 $this->update_curtain_categories(
                     array(
                         'curtain_category_name'=>$_POST['_curtain_category_name'],
+                        'allow_parts'=>$_POST['_allow_parts'],
                         'hide_remote'=>$_POST['_hide_remote'],
                         'hide_specification'=>$_POST['_hide_specification'],
                         'hide_width'=>$_POST['_hide_width'],
@@ -263,7 +267,6 @@ if (!class_exists('curtain_categories')) {
                     )
                 );
             }
-
             $response = array();
             echo json_encode( $response );
             wp_die();
@@ -295,6 +298,16 @@ if (!class_exists('curtain_categories')) {
             global $wpdb;
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
             return $row->curtain_category_name;
+        }
+
+        public function is_parts_allowed( $_id=0 ) {
+            global $wpdb;
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
+            if ($row->allow_parts==1) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         public function is_remote_hided( $_id=0 ) {
@@ -378,6 +391,26 @@ if (!class_exists('curtain_categories')) {
             return $output;
         }
 
+        public function parts_options( $_id=0 ) {
+            global $wpdb;
+            $output = '<option value="0">-- Select an option --</option>';
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE allow_parts=1", OBJECT );
+            foreach ($results as $index => $result) {
+                $parts = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$result->curtain_category_id}", OBJECT );
+                foreach ($parts as $sub_index => $sub_parts) {
+                    if ( $sub_parts->curtain_model_id == $_id ) {
+                        $output .= '<option value="'.$result->curtain_model_id.'" selected>';
+                    } else {
+                        $output .= '<option value="'.$result->curtain_model_id.'">';
+                    }
+                    $output .= $result->curtain_model_name;
+                    $output .= '</option>';        
+                }
+            }
+            $output .= '<option value="0">-- Remove this --</option>';
+            return $output;
+        }
+
         public function create_tables() {
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
@@ -386,6 +419,7 @@ if (!class_exists('curtain_categories')) {
             $sql = "CREATE TABLE `{$wpdb->prefix}curtain_categories` (
                 curtain_category_id int NOT NULL AUTO_INCREMENT,
                 curtain_category_name varchar(50),
+                allow_parts tinyint,
                 hide_remote tinyint,
                 hide_specification tinyint,
                 hide_width tinyint,

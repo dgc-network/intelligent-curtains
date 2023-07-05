@@ -759,6 +759,7 @@ if (!class_exists('curtain_orders')) {
             }
             $response = array();
             $response["sub_item_list"] = $sub_item_list;
+            $response["parts_options"] = $$curtain_categories->parts_options();
             echo json_encode( $response );
             wp_die();
         }
