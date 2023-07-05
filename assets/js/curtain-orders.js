@@ -282,6 +282,7 @@ jQuery(document).ready(function($) {
                 $("#parts-qty-add").empty();
 
                 $.each(response.sub_item_list, function (index, value) {
+                    $("#sub-item-"+index).show();
                     $("#parts-id-"+index).append(value.parts_id);
                     $("#parts-qty-"+index).append(value.parts_qty);
                     $("#parts-del-"+index).append('<span id="btn-del-sub-item-'+value.sub_item_id+'"><i class="fa-regular fa-trash-can"></i></span>');
