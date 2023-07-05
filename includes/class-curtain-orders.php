@@ -123,6 +123,14 @@ if (!class_exists('curtain_orders')) {
                 );
             }
 */
+            if( isset($_GET['_delete_sub_item']) ) {
+                $this->delete_sub_items(
+                    array(
+                        'sub_item_id'=>$_GET['_delete_sub_item']
+                    )
+                );
+            }
+
             if( isset($_GET['_delete_customer_order']) ) {
                 $this->delete_customer_orders(
                     array(
@@ -537,7 +545,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<tr>';
             $output .= '<td><input type="hidden" id="order-item-id" /></td>';
             $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
-            $output .= '<td><input type="text" size="12" id="parts-qty" value="1" /></td>';
+            $output .= '<td><input type="text" size="2" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
             $output .= '</tbody></table>';
             $output .= '</div>';
@@ -751,6 +759,7 @@ if (!class_exists('curtain_orders')) {
             $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sub_items WHERE order_item_id={$_id}", OBJECT );                
             foreach ( $results as $index=>$result ) {
                 $value = array();
+                $value["sub_item_id"] = $result->sub_item_id;
                 $value["parts_id"] = $curtain_models->get_description($result->parts_id);
                 $value["parts_qty"] = $result->parts_qty;
                 array_push($sub_item_list, $value);
