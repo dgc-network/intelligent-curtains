@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
         id = this.id;
         id = id.substring(19);
         if (window.confirm("Are you sure you want to delete this record?")) {
-            window.location.replace("?_course_delete=" + id);
+            window.location.replace("?_order_item_delete=" + id);
         }        
     });
 
@@ -249,4 +249,86 @@ jQuery(document).ready(function($) {
         }
     });
     
+    /**
+     * Sub Items Dialog and Buttons
+     */
+    $('[id^="btn-del-sub-item-"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(17);
+        if (window.confirm("Are you sure you want to delete this record?")) {
+            window.location.replace("?_sub_item_delete=" + id);
+        }        
+    });
+
+    $('[id^="btn-sub-items"]').on( "click", function() {
+        id = this.id;
+        id = id.substring(14);
+        jQuery.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'sub_items_dialog_get_data',
+                '_id': id,
+            },
+            success: function (response) {                    
+                $("#sub-item-id").val(id);
+                for(index=0;index<10;index++) {
+                    $("#parts-id-"+index).empty();
+                    $("#parts-qty-"+index).empty();
+                    $("#parts-del-"+index).empty();
+                }
+                $("#parts-id-add").empty();
+                $("#parts-qty-add").empty();
+
+                $.each(response.sub_item_list, function (index, value) {
+                    $("#parts-id-"+index).append(value.parts_id);
+                    $("#parts-qty-"+index).append(value.parts_qty);
+                    $("#parts-del-"+index).append('<span id="btn-del-sub-item-'+value.sub_item_id+'"><i class="fa-regular fa-trash-can"></i></span>');
+                });
+                $("#parts-id-add").append('<select id="parts-id">'+response.parts_id_options+'</select>');
+                $("#parts-qty-add").append('<input type="text" size="12" id="parts-qty" value="1">');
+
+                $("#sub-items-dialog").dialog('open');
+            },
+            error: function(error){
+                alert(error);
+            }
+        });
+    });
+
+    $("#sub-items-dialog").dialog({
+        width: 600,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var sub_item_id = $("#sub-item-id").val();
+                var order_item_id = $("#order-item-id").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'sub_items_dialog_save_data',
+                        '_sub_item_id': sub_item_id,
+                        '_order_item_id': order_item_id,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#sub-items-dialog").dialog('close');        
+
 });

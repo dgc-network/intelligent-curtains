@@ -31,6 +31,10 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_select_category_id', array( $this, 'select_category_id' ) );
             add_action( 'wp_ajax_select_order_status', array( $this, 'select_order_status' ) );
             add_action( 'wp_ajax_nopriv_select_order_status', array( $this, 'select_order_status' ) );
+            add_action( 'wp_ajax_sub_items_dialog_get_data', array( $this, 'sub_items_dialog_get_data' ) );
+            add_action( 'wp_ajax_nopriv_sub_items_dialog_get_data', array( $this, 'sub_items_dialog_get_data' ) );
+            add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
+            add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
         }
 
         public function order_status_notice($customer_order_number, $customer_order_status) {
@@ -434,13 +438,14 @@ if (!class_exists('curtain_orders')) {
             $output .= '</div>';
 
             $output .= '<div class="ui-widget">';
-            $output .= '<table id="orders" class="ui-widget ui-widget-content">';
+            $output .= '<table id="order-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th></th>';
             $output .= '<th>date/time</th>';
             $output .= '<th>category</th>';
             $output .= '<th>model</th>';
+            $output .= '<th>parts</th>';
             $output .= '<th>QTY</th>';
             $output .= '<th>amount</th>';
             $output .= '<th></th>';
@@ -469,6 +474,9 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</td>';
                 $output .= '<td>'.$curtain_categories->get_name($result->curtain_category_id).'</td>';
                 $output .= '<td style="text-align: center;">'.$curtain_models->get_name($result->curtain_model_id).'</td>';
+                $output .= '<td style="text-align: center;">';
+                $output .= '<span id="btn-sub-items-'.$result->curtain_order_id.'"><i class="fa-solid fa-gifts"></i></span>';
+                $output .= '</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
                 $output .= '<td style="text-align: center;">'.number_format_i18n($result->order_item_amount).'</td>';
                 if ( $result->is_checkout==1 ) {
@@ -505,6 +513,32 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input type="text" id="order-item-qty" />';
             $output .= '</fieldset>';
             $output .= '</div>';
+
+            /** Sub Item Dialog */
+            $output .= '<div id="sub-item-dialog" title="Sub Item dialog">';
+            $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
+            $output .= '<thead><tr class="ui-widget-header ">';
+            $output .= '<th></th>';
+            $output .= '<th>parts</th>';
+            $output .= '<th>QTY</th>';
+            $output .= '<th></th>';
+            $output .= '</tr></thead>';
+
+            $output .= '<tbody>';
+            $x = 0;
+            while ($x<10) {
+                $output .= '<tr>';
+                $output .= '<td id="parts-id-'.$x.'"></td>';
+                $output .= '<td id="parts-qty-'.$x.'" style="text-align: center;"></td>';
+                $output .= '<td id="parts-del-'.$x.'" style="text-align: center;"></td>';
+                $output .= '</tr>';
+                $x += 1;
+            }            
+            $output .= '<tr>';
+            $output .= '<td id="parts-id-add"></td>';
+            $output .= '<td id="parts-qty-add" style="text-align: center;"></td>';
+            $output .= '</tr>';
+            $output .= '</tbody></table></div>';
 
             if( isset($_GET['_edit']) ) {
                 $_id = $_GET['_edit'];
@@ -667,7 +701,6 @@ if (!class_exists('curtain_orders')) {
         }
 
         function select_category_id() {
-            //global $wpdb;
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
             $curtain_remotes = new curtain_remotes();
@@ -706,6 +739,39 @@ if (!class_exists('curtain_orders')) {
             wp_die();
         }
         
+        function sub_items_dialog_get_data() {
+            global $wpdb;
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
+            $_id = $_POST['_id'];
+            $sub_item_list = array();
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sub_items WHERE order_item_id={$_id}", OBJECT );                
+            foreach ( $results as $index=>$result ) {
+                $value = array();
+                $value["parts_id"] = $result->parts_id;
+                $value["parts_qty"] = $result->parts_qty;
+                array_push($sub_item_list, $value);
+            }
+            $response = array();
+            $response["sub_item_list"] = $sub_item_list;
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function sub_items_dialog_save_data() {
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
+            $response = array();
+            echo json_encode( $response );
+            wp_die();
+        }
+
         public function insert_customer_order($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'customer_orders';
@@ -766,7 +832,7 @@ if (!class_exists('curtain_orders')) {
                 PRIMARY KEY (customer_order_id)
             ) $charset_collate;";
             dbDelta($sql);
-        
+
             $sql = "CREATE TABLE `{$wpdb->prefix}order_items` (
                 curtain_order_id int NOT NULL AUTO_INCREMENT,
                 customer_order_number varchar(20),
@@ -783,6 +849,17 @@ if (!class_exists('curtain_orders')) {
                 create_timestamp int(10),
                 update_timestamp int(10),
                 PRIMARY KEY (curtain_order_id)
+            ) $charset_collate;";
+            dbDelta($sql);
+
+            $sql = "CREATE TABLE `{$wpdb->prefix}sub_items` (
+                sub_item_id int NOT NULL AUTO_INCREMENT,
+                order_item_id int,
+                parts_id int,
+                parts_qty int,
+                create_timestamp int(10),
+                update_timestamp int(10),
+                PRIMARY KEY (sub_item_id)
             ) $charset_collate;";
             dbDelta($sql);
         }
