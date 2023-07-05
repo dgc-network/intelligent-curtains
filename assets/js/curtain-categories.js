@@ -17,20 +17,25 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
+                $('#allow-parts').empty();
                 if (response.allow_parts==1) {
                     $('#allow-parts').prop('checked', true);
                 }            
+                $('#hide-remote').empty();
                 if (response.hide_remote==1) {
                     $('#hide-remote').prop('checked', true);
                 }            
+                $('#hide-specification').empty();
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
                 }            
+                $('#hide-width').empty();
                 if (response.hide_width==1) {
                     $('#hide-width').prop('checked', true);
                 }            
                 $("#min-width").val(response.min_width);
                 $("#max-width").val(response.max_width);
+                $('#hide-height').empty();
                 if (response.hide_height==1) {
                     $('#hide-height').prop('checked', true);
                 }            

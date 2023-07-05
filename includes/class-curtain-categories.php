@@ -399,11 +399,11 @@ if (!class_exists('curtain_categories')) {
                 $parts = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_category_id={$result->curtain_category_id}", OBJECT );
                 foreach ($parts as $sub_index => $sub_parts) {
                     if ( $sub_parts->curtain_model_id == $_id ) {
-                        $output .= '<option value="'.$result->curtain_model_id.'" selected>';
+                        $output .= '<option value="'.$sub_parts->curtain_model_id.'" selected>';
                     } else {
-                        $output .= '<option value="'.$result->curtain_model_id.'">';
+                        $output .= '<option value="'.$sub_parts->curtain_model_id.'">';
                     }
-                    $output .= $result->curtain_model_name;
+                    $output .= $sub_parts->curtain_model_name;
                     $output .= '</option>';        
                 }
             }
