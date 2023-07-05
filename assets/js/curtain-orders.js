@@ -320,7 +320,7 @@ jQuery(document).ready(function($) {
         modal: true,
         autoOpen: false,
         buttons: {
-            "Save": function() {
+            "Add": function() {
                 //var sub_item_id = $("#sub-item-id").val();
                 var parts_id = $("#parts-id").val();
                 var parts_qty = $("#parts-qty").val();
