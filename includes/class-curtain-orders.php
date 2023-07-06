@@ -677,7 +677,7 @@ if (!class_exists('curtain_orders')) {
             foreach ( $results as $index=>$result ) {
                 $parts_price = $curtain_models->get_price($result->parts_id);
                 $parts_amount = $parts_price * $result->parts_qty;
-                $sub_amount .= $parts_amount;
+                $sub_amount = $sub_amount + $parts_amount;
             }
             $amount = ($m_price + $sub_amount + $spec_amount) * $row->order_item_qty;
 
