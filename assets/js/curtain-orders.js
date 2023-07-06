@@ -274,12 +274,13 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#order-item-id").val(id);
                 for(index=0;index<10;index++) {
+                    $("#sub-item-"+index).hide();
                     $("#parts-id-"+index).empty();
                     $("#parts-qty-"+index).empty();
                     $("#parts-del-"+index).empty();
                 }
-                $("#parts-id-add").empty();
-                $("#parts-qty-add").empty();
+                //$("#parts-id-add").empty();
+                //$("#parts-qty-add").empty();
 
                 $.each(response.sub_item_list, function (index, value) {
                     $("#sub-item-"+index).show();
