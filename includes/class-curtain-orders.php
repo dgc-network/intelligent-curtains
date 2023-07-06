@@ -131,7 +131,15 @@ if (!class_exists('curtain_orders')) {
                         'sub_item_id'=>$_GET['_delete_sub_item']
                     )
                 );
-                $this->caculate_order_item_amount($row->order_item_id);
+                //$this->caculate_order_item_amount($row->order_item_id);
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($row->order_item_id),
+                    ),
+                    array(
+                        'curtain_order_id'=>$row->order_item_id
+                    )
+                );
             }
 
             if( isset($_GET['_delete_customer_order']) ) {
