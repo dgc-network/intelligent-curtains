@@ -495,7 +495,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="9"><div id="btn-order-item-0" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="9"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
@@ -642,6 +642,37 @@ if (!class_exists('curtain_orders')) {
             wp_die();
         }
 
+        function caculate_order_item_amount($_id=0) {
+            global $wpdb;
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
+
+            $m_price = $curtain_models->get_price($row->curtain_model_id);
+            $r_price = $curtain_remotes->get_price($row->curtain_remote_id);
+            $s_price = $curtain_specifications->get_price($row->curtain_specification_id);
+
+            if ($curtain_categories->is_height_hided($row->curtain_category_id)){
+                $spec_amount = $row->curtain_width/100 * $s_price;
+            } else {
+                $spec_amount = $row->curtain_width/100 * $row->curtain_height/100 * $s_price;
+            }
+            
+            $sub_amount = 0;
+            $results = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}sub_items WHERE order_item_id={$_id}", OBJECT );                
+            foreach ( $results as $index=>$result ) {
+                $parts_price = $curtain_models->get_price($result->parts_id);
+                $parts_amount = $parts_price * $result->parts_qty;
+                $sub_amount .= $parts_amount;
+            }
+            $amount = ($m_price + $sub_amount + $spec_amount) * $row->order_item_qty;
+
+            return $amount;
+        }
+
         function order_item_dialog_save_data() {
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
@@ -671,7 +702,7 @@ if (!class_exists('curtain_orders')) {
                 $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
             }
 
-            if( $_POST['_order_item_id']==0 ) {
+            if( $_POST['_order_item_id']=='' ) {
                 $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$this->curtain_agent_id,
@@ -696,7 +727,8 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
-                        'order_item_amount'=>$amount,
+                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
+                        //'order_item_amount'=>$amount,
                     ),
                     array(
                         'curtain_order_id'=>$_POST['_order_item_id']
@@ -732,7 +764,6 @@ if (!class_exists('curtain_orders')) {
         }
 
         function select_order_status() {
-
             $this->update_customer_orders(
                 array(
                     'customer_order_status'=>$_POST['_customer_order_status'],
@@ -771,13 +802,20 @@ if (!class_exists('curtain_orders')) {
         }
 
         function sub_items_dialog_save_data() {
-
             if( $_POST['_sub_item_id']=='' ) {
                 $this->insert_sub_item(
                     array(
                         'order_item_id'=>$_POST['_order_item_id'],
                         'parts_id'=>$_POST['_parts_id'],
                         'parts_qty'=>$_POST['_parts_qty'],
+                    )
+                );
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_order_item_id']
                     )
                 );
             }
