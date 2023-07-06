@@ -533,8 +533,8 @@ if (!class_exists('curtain_orders')) {
             $output .= '<select id="curtain-category-id"></select>';
             $output .= '<label id="curtain-model-label" for="curtain-model-id">Curtain Model</label>';
             $output .= '<select id="curtain-model-id"></select>';
-            $output .= '<label id="curtain-remote-label" for="curtain-remote-id">Curtain Remote</label>';
-            $output .= '<select id="curtain-remote-id"></select>';
+            //$output .= '<label id="curtain-remote-label" for="curtain-remote-id">Curtain Remote</label>';
+            //$output .= '<select id="curtain-remote-id"></select>';
             $output .= '<label id="curtain-specification-label" for="curtain-specification-id">Specification</label>';
             $output .= '<select id="curtain-specification-id"></select>';
             $output .= '<label id="curtain-width-label" for="curtain-width">Width</label>';
@@ -559,7 +559,7 @@ if (!class_exists('curtain_orders')) {
             $x = 0;
             while ($x<10) {
                 $output .= '<tr id="sub-item-'.$x.'" style="display:none;">';
-                $output .= '<td></td>';
+                $output .= '<td>'.($x+1).'</td>';
                 $output .= '<td id="parts-id-'.$x.'"></td>';
                 $output .= '<td id="parts-qty-'.$x.'" style="text-align: center;"></td>';
                 $output .= '<td id="parts-del-'.$x.'" style="text-align: center;"></td>';
@@ -567,7 +567,8 @@ if (!class_exists('curtain_orders')) {
                 $x += 1;
             }            
             $output .= '<tr>';
-            $output .= '<td><input type="hidden" id="order-item-id" /></td>';
+            $output .= '<td>N</td>';
+            $output .= '<input type="hidden" id="order-item-id" />';
             $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
             $output .= '<td><input type="text" size="2" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
@@ -585,8 +586,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
                 $output .= '<label for="select-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_category_id, $row->curtain_model_id ).'</select>';
-                $output .= '<label for="select-remote-id">Remote</label>';
-                $output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options($row->curtain_remote_id).'</select>';
+                //$output .= '<label for="select-remote-id">Remote</label>';
+                //$output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options($row->curtain_remote_id).'</select>';
                 $output .= '<label for="select-specification-id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_category_id, $row->curtain_specification_id ).'</select>';
 
@@ -614,8 +615,8 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<select name="_curtain_category_id" id="curtain-category-id">'.$curtain_categories->select_options().'</select>';
                 $output .= '<label for="curtain-model-id">Model</label>';
                 $output .= '<select name="_curtain_model_id" id="curtain-model-id">'.$curtain_models->select_options().'</select>';
-                $output .= '<label for="curtain-remote-id">Remote</label>';
-                $output .= '<select name="_curtain_remote_id" id="curtain-remote-id">'.$curtain_remotes->select_options().'</select>';
+                //$output .= '<label for="curtain-remote-id">Remote</label>';
+                //$output .= '<select name="_curtain_remote_id" id="curtain-remote-id">'.$curtain_remotes->select_options().'</select>';
                 $output .= '<label for="curtain-specification-id">Specification</label>';
                 $output .= '<select name="_curtain_specification_id" id="curtain-specification-id">'.$curtain_specifications->select_options().'</select>';
 

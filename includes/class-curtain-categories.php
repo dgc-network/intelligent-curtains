@@ -163,7 +163,7 @@ if (!class_exists('curtain_categories')) {
             $output .= ' cm';
             $output .= '</div>';
             $output .= '</div>';
-            $output .= '<input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts in sub-item.<br>';
+            $output .= '<input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>';
             $output .= '</fieldset>';
             $output .= '</div>';
 

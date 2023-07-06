@@ -119,7 +119,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#order-item-dialog").dialog({
-        width: 300,
+        width: 350,
         modal: true,
         autoOpen: false,
         buttons: {

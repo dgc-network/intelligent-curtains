@@ -21,25 +21,33 @@ jQuery(document).ready(function($) {
                 if (response.allow_parts==1) {
                     $('#allow-parts').prop('checked', true);
                 } else {
-                    $('#allow-parts').prop('', true);
+                    $('#allow-parts').prop('checked', false);
                 }           
-                $('#hide-remote').empty();
+                //$('#hide-remote').empty();
                 if (response.hide_remote==1) {
                     $('#hide-remote').prop('checked', true);
-                }            
-                $('#hide-specification').empty();
+                } else {
+                    $('#hide-remote').prop('checked', false);
+                }
+                //$('#hide-specification').empty();
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
+                } else {
+                    $('#hide-specification').prop('checked', false);
                 }            
-                $('#hide-width').empty();
+                //$('#hide-width').empty();
                 if (response.hide_width==1) {
                     $('#hide-width').prop('checked', true);
+                } else {
+                    $('#hide-width').prop('checked', false);
                 }            
                 $("#min-width").val(response.min_width);
                 $("#max-width").val(response.max_width);
-                $('#hide-height').empty();
+                //$('#hide-height').empty();
                 if (response.hide_height==1) {
                     $('#hide-height').prop('checked', true);
+                } else {
+                    $('#hide-height').prop('checked', false);
                 }            
                 $("#min-height").val(response.min_height);
                 $("#max-height").val(response.max_height);
