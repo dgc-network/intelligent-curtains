@@ -131,7 +131,7 @@ if (!class_exists('curtain_orders')) {
                         'sub_item_id'=>$_GET['_delete_sub_item']
                     )
                 );
-                //$this->caculate_order_item_amount($row->order_item_id);
+
                 $this->update_order_items(
                     array(
                         'order_item_amount'=>$this->caculate_order_item_amount($row->order_item_id),
@@ -693,6 +693,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function order_item_dialog_save_data() {
+/*            
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
             $curtain_remotes = new curtain_remotes();
@@ -720,9 +721,9 @@ if (!class_exists('curtain_orders')) {
             } else {
                 $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
             }
-
+*/
             if( $_POST['_order_item_id']=='' ) {
-                $this->insert_order_item(
+                $order_item_id = $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$this->curtain_agent_id,
                         'curtain_category_id'=>$_POST['_curtain_category_id'],
@@ -732,8 +733,16 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
-                        'order_item_amount'=>$amount,
+                        //'order_item_amount'=>$amount,
                         'is_checkout'=>0
+                    )
+                );
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($order_item_id),
+                    ),
+                    array(
+                        'curtain_order_id'=>$order_item_id
                     )
                 );
             } else {
@@ -746,8 +755,15 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
-                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
                         //'order_item_amount'=>$amount,
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_order_item_id']
+                    )
+                );
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
                     ),
                     array(
                         'curtain_order_id'=>$_POST['_order_item_id']
