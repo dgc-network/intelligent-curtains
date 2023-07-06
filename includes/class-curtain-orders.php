@@ -656,9 +656,17 @@ if (!class_exists('curtain_orders')) {
             $s_price = $curtain_specifications->get_price($row->curtain_specification_id);
 
             if ($curtain_categories->is_height_hided($row->curtain_category_id)){
-                $spec_amount = $row->curtain_width/100 * $s_price;
+                if ($curtain_categories->is_width_hided($row->curtain_category_id)){
+                    $spec_amount = 0;
+                } else {
+                    $spec_amount = $row->curtain_width/100 * $s_price;
+                }
             } else {
-                $spec_amount = $row->curtain_width/100 * $row->curtain_height/100 * $s_price;
+                if ($curtain_categories->is_width_hided($row->curtain_category_id)){
+                    $spec_amount = $row->curtain_height/100 * $s_price;
+                } else {
+                    $spec_amount = $row->curtain_width/100 * $row->curtain_height/100 * $s_price;
+                }
             }
             
             $sub_amount = 0;
