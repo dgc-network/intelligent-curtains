@@ -432,7 +432,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
             $output .= '<form method="post">';
-            //$output .= '<input type="hidden" name="_agent_submit" value="true">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
             $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '</form>';
@@ -496,7 +495,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="9"><div id="btn-order-item-add" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="9"><div id="btn-order-item-0" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '</form>';
@@ -672,7 +671,7 @@ if (!class_exists('curtain_orders')) {
                 $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
             }
 
-            if( $_POST['_order_item_id']=='add' ) {
+            if( $_POST['_order_item_id']==0 ) {
                 $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$this->curtain_agent_id,
