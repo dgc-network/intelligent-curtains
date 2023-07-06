@@ -17,10 +17,12 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
-                $('#allow-parts').empty();
+                //$('#allow-parts').empty();
                 if (response.allow_parts==1) {
                     $('#allow-parts').prop('checked', true);
-                }            
+                } else {
+                    $('#allow-parts').prop('', true);
+                }           
                 $('#hide-remote').empty();
                 if (response.hide_remote==1) {
                     $('#hide-remote').prop('checked', true);

@@ -86,7 +86,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th>category</th>';
-            $output .= '<th>remote</th>';
+            //$output .= '<th>remote</th>';
             $output .= '<th>spec</th>';
             $output .= '<th>width</th>';
             $output .= '<th>height</th>';
@@ -103,14 +103,14 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</td>';
                 $models_page_url = '/models/?_curtain_category_id='.$result->curtain_category_id;
                 $output .= '<td><a href="'.$models_page_url.'">'.$result->curtain_category_name.'</a></td>';
-
+/*
                 if ($result->hide_remote==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
                     $remotes_page_url = '/remotes/?_curtain_category_id='.$result->curtain_category_id;
                     $output .= '<td style="text-align: center;"><a href="'.$remotes_page_url.'">remote</a></td>';
                 }
-
+*/
                 if ($result->hide_specification==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
@@ -134,7 +134,7 @@ if (!class_exists('curtain_categories')) {
                 $output .= '</td>';
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="7"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="6"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
 
             /** Category Dialog */
@@ -143,7 +143,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<input type="hidden" id="curtain-category-id" />';
             $output .= '<label for="curtain-category-name">Category Name</label>';
             $output .= '<input type="text" id="curtain-category-name" />';
-            $output .= '<input type="checkbox" id="hide-remote" style="display:inline-block; width:5%; " /> Hide the Remote.<br>';
+            //$output .= '<input type="checkbox" id="hide-remote" style="display:inline-block; width:5%; " /> Hide the Remote.<br>';
             $output .= '<input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.<br>';
             $output .= '<div>';
             $output .= '<input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.';
@@ -163,7 +163,7 @@ if (!class_exists('curtain_categories')) {
             $output .= ' cm';
             $output .= '</div>';
             $output .= '</div>';
-            $output .= '<input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> Allow to support as the parts in sub-item.<br>';
+            $output .= '<input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts in sub-item.<br>';
             $output .= '</fieldset>';
             $output .= '</div>';
 
