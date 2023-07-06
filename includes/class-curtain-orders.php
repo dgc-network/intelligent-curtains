@@ -124,11 +124,14 @@ if (!class_exists('curtain_orders')) {
             }
 */
             if( isset($_GET['_delete_sub_item']) ) {
+                $_id = $_GET['_delete_sub_item'];
                 $this->delete_sub_items(
                     array(
                         'sub_item_id'=>$_GET['_delete_sub_item']
                     )
                 );
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}sub_items WHERE sub_item_id = %d", $_id ), OBJECT );
+                $this->caculate_order_item_amount($row->order_item_id);
             }
 
             if( isset($_GET['_delete_customer_order']) ) {
