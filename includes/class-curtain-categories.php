@@ -15,10 +15,10 @@ if (!class_exists('curtain_categories')) {
             $this->_wp_page_title = 'Categories';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-category-list');
             add_shortcode( 'curtain-category-list', array( $this, 'list_curtain_categories' ) );
-            add_action( 'wp_ajax_category_dialog_get_data', array( $this, 'category_dialog_get_data' ) );
-            add_action( 'wp_ajax_nopriv_category_dialog_get_data', array( $this, 'category_dialog_get_data' ) );
-            add_action( 'wp_ajax_category_dialog_save_data', array( $this, 'category_dialog_save_data' ) );
-            add_action( 'wp_ajax_nopriv_category_dialog_save_data', array( $this, 'category_dialog_save_data' ) );
+            add_action( 'wp_ajax_get_category_dialog_data', array( $this, 'get_category_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_get_category_dialog_data', array( $this, 'get_category_dialog_data' ) );
+            add_action( 'wp_ajax_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
         }
 
         public function list_curtain_categories() {
@@ -213,7 +213,7 @@ if (!class_exists('curtain_categories')) {
             return $output;
         }
 
-        function category_dialog_get_data() {
+        function get_category_dialog_data() {
             global $wpdb;
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $_id ), OBJECT );
@@ -232,7 +232,7 @@ if (!class_exists('curtain_categories')) {
             wp_die();
         }
 
-        function category_dialog_save_data() {
+        function save_category_dialog_data() {
             if( $_POST['_curtain_category_id']=='' ) {
                 $this->insert_curtain_category(
                     array(

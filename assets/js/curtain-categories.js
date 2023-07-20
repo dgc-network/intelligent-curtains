@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
             url: ajax_object.ajax_url,
             dataType: "json",
             data: {
-                'action': 'category_dialog_get_data',
+                'action': 'get_category_dialog_data',
                 '_id': id,
             },
             success: function (response) {                    
@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
                     url: ajax_object.ajax_url,
                     dataType: "json",
                     data: {
-                        'action': 'category_dialog_save_data',
+                        'action': 'save_category_dialog_data',
                         '_curtain_category_id': curtain_category_id,
                         '_curtain_category_name': curtain_category_name,
                         '_allow_parts': allow_parts,
