@@ -161,18 +161,18 @@ if (!class_exists('general_helps')) {
             return $page_id;
         }
         
-        public static function get_search_results( $table, $_where=array(), $_additions=array() ) {            
+        public static function get_search_results( $table, $_search=array(), $_additions=array() ) {            
             global $wpdb;
             $results = array();
             $where_condition = '';
-            if ($_where!=array()) {
-                if ($_where=='' && $_additions==array()) {
+            if ($_search!=array()) {
+                if ($_search=='' && $_additions==array()) {
                     $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
                 } else {
                     $existing_columns = $wpdb->get_col("DESC ".$table, 0);
                     $x = count($existing_columns);
                     foreach ($existing_columns as $existing_column) {
-                        $where_condition .= $existing_column.' LIKE "%'.$_where.'%"';
+                        $where_condition .= $existing_column.' LIKE "%'.$_search.'%"';
                         $x = $x - 1 ;
                         if ($x > 0) {
                             $where_condition .= ' OR ';
