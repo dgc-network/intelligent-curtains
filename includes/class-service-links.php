@@ -108,7 +108,7 @@ if (!class_exists('service_links')) {
             $output .= '</tr></thead>';
 
             $output .= '<tbody>';
-            $_addition = array('service_link_category="view"');
+            $_conditions = array('service_link_category="view"');
             $results = general_helps::get_search_results($wpdb->prefix.'service_links', $_POST['_where']);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';

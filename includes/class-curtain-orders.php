@@ -288,11 +288,11 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</tr></thead>';
 
                 $output .= '<tbody>';
-                $_addition = array('curtain_agent_id='.$this->curtain_agent_id);
+                $_conditions = array('curtain_agent_id='.$this->curtain_agent_id);
                 if($user->has_cap('manage_options')){
                     $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
                 } else {
-                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_addition);
+                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where'], $_conditions);
                 }
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
@@ -485,8 +485,8 @@ if (!class_exists('curtain_orders')) {
 
             $output .= '<form method="post">';
             $output .= '<tbody>';
-            $_addition = array('curtain_agent_id='.$this->curtain_agent_id, 'is_checkout=0');
-            $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_addition);
+            $_conditions = array('curtain_agent_id='.$this->curtain_agent_id, 'is_checkout=0');
+            $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where'], $_conditions);
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 if ( $result->is_checkout==1 ) {

@@ -233,12 +233,12 @@ if (!class_exists('wp_pages')) {
             return $page_id;
         }
         
-        public function get_search_results( $table, $_search=array(), $_and=array() ) {            
+        public function get_search_results( $table, $_search=array(), $_conditions=array() ) {            
             global $wpdb;
             $results = array();
             $where_condition = '';
             if ($_search!=array()) {
-                if ($_search=='' && $_and==array()) {
+                if ($_search=='' && $_conditions==array()) {
                     $results = $wpdb->get_results( "SELECT * FROM ".$table, OBJECT );
                 } else {
                     $existing_columns = $wpdb->get_col("DESC ".$table, 0);
@@ -256,13 +256,13 @@ if (!class_exists('wp_pages')) {
                 }
             }
 
-            if ($_and!=array()) {
+            if ($_conditions!=array()) {
                 $x = 0;
-                foreach ($_and as $addition) {
+                foreach ($_conditions as $_condition) {
                     if ($x > 0) {
                         $where_condition .= ' AND ';
                     }
-                    $where_condition .= $addition;
+                    $where_condition .= $_condition;
                     $x = $x + 1;
                 }
             }
