@@ -33,17 +33,17 @@ function user_custom_fields(WP_User $user) {
             </tr>
         </table>
     <?php
-    }
-    add_action('show_user_profile', 'user_custom_fields'); // editing your own profile
-    add_action('edit_user_profile', 'user_custom_fields'); // editing another user
-    add_action('user_new_form', 'user_custom_fields'); // creating a new user
-    
-    function userMetaDataSave($userId) {
-        if (current_user_can('edit_user', $userId)) {
-            update_user_meta($userId, 'line_user_id', $_REQUEST['line_user_id']);
-            update_user_meta($userId, 'wallet_address', $_REQUEST['wallet_address']);
-        }    
-    }
-    add_action('personal_options_update', 'userMetaDataSave');
-    add_action('edit_user_profile_update', 'userMetaDataSave');
-    add_action('user_register', 'userMetaDataSave');
+}
+add_action('show_user_profile', 'user_custom_fields'); // editing your own profile
+add_action('edit_user_profile', 'user_custom_fields'); // editing another user
+add_action('user_new_form', 'user_custom_fields'); // creating a new user
+
+function userMetaDataSave($userId) {
+    if (current_user_can('edit_user', $userId)) {
+        update_user_meta($userId, 'line_user_id', $_REQUEST['line_user_id']);
+        update_user_meta($userId, 'wallet_address', $_REQUEST['wallet_address']);
+    }    
+}
+add_action('personal_options_update', 'userMetaDataSave');
+add_action('edit_user_profile_update', 'userMetaDataSave');
+add_action('user_register', 'userMetaDataSave');
