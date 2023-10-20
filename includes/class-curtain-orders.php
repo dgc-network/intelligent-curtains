@@ -651,7 +651,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
 
                 $output .= '<label for="order_item_qty">QTY</label>';
-                $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
+                $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" value="1" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input type="hidden" name="_agent_submit" value="true">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
