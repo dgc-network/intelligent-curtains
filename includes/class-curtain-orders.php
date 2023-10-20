@@ -114,15 +114,7 @@ if (!class_exists('curtain_orders')) {
             } else {
                 echo do_shortcode( '[qr-scanner-redirect]' );
             }
-/*
-            if( isset($_GET['_repack']) ) {
-                $this->delete_customer_orders(
-                    array(
-                        'customer_order_amount'=>$_GET['_repack']
-                    )
-                );
-            }
-*/
+
             if( isset($_GET['_delete_sub_item']) ) {
                 $_id = $_GET['_delete_sub_item'];
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}sub_items WHERE sub_item_id = %d", $_id ), OBJECT );
@@ -151,7 +143,7 @@ if (!class_exists('curtain_orders')) {
             }
 
             //* Print Customer Order */
-            if( isset($_POST['_status_submit']) ) {
+            if( isset($_POST['_order_status_submit']) ) {
                 $this->update_customer_orders(
                     array(
                         'customer_order_status'=>$_POST['_customer_order_status'],
@@ -181,7 +173,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<form method="post" style="display:flex;">';
                     $output .= '<select id="customer-order-status" name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
                     $output .= '<input type="hidden" id="customer-order-number" name="_customer_order_number" value="'.$row->customer_order_number.'" />';
-                    //$output .= '<input type="submit" name="_status_submit" style="margin:3px;" value="Submit" />';
+                    //$output .= '<input type="submit" name="_order_status_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</td>';
                 } else {
@@ -458,13 +450,15 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="我的訂單" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="查詢" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '</div>';
@@ -474,12 +468,18 @@ if (!class_exists('curtain_orders')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th></th>';
-            $output .= '<th>date/time</th>';
-            $output .= '<th>category</th>';
-            $output .= '<th>model</th>';
-            $output .= '<th>parts</th>';
-            $output .= '<th>QTY</th>';
-            $output .= '<th>amount</th>';
+            //$output .= '<th>date/time</th>';
+            //$output .= '<th>category</th>';
+            //$output .= '<th>model</th>';
+            //$output .= '<th>parts</th>';
+            //$output .= '<th>QTY</th>';
+            //$output .= '<th>amount</th>';
+            $output .= '<th>時間</th>';
+            $output .= '<th>窗簾種類</th>';
+            $output .= '<th>型號</th>';
+            $output .= '<th>配件</th>';
+            $output .= '<th>數量</th>';
+            $output .= '<th>金額</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
@@ -522,7 +522,8 @@ if (!class_exists('curtain_orders')) {
             }
             $output .= '<tr><td colspan="9"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
-            $output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
+            //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
+            $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
 
             /** Order Item Dialog */
@@ -568,7 +569,7 @@ if (!class_exists('curtain_orders')) {
             }            
             $output .= '<tr>';
             $output .= '<td>N</td>';
-            $output .= '<input type="hidden" id="order-item-id" />';
+            //$output .= '<input type="hidden" id="order-item-id" />';
             $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
             $output .= '<td><input type="text" size="2" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
