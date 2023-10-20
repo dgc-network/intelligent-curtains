@@ -550,6 +550,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</div>';
 
             /** Order Add Item Dialog */
+/*            
             $output .= '<div id="order-add-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
             //$output .= '<input type="hidden" id="order-item-id">';
@@ -569,7 +570,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input type="text" id="order-item-qty" />';
             $output .= '</fieldset>';
             $output .= '</div>';
-
+*/
             /** Sub Items Dialog */
             $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
