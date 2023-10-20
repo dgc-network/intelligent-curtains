@@ -531,13 +531,13 @@ if (!class_exists('curtain_orders')) {
             $output .= '<fieldset>';
             //$output .= '<input type="hidden" id="order-item-id">';
             $output .= '<label for="curtain-category-id">Curtain Category</label>';
-            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '<select id="curtain-category-id">'.$curtain_categories->select_options().'</select>';
             $output .= '<label id="curtain-model-label" for="curtain-model-id">Curtain Model</label>';
-            $output .= '<select id="curtain-model-id"></select>';
+            $output .= '<select id="curtain-model-id">'.$curtain_models->select_options().'</select>';
             //$output .= '<label id="curtain-remote-label" for="curtain-remote-id">Curtain Remote</label>';
             //$output .= '<select id="curtain-remote-id"></select>';
             $output .= '<label id="curtain-specification-label" for="curtain-specification-id">Specification</label>';
-            $output .= '<select id="curtain-specification-id"></select>';
+            $output .= '<select id="curtain-specification-id">'.$curtain_specifications->select_options().'</select>';
             $output .= '<label id="curtain-width-label" for="curtain-width">Width</label>';
             $output .= '<input type="text" id="curtain-width" />';
             $output .= '<label id="curtain-height-label" for="curtain-height">Height</label>';
