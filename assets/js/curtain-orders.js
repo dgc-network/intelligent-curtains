@@ -65,7 +65,7 @@ jQuery(document).ready(function($) {
                 '_id': id,
             },
             success: function (response) {                    
-                $("#order-item-id").val(id);
+                //$("#order-item-id").val(id);
                 $("#curtain-category-id").empty();
                 $("#curtain-category-id").append(response.curtain_category_id);
                 $("#curtain-model-id").empty();
