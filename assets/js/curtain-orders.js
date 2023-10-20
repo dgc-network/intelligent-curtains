@@ -131,7 +131,7 @@ jQuery(document).ready(function($) {
                 //var order_item_id = $("#order-item-id").val();
                 var curtain_category_id = $("#curtain-category-id").val();
                 var curtain_model_id = $("#curtain-model-id").val();
-                //var curtain_remote_id = $("#curtain-remote-id").val();
+                var curtain_remote_id = $("#curtain-remote-id").val();
                 var curtain_specification_id = $("#curtain-specification-id").val();
                 var curtain_width = $("#curtain-width").val();
                 var curtain_height = $("#curtain-height").val();
