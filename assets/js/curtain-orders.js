@@ -48,7 +48,7 @@ jQuery(document).ready(function($) {
     $('[id^="btn-del-order-item-"]').on( "click", function() {
         id = this.id;
         id = id.substring(19);
-        if (window.confirm("Are you sure you want to delete this record?")) {
+        if (window.confirm("Are you sure you want to delete this item?")) {
             window.location.replace("?_order_item_delete=" + id);
         }        
     });

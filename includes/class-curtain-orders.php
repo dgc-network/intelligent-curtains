@@ -438,7 +438,8 @@ if (!class_exists('curtain_orders')) {
                 ?><script>window.location.replace("?_update=");</script><?php
             }
 
-            if( isset($_GET['_delete']) ) {
+            //if( isset($_GET['_delete']) ) {
+            if( isset($_GET['_order_item_delete']) ) {
                 $this->delete_order_items(
                     array(
                         'curtain_order_id'=>$_GET['_delete']
@@ -517,7 +518,8 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    $output .= '<span id="btn-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    //$output .= '<span id="btn-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '<span id="btn-del-order-item-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                 }
                 $output .= '</tr>';
