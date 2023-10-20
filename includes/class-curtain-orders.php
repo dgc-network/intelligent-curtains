@@ -301,7 +301,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<td>'.$system_status->get_name($result->customer_order_status).'</td>';
                     if($user->has_cap('manage_options')){
                         $output .= '<td style="text-align: center;">';
-                        $output .= '<span id="btn-del-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-trash-can"></i></span>';
+                        $output .= '<span id="btn-customer-order-del-'.$result->customer_order_number.'"><i class="fa-regular fa-trash-can"></i></span>';
                         $output .= '</td>';
                     }
                     $output .= '</tr>';
@@ -442,7 +442,8 @@ if (!class_exists('curtain_orders')) {
             if( isset($_GET['_order_item_delete']) ) {
                 $this->delete_order_items(
                     array(
-                        'curtain_order_id'=>$_GET['_delete']
+                        //'curtain_order_id'=>$_GET['_delete']
+                        'curtain_order_id'=>$_GET['_order_item_delete']
                     )
                 );
             }
@@ -519,7 +520,7 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $output .= '<td style="text-align: center;">';
                     //$output .= '<span id="btn-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
-                    $output .= '<span id="btn-del-order-item-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
+                    $output .= '<span id="btn-order-item-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                 }
                 $output .= '</tr>';

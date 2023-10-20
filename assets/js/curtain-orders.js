@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
     });
 
     /* Delete Customer Order Button */
-    $('[id^="btn-del-customer-order-"]').on( "click", function() {
+    $('[id^="btn-customer-order-del-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
         id = id.substring(23);        
@@ -45,7 +45,7 @@ jQuery(document).ready(function($) {
     /**
      * Order Item Dialog and Buttons
      */
-    $('[id^="btn-del-order-item-"]').on( "click", function() {
+    $('[id^="btn-order-item-del-"]').on( "click", function() {
         id = this.id;
         id = id.substring(19);
         if (window.confirm("Are you sure you want to delete this item?")) {
