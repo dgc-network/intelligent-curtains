@@ -671,6 +671,42 @@ if (!class_exists('curtain_orders')) {
 
         function order_item_dialog_save_data() {
             if( $_POST['_order_item_id']=='' ) {
+
+                $width = 1;
+                $height = 1;
+                $qty = 1;
+                if (is_numeric($_POST['_curtain_width'])) {
+                    $width = $_POST['_curtain_width'];
+                }
+                if (is_numeric($_POST['_curtain_height'])) {
+                    $height = $_POST['_curtain_height'];
+                }
+                if (is_numeric($_POST['_shopping_item_qty'])) {
+                    $qty = $_POST['_shopping_item_qty'];
+                }
+                $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
+                $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
+                $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
+                if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
+                    $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
+                } else {
+                    $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
+                }
+                $this->insert_order_item(
+                    array(
+                        'curtain_agent_id'=>$this->curtain_agent_id,
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_shopping_item_qty'],
+                        'order_item_amount'=>$amount,
+                        'is_checkout'=>0
+                    )
+                );
+/*
                 $order_item_id = $this->insert_order_item(
                     array(
                         'curtain_agent_id'=>$this->curtain_agent_id,
@@ -692,6 +728,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_order_id'=>$order_item_id
                     )
                 );
+*/                
             } else {
                 $this->update_order_items(
                     array(
@@ -702,11 +739,13 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
                     ),
                     array(
                         'curtain_order_id'=>$_POST['_order_item_id']
                     )
                 );
+/*                
                 $this->update_order_items(
                     array(
                         'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
@@ -715,6 +754,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_order_id'=>$_POST['_order_item_id']
                     )
                 );
+*/                
             }
 
             $response = array();
