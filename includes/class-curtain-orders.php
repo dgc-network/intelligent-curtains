@@ -520,11 +520,32 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="9"><div id="btn-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            $output .= '<tr><td colspan="9"><div id="btn-add-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
+
+            /** Order Add Item Dialog */
+            $output .= '<div id="order-add-item-dialog" title="Order Item dialog">';
+            $output .= '<fieldset>';
+            //$output .= '<input type="hidden" id="order-item-id">';
+            $output .= '<label for="curtain-category-id">Curtain Category</label>';
+            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '<label id="curtain-model-label" for="curtain-model-id">Curtain Model</label>';
+            $output .= '<select id="curtain-model-id"></select>';
+            //$output .= '<label id="curtain-remote-label" for="curtain-remote-id">Curtain Remote</label>';
+            //$output .= '<select id="curtain-remote-id"></select>';
+            $output .= '<label id="curtain-specification-label" for="curtain-specification-id">Specification</label>';
+            $output .= '<select id="curtain-specification-id"></select>';
+            $output .= '<label id="curtain-width-label" for="curtain-width">Width</label>';
+            $output .= '<input type="text" id="curtain-width" />';
+            $output .= '<label id="curtain-height-label" for="curtain-height">Height</label>';
+            $output .= '<input type="text" id="curtain-height" />';    
+            $output .= '<label for="order-item-qty">QTY</label>';
+            $output .= '<input type="text" id="order-item-qty" />';
+            $output .= '</fieldset>';
+            $output .= '</div>';
 
             /** Order Item Dialog */
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
@@ -665,6 +686,104 @@ if (!class_exists('curtain_orders')) {
             $response['min_height'] = $curtain_categories->get_min_height($row->curtain_category_id);
             $response['max_height'] = $curtain_categories->get_max_height($row->curtain_category_id);
 
+            echo json_encode( $response );
+            wp_die();
+        }
+
+        function order_item_dialog_add_data() {
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+            $width = 1;
+            $height = 1;
+            $qty = 1;
+            if (is_numeric($_POST['_curtain_width'])) {
+                $width = $_POST['_curtain_width'];
+            }
+            if (is_numeric($_POST['_curtain_height'])) {
+                $height = $_POST['_curtain_height'];
+            }
+            if (is_numeric($_POST['_shopping_item_qty'])) {
+                $qty = $_POST['_shopping_item_qty'];
+            }
+            $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
+            $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
+            $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
+            if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
+                $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
+            } else {
+                $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
+            }
+
+            if( $_POST['_order_item_id']=='' ) {
+
+                $this->insert_order_item(
+                    array(
+                        'curtain_agent_id'=>$this->curtain_agent_id,
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_shopping_item_qty'],
+                        'order_item_amount'=>$amount,
+                        'is_checkout'=>0
+                    )
+                );
+/*
+                $order_item_id = $this->insert_order_item(
+                    array(
+                        'curtain_agent_id'=>$this->curtain_agent_id,
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'is_checkout'=>0
+                    )
+                );
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($order_item_id),
+                    ),
+                    array(
+                        'curtain_order_id'=>$order_item_id
+                    )
+                );
+*/                
+            } else {
+                $this->update_order_items(
+                    array(
+                        'curtain_category_id'=>$_POST['_curtain_category_id'],
+                        'curtain_model_id'=>$_POST['_curtain_model_id'],
+                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
+                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
+                        'curtain_width'=>$_POST['_curtain_width'],
+                        'curtain_height'=>$_POST['_curtain_height'],
+                        'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_amount'=>$amount,
+                        //'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_order_item_id']
+                    )
+                );
+/*                
+                $this->update_order_items(
+                    array(
+                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
+                    ),
+                    array(
+                        'curtain_order_id'=>$_POST['_order_item_id']
+                    )
+                );
+*/                
+            }
+
+            $response = array();
             echo json_encode( $response );
             wp_die();
         }
