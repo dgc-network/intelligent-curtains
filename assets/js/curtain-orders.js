@@ -231,9 +231,11 @@ jQuery(document).ready(function($) {
                 $("#curtain-specification-id").empty();
                 $("#curtain-specification-id").append(response.curtain_specification_id);
                 $('#curtain-width-label').empty();
-                $('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                //$('#curtain-width-label').append('Width: min('+response.min_width+'),max('+response.max_width+')');
+                $('#curtain-width-label').append('寬度: 不得少於('+response.min_width+'),不得大於('+response.max_width+')');
                 $('#curtain-height-label').empty();
-                $('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+                //$('#curtain-height-label').append('Height: min('+response.min_height+'),max('+response.max_height+')');
+                $('#curtain-height-label').append('高度: 不得少於('+response.min_height+'),不得大於('+response.max_height+')');
 
                 if (response.is_remote_hided) {
                     $('#curtain-remote-label').hide();
