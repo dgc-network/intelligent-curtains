@@ -276,7 +276,8 @@ if (!class_exists('curtain_service')) {
 
 
                 if( isset($_GET['_agent_no']) ) {
-                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
+                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
+                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
                     if (is_null($agent) || !empty($wpdb->last_error)) {
 
                         /** Update the User account information */
