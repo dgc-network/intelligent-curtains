@@ -231,11 +231,11 @@ if (!class_exists('curtain_service')) {
 
                     /** Post Submit */
                     if( isset($_POST['_agent_submit']) ) {
-                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_code = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
                         if (is_null($row) || !empty($wpdb->last_error)) {
                         } else {
                             update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                            update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
+                            update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
                             $curtain_agents->insert_agent_operator(
                                 array(
                                     'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
@@ -270,13 +270,13 @@ if (!class_exists('curtain_service')) {
                         $output .= '<fieldset>';
                         $output .= '<label style="text-align:left;" for="_agent_number">代碼:</label>';
                         $output .= '<input type="text" name="_agent_number" />';
-                        $output .= '<label style="text-align:left;" for="_agent_code">密碼:</label>';
-                        $output .= '<input type="password" name="_agent_code" />';
+                        $output .= '<label style="text-align:left;" for="_agent_password">密碼:</label>';
+                        $output .= '<input type="password" name="_agent_password" />';
                         $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
                         $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
                         $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
                         $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
-                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submiy" />';
+                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
                         $output .= '</fieldset>';
                         $output .= '</form>';
                         $output .= '</div>';
@@ -629,7 +629,7 @@ if (!class_exists('curtain_service')) {
                 /** Assign the User as the specified Agent Operators */
                 if( isset($_GET['_agent_no']) ) {
                     if( isset($_POST['_agent_submit']) ) {
-                        $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
+                        $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
                         if (is_null($agent) || !empty($wpdb->last_error)) {
 
                             $line_bot_api->pushMessage([
@@ -645,9 +645,9 @@ if (!class_exists('curtain_service')) {
                             return 'Wrong Code';
                         } else {
                             //$_SESSION['_agent_number'] = $_POST['_agent_number'];
-                            //$_SESSION['_agent_code'] = $_POST['_agent_code'];
+                            //$_SESSION['_agent_password'] = $_POST['_agent_password'];
                             update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                            update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
+                            update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
 
                             $curtain_agents->insert_agent_operator(
                                 array(
@@ -664,7 +664,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name_by_no($agent_number).'.</p>';
                     $output .= '<p>Please enter the code and click the below Submit button to complete the registration.</p>';
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                    $output .= '<input type="text" name="_agent_code" />';
+                    $output .= '<input type="text" name="_agent_password" />';
                     $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_no'].'" />';
                     $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
