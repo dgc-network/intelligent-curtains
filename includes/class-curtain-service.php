@@ -228,6 +228,104 @@ if (!class_exists('curtain_service')) {
 
 
                 if( isset($_GET['_menu']) ) {
+
+                    /** Post Submit */
+                    if( isset($_POST['_agent_submit']) ) {
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
+                        if (is_null($row) || !empty($wpdb->last_error)) {
+                        } else {
+                            ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
+
+                        }
+                        update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                        update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
+    
+                        $curtain_agents->insert_agent_operator(
+                            array(
+                                'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
+                                'curtain_user_id'=>intval($user->ID)
+                            ),
+                        );
+    
+                        $users = get_users(array(
+                            'meta_key'     => 'line_user_id',
+                            'meta_value'   => $_POST['_line_user_id'],
+                            'meta_compare' => '=',
+                        ));
+                        $user_data = wp_update_user( array( 
+                            'ID' => $users[0]->ID, 
+                            'display_name' => $_POST['_display_name'], 
+                            'user_email' => $_POST['_user_email'], 
+                        ) );
+    
+                    }
+    
+                    if( isset($_POST['_user_submit']) ) {
+                        ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                        $users = get_users(array(
+                            'meta_key'     => 'line_user_id',
+                            'meta_value'   => $_POST['_line_user_id'],
+                            'meta_compare' => '=',
+                        ));
+                        $user_data = wp_update_user( array( 
+                            'ID' => $users[0]->ID, 
+                            'display_name' => $_POST['_display_name'], 
+                            'user_email' => $_POST['_user_email'], 
+                        ) );
+    
+                        if ( is_wp_error( $user_data ) ) {
+                            // There was an error; possibly this user doesn't exist.
+                            echo 'Error.';
+                        } else {
+                            // Success!
+                            //echo 'User profile updated.';
+                        }
+                    }
+
+                    if( $_GET['_menu']=='agent' ) {
+                        /** Assign the User as the specified Agent Operators */
+                        //$agent_number = $_GET['_agent_no'];
+                        $output  = '<div style="text-align:center;">';
+                        //$output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name_by_no($agent_number).'.</p>';
+                        //$output .= '<p>Please enter the code and click the below Submit button to complete the registration.</p>';
+                        $output .= '<h4>經銷商登入</h4>';
+                        $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                        $output .= '<fieldset>';
+                        $output .= '<label style="text-align:left;" for="_agent_number">代碼:</label>';
+                        $output .= '<input type="text" name="_agent_number" />';
+                        $output .= '<label style="text-align:left;" for="_agent_code">密碼:</label>';
+                        $output .= '<input type="password" name="_agent_code" />';
+                        $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
+                        $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
+                        $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
+                        $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
+                        //$output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
+                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
+                        $output .= '</fieldset>';
+                        $output .= '</form>';
+                        $output .= '</div>';
+                        return $output;    
+
+                    }
+
+                    if( $_GET['_menu']=='user' ) {
+                        $output  = '<div style="text-align:center;">';
+                        $output .= '<h3>User profile</h3>';
+                        $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                        $output .= '<fieldset>';
+                        $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
+                        $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
+                        $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
+                        $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
+                        $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
+                        $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
+                        $output .= '</fieldset>';
+                        $output .= '</form>';
+                        $output .= '</div>';
+                        return $output;    
+
+                    }
+
                     $one_time_password = random_int(100000, 999999);
                     update_option('_one_time_password', $one_time_password);
 
@@ -239,53 +337,6 @@ if (!class_exists('curtain_service')) {
                     return $output;
                 }
 
-                /** Post Submit */
-                if( isset($_POST['_agent_submit']) ) {
-                    update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                    update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
-
-                    $curtain_agents->insert_agent_operator(
-                        array(
-                            'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
-                            'curtain_user_id'=>intval($user->ID)
-                        ),
-                    );
-
-                    $users = get_users(array(
-                        'meta_key'     => 'line_user_id',
-                        'meta_value'   => $_POST['_line_user_id'],
-                        'meta_compare' => '=',
-                    ));
-                    $user_data = wp_update_user( array( 
-                        'ID' => $users[0]->ID, 
-                        'display_name' => $_POST['_display_name'], 
-                        'user_email' => $_POST['_user_email'], 
-                    ) );
-
-                    ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
-                }
-
-                if( isset($_POST['_user_submit']) ) {
-                    $users = get_users(array(
-                        'meta_key'     => 'line_user_id',
-                        'meta_value'   => $_POST['_line_user_id'],
-                        'meta_compare' => '=',
-                    ));
-                    $user_data = wp_update_user( array( 
-                        'ID' => $users[0]->ID, 
-                        'display_name' => $_POST['_display_name'], 
-                        'user_email' => $_POST['_user_email'], 
-                    ) );
-
-                    if ( is_wp_error( $user_data ) ) {
-                        // There was an error; possibly this user doesn't exist.
-                        echo 'Error.';
-                    } else {
-                        // Success!
-                        //echo 'User profile updated.';
-                        ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
-                    }
-                }
 
 
                 if( isset($_GET['_agent_no']) ) {
@@ -295,20 +346,6 @@ if (!class_exists('curtain_service')) {
 
                         /** Update the User account information */
                         if( isset($_GET['_id']) ) {
-                            $output  = '<div style="text-align:center;">';
-                            $output .= '<h3>User profile</h3>';
-                            $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                            $output .= '<fieldset>';
-                            $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
-                            $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
-                            $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
-                            $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
-                            $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
-                            $output .= '<input type="submit" name="_user_submit" style="margin:3px;" value="Submit" />';
-                            $output .= '</fieldset>';
-                            $output .= '</form>';
-                            $output .= '</div>';
-                            return $output;    
                         } else {
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta( $user->ID, 'line_user_id', TRUE ),
@@ -327,25 +364,6 @@ if (!class_exists('curtain_service')) {
         
                     } else {
 
-                        /** Assign the User as the specified Agent Operators */
-                        $agent_number = $_GET['_agent_no'];
-                        $output  = '<div style="text-align:center;">';
-                        $output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name_by_no($agent_number).'.</p>';
-                        $output .= '<p>Please enter the code and click the below Submit button to complete the registration.</p>';
-                        $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                        $output .= '<fieldset>';
-                        $output .= '<input type="text" name="_agent_code" />';
-                        $output .= '<input type="hidden" name="_agent_number" value="'.$_GET['_agent_no'].'" />';
-                        $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
-                        $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
-                        $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
-                        $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
-                        $output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
-                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
-                        $output .= '</fieldset>';
-                        $output .= '</form>';
-                        $output .= '</div>';
-                        return $output;    
 
                     }
 
