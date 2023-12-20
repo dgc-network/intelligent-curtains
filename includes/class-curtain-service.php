@@ -231,64 +231,41 @@ if (!class_exists('curtain_service')) {
 
                     /** Post Submit */
                     if( isset($_POST['_agent_submit']) ) {
-                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_code = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
                         if (is_null($row) || !empty($wpdb->last_error)) {
                         } else {
+                            update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                            update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
+                            $curtain_agents->insert_agent_operator(
+                                array(
+                                    'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
+                                    'curtain_user_id'=>intval($user->ID)
+                                ),
+                            );
+                            wp_update_user( array(
+                                'ID' => $user->ID, 
+                                'display_name' => $_POST['_display_name'], 
+                                'user_email' => $_POST['_user_email'], 
+                            ) );
+        
                             ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
-
                         }
-                        update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                        update_user_meta($user->ID, 'agent_code', $_POST['_agent_code']);
-    
-                        $curtain_agents->insert_agent_operator(
-                            array(
-                                'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
-                                'curtain_user_id'=>intval($user->ID)
-                            ),
-                        );
-    
-                        $users = get_users(array(
-                            'meta_key'     => 'line_user_id',
-                            'meta_value'   => $_POST['_line_user_id'],
-                            'meta_compare' => '=',
-                        ));
-                        $user_data = wp_update_user( array( 
-                            'ID' => $users[0]->ID, 
-                            'display_name' => $_POST['_display_name'], 
-                            'user_email' => $_POST['_user_email'], 
-                        ) );
-    
                     }
     
                     if( isset($_POST['_user_submit']) ) {
-                        ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
-                        $users = get_users(array(
-                            'meta_key'     => 'line_user_id',
-                            'meta_value'   => $_POST['_line_user_id'],
-                            'meta_compare' => '=',
-                        ));
-                        $user_data = wp_update_user( array( 
-                            'ID' => $users[0]->ID, 
+                        wp_update_user( array( 
+                            'ID' => $user->ID, 
                             'display_name' => $_POST['_display_name'], 
                             'user_email' => $_POST['_user_email'], 
                         ) );
     
-                        if ( is_wp_error( $user_data ) ) {
-                            // There was an error; possibly this user doesn't exist.
-                            echo 'Error.';
-                        } else {
-                            // Success!
-                            //echo 'User profile updated.';
-                        }
+                        ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
                     }
 
                     if( $_GET['_menu']=='agent' ) {
                         /** Assign the User as the specified Agent Operators */
-                        //$agent_number = $_GET['_agent_no'];
                         $output  = '<div style="text-align:center;">';
-                        //$output .= '<p>This is a process to register as the operator for '.$curtain_agents->get_name_by_no($agent_number).'.</p>';
-                        //$output .= '<p>Please enter the code and click the below Submit button to complete the registration.</p>';
-                        $output .= '<h4>經銷商登入</h4>';
+                        $output .= '<h4>經銷商登入/註冊</h4>';
                         $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                         $output .= '<fieldset>';
                         $output .= '<label style="text-align:left;" for="_agent_number">代碼:</label>';
@@ -299,13 +276,11 @@ if (!class_exists('curtain_service')) {
                         $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
                         $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
                         $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
-                        //$output .= '<input type="hidden" name="_line_user_id" value="'.$_GET['_id'].'" />';
-                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
+                        $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submiy" />';
                         $output .= '</fieldset>';
                         $output .= '</form>';
                         $output .= '</div>';
                         return $output;    
-
                     }
 
                     if( $_GET['_menu']=='user' ) {
@@ -323,68 +298,11 @@ if (!class_exists('curtain_service')) {
                         $output .= '</form>';
                         $output .= '</div>';
                         return $output;    
-
                     }
-
-                    $one_time_password = random_int(100000, 999999);
-                    update_option('_one_time_password', $one_time_password);
-
-                    $output = '<div style="text-align:center;">';
-                    $output .= '感謝您選購我們的電動窗簾logon<br>';
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>完成註冊/登入作業<br>';
-                    $output .= '</div>';
-                    return $output;
                 }
-
-
-
-                if( isset($_GET['_agent_no']) ) {
-                    //$agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND phone1 = %s", $_POST['_agent_number'], $_POST['_agent_code'] ), OBJECT );            
-                    $agent = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $_GET['_agent_no'] ), OBJECT );            
-                    if (is_null($agent) || !empty($wpdb->last_error)) {
-
-                        /** Update the User account information */
-                        if( isset($_GET['_id']) ) {
-                        } else {
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta( $user->ID, 'line_user_id', TRUE ),
-                                'messages' => [
-                                    [
-                                        "type" => "text",
-                                        "text" => 'Please click the below link to register the system. ',
-                                    ]
-                                ]
-                            ]);
-        
-                            return 'Wrong Code';
-    
-                        }
-        
-        
-                    } else {
-
-
-                    }
-
-                }
-
             } else {
 
                 /** Did not login system yet */
-                if( isset($_GET['_menu']) ) {
-                    $one_time_password = random_int(100000, 999999);
-                    update_option('_one_time_password', $one_time_password);
-
-                    $output = '<div style="text-align:center;">';
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>完成註冊/登入作業<br>';
-                    $output .= '</div>';
-                    return $output;
-                }
-
-
                 if( isset($_GET['_id']) ) {
                     /** Using Line User ID to register and login into the system */
                     $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -442,8 +360,7 @@ if (!class_exists('curtain_service')) {
 
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
-                //$profile = $line_bot_api->getProfile($event['source']['userId']);
-                
+                /** Start the User Login/Registration process if got the one time password */
                 if ($event['message']['text']==get_option('_one_time_password')) {
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                     $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
@@ -465,39 +382,19 @@ if (!class_exists('curtain_service')) {
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
-
-                                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $message['text'] ), OBJECT );            
-                                if (is_null($row) || !empty($wpdb->last_error)) {
-                                    /** Open-AI auto reply */
-                                    $param=array();
-                                    $param["messages"][0]["content"]=$message['text'];
-                                    $response = $open_ai_api->createChatCompletion($param);
-                                    $line_bot_api->replyMessage([
-                                        'replyToken' => $event['replyToken'],
-                                        'messages' => [
-                                            [
-                                                'type' => 'text',
-                                                'text' => $response
-                                            ]                                                                    
-                                        ]
-                                    ]);
-
-                                } else {
-                                    /** Agent login/registration */
-                                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$row->agent_number;
-                                    $see_more["body"]["contents"][0]["action"]["label"] = 'Agent Login/Registration';
-                                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-                                    $line_bot_api->replyMessage([
-                                        'replyToken' => $event['replyToken'],
-                                        'messages' => [
-                                            [
-                                                "type" => "flex",
-                                                "altText" => 'Welcome message',
-                                                'contents' => $see_more
-                                            ]
-                                        ]
-                                    ]);
-                                }
+                                /** Open-AI auto reply */
+                                $param=array();
+                                $param["messages"][0]["content"]=$message['text'];
+                                $response = $open_ai_api->createChatCompletion($param);
+                                $line_bot_api->replyMessage([
+                                    'replyToken' => $event['replyToken'],
+                                    'messages' => [
+                                        [
+                                            'type' => 'text',
+                                            'text' => $response
+                                        ]                                                                    
+                                    ]
+                                ]);
                                 break;
                             default:
                                 error_log('Unsupported message type: ' . $message['type']);
