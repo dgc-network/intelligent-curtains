@@ -305,7 +305,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
                     $output .= '<fieldset>';
                     $output .= '<label style="text-align:left;" for="_agent_number">代碼:</label>';
-                    $output .= '<input type="text" name="_agent_number" valur="'.$_GET['_agent_no'].'" />';
+                    $output .= '<input type="text" name="_agent_number" value="'.$_GET['_agent_no'].'" />';
                     $output .= '<label style="text-align:left;" for="_agent_password">密碼:</label>';
                     $output .= '<input type="password" name="_agent_password" />';
                     $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';

@@ -200,6 +200,7 @@ if (!class_exists('curtain_orders')) {
                 $output .= '<th>Dimension</th>';
                 $output .= '<th>QTY</th>';
                 $output .= '<th>Amount</th>';
+                $output .= '<th>Note</th>';
                 $output .= '<th></th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
@@ -234,6 +235,7 @@ if (!class_exists('curtain_orders')) {
 
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
                     $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
+                    $output .= '<td>'.$result->order_item_note.'</td>';
                     $output .= '<td style="text-align: center;">';
                     $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
                     $output .= '<a href="'.$serials_page_url.'">'.'<i class="fa-solid fa-qrcode"></i>'.'</a>';
@@ -251,12 +253,14 @@ if (!class_exists('curtain_orders')) {
                         $output .= '<td style="text-align:center;">'.$sub_item->parts_qty.'</td>';
                         $output .= '<td></td>';
                         $output .= '<td></td>';
+                        $output .= '<td></td>';
                         $output .= '</tr>';    
                     }
                 }
                 $output .= '<tr>';
                 $output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
                 $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
+                $output .= '<td colspan="2"></td>';
                 $output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
@@ -526,7 +530,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            $output .= '<tr><td colspan="9"><div id="btn-add-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
+            //$output .= '<tr><td colspan="10"><div id="btn-add-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
             //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
