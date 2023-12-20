@@ -226,42 +226,40 @@ if (!class_exists('curtain_service')) {
                     return $output;        
                 }
 
-
-                if( isset($_GET['_menu']) ) {
-
-                    /** Post Submit */
-                    if( isset($_POST['_agent_submit']) ) {
-                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
-                        if (is_null($row) || !empty($wpdb->last_error)) {
-                        } else {
-                            update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                            update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
-                            $curtain_agents->insert_agent_operator(
-                                array(
-                                    'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
-                                    'curtain_user_id'=>intval($user->ID)
-                                ),
-                            );
-                            wp_update_user( array(
-                                'ID' => $user->ID, 
-                                'display_name' => $_POST['_display_name'], 
-                                'user_email' => $_POST['_user_email'], 
-                            ) );
-        
-                            ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
-                        }
-                    }
-    
-                    if( isset($_POST['_user_submit']) ) {
-                        wp_update_user( array( 
+                /** Post Submit */
+                if( isset($_POST['_agent_submit']) ) {
+                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
+                    if (is_null($row) || !empty($wpdb->last_error)) {
+                    } else {
+                        update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                        update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
+                        $curtain_agents->insert_agent_operator(
+                            array(
+                                'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
+                                'curtain_user_id'=>intval($user->ID)
+                            ),
+                        );
+                        wp_update_user( array(
                             'ID' => $user->ID, 
                             'display_name' => $_POST['_display_name'], 
                             'user_email' => $_POST['_user_email'], 
                         ) );
     
-                        ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                        ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
                     }
+                }
 
+                if( isset($_POST['_user_submit']) ) {
+                    wp_update_user( array( 
+                        'ID' => $user->ID, 
+                        'display_name' => $_POST['_display_name'], 
+                        'user_email' => $_POST['_user_email'], 
+                    ) );
+
+                    ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                }
+
+                if( isset($_GET['_menu']) ) {
                     if( $_GET['_menu']=='agent' ) {
                         /** Assign the User as the specified Agent Operators */
                         $output  = '<div style="text-align:center;">';
@@ -300,6 +298,27 @@ if (!class_exists('curtain_service')) {
                         return $output;    
                     }
                 }
+
+                if( isset($_GET['_agent_no']) ) {
+                    $output  = '<div style="text-align:center;">';
+                    $output .= '<h4>經銷商登入/註冊</h4>';
+                    $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                    $output .= '<fieldset>';
+                    $output .= '<label style="text-align:left;" for="_agent_number">代碼:</label>';
+                    $output .= '<input type="text" name="_agent_number" valur="'.$_GET['_agent_no'].'" />';
+                    $output .= '<label style="text-align:left;" for="_agent_password">密碼:</label>';
+                    $output .= '<input type="password" name="_agent_password" />';
+                    $output .= '<label style="text-align:left;" for="_display_name">Name:</label>';
+                    $output .= '<input type="text" name="_display_name" value="'.$user->display_name.'" />';
+                    $output .= '<label style="text-align:left;" for="_user_email">Email:</label>';
+                    $output .= '<input type="text" name="_user_email" value="'.$user->user_email.'" />';
+                    $output .= '<input type="submit" name="_agent_submit" style="margin:3px;" value="Submit" />';
+                    $output .= '</fieldset>';
+                    $output .= '</form>';
+                    $output .= '</div>';
+                    return $output;    
+                }
+
             } else {
 
                 /** Did not login system yet */
@@ -364,6 +383,25 @@ if (!class_exists('curtain_service')) {
                 if ($event['message']['text']==get_option('_one_time_password')) {
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                     $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
+                    $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+                    $line_bot_api->replyMessage([
+                        'replyToken' => $event['replyToken'],
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'Welcome message',
+                                'contents' => $see_more
+                            ]
+                        ]
+                    ]);
+                }
+
+                /** Start the Agent Login/Registration process if got the correct agent number */
+                $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text'] ), OBJECT );            
+                if (is_null($row) || !empty($wpdb->last_error)) {
+                } else {
+                    $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$event['message']['text'];
+                    $see_more["body"]["contents"][0]["action"]["label"] = 'Agent Login/Registration';
                     $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
                     $line_bot_api->replyMessage([
                         'replyToken' => $event['replyToken'],

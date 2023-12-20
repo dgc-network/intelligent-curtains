@@ -484,6 +484,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<th>配件</th>';
             $output .= '<th>數量</th>';
             $output .= '<th>金額</th>';
+            $output .= '<th>備註</th>';
             $output .= '<th></th>';
             $output .= '</tr></thead>';
 
@@ -515,11 +516,11 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</td>';
                 $output .= '<td style="text-align: center;">'.$result->order_item_qty.'</td>';
                 $output .= '<td style="text-align: center;">'.number_format_i18n($result->order_item_amount).'</td>';
+                $output .= '<td>'.$result->order_item_note.'</td>';
                 if ( $result->is_checkout==1 ) {
                     $output .= '<td>checkout already</td>';
                 } else {
                     $output .= '<td style="text-align: center;">';
-                    //$output .= '<span id="btn-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '<span id="btn-order-item-del-'.$result->curtain_order_id.'"><i class="fa-regular fa-trash-can"></i></span>';
                     $output .= '</td>';
                 }
@@ -553,6 +554,8 @@ if (!class_exists('curtain_orders')) {
             //$output .= '<label for="order-item-qty">QTY</label>';
             $output .= '<label for="order-item-qty">數量</label>';
             $output .= '<input type="text" id="order-item-qty" />';
+            $output .= '<label for="order-item-note">備註</label>';
+            $output .= '<input type="text" id="order-item-note" />';
             $output .= '</fieldset>';
             $output .= '</div>';
 
@@ -643,6 +646,9 @@ if (!class_exists('curtain_orders')) {
                 //$output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<label for="order_item_qty">數量</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" value="1" class="text ui-widget-content ui-corner-all">';
+
+                $output .= '<label for="order_item_note">備註</label>';
+                $output .= '<input type="text" name="_shopping_item_note" id="order_item_note" class="text ui-widget-content ui-corner-all">';
                 $output .= '</fieldset>';
                 $output .= '<input type="hidden" name="_agent_submit" value="true">';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Create" name="_create">';
@@ -670,6 +676,7 @@ if (!class_exists('curtain_orders')) {
             $response["curtain_width"] = $row->curtain_width;
             $response["curtain_height"] = $row->curtain_height;
             $response["order_item_qty"] = $row->order_item_qty;
+            $response["order_item_note"] = $row->order_item_note;
 
             $response["is_remote_hided"] = $curtain_categories->is_remote_hided($row->curtain_category_id);
             $response["is_specification_hided"] = $curtain_categories->is_specification_hided($row->curtain_category_id);
@@ -766,6 +773,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_shopping_item_qty'],
+                        'order_item_note'=>$_POST['_shopping_item_note'],
                         'order_item_amount'=>$amount,
                         'is_checkout'=>0
                     )
@@ -803,6 +811,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_width'=>$_POST['_curtain_width'],
                         'curtain_height'=>$_POST['_curtain_height'],
                         'order_item_qty'=>$_POST['_order_item_qty'],
+                        'order_item_note'=>$_POST['_order_item_note'],
                         'order_item_amount'=>$amount,
                         //'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
                     ),
@@ -1038,6 +1047,7 @@ if (!class_exists('curtain_orders')) {
                 curtain_height int,
                 order_item_qty int DEFAULT 1,
                 order_item_amount decimal(10,0),
+                order_item_note text,
                 is_checkout tinyint,
                 create_timestamp int(10),
                 update_timestamp int(10),
