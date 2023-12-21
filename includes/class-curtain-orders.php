@@ -160,47 +160,47 @@ if (!class_exists('curtain_orders')) {
             if( isset($_GET['_print_customer_order']) ) {
                 $_id = $_GET['_print_customer_order'];
                 $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number={$_id}", OBJECT );
-                $output  = '<div style="text-align:center;"><h2>Customer Order</h2></div>';
+                $output  = '<div style="text-align:center;"><h2>客戶訂單</h2></div>';
                 $output .= '<div class="ui-widget">';
                 $output .= '<table id="order-header" class="ui-widget ui-widget-content">';
                 $output .= '<tr>';
-                $output .= '<td>Order Number:</td><td><span id="select-order-number">'.$row->customer_order_number.'</span></td>';
-                $output .= '<td>Order Date:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
+                $output .= '<td>訂單號碼:</td><td><span id="select-order-number">'.$row->customer_order_number.'</span></td>';
+                $output .= '<td>訂單日期:</td><td>'.wp_date( get_option('date_format'), $row->create_timestamp ).'</td>';
                 $output .= '</tr>';
                 $output .= '<tr>';
-                $output .= '<td>Agent:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
-                $output .= '<td>Status:</td>';
+                $output .= '<td>經銷商:</td><td>'.$curtain_agents->get_name($row->curtain_agent_id).'</td>';
+                $output .= '<td>訂單狀態:</td>';
                 if($user->has_cap('manage_options')){
                     $output .= '<td>';
                     $output .= '<form method="post" style="display:flex;">';
                     $output .= '<select id="customer-order-status" name="_customer_order_status">'.$system_status->select_options($row->customer_order_status).'</select>';
                     $output .= '<input type="hidden" id="customer-order-number" name="_customer_order_number" value="'.$row->customer_order_number.'" />';
-                    //$output .= '<input type="submit" name="_order_status_submit" style="margin:3px;" value="Submit" />';
                     $output .= '</form>';
                     $output .= '</td>';
                 } else {
-                    $output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                    //$output .= '<td>'.$system_status->get_name($row->customer_order_status).'</td>';
+                    $output .= '<td></td>';
                 }
                 $output .= '</tr>';
                 $output .= '<tr>';
-                $output .= '<td>Contact:</td><td>'.$curtain_agents->get_contact($row->curtain_agent_id).'</td>';
-                $output .= '<td>Phone:</td><td>'.$curtain_agents->get_phone($row->curtain_agent_id).'</td>';
+                $output .= '<td>聯絡人:</td><td>'.$curtain_agents->get_contact($row->curtain_agent_id).'</td>';
+                $output .= '<td>電話:</td><td>'.$curtain_agents->get_phone($row->curtain_agent_id).'</td>';
                 $output .= '</tr>';
                 $output .= '<tr>';
-                $output .= '<td>Address:</td><td colspan="3">'.$curtain_agents->get_address($row->curtain_agent_id).'</td>';
+                $output .= '<td>住址:</td><td colspan="3">'.$curtain_agents->get_address($row->curtain_agent_id).'</td>';
                 $output .= '</tr>';
                 $output .= '</table>';
 
                 $output .= '<table id="orders" class="ui-widget ui-widget-content">';
                 $output .= '<thead><tr class="ui-widget-header ">';
                 $output .= '<th>#</th>';
-                $output .= '<th>Category</th>';
-                $output .= '<th>Model</th>';
-                $output .= '<th>Specification</th>';
-                $output .= '<th>Dimension</th>';
-                $output .= '<th>QTY</th>';
-                $output .= '<th>Amount</th>';
-                $output .= '<th>Note</th>';
+                $output .= '<th>窗簾類型</th>';
+                $output .= '<th>型號</th>';
+                $output .= '<th>規格</th>';
+                $output .= '<th>尺寸</th>';
+                $output .= '<th>數量</th>';
+                //$output .= '<th>Amount</th>';
+                $output .= '<th>備註</th>';
                 $output .= '<th></th>';
                 $output .= '</tr></thead>';
                 $output .= '<tbody>';
@@ -234,7 +234,7 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</td>';
 
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
-                    $output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
+                    //$output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
                     $output .= '<td>'.$result->order_item_note.'</td>';
                     $output .= '<td style="text-align: center;">';
                     $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
@@ -251,17 +251,17 @@ if (!class_exists('curtain_orders')) {
                         $output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '<td style="text-align:center;">'.$sub_item->parts_qty.'</td>';
-                        $output .= '<td></td>';
+                        //$output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '</tr>';    
                     }
                 }
-                $output .= '<tr>';
-                $output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
-                $output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
-                $output .= '<td colspan="2"></td>';
-                $output .= '</tr>';
+                //$output .= '<tr>';
+                //$output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
+                //$output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
+                //$output .= '<td colspan="2"></td>';
+                //$output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
             }
