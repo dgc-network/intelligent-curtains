@@ -231,8 +231,8 @@ if (!class_exists('curtain_service')) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
                     if (is_null($row) || !empty($wpdb->last_error)) {
                     } else {
-                        update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                        update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
+                        update_post_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                        update_post_meta($user->ID, 'agent_password', $_POST['_agent_password']);
                         $curtain_agents->insert_agent_operator(
                             array(
                                 'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
