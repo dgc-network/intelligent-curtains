@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
         
     $('[id^="cart-btn"]').mouseout(function() {
         $(this).css('cursor', 'default');
-        $(this).css('color', 'black');
+        $(this).css('color', '');
     });
         
     $('[id^="cart-btn"]').on( "click", function() {
@@ -346,7 +346,7 @@ jQuery(document).ready(function($) {
                     
                 $('[id^="btn-"]').mouseout(function() {
                     $(this).css('cursor', 'default');
-                    $(this).css('color', 'black');
+                    $(this).css('color', '');
                 });
             
                 $('[id^="btn-del-sub-item-"]').on( "click", function() {
