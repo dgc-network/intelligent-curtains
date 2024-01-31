@@ -58,7 +58,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specification
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
-//require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
+require_once plugin_dir_path( __FILE__ ) . 'web-services/option-setting.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-pages.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';

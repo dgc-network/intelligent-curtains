@@ -40,6 +40,10 @@ if (!class_exists('open_ai_api')) {
                 }    
             } 
             $this->openai_api_key = $openai_api_key;
+
+            $value = get_option('open_ai_api_key');
+            $this->openai_api_key = esc_attr($value);
+
         }
     
         /**
