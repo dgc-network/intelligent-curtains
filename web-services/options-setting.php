@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function web_service_register_settings() {
-    // Register a section
+    // Register Line bot section
     add_settings_section(
         'line_bot_settings_section',
         'Line bot Settings',
@@ -31,7 +31,16 @@ function web_service_register_settings() {
     );
     register_setting('general', 'line_official_account');
 
-    // Register a section
+    add_settings_field(
+        'line_official_qr_code',
+        'Line official qr_code',
+        'line_official_qr_code_callback',
+        'general',
+        'line_bot_settings_section'
+    );
+    register_setting('general', 'line_official_qr_code');
+
+    // Register AI section
     add_settings_section(
         'open_ai_settings_section',
         'Open AI Settings',
@@ -90,6 +99,11 @@ function line_bot_token_option_callback() {
 function line_official_account_callback() {
     $value = get_option('line_official_account');
     echo '<input type="text" id="line_official_account" name="line_official_account" style="width:100%;" value="' . esc_attr($value) . '" />';
+}
+
+function line_official_qr_code_callback() {
+    $value = get_option('line_official_qr_code');
+    echo '<input type="text" id="line_official_qr_code" name="line_official_qr_code" style="width:100%;" value="' . esc_attr($value) . '" />';
 }
 
 function open_ai_settings_section_callback() {

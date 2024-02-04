@@ -19,6 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+function custom_date_format() {
+    $date_format = get_option('date_format');
+    if (empty($date_format)) {
+        $new_date_format = 'Y-m-d'; // Set your desired date format    
+        update_option('date_format', $new_date_format);
+        $new_time_format = 'h:i'; // Set your desired time format
+        update_option('time_format', $new_time_format);
+    }
+}
+add_action( 'init', 'custom_date_format' );
+
 function register_session() {
     if ( ! session_id() ) {
         session_start();
@@ -58,7 +69,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specification
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
-require_once plugin_dir_path( __FILE__ ) . 'web-services/option-setting.php';
+require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-pages.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';
