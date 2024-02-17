@@ -9,7 +9,7 @@ function web_service_register_settings() {
         'line_bot_settings_section',
         'Line bot Settings',
         'line_bot_settings_section_callback',
-        'general'
+        'web-service-settings'
     );
 
     // Register a field
@@ -17,35 +17,35 @@ function web_service_register_settings() {
         'line_bot_token_option',
         'Line bot Token',
         'line_bot_token_option_callback',
-        'general',
+        'web-service-settings',
         'line_bot_settings_section'
     );
-    register_setting('general', 'line_bot_token_option');
+    register_setting('web-service-settings', 'line_bot_token_option');
 
     add_settings_field(
         'line_official_account',
         'Line official account',
         'line_official_account_callback',
-        'general',
+        'web-service-settings',
         'line_bot_settings_section'
     );
-    register_setting('general', 'line_official_account');
+    register_setting('web-service-settings', 'line_official_account');
 
     add_settings_field(
         'line_official_qr_code',
         'Line official qr_code',
         'line_official_qr_code_callback',
-        'general',
+        'web-service-settings',
         'line_bot_settings_section'
     );
-    register_setting('general', 'line_official_qr_code');
+    register_setting('web-service-settings', 'line_official_qr_code');
 
     // Register AI section
     add_settings_section(
         'open_ai_settings_section',
         'Open AI Settings',
         'open_ai_settings_section_callback',
-        'general'
+        'web-service-settings'
     );
 
     // Register a field
@@ -53,10 +53,10 @@ function web_service_register_settings() {
         'open_ai_api_key',
         'API_KEY',
         'open_ai_api_key_callback',
-        'general',
+        'web-service-settings',
         'open_ai_settings_section'
     );
-    register_setting('general', 'open_ai_api_key');
+    register_setting('web-service-settings', 'open_ai_api_key');
     
 }
 add_action('admin_init', 'web_service_register_settings');
@@ -78,8 +78,8 @@ function web_service_settings_page() {
         <h2>Web Service Settings</h2>
         <form method="post" action="options.php">
             <?php
-            settings_fields('general');
-            do_settings_sections('general');
+            settings_fields('web-service-settings');
+            do_settings_sections('web-service-settings');
             submit_button();
             ?>
         </form>
