@@ -89,8 +89,7 @@ if (!class_exists('line_bot_api')) {
             $this->channelAccessToken = $channelAccessToken;
             $this->channelSecret = $channelSecret;
 
-            $value = get_option('line_bot_token_option');
-            $this->channel_access_token = esc_attr($value);
+            $this->channel_access_token = get_option('line_bot_token_option');
 
         }
     

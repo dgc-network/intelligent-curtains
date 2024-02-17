@@ -422,9 +422,12 @@ if (!class_exists('curtain_service')) {
                         switch ($message['type']) {
                             case 'text':
                                 /** Open-AI auto reply */
+/*                                
                                 $param=array();
                                 $param["messages"][0]["content"]=$message['text'];
                                 $response = $open_ai_api->createChatCompletion($param);
+*/
+                                $response = $open_ai_api->createChatCompletion($message['text']);
                                 $line_bot_api->replyMessage([
                                     'replyToken' => $event['replyToken'],
                                     'messages' => [

@@ -41,8 +41,7 @@ if (!class_exists('open_ai_api')) {
             } 
             $this->openai_api_key = $openai_api_key;
 
-            $value = get_option('open_ai_api_key');
-            $this->openai_api_key = esc_attr($value);
+            $this->openai_api_key = get_option('open_ai_api_key');
 
         }
     
@@ -80,6 +79,46 @@ if (!class_exists('open_ai_api')) {
          * @param array<string, mixed> $param
          * @return void
          */
+        public function createChatCompletion($userMessage) {
+            $param = array(
+                'model' => 'gpt-3.5-turbo',
+                'messages' => array(
+                    // Fixed system role for maintaining the subject
+                    array('role' => 'system', 'content' => 'intelligent-curtains'),
+                    // User's message
+                    array('role' => 'user', 'content' => $userMessage),
+                ),
+                'temperature' => 1.0,
+                'max_tokens' => 4000,
+                'frequency_penalty' => 0,
+                'presence_penalty' => 0,
+            );
+        
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->openai_api_key,
+            );
+        
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'POST',
+                    'header' => implode("\r\n", $header),
+                    'content' => json_encode($param),
+                ],
+            ]);
+        
+            $response = file_get_contents('https://api.openai.com/v1/chat/completions', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+        
+            $data = json_decode($response, true);
+            $responseContent = $data['choices'][0]['message']['content'];
+        
+            return $responseContent;
+        }        
+/*
         public function createChatCompletion($param) {
     
             $param["model"]="gpt-3.5-turbo";
@@ -114,6 +153,7 @@ if (!class_exists('open_ai_api')) {
             $response = $data['choices'][0]['message']['content'];
             return $response;
         }
+*/        
     }
 }
 
