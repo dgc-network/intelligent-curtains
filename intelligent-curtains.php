@@ -51,7 +51,6 @@ function enqueue_scripts() {
     wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-orders', plugins_url( '/assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-categories', plugins_url( '/assets/js/curtain-categories.js' , __FILE__ ), array( 'jquery' ), time() );
-    // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
     wp_localize_script( 'custom-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-orders', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-categories', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
@@ -70,12 +69,126 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-pages.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-users.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-json-templates.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
+add_action('parse_request', 'handle_line_webhook');
+
+function handle_line_webhook() {
+    // Retrieve the request method
+    $request_method = $_SERVER['REQUEST_METHOD'];
+
+    // Check if the request method is POST
+    if ($request_method === 'POST' && isset($_SERVER['HTTP_X_LINE_SIGNATURE'])) {
+        // Process Line webhook data
+        process_line_webhook();
+    }
+}
+
+function process_line_webhook() {
+    // Retrieve the request body
+    $entityBody = file_get_contents('php://input');
+
+    // Verify that the request body is not empty
+    if ($entityBody === false || strlen($entityBody) === 0) {
+        http_response_code(400);
+        error_log('Missing request body');
+        exit;
+    }
+
+    // Decode the JSON payload
+    $data = json_decode($entityBody, true);
+
+    // Verify that the JSON payload can be decoded
+    if ($data === null || json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        error_log('Invalid JSON payload: ' . json_last_error_msg());
+        exit;
+    }
+
+    // Implement your logic here based on the $data array
+    global $wpdb;
+    $line_bot_api = new line_bot_api();
+    $open_ai_api = new open_ai_api();
+    $curtain_agents = new curtain_agents();
+
+    if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
+        $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
+        $see_more = json_decode($see_more, true);
+    }
+
+    foreach ((array)$line_bot_api->parseEvents() as $event) {
+
+        /** Start the User Login/Registration process if got the one time password */
+        if ($event['message']['text']==get_option('_one_time_password')) {
+            $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+            $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
+            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+            $line_bot_api->replyMessage([
+                'replyToken' => $event['replyToken'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => 'Welcome message',
+                        'contents' => $see_more
+                    ]
+                ]
+            ]);
+        }
+
+        /** Start the Agent Login/Registration process if got the correct agent number */
+        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text'] ), OBJECT );            
+        if (is_null($row) || !empty($wpdb->last_error)) {
+        } else {
+            $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$event['message']['text'];
+            $see_more["body"]["contents"][0]["action"]["label"] = 'Agent Login/Registration';
+            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
+            $line_bot_api->replyMessage([
+                'replyToken' => $event['replyToken'],
+                'messages' => [
+                    [
+                        "type" => "flex",
+                        "altText" => 'Welcome message',
+                        'contents' => $see_more
+                    ]
+                ]
+            ]);
+        }
+
+        switch ($event['type']) {
+            case 'message':
+                $message = $event['message'];
+                switch ($message['type']) {
+                    case 'text':
+                        /** Open-AI auto reply */
+                        $response = $open_ai_api->createChatCompletion($message['text']);
+                        $line_bot_api->replyMessage([
+                            'replyToken' => $event['replyToken'],
+                            'messages' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => $response
+                                ]                                                                    
+                            ]
+                        ]);
+                        break;
+                    default:
+                        error_log('Unsupported message type: ' . $message['type']);
+                        break;
+                }
+                break;
+            default:
+                error_log('Unsupported event type: ' . $event['type']);
+                break;
+        }
+    }
+
+    // Send a response (optional)
+    http_response_code(200);
+    echo 'Webhook received successfully';
+}
+/*
 $curtain_service = new curtain_service();
 //$curtain_service->init_webhook();
 $curtain_service->init_webhook_events();
+*/
 ?>
