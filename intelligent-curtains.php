@@ -75,13 +75,15 @@ $curtain_service = new curtain_service();
 $curtain_service->init_webhook_events();
 */
 
-//add_action( 'parse_request', 'init_webhook_events' );
+add_action( 'parse_request', 'init_webhook_events' );
 //add_action( 'wp_load', 'init_webhook_events' );
 //add_action( 'init', 'init_webhook_events' );
 function init_webhook_events() {
 
+    global $wpdb;
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
+    //$curtain_agents = new curtain_agents();
 
     $entityBody = file_get_contents('php://input');
     $data = json_decode($entityBody, true);
@@ -94,7 +96,8 @@ function init_webhook_events() {
             $profile = $line_bot_api->getProfile($event['source']['userId']);
             $display_name = str_replace(' ', '', $profile['displayName']);
             // Encode the Chinese characters for inclusion in the URL
-            $link_uri = home_url().'/my-jobs/?_id='.$event['source']['userId'].'&_name='.urlencode($display_name);
+            $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_name='.urlencode($display_name);
+            //$link_uri = get_option('Service').'?_id='.$event['source']['userId'];
             // Flex Message JSON structure with a button
             $flexMessage = [
                 'type' => 'flex',
@@ -141,6 +144,93 @@ function init_webhook_events() {
             ]);            
         }
 
+        // Start the Agent Login/Registration process if got the correct agent number
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text']), OBJECT);
+
+        if (is_null($row) || !empty($wpdb->last_error)) {
+            // Handle the case when no row is found or there's a database error
+        } else {
+            // Generate link URI based on the retrieved data
+            //$link_uri = get_option('Service') . '?_id=' . $event['source']['userId'] . '&_agent_no=' . $event['message']['text'];
+            $display_name = str_replace(' ', '', $profile['displayName']);
+            // Encode the Chinese characters for inclusion in the URL
+            $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_agent_no=' . $event['message']['text'];
+            //$link_uri = get_option('Service').'?_id='.$event['source']['userId'];
+            // Flex Message JSON structure with a button
+            $flexMessage = [
+                'type' => 'flex',
+                'altText' => 'This is a Flex Message with a Button',
+                'contents' => [
+                    'type' => 'bubble',
+                    'body' => [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'Hello, '.$display_name,
+                                'size' => 'lg',
+                                'weight' => 'bold',
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => 'Please click the button below to go to the Agent Login/Registration system.',
+                                'wrap' => true,
+                            ],
+                        ],
+                    ],
+                    'footer' => [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => [
+                            [
+                                'type' => 'button',
+                                'action' => [
+                                    'type' => 'uri',
+                                    'label' => 'Click me!',
+                                    'uri' => $link_uri, // Replace with your desired URI
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            
+            $line_bot_api->replyMessage([
+                'replyToken' => $event['replyToken'], // Make sure $event['replyToken'] is valid and present
+                'messages' => [$flexMessage],
+            ]);            
+/*        
+            // Prepare the flex message
+            $see_more = [
+                'type' => 'flex',
+                'altText' => 'Welcome message',
+                'contents' => [
+                    'body' => [
+                        'contents' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'Agent Login/Registration',
+                                'action' => [
+                                    'type' => 'uri',
+                                    'label' => 'Agent Login/Registration',
+                                    'uri' => $link_uri,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        
+            // Reply with the flex message
+            $line_bot_api->replyMessage([
+                'replyToken' => $event['replyToken'],
+                'messages' => [$see_more],
+            ]);
+*/            
+        }
+        
+
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
@@ -173,7 +263,7 @@ function init_webhook_events() {
 
 }
 
-add_action('parse_request', 'process_line_webhook');
+//add_action('parse_request', 'process_line_webhook');
 function process_line_webhook() {
     global $wpdb;
     $line_bot_api = new line_bot_api();
