@@ -77,12 +77,12 @@ function process_line_webhook() {
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
     $curtain_agents = new curtain_agents();
-
+/*
     if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
         $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
         $see_more = json_decode($see_more, true);
     }
-
+*/
     $entityBody = file_get_contents('php://input');
     $data = json_decode($entityBody, true);
     $events = $data['events'] ?? [];
