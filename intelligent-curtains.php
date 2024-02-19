@@ -18,7 +18,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
+/*
 function custom_date_format() {
     $date_format = get_option('date_format');
     if (empty($date_format)) {
@@ -29,7 +29,7 @@ function custom_date_format() {
     }
 }
 add_action( 'init', 'custom_date_format' );
-
+*/
 function register_session() {
     if ( ! session_id() ) {
         session_start();
@@ -88,8 +88,8 @@ function process_line_webhook() {
     $events = $data['events'] ?? [];
 
     foreach ((array)$events as $event) {
-
-        /** Start the User Login/Registration process if got the one time password */
+/*
+        // Start the User Login/Registration process if got the one time password
         if ($event['message']['text']==get_option('_one_time_password')) {
             $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
             $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
@@ -106,7 +106,7 @@ function process_line_webhook() {
             ]);
         }
 
-        /** Start the Agent Login/Registration process if got the correct agent number */
+        // Start the Agent Login/Registration process if got the correct agent number
         $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text'] ), OBJECT );            
         if (is_null($row) || !empty($wpdb->last_error)) {
         } else {
@@ -124,7 +124,7 @@ function process_line_webhook() {
                 ]
             ]);
         }
-
+*/
         switch ($event['type']) {
             case 'message':
                 $message = $event['message'];
