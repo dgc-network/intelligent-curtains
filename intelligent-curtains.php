@@ -71,7 +71,102 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-add_action('parse_request', 'process_line_webhook');
+function init_webhook_events() {
+
+    $line_bot_api = new line_bot_api();
+    $open_ai_api = new open_ai_api();
+
+    $entityBody = file_get_contents('php://input');
+    $data = json_decode($entityBody, true);
+    $events = $data['events'] ?? [];
+
+    foreach ((array)$events as $event) {
+
+        // Start the User Login/Registration process if got the one time password
+        if ((int)$event['message']['text']==(int)get_option('_one_time_password')) {
+            $profile = $line_bot_api->getProfile($event['source']['userId']);
+            $display_name = str_replace(' ', '', $profile['displayName']);
+            // Encode the Chinese characters for inclusion in the URL
+            $link_uri = home_url().'/my-jobs/?_id='.$event['source']['userId'].'&_name='.urlencode($display_name);
+            // Flex Message JSON structure with a button
+            $flexMessage = [
+                'type' => 'flex',
+                'altText' => 'This is a Flex Message with a Button',
+                'contents' => [
+                    'type' => 'bubble',
+                    'body' => [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => [
+                            [
+                                'type' => 'text',
+                                'text' => 'Hello, '.$display_name,
+                                'size' => 'lg',
+                                'weight' => 'bold',
+                            ],
+                            [
+                                'type' => 'text',
+                                'text' => 'You have not logged in yet. Please click the button below to go to the Login/Registration system.',
+                                'wrap' => true,
+                            ],
+                        ],
+                    ],
+                    'footer' => [
+                        'type' => 'box',
+                        'layout' => 'vertical',
+                        'contents' => [
+                            [
+                                'type' => 'button',
+                                'action' => [
+                                    'type' => 'uri',
+                                    'label' => 'Click me!',
+                                    'uri' => $link_uri, // Replace with your desired URI
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+            
+            $line_bot_api->replyMessage([
+                'replyToken' => $event['replyToken'], // Make sure $event['replyToken'] is valid and present
+                'messages' => [$flexMessage],
+            ]);            
+        }
+
+        // Regular webhook response
+        switch ($event['type']) {
+            case 'message':
+                $message = $event['message'];
+                switch ($message['type']) {
+                    case 'text':
+                        // Open-AI auto reply
+                        $response = $open_ai_api->createChatCompletion($message['text']);
+                        $line_bot_api->replyMessage([
+                            'replyToken' => $event['replyToken'],
+                            'messages' => [
+                                [
+                                    'type' => 'text',
+                                    'text' => $response
+                                ]                                                                    
+                            ]
+                        ]);
+                        break;
+                    default:
+                        error_log('Unsupported message type: ' . $message['type']);
+                        break;
+                }
+                break;
+            default:
+                error_log('Unsupported event type: ' . $event['type']);
+                break;
+        }
+    }
+
+}
+add_action( 'parse_request', 'init_webhook_events' );
+
+//add_action('parse_request', 'process_line_webhook');
 function process_line_webhook() {
     global $wpdb;
     $line_bot_api = new line_bot_api();
