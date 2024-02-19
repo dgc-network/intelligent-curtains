@@ -75,7 +75,7 @@ $curtain_service = new curtain_service();
 $curtain_service->init_webhook_events();
 */
 
-add_action( 'parse_request', 'init_webhook_events' );
+//add_action( 'parse_request', 'init_webhook_events' );
 //add_action( 'wp_load', 'init_webhook_events' );
 //add_action( 'init', 'init_webhook_events' );
 function init_webhook_events() {
@@ -173,24 +173,24 @@ function init_webhook_events() {
 
 }
 
-//add_action('parse_request', 'process_line_webhook');
+add_action('parse_request', 'process_line_webhook');
 function process_line_webhook() {
     global $wpdb;
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
     $curtain_agents = new curtain_agents();
-/*
+
     if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
         $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
         $see_more = json_decode($see_more, true);
     }
-*/
+
     $entityBody = file_get_contents('php://input');
     $data = json_decode($entityBody, true);
     $events = $data['events'] ?? [];
 
     foreach ((array)$events as $event) {
-/*
+
         // Start the User Login/Registration process if got the one time password
         if ($event['message']['text']==get_option('_one_time_password')) {
             $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
@@ -226,7 +226,7 @@ function process_line_webhook() {
                 ]
             ]);
         }
-*/
+
         switch ($event['type']) {
             case 'message':
                 $message = $event['message'];
