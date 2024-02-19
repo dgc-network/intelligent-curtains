@@ -76,7 +76,8 @@ $curtain_service->init_webhook_events();
 */
 
 //add_action( 'parse_request', 'init_webhook_events' );
-add_action( 'init', 'init_webhook_events' );
+add_action( 'wp_load', 'init_webhook_events' );
+//add_action( 'init', 'init_webhook_events' );
 function init_webhook_events() {
 
     $line_bot_api = new line_bot_api();
