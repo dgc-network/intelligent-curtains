@@ -147,7 +147,8 @@ function init_webhook_events() {
                             'messages' => [
                                 [
                                     'type' => 'text',
-                                    'text' => $response
+                                    //'text' => $response,
+                                    'text' => $message['text'],
                                 ]                                                                    
                             ]
                         ]);
