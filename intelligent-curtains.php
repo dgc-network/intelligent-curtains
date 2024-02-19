@@ -71,41 +71,8 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-add_action('parse_request', 'handle_line_webhook');
-
-function handle_line_webhook() {
-    // Retrieve the request method
-    $request_method = $_SERVER['REQUEST_METHOD'];
-
-    // Check if the request method is POST
-    if ($request_method === 'POST' && isset($_SERVER['HTTP_X_LINE_SIGNATURE'])) {
-        // Process Line webhook data
-        process_line_webhook();
-    }
-}
-
+add_action('parse_request', 'process_line_webhook');
 function process_line_webhook() {
-    // Retrieve the request body
-    $entityBody = file_get_contents('php://input');
-
-    // Verify that the request body is not empty
-    if ($entityBody === false || strlen($entityBody) === 0) {
-        http_response_code(400);
-        error_log('Missing request body');
-        exit;
-    }
-
-    // Decode the JSON payload
-    $data = json_decode($entityBody, true);
-
-    // Verify that the JSON payload can be decoded
-    if ($data === null || json_last_error() !== JSON_ERROR_NONE) {
-        http_response_code(400);
-        error_log('Invalid JSON payload: ' . json_last_error_msg());
-        exit;
-    }
-
-    // Implement your logic here based on the $data array
     global $wpdb;
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
@@ -116,7 +83,11 @@ function process_line_webhook() {
         $see_more = json_decode($see_more, true);
     }
 
-    foreach ((array)$line_bot_api->parseEvents() as $event) {
+    $entityBody = file_get_contents('php://input');
+    $data = json_decode($entityBody, true);
+    $events = $data['events'] ?? [];
+
+    foreach ((array)$events as $event) {
 
         /** Start the User Login/Registration process if got the one time password */
         if ($event['message']['text']==get_option('_one_time_password')) {
@@ -181,10 +152,6 @@ function process_line_webhook() {
                 break;
         }
     }
-
-    // Send a response (optional)
-    http_response_code(200);
-    echo 'Webhook received successfully';
 }
 /*
 $curtain_service = new curtain_service();
