@@ -70,20 +70,12 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
-/*
-$curtain_service = new curtain_service();
-$curtain_service->init_webhook_events();
-*/
 
 add_action( 'parse_request', 'init_webhook_events' );
-//add_action( 'wp_load', 'init_webhook_events' );
-//add_action( 'init', 'init_webhook_events' );
 function init_webhook_events() {
-
     global $wpdb;
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
-    //$curtain_agents = new curtain_agents();
 
     $entityBody = file_get_contents('php://input');
     $data = json_decode($entityBody, true);
@@ -97,7 +89,6 @@ function init_webhook_events() {
             $display_name = str_replace(' ', '', $profile['displayName']);
             // Encode the Chinese characters for inclusion in the URL
             $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_name='.urlencode($display_name);
-            //$link_uri = get_option('Service').'?_id='.$event['source']['userId'];
             // Flex Message JSON structure with a button
             $flexMessage = [
                 'type' => 'flex',
@@ -151,11 +142,8 @@ function init_webhook_events() {
             // Handle the case when no row is found or there's a database error
         } else {
             // Generate link URI based on the retrieved data
-            //$link_uri = get_option('Service') . '?_id=' . $event['source']['userId'] . '&_agent_no=' . $event['message']['text'];
             $display_name = str_replace(' ', '', $profile['displayName']);
-            // Encode the Chinese characters for inclusion in the URL
             $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_agent_no=' . $event['message']['text'];
-            //$link_uri = get_option('Service').'?_id='.$event['source']['userId'];
             // Flex Message JSON structure with a button
             $flexMessage = [
                 'type' => 'flex',
@@ -200,37 +188,8 @@ function init_webhook_events() {
                 'replyToken' => $event['replyToken'], // Make sure $event['replyToken'] is valid and present
                 'messages' => [$flexMessage],
             ]);            
-/*        
-            // Prepare the flex message
-            $see_more = [
-                'type' => 'flex',
-                'altText' => 'Welcome message',
-                'contents' => [
-                    'body' => [
-                        'contents' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'Agent Login/Registration',
-                                'action' => [
-                                    'type' => 'uri',
-                                    'label' => 'Agent Login/Registration',
-                                    'uri' => $link_uri,
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        
-            // Reply with the flex message
-            $line_bot_api->replyMessage([
-                'replyToken' => $event['replyToken'],
-                'messages' => [$see_more],
-            ]);
-*/            
         }
         
-
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
@@ -244,92 +203,7 @@ function init_webhook_events() {
                             'messages' => [
                                 [
                                     'type' => 'text',
-                                    //'text' => $response,
-                                    'text' => $message['text'],
-                                ]                                                                    
-                            ]
-                        ]);
-                        break;
-                    default:
-                        error_log('Unsupported message type: ' . $message['type']);
-                        break;
-                }
-                break;
-            default:
-                error_log('Unsupported event type: ' . $event['type']);
-                break;
-        }
-    }
-
-}
-
-//add_action('parse_request', 'process_line_webhook');
-function process_line_webhook() {
-    global $wpdb;
-    $line_bot_api = new line_bot_api();
-    $open_ai_api = new open_ai_api();
-    $curtain_agents = new curtain_agents();
-
-    if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
-        $see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
-        $see_more = json_decode($see_more, true);
-    }
-
-    $entityBody = file_get_contents('php://input');
-    $data = json_decode($entityBody, true);
-    $events = $data['events'] ?? [];
-
-    foreach ((array)$events as $event) {
-
-        // Start the User Login/Registration process if got the one time password
-        if ($event['message']['text']==get_option('_one_time_password')) {
-            $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
-            $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
-            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-            $line_bot_api->replyMessage([
-                'replyToken' => $event['replyToken'],
-                'messages' => [
-                    [
-                        "type" => "flex",
-                        "altText" => 'Welcome message',
-                        'contents' => $see_more
-                    ]
-                ]
-            ]);
-        }
-
-        // Start the Agent Login/Registration process if got the correct agent number
-        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text'] ), OBJECT );            
-        if (is_null($row) || !empty($wpdb->last_error)) {
-        } else {
-            $link_uri = get_option('Service').'?_id='.$event['source']['userId'].'&_agent_no='.$event['message']['text'];
-            $see_more["body"]["contents"][0]["action"]["label"] = 'Agent Login/Registration';
-            $see_more["body"]["contents"][0]["action"]["uri"] = $link_uri;
-            $line_bot_api->replyMessage([
-                'replyToken' => $event['replyToken'],
-                'messages' => [
-                    [
-                        "type" => "flex",
-                        "altText" => 'Welcome message',
-                        'contents' => $see_more
-                    ]
-                ]
-            ]);
-        }
-
-        switch ($event['type']) {
-            case 'message':
-                $message = $event['message'];
-                switch ($message['type']) {
-                    case 'text':
-                        /** Open-AI auto reply */
-                        $response = $open_ai_api->createChatCompletion($message['text']);
-                        $line_bot_api->replyMessage([
-                            'replyToken' => $event['replyToken'],
-                            'messages' => [
-                                [
-                                    'type' => 'text',
-                                    'text' => $response
+                                    'text' => $response,
                                 ]                                                                    
                             ]
                         ]);
@@ -345,3 +219,4 @@ function process_line_webhook() {
         }
     }
 }
+
