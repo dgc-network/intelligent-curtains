@@ -229,7 +229,28 @@ if (!class_exists('curtain_service')) {
                 /** Post Submit */
                 if( isset($_POST['_agent_submit']) ) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
+                    if (!is_null($row) && empty($wpdb->last_error)) {
+                        update_post_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                        update_post_meta($user->ID, 'agent_password', $_POST['_agent_password']);
+                    
+                        $curtain_agents->insert_agent_operator([
+                            'curtain_agent_id' => $curtain_agents->get_id($_POST['_agent_number']),
+                            'curtain_user_id' => intval($user->ID)
+                        ]);
+                    
+                        wp_update_user([
+                            'ID' => $user->ID,
+                            'display_name' => $_POST['_display_name'],
+                            'user_email' => $_POST['_user_email'],
+                        ]);
+                    
+                        $redirect_url = home_url("/toolbox/"); // Adjust the path as needed
+                        wp_redirect($redirect_url);
+                        exit();
+                    }
+/*                                        
                     if (is_null($row) || !empty($wpdb->last_error)) {
+
                     } else {
                         update_post_meta($user->ID, 'agent_number', $_POST['_agent_number']);
                         update_post_meta($user->ID, 'agent_password', $_POST['_agent_password']);
@@ -247,6 +268,7 @@ if (!class_exists('curtain_service')) {
     
                         ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
                     }
+*/                    
                 }
 
                 if( isset($_POST['_user_submit']) ) {

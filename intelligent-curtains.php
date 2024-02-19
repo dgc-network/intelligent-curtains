@@ -134,7 +134,7 @@ function init_webhook_events() {
                 'messages' => [$flexMessage],
             ]);            
         }
-
+/*
         // Start the Agent Login/Registration process if got the correct agent number
         $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text']), OBJECT);
 
@@ -189,7 +189,7 @@ function init_webhook_events() {
                 'messages' => [$flexMessage],
             ]);            
         }
-        
+*/        
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
