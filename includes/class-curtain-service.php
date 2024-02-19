@@ -243,10 +243,7 @@ if (!class_exists('curtain_service')) {
                             'display_name' => $_POST['_display_name'],
                             'user_email' => $_POST['_user_email'],
                         ]);
-                    
-                        $redirect_url = home_url("/toolbox/"); // Adjust the path as needed
-                        wp_redirect($redirect_url);
-                        exit();
+                        ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
                     }
 /*                                        
                     if (is_null($row) || !empty($wpdb->last_error)) {
