@@ -153,9 +153,3 @@ function process_line_webhook() {
         }
     }
 }
-/*
-$curtain_service = new curtain_service();
-//$curtain_service->init_webhook();
-$curtain_service->init_webhook_events();
-*/
-?>
