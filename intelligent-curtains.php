@@ -70,10 +70,13 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
-
+/*
 $curtain_service = new curtain_service();
 $curtain_service->init_webhook_events();
+*/
 
+//add_action( 'parse_request', 'init_webhook_events' );
+add_action( 'init', 'init_webhook_events' );
 function init_webhook_events() {
 
     $line_bot_api = new line_bot_api();
@@ -168,7 +171,6 @@ function init_webhook_events() {
     }
 
 }
-//add_action( 'parse_request', 'init_webhook_events' );
 
 //add_action('parse_request', 'process_line_webhook');
 function process_line_webhook() {
