@@ -230,8 +230,8 @@ if (!class_exists('curtain_service')) {
                 if( isset($_POST['_agent_submit']) ) {
                     $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_POST['_agent_number'], $_POST['_agent_password'] ), OBJECT );            
                     if (!is_null($row) && empty($wpdb->last_error)) {
-                        update_post_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                        update_post_meta($user->ID, 'agent_password', $_POST['_agent_password']);
+                        update_user_meta($user->ID, 'agent_number', $_POST['_agent_number']);
+                        update_user_meta($user->ID, 'agent_password', $_POST['_agent_password']);
                     
                         $curtain_agents->insert_agent_operator([
                             'curtain_agent_id' => $curtain_agents->get_id($_POST['_agent_number']),
@@ -245,27 +245,6 @@ if (!class_exists('curtain_service')) {
                         ]);
                         ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
                     }
-/*                                        
-                    if (is_null($row) || !empty($wpdb->last_error)) {
-
-                    } else {
-                        update_post_meta($user->ID, 'agent_number', $_POST['_agent_number']);
-                        update_post_meta($user->ID, 'agent_password', $_POST['_agent_password']);
-                        $curtain_agents->insert_agent_operator(
-                            array(
-                                'curtain_agent_id'=>$curtain_agents->get_id($_POST['_agent_number']),
-                                'curtain_user_id'=>intval($user->ID)
-                            ),
-                        );
-                        wp_update_user( array(
-                            'ID' => $user->ID, 
-                            'display_name' => $_POST['_display_name'], 
-                            'user_email' => $_POST['_user_email'], 
-                        ) );
-    
-                        ?><script>window.location.replace("https://aihome.tw/toolbox/");</script><?php
-                    }
-*/                    
                 }
 
                 if( isset($_POST['_user_submit']) ) {
@@ -274,7 +253,6 @@ if (!class_exists('curtain_service')) {
                         'display_name' => $_POST['_display_name'], 
                         'user_email' => $_POST['_user_email'], 
                     ) );
-
                     ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
                 }
 
@@ -441,11 +419,6 @@ if (!class_exists('curtain_service')) {
                         switch ($message['type']) {
                             case 'text':
                                 /** Open-AI auto reply */
-/*                                
-                                $param=array();
-                                $param["messages"][0]["content"]=$message['text'];
-                                $response = $open_ai_api->createChatCompletion($param);
-*/
                                 $response = $open_ai_api->createChatCompletion($message['text']);
                                 $line_bot_api->replyMessage([
                                     'replyToken' => $event['replyToken'],

@@ -96,11 +96,9 @@ if (!class_exists('curtain_orders')) {
             if ( !is_user_logged_in() ) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
             }
-            $user = wp_get_current_user();
-            //$_agent_number = get_user_meta( $user->ID, 'agent_number', TRUE );
-            //$_agent_password = get_user_meta( $user->ID, 'agent_password', TRUE );
-            $_agent_number = get_post_meta( $user->ID, 'agent_number', TRUE );
-            $_agent_password = get_post_meta( $user->ID, 'agent_password', TRUE );
+            $current_user_id = wp_get_current_user();
+            $_agent_number = get_user_meta( $current_user_id, 'agent_number', TRUE );
+            $_agent_password = get_user_meta( $current_user_id, 'agent_password', TRUE );
 
             if( isset($_agent_number) && isset($_agent_password) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_agent_number, $_agent_password ), OBJECT );
@@ -236,7 +234,6 @@ if (!class_exists('curtain_orders')) {
                     $output .= '</td>';
 
                     $output .= '<td style="text-align:center;">'.$result->order_item_qty.'</td>';
-                    //$output .= '<td style="text-align:center;">'.number_format_i18n($result->order_item_amount).'</td>';
                     $output .= '<td>'.$result->order_item_note.'</td>';
                     $output .= '<td style="text-align: center;">';
                     $serials_page_url = '/serials/?_order_item_id='.$result->curtain_order_id;
@@ -253,17 +250,11 @@ if (!class_exists('curtain_orders')) {
                         $output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '<td style="text-align:center;">'.$sub_item->parts_qty.'</td>';
-                        //$output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '<td></td>';
                         $output .= '</tr>';    
                     }
                 }
-                //$output .= '<tr>';
-                //$output .= '<td style="text-align:right;" colspan="6">Sub Total: </td>';
-                //$output .= '<td style="text-align:center;">'.number_format_i18n($row->customer_order_amount).'</td>';
-                //$output .= '<td colspan="2"></td>';
-                //$output .= '</tr>';
                 $output .= '</tbody></table></div>';
                 return $output;
             }
@@ -297,7 +288,6 @@ if (!class_exists('curtain_orders')) {
                 foreach ( $results as $index=>$result ) {
                     $output .= '<tr>';
                     $output .= '<td style="text-align: center;">';
-                    //$output .= '<span id="btn-print-customer-order-'.$result->customer_order_number.'"><i class="fa-solid fa-print"></i></span>';
                     $output .= '<span id="btn-print-customer-order-'.$result->customer_order_number.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                     $output .= '<td style="text-align: center;">'.$result->customer_order_number.'</td>';
@@ -404,47 +394,7 @@ if (!class_exists('curtain_orders')) {
                     )
                 );
             }
-/*
-            if( isset($_POST['_update']) ) {
-                $width = 1;
-                $height = 1;
-                $qty = 1;
-                if (is_numeric($_POST['_curtain_width'])) {
-                    $width = $_POST['_curtain_width'];
-                }
-                if (is_numeric($_POST['_curtain_height'])) {
-                    $height = $_POST['_curtain_height'];
-                }
-                if (is_numeric($_POST['_shopping_item_qty'])) {
-                    $qty = $_POST['_shopping_item_qty'];
-                }
-                $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
-                $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
-                $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-                if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                    $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
-                } else {
-                    $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
-                }
-                $this->update_order_items(
-                    array(
-                        'curtain_category_id'=>$_POST['_curtain_category_id'],
-                        'curtain_model_id'=>$_POST['_curtain_model_id'],
-                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
-                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
-                        'curtain_width'=>$_POST['_curtain_width'],
-                        'curtain_height'=>$_POST['_curtain_height'],
-                        'order_item_qty'=>$_POST['_shopping_item_qty'],
-                        'order_item_amount'=>$amount,
-                    ),
-                    array(
-                        'curtain_order_id'=>$_POST['_curtain_order_id'],
-                    )
-                );
-                ?><script>window.location.replace("?_update=");</script><?php
-            }
-*/
-            //if( isset($_GET['_delete']) ) {
+
             if( isset($_GET['_order_item_delete']) ) {
                 $this->delete_order_items(
                     array(
@@ -460,14 +410,12 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div>';
             $output .= '<form method="post">';
             $output .= '<input class="wp-block-button__link" type="submit" value="New Item" name="_add">';
-            //$output .= '<input class="wp-block-button__link" type="submit" value="My Orders" name="_customer_orders">';
             $output .= '<input class="wp-block-button__link" type="submit" value="我的訂單" name="_customer_orders">';
             $output .= '</form>';
             $output .= '</div>';
             $output .= '<div style="text-align: right;">';
             $output .= '<form method="post">';
             $output .= '<input style="display:inline" type="text" name="_where" placeholder="Search...">';
-            //$output .= '<input class="wp-block-button__link" type="submit" value="Search" name="submit_action">';
             $output .= '<input class="wp-block-button__link" type="submit" value="查詢" name="submit_action">';
             $output .= '</form>';
             $output .= '</div>';
@@ -478,12 +426,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
             $output .= '<th></th>';
-            //$output .= '<th>date/time</th>';
-            //$output .= '<th>category</th>';
-            //$output .= '<th>model</th>';
-            //$output .= '<th>parts</th>';
-            //$output .= '<th>QTY</th>';
-            //$output .= '<th>amount</th>';
             $output .= '<th>時間</th>';
             $output .= '<th>窗簾種類</th>';
             $output .= '<th>型號</th>';
@@ -508,7 +450,6 @@ if (!class_exists('curtain_orders')) {
                     $output .= '<input style="display:inline" type="checkbox" value="1" name="_is_checkout_'.$index.'">';
                     $output .= '</td>';
                     $output .= '<td style="text-align: center;">';
-                    //$output .= '<span style="margin-left:5px;" id="btn-edit-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '<span style="margin-left:5px;" id="btn-order-item-'.$result->curtain_order_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                     $output .= '</td>';
                 }
@@ -532,9 +473,7 @@ if (!class_exists('curtain_orders')) {
                 }
                 $output .= '</tr>';
             }
-            //$output .= '<tr><td colspan="10"><div id="btn-add-order-item" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
-            //$output .= '<input class="wp-block-button__link" type="submit" value="Checkout" name="_checkout_submit">';
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
 
@@ -542,22 +481,16 @@ if (!class_exists('curtain_orders')) {
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="order-item-id">';
-            //$output .= '<label for="curtain-category-id">Curtain Category</label>';
             $output .= '<label for="curtain-category-id">窗簾種類</label>';
             $output .= '<select id="curtain-category-id"></select>';
-            //$output .= '<label id="curtain-model-label" for="curtain-model-id">Curtain Model</label>';
             $output .= '<label id="curtain-model-label" for="curtain-model-id">型號</label>';
             $output .= '<select id="curtain-model-id"></select>';
-            //$output .= '<label id="curtain-specification-label" for="curtain-specification-id">Specification</label>';
             $output .= '<label id="curtain-specification-label" for="curtain-specification-id">規格</label>';
             $output .= '<select id="curtain-specification-id"></select>';
-            //$output .= '<label id="curtain-width-label" for="curtain-width">Width</label>';
             $output .= '<label id="curtain-width-label" for="curtain-width">寬</label>';
             $output .= '<input type="text" id="curtain-width" />';
-            //$output .= '<label id="curtain-height-label" for="curtain-height">Height</label>';
             $output .= '<label id="curtain-height-label" for="curtain-height">高</label>';
             $output .= '<input type="text" id="curtain-height" />';    
-            //$output .= '<label for="order-item-qty">QTY</label>';
             $output .= '<label for="order-item-qty">數量</label>';
             $output .= '<input type="text" id="order-item-qty" />';
             $output .= '<label for="order-item-note">備註</label>';
@@ -570,8 +503,6 @@ if (!class_exists('curtain_orders')) {
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
             $output .= '<th></th>';
-            //$output .= '<th>parts</th>';
-            //$output .= '<th>QTY</th>';
             $output .= '<th>附件</th>';
             $output .= '<th>數量</th>';
             $output .= '<th></th>';
@@ -589,67 +520,28 @@ if (!class_exists('curtain_orders')) {
             }            
             $output .= '<tr>';
             $output .= '<td>N</td>';
-            //$output .= '<input type="hidden" id="order-item-id" />';
             $output .= '<td><select id="parts-id">'.$curtain_categories->parts_options().'</select></td>';
             $output .= '<td><input type="text" size="2" id="parts-qty" value="1" /></td>';
             $output .= '</tr>';
             $output .= '</tbody></table>';
             $output .= '</div>';
-/*
-            if( isset($_GET['_edit']) ) {
-                $_id = $_GET['_edit'];
-                $row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id={$_id}", OBJECT );
-                $output .= '<div id="dialog" title="Items update">';
-                $output .= '<form method="post">';
-                $output .= '<fieldset>';
-                $output .= '<input type="hidden" name="_curtain_order_id" value="'.$row->curtain_order_id.'">';
-                $output .= '<label for="select-category-id">Curtain Category</label>';
-                $output .= '<select name="_curtain_category_id" id="select-category-id">'.$curtain_categories->select_options($row->curtain_category_id).'</select>';
-                $output .= '<label for="select-model-id">Model</label>';
-                $output .= '<select name="_curtain_model_id" id="select-model-id">'.$curtain_models->select_options($row->curtain_category_id, $row->curtain_model_id ).'</select>';
-                //$output .= '<label for="select-remote-id">Remote</label>';
-                //$output .= '<select name="_curtain_remote_id" id="select-remote-id">'.$curtain_remotes->select_options($row->curtain_remote_id).'</select>';
-                $output .= '<label for="select-specification-id">Specification</label>';
-                $output .= '<select name="_curtain_specification_id" id="select-specification-id">'.$curtain_specifications->select_options($row->curtain_category_id, $row->curtain_specification_id ).'</select>';
 
-                $output .= '<label id="curtain-width-label" for="curtain-width">Width: min('.$curtain_categories->get_min_width($row->curtain_category_id).'),max('.$curtain_categories->get_max_width($row->curtain_category_id).')</label>';
-                $output .= '<input type="text" name="_curtain_width" value="'.$row->curtain_width.'" id="curtain-width" class="text ui-widget-content ui-corner-all">';
-                if ($row->curtain_category_id!=1) {
-                    $output .= '<label id="curtain-height-label" for="curtain-height">Height: min('.$curtain_categories->get_min_height($row->curtain_category_id).'),max('.$curtain_categories->get_max_height($row->curtain_category_id).')</label>';
-                    $output .= '<input type="text" name="_curtain_height" value="'.$row->curtain_height.'" id="curtain-height" class="text ui-widget-content ui-corner-all">';    
-                }
-
-                $output .= '<label for="order_item_qty">QTY</label>';
-                $output .= '<input type="text" name="_shopping_item_qty" value="'.$row->order_item_qty.'" id="order_item_qty" class="text ui-widget-content ui-corner-all">';
-                $output .= '</fieldset>';
-                $output .= '<input type="hidden" name="_agent_submit" value="true">';
-                $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update" id="update-btn-'.$row->curtain_order_id.'">';
-                $output .= '</form>';
-                $output .= '</div>';
-            }
-*/
             if( isset($_POST['_add']) ) {
                 $output .= '<div id="dialog" title="Create new item">';
                 $output .= '<form method="post">';
                 $output .= '<fieldset>';
-                //$output .= '<label for="curtain-category-id">Curtain Category</label>';
                 $output .= '<label for="curtain-category-id">窗簾種類</label>';
                 $output .= '<select name="_curtain_category_id" id="curtain-category-id">'.$curtain_categories->select_options().'</select>';
-                //$output .= '<label for="curtain-model-id">Model</label>';
                 $output .= '<label for="curtain-model-id">型號</label>';
                 $output .= '<select name="_curtain_model_id" id="curtain-model-id">'.$curtain_models->select_options().'</select>';
-                //$output .= '<label for="curtain-specification-id">Specification</label>';
                 $output .= '<label for="curtain-specification-id">規格</label>';
                 $output .= '<select name="_curtain_specification_id" id="curtain-specification-id">'.$curtain_specifications->select_options().'</select>';
 
-                //$output .= '<label id="curtain-width-label" for="curtain-width">Width: min(),max()</label>';
                 $output .= '<label id="curtain-width-label" for="curtain-width">寬: min(),max()</label>';
                 $output .= '<input type="text" name="_curtain_width" id="curtain-width" class="text ui-widget-content ui-corner-all">';
-                //$output .= '<label id="curtain-height-label" for="curtain-height">Height: min(),max()</label>';
                 $output .= '<label id="curtain-height-label" for="curtain-height">高: min(),max()</label>';
                 $output .= '<input type="text" name="_curtain_height" id="curtain-height" class="text ui-widget-content ui-corner-all">';
 
-                //$output .= '<label for="order_item_qty">QTY</label>';
                 $output .= '<label for="order_item_qty">數量</label>';
                 $output .= '<input type="text" name="_shopping_item_qty" id="order_item_qty" value="1" class="text ui-widget-content ui-corner-all">';
 
@@ -661,7 +553,6 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</form>';
                 $output .= '</div>';
             }
-
             return $output;
         }
 
@@ -696,52 +587,7 @@ if (!class_exists('curtain_orders')) {
             echo json_encode( $response );
             wp_die();
         }
-/*
-        function order_item_dialog_add_data() {
-            $curtain_models = new curtain_models();
-            $curtain_remotes = new curtain_remotes();
-            $curtain_specifications = new curtain_specifications();
-            $width = 1;
-            $height = 1;
-            $qty = 1;
-            if (is_numeric($_POST['_curtain_width'])) {
-                $width = $_POST['_curtain_width'];
-            }
-            if (is_numeric($_POST['_curtain_height'])) {
-                $height = $_POST['_curtain_height'];
-            }
-            if (is_numeric($_POST['_shopping_item_qty'])) {
-                $qty = $_POST['_shopping_item_qty'];
-            }
-            $m_price = $curtain_models->get_price($_POST['_curtain_model_id']);
-            $r_price = $curtain_remotes->get_price($_POST['_curtain_remote_id']);
-            $s_price = $curtain_specifications->get_price($_POST['_curtain_specification_id']);
-            if ($curtain_specifications->is_length_only($_POST['_curtain_specification_id'])==1){
-                $amount = ($m_price + $r_price + $width/100 * $s_price) * $qty;
-            } else {
-                $amount = ($m_price + $r_price + $width/100 * $height/100 * $s_price) * $qty;
-            }
 
-                $this->insert_order_item(
-                    array(
-                        'curtain_agent_id'=>$this->curtain_agent_id,
-                        'curtain_category_id'=>$_POST['_curtain_category_id'],
-                        'curtain_model_id'=>$_POST['_curtain_model_id'],
-                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
-                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
-                        'curtain_width'=>$_POST['_curtain_width'],
-                        'curtain_height'=>$_POST['_curtain_height'],
-                        'order_item_qty'=>$_POST['_shopping_item_qty'],
-                        'order_item_amount'=>$amount,
-                        'is_checkout'=>0
-                    )
-                );
-
-            $response = array();
-            echo json_encode( $response );
-            wp_die();
-        }
-*/
         function order_item_dialog_save_data() {
             $curtain_models = new curtain_models();
             $curtain_remotes = new curtain_remotes();
@@ -784,29 +630,6 @@ if (!class_exists('curtain_orders')) {
                         'is_checkout'=>0
                     )
                 );
-/*
-                $order_item_id = $this->insert_order_item(
-                    array(
-                        'curtain_agent_id'=>$this->curtain_agent_id,
-                        'curtain_category_id'=>$_POST['_curtain_category_id'],
-                        'curtain_model_id'=>$_POST['_curtain_model_id'],
-                        'curtain_remote_id'=>$_POST['_curtain_remote_id'],
-                        'curtain_specification_id'=>$_POST['_curtain_specification_id'],
-                        'curtain_width'=>$_POST['_curtain_width'],
-                        'curtain_height'=>$_POST['_curtain_height'],
-                        'order_item_qty'=>$_POST['_order_item_qty'],
-                        'is_checkout'=>0
-                    )
-                );
-                $this->update_order_items(
-                    array(
-                        'order_item_amount'=>$this->caculate_order_item_amount($order_item_id),
-                    ),
-                    array(
-                        'curtain_order_id'=>$order_item_id
-                    )
-                );
-*/                
             } else {
                 $this->update_order_items(
                     array(
@@ -819,22 +642,11 @@ if (!class_exists('curtain_orders')) {
                         'order_item_qty'=>$_POST['_order_item_qty'],
                         'order_item_note'=>$_POST['_order_item_note'],
                         'order_item_amount'=>$amount,
-                        //'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
                     ),
                     array(
                         'curtain_order_id'=>$_POST['_order_item_id']
                     )
                 );
-/*                
-                $this->update_order_items(
-                    array(
-                        'order_item_amount'=>$this->caculate_order_item_amount($_POST['_order_item_id']),
-                    ),
-                    array(
-                        'curtain_order_id'=>$_POST['_order_item_id']
-                    )
-                );
-*/                
             }
 
             $response = array();

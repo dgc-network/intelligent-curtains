@@ -40,8 +40,8 @@ add_action('user_new_form', 'user_custom_fields'); // creating a new user
 
 function userMetaDataSave($userId) {
     if (current_user_can('edit_user', $userId)) {
-        update_post_meta($userId, 'line_user_id', $_REQUEST['line_user_id']);
-        update_post_meta($userId, 'wallet_address', $_REQUEST['wallet_address']);
+        update_user_meta($userId, 'line_user_id', $_REQUEST['line_user_id']);
+        update_user_meta($userId, 'wallet_address', $_REQUEST['wallet_address']);
     }    
 }
 add_action('personal_options_update', 'userMetaDataSave');

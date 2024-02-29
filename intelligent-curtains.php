@@ -18,18 +18,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-/*
-function custom_date_format() {
-    $date_format = get_option('date_format');
-    if (empty($date_format)) {
-        $new_date_format = 'Y-m-d'; // Set your desired date format    
-        update_option('date_format', $new_date_format);
-        $new_time_format = 'h:i'; // Set your desired time format
-        update_option('time_format', $new_time_format);
-    }
-}
-add_action( 'init', 'custom_date_format' );
-*/
+
 function register_session() {
     if ( ! session_id() ) {
         session_start();
@@ -37,6 +26,13 @@ function register_session() {
 }
 add_action( 'init', 'register_session' );
 
+function remove_admin_bar() {
+    if (!current_user_can('administrator') && !is_admin()) {
+      show_admin_bar(false);
+    }
+}
+add_action('after_setup_theme', 'remove_admin_bar');  
+  
 function enqueue_scripts() {		
     wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
@@ -134,62 +130,7 @@ function init_webhook_events() {
                 'messages' => [$flexMessage],
             ]);            
         }
-/*
-        // Start the Agent Login/Registration process if got the correct agent number
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text']), OBJECT);
 
-        if (is_null($row) || !empty($wpdb->last_error)) {
-            // Handle the case when no row is found or there's a database error
-        } else {
-            // Generate link URI based on the retrieved data
-            $display_name = str_replace(' ', '', $profile['displayName']);
-            $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_agent_no=' . $event['message']['text'];
-            // Flex Message JSON structure with a button
-            $flexMessage = [
-                'type' => 'flex',
-                'altText' => 'This is a Flex Message with a Button',
-                'contents' => [
-                    'type' => 'bubble',
-                    'body' => [
-                        'type' => 'box',
-                        'layout' => 'vertical',
-                        'contents' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'Hello, '.$display_name,
-                                'size' => 'lg',
-                                'weight' => 'bold',
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => 'Please click the button below to go to the Agent Login/Registration system.',
-                                'wrap' => true,
-                            ],
-                        ],
-                    ],
-                    'footer' => [
-                        'type' => 'box',
-                        'layout' => 'vertical',
-                        'contents' => [
-                            [
-                                'type' => 'button',
-                                'action' => [
-                                    'type' => 'uri',
-                                    'label' => 'Click me!',
-                                    'uri' => $link_uri, // Replace with your desired URI
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-            
-            $line_bot_api->replyMessage([
-                'replyToken' => $event['replyToken'], // Make sure $event['replyToken'] is valid and present
-                'messages' => [$flexMessage],
-            ]);            
-        }
-*/        
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
