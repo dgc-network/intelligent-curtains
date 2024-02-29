@@ -96,9 +96,9 @@ if (!class_exists('curtain_orders')) {
             if ( !is_user_logged_in() ) {
                 echo do_shortcode( '[qr-scanner-redirect]' );
             }
-            $current_user_id = wp_get_current_user();
-            $_agent_number = get_user_meta( $current_user_id, 'agent_number', TRUE );
-            $_agent_password = get_user_meta( $current_user_id, 'agent_password', TRUE );
+            $user = wp_get_current_user();
+            $_agent_number = get_user_meta( $user->ID, 'agent_number', TRUE );
+            $_agent_password = get_user_meta( $user->ID, 'agent_password', TRUE );
 
             if( isset($_agent_number) && isset($_agent_password) ) {
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s AND agent_password = %s", $_agent_number, $_agent_password ), OBJECT );
