@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#category-dialog").dialog({
-        width: 400,
+        width: 450,
         modal: true,
         autoOpen: false,
         buttons: {
