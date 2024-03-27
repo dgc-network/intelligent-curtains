@@ -319,8 +319,10 @@ if (!class_exists('curtain_service')) {
             } else {
 
                 /** Did not login system yet */
+                user_did_not_login_yet();
+/*                
                 if( isset($_GET['_id']) ) {
-                    /** Using Line User ID to register and login into the system */
+                    // Using Line User ID to register and login into the system
                     $array = get_users( array( 'meta_value' => $_GET['_id'] ));
                     if (empty($array)) {
                         $user_id = wp_insert_user( array(
@@ -361,9 +363,10 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                     return $output;        
                 }
+*/            
             }
         }
-
+/*
         public function init_webhook_events() {
             global $wpdb;
             $line_bot_api = new line_bot_api();
@@ -377,7 +380,7 @@ if (!class_exists('curtain_service')) {
 
             foreach ((array)$line_bot_api->parseEvents() as $event) {
 
-                /** Start the User Login/Registration process if got the one time password */
+                // Start the User Login/Registration process if got the one time password
                 if ($event['message']['text']==get_option('_one_time_password')) {
                     $link_uri = get_option('Service').'?_id='.$event['source']['userId'];
                     $see_more["body"]["contents"][0]["action"]["label"] = 'User Login/Registration';
@@ -394,7 +397,7 @@ if (!class_exists('curtain_service')) {
                     ]);
                 }
 
-                /** Start the Agent Login/Registration process if got the correct agent number */
+                // Start the Agent Login/Registration process if got the correct agent number
                 $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE agent_number = %s", $event['message']['text'] ), OBJECT );            
                 if (is_null($row) || !empty($wpdb->last_error)) {
                 } else {
@@ -418,7 +421,7 @@ if (!class_exists('curtain_service')) {
                         $message = $event['message'];
                         switch ($message['type']) {
                             case 'text':
-                                /** Open-AI auto reply */
+                                // Open-AI auto reply
                                 $response = $open_ai_api->createChatCompletion($message['text']);
                                 $line_bot_api->replyMessage([
                                     'replyToken' => $event['replyToken'],
@@ -441,7 +444,7 @@ if (!class_exists('curtain_service')) {
                 }
             }
         }
-
+*/
         public function insert_chat_message($data=[]) {
             global $wpdb;
             $table = $wpdb->prefix.'chat_messages';

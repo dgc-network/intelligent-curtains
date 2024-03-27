@@ -67,7 +67,6 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
-add_action( 'parse_request', 'init_webhook_events' );
 function init_webhook_events() {
     global $wpdb;
     $line_bot_api = new line_bot_api();
@@ -158,6 +157,81 @@ function init_webhook_events() {
                 error_log('Unsupported event type: ' . $event['type']);
                 break;
         }
+    }
+}
+add_action( 'parse_request', 'init_webhook_events' );
+
+function user_did_not_login_yet() {
+    if( isset($_GET['_id']) && isset($_GET['_name']) ) {
+        // Using Line User ID to register and login into the system
+        $array = get_users( array( 'meta_value' => $_GET['_id'] ));
+        if (empty($array)) {
+            $user_id = wp_insert_user( array(
+                'user_login' => $_GET['_id'],
+                'user_pass' => $_GET['_id'],
+            ));
+            add_user_meta( $user_id, 'line_user_id', $_GET['_id']);
+        } else {
+            // Get user by 'line_user_id' meta
+            global $wpdb;
+            $user_id = $wpdb->get_var($wpdb->prepare(
+                "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'line_user_id' AND meta_value = %s",
+                $_GET['_id']
+            ));
+            $site_id = get_user_meta( $user_id, 'site_id', true);
+            $site_title = get_the_title($site_id);
+        }
+        //$user = get_user_by( 'ID', $user_id );
+        $user_data = get_userdata( $user_id );
+        ?>
+        <div class="ui-widget">
+            <h2>User registration/login</h2>
+            <fieldset>
+                <label for="display-name">Name:</label>
+                <input type="text" id="display-name" value="<?php echo esc_attr($_GET['_name']);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="user-email">Email:</label>
+                <input type="text" id="user-email" value="<?php echo esc_attr($user_data->user_email);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="site-id">Site:</label>
+                <input type="text" id="site-title" value="<?php echo esc_attr($site_title);?>" class="text ui-widget-content ui-corner-all" />
+                <div id="site-hint" style="display:none; color:#999;"></div>
+                <input type="hidden" id="site-id" value="<?php echo esc_attr($site_id);?>" />
+                <input type="hidden" id="log" value="<?php echo esc_attr($_GET['_id']);?>" />
+                <input type="hidden" id="pwd" value="<?php echo esc_attr($_GET['_id']);?>" />
+                <hr>
+                <input type="submit" id="wp-login-submit" class="button button-primary" value="Submit" />
+            </fieldset>
+        </div>
+        <?php        
+} else {
+        // Display a message or redirect to the login/registration page
+        $one_time_password = random_int(100000, 999999);
+        update_option('_one_time_password', $one_time_password);
+        ?>
+        <div class="desktop-content ui-widget" style="text-align:center; display:none;">
+            <!-- Content for desktop users -->
+            <p>感謝您使用我們的系統</p>
+            <p>請輸入您的 Email 帳號</p>
+            <input type="text" id="user-email-input" />
+            <div id="otp-input-div" style="display:none;">
+            <p>請輸入傳送到您 Line 上的六位數字密碼</p>
+            <input type="text" id="one-time-password-desktop-input" />
+            <input type="hidden" id="line-user-id-input" />
+            </div>
+        </div>
+
+        <div class="mobile-content ui-widget" style="text-align:center; display:none;">
+            <!-- Content for mobile users -->
+            <p>感謝您使用我們的系統</p>
+            <p>請加入我們的Line官方帳號,</p>
+            <p>利用手機按或掃描下方QR code</p>
+            <a href="<?php echo get_option('line_official_account');?>">
+            <img src="<?php echo get_option('line_official_qr_code');?>">
+            </a>
+            <p>並請在聊天室中, 輸入六位數字:</p>
+            <h3><?php echo get_option('_one_time_password');?></h3>
+            <p>完成註冊/登入作業</p>
+        </div>
+        <?php
     }
 }
 
