@@ -319,8 +319,8 @@ if (!class_exists('curtain_service')) {
             } else {
 
                 /** Did not login system yet */
-                user_did_not_login_yet();
-/*                
+                //user_did_not_login_yet();
+
                 if( isset($_GET['_id']) ) {
                     // Using Line User ID to register and login into the system
                     $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -363,7 +363,6 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                     return $output;        
                 }
-*/            
             }
         }
 /*
