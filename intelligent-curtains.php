@@ -1,6 +1,4 @@
 <?php
-//update_option( 'home', 'https://aihome.tw' );
-//update_option( 'siteurl', 'https://aihome.tw' );
 /**
  * Plugin Name: intelligent-curtains
  * Plugin URI: https://wordpress.org/plugins/intelligent-curtains/
