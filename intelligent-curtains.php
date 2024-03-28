@@ -75,9 +75,15 @@ function init_webhook_events() {
     $events = $data['events'] ?? [];
 
     foreach ((array)$events as $event) {
+        // Start the session to access stored OTP and expiration
+        session_start();
+        // Get stored OTP and expiration timestamp from session
+        $one_time_password = isset($_SESSION['one_time_password']) ? intval($_SESSION['one_time_password']) : 0;
 
         // Start the User Login/Registration process if got the one time password
-        if ((int)$event['message']['text']==(int)get_option('_one_time_password')) {
+        if ((int)$event['message']['text']===$one_time_password) {
+        //}
+        //if ((int)$event['message']['text']==(int)get_option('_one_time_password')) {
             $profile = $line_bot_api->getProfile($event['source']['userId']);
             $display_name = str_replace(' ', '', $profile['displayName']);
             // Encode the Chinese characters for inclusion in the URL
@@ -204,6 +210,10 @@ function user_did_not_login_yet() {
         // Display a message or redirect to the login/registration page
         $one_time_password = random_int(100000, 999999);
         update_option('_one_time_password', $one_time_password);
+        // Store OTP in session for verification
+        session_start();
+        $_SESSION['one_time_password'] = $one_time_password;
+
         ?>
         <div class="desktop-content ui-widget" style="text-align:center; display:none;">
             <!-- Content for desktop users -->
