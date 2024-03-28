@@ -66,7 +66,7 @@ require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 function init_webhook_events() {
-    global $wpdb;
+    //global $wpdb;
     $line_bot_api = new line_bot_api();
     $open_ai_api = new open_ai_api();
 
@@ -75,6 +75,10 @@ function init_webhook_events() {
     $events = $data['events'] ?? [];
 
     foreach ((array)$events as $event) {
+        $line_user_id = $event['source']['userId'];
+        $profile = $line_bot_api->getProfile($line_user_id);
+        $display_name = str_replace(' ', '', $profile['displayName']);
+/*
         // Start the session to access stored OTP and expiration
         session_start();
         // Get stored OTP and expiration timestamp from session
@@ -133,13 +137,13 @@ function init_webhook_events() {
                 'messages' => [$flexMessage],
             ]);            
         }
-
+*/
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
                 if (!is_user_logged_in()) {
                     $line_user_id = $event['source']['userId'];
-                    proceed_to_registration_login($line_user_id);
+                    proceed_to_registration_login($line_user_id, $display_name);
                 }
                 $message = $event['message'];
                 switch ($message['type']) {
@@ -169,7 +173,7 @@ function init_webhook_events() {
 }
 add_action( 'parse_request', 'init_webhook_events' );
 
-function proceed_to_registration_login($line_user_id) {
+function proceed_to_registration_login($line_user_id, $display_name) {
     // Using Line User ID to register and login into the system
     $array = get_users( array( 'meta_value' => $line_user_id ));
     if (empty($array)) {
