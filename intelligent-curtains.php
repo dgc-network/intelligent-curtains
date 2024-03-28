@@ -137,6 +137,10 @@ function init_webhook_events() {
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
+                if (!is_user_logged_in()) {
+                    $line_user_id = $event['source']['userId'];
+                    proceed_to_registration_login($line_user_id);
+                }
                 $message = $event['message'];
                 switch ($message['type']) {
                     case 'text':
@@ -165,7 +169,39 @@ function init_webhook_events() {
 }
 add_action( 'parse_request', 'init_webhook_events' );
 
+function proceed_to_registration_login($line_user_id) {
+    // Using Line User ID to register and login into the system
+    $array = get_users( array( 'meta_value' => $line_user_id ));
+    if (empty($array)) {
+        $user_id = wp_insert_user( array(
+            'user_login' => $line_user_id,
+            'user_pass' => $line_user_id,
+        ));
+        $user = get_user_by( 'ID', $user_id );
+        add_user_meta( $user_id, 'line_user_id', $line_user_id );
+    }
+
+    $link_uri = home_url().'/support/after_service/';
+
+    $output  = '<div style="text-align:center;">';
+    $output .= '<p>This is an automated process that helps you register for the system. ';
+    $output .= 'Please click the Submit button below to complete your registration.</p>';
+    $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
+    $output .= '<fieldset>';
+    $output .= '<input type="hidden" name="log" value="'. $line_user_id .'" />';
+    $output .= '<input type="hidden" name="pwd" value="'. $line_user_id .'" />';
+    $output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
+    $output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $link_uri ).'" />';
+    $output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
+    $output .= '</fieldset>';
+    $output .= '</form>';
+    $output .= '</div>';
+    return $output;
+
+}
+
 function user_did_not_login_yet() {
+    
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -240,6 +276,6 @@ function user_did_not_login_yet() {
             <p>完成註冊/登入作業</p>
         </div>
         <?php
-    }
+    }    
 }
 
