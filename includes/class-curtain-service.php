@@ -384,20 +384,6 @@ if (!class_exists('curtain_service')) {
                     <?php
                     $html = ob_get_clean();
                     return $html;
-/*
-                    $one_time_password = random_int(100000, 999999);
-                    update_option('_one_time_password', $one_time_password);
-                    // Store OTP in session for verification
-                    session_start();
-                    $_SESSION['one_time_password'] = $one_time_password;
-            
-                    $output = '<div style="text-align:center;">';
-                    $output .= '感謝您選購我們的電動窗簾<br>';
-                    $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
-                    $output .= '並請在聊天室中, 輸入「我要註冊」或「我要登錄」,啟動註冊/登入作業。';
-                    $output .= '</div>';
-                    return $output;
-*/                    
                 }
             }
         }
