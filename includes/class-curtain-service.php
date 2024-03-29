@@ -366,7 +366,7 @@ if (!class_exists('curtain_service')) {
                         </div>
                     </div>
             
-                    <div class="mobile-content ui-widget" style="text-align:center; display:none;">
+                    <div class="mobile-content ui-widget" style="text-align:center;">
                         <!-- Content for mobile users -->
                         <p>感謝您使用我們的系統</p>
                         <p>請加入我們的Line官方帳號,</p>
