@@ -316,6 +316,8 @@ if (!class_exists('curtain_service')) {
                     return $output;    
                 }
 
+                wp_redirect(home_url());
+
             } else {
 
                 /** Did not login system yet */
@@ -353,7 +355,6 @@ if (!class_exists('curtain_service')) {
                     return $output;
 
                 } else {
-/*                    
                     ob_start();
                     ?>
                     <div class="desktop-content ui-widget" style="text-align:center; display:none;">
@@ -381,7 +382,7 @@ if (!class_exists('curtain_service')) {
                     <?php
                     $html = ob_get_clean();
                     return $html;
-*/                    
+/*
                     $one_time_password = random_int(100000, 999999);
                     update_option('_one_time_password', $one_time_password);
                     // Store OTP in session for verification
@@ -394,6 +395,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '並請在聊天室中, 輸入「我要註冊」或「我要登錄」,啟動註冊/登入作業。';
                     $output .= '</div>';
                     return $output;
+*/                    
                 }
             }
         }
