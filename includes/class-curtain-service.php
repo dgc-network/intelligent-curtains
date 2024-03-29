@@ -316,7 +316,9 @@ if (!class_exists('curtain_service')) {
                     return $output;    
                 }
 
-                return wp_redirect(home_url());
+                ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+
+                //return wp_redirect(home_url());
 
             } else {
 
