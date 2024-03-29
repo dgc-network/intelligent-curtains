@@ -132,7 +132,7 @@ function init_webhook_events() {
                             $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
                             $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
                             // Encode the Chinese characters for inclusion in the URL
-                            $link_uri = home_url().'/display-profiles/?_id='.$line_user_id.'&_name='.urlencode($display_name);
+                            $link_uri = home_url().'/service/?_id='.$line_user_id.'&_name='.urlencode($display_name);
                             $flexMessage = set_flex_message($display_name, $link_uri, $text_message);
                             $line_bot_api->replyMessage([
                                 'replyToken' => $event['replyToken'],
@@ -176,40 +176,7 @@ function get_keyword_matchmaking($keyword) {
         
     return false;
 }
-
-function proceed_to_registration_login($line_user_id, $display_name) {
-    // Using Line User ID to register and login into the system
-    $array = get_users( array( 'meta_value' => $line_user_id ));
-    if (empty($array)) {
-        $user_id = wp_insert_user( array(
-            'user_login' => $line_user_id,
-            'user_pass' => $line_user_id,
-        ));
-        $user = get_user_by( 'ID', $user_id );
-        add_user_meta( $user_id, 'line_user_id', $line_user_id );
-    }
-
-    $link_uri = home_url().'/support/after_service/';
-
-    $output  = '<div style="text-align:center;">';
-    $output .= '<p>This is an automated process that helps you register for the system. ';
-    $output .= 'Please click the Submit button below to complete your registration.</p>';
-    $output .= '<form action="'.esc_url( site_url( 'wp-login.php', 'login_post' ) ).'" method="post" style="display:inline-block;">';
-    $output .= '<fieldset>';
-    $output .= '<input type="hidden" name="log" value="'. $line_user_id .'" />';
-    $output .= '<input type="hidden" name="pwd" value="'. $line_user_id .'" />';
-    $output .= '<input type="hidden" name="rememberme" value="foreverchecked" />';
-    $output .= '<input type="hidden" name="redirect_to" value="'.esc_url( $link_uri ).'" />';
-    $output .= '<input type="submit" name="wp-submit" class="button button-primary" value="Submit" />';
-    $output .= '</fieldset>';
-    $output .= '</form>';
-    $output .= '</div>';
-    return $output;
-
-}
-
-function user_did_not_login_yet() {
-    
+function user_did_not_login_yet() {    
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));

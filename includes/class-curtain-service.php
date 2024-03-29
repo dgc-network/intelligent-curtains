@@ -353,6 +353,31 @@ if (!class_exists('curtain_service')) {
                     return $output;
 
                 } else {
+                    ?>
+                    <div class="desktop-content ui-widget" style="text-align:center; display:none;">
+                        <!-- Content for desktop users -->
+                        <p>感謝您使用我們的系統</p>
+                        <p>請輸入您的 Email 帳號</p>
+                        <input type="text" id="user-email-input" />
+                        <div id="otp-input-div" style="display:none;">
+                        <p>請輸入傳送到您 Line 上的六位數字密碼</p>
+                        <input type="text" id="one-time-password-desktop-input" />
+                        <input type="hidden" id="line-user-id-input" />
+                        </div>
+                    </div>
+            
+                    <div class="mobile-content ui-widget" style="text-align:center; display:none;">
+                        <!-- Content for mobile users -->
+                        <p>感謝您使用我們的系統</p>
+                        <p>請加入我們的Line官方帳號,</p>
+                        <p>利用手機按或掃描下方QR code</p>
+                        <a href="<?php echo get_option('line_official_account');?>">
+                        <img src="<?php echo get_option('line_official_qr_code');?>">
+                        </a>
+                        <p>並請在聊天室中, 輸入「我要註冊」或「我要登錄」,啟動註冊/登入作業。</p>
+                    </div>
+                    <?php
+/*            
                     $one_time_password = random_int(100000, 999999);
                     update_option('_one_time_password', $one_time_password);
                     // Store OTP in session for verification
@@ -364,7 +389,8 @@ if (!class_exists('curtain_service')) {
                     $output .= '請利用手機<i class="fa-solid fa-mobile-screen"></i>按'.'<a href="'.get_option('_line_account').'">這裡</a>, 加入我們的Line官方帳號,<br>';
                     $output .= '並請在聊天室中, 輸入六位數字:<h4>'.get_option('_one_time_password').'</h4>完成註冊/登入作業<br>';
                     $output .= '</div>';
-                    return $output;        
+                    return $output;
+*/                    
                 }
             }
         }
