@@ -353,6 +353,7 @@ if (!class_exists('curtain_service')) {
                     return $output;
 
                 } else {
+                    ob_start();
                     ?>
                     <div class="desktop-content ui-widget" style="text-align:center; display:none;">
                         <!-- Content for desktop users -->
@@ -366,7 +367,7 @@ if (!class_exists('curtain_service')) {
                         </div>
                     </div>
             
-                    <div class="mobile-content ui-widget" style="text-align:center;">
+                    <div class="mobile-content ui-widget" style="text-align:center;; display:none;">
                         <!-- Content for mobile users -->
                         <p>感謝您使用我們的系統</p>
                         <p>請加入我們的Line官方帳號,</p>
@@ -377,6 +378,9 @@ if (!class_exists('curtain_service')) {
                         <p>並請在聊天室中, 輸入「我要註冊」或「我要登錄」,啟動註冊/登入作業。</p>
                     </div>
                     <?php
+                    $html = ob_get_clean();
+                    return $html;
+                    
 /*            
                     $one_time_password = random_int(100000, 999999);
                     update_option('_one_time_password', $one_time_password);
