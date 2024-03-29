@@ -65,6 +65,48 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
 add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
+function set_flex_message($display_name, $link_uri, $text_message) {
+    // Flex Message JSON structure with a button
+    return $flexMessage = [
+        'type' => 'flex',
+        'altText' => $text_message,
+        'contents' => [
+            'type' => 'bubble',
+            'body' => [
+                'type' => 'box',
+                'layout' => 'vertical',
+                'contents' => [
+                    [
+                        'type' => 'text',
+                        'text' => 'Hello, '.$display_name,
+                        'size' => 'lg',
+                        'weight' => 'bold',
+                    ],
+                    [
+                        'type' => 'text',
+                        'text' => $text_message,
+                        'wrap' => true,
+                    ],
+                ],
+            ],
+            'footer' => [
+                'type' => 'box',
+                'layout' => 'vertical',
+                'contents' => [
+                    [
+                        'type' => 'button',
+                        'action' => [
+                            'type' => 'uri',
+                            'label' => 'Click me!',
+                            'uri' => $link_uri, // Replace with your desired URI
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+}
+
 function init_webhook_events() {
     //global $wpdb;
     $line_bot_api = new line_bot_api();
@@ -78,86 +120,38 @@ function init_webhook_events() {
         $line_user_id = $event['source']['userId'];
         $profile = $line_bot_api->getProfile($line_user_id);
         $display_name = str_replace(' ', '', $profile['displayName']);
-/*
-        // Start the session to access stored OTP and expiration
-        session_start();
-        // Get stored OTP and expiration timestamp from session
-        $one_time_password = isset($_SESSION['one_time_password']) ? intval($_SESSION['one_time_password']) : 0;
 
-        // Start the User Login/Registration process if got the one time password
-        if ((int)$event['message']['text']===$one_time_password) {
-        //}
-        //if ((int)$event['message']['text']==(int)get_option('_one_time_password')) {
-            $profile = $line_bot_api->getProfile($event['source']['userId']);
-            $display_name = str_replace(' ', '', $profile['displayName']);
-            // Encode the Chinese characters for inclusion in the URL
-            $link_uri = home_url().'/service/?_id='.$event['source']['userId'].'&_name='.urlencode($display_name);
-            // Flex Message JSON structure with a button
-            $flexMessage = [
-                'type' => 'flex',
-                'altText' => 'This is a Flex Message with a Button',
-                'contents' => [
-                    'type' => 'bubble',
-                    'body' => [
-                        'type' => 'box',
-                        'layout' => 'vertical',
-                        'contents' => [
-                            [
-                                'type' => 'text',
-                                'text' => 'Hello, '.$display_name,
-                                'size' => 'lg',
-                                'weight' => 'bold',
-                            ],
-                            [
-                                'type' => 'text',
-                                'text' => 'You have not logged in yet. Please click the button below to go to the Login/Registration system.',
-                                'wrap' => true,
-                            ],
-                        ],
-                    ],
-                    'footer' => [
-                        'type' => 'box',
-                        'layout' => 'vertical',
-                        'contents' => [
-                            [
-                                'type' => 'button',
-                                'action' => [
-                                    'type' => 'uri',
-                                    'label' => 'Click me!',
-                                    'uri' => $link_uri, // Replace with your desired URI
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-            
-            $line_bot_api->replyMessage([
-                'replyToken' => $event['replyToken'], // Make sure $event['replyToken'] is valid and present
-                'messages' => [$flexMessage],
-            ]);            
-        }
-*/
         // Regular webhook response
         switch ($event['type']) {
             case 'message':
-                if (!is_user_logged_in()) {
-                    proceed_to_registration_login($line_user_id, $display_name);
-                }
                 $message = $event['message'];
                 switch ($message['type']) {
                     case 'text':
-                        // Open-AI auto reply
-                        $response = $open_ai_api->createChatCompletion($message['text']);
-                        $line_bot_api->replyMessage([
-                            'replyToken' => $event['replyToken'],
-                            'messages' => [
-                                [
-                                    'type' => 'text',
-                                    'text' => $response,
-                                ]                                                                    
-                            ]
-                        ]);
+                        $result = get_keyword_matchmaking($message['text']);
+                        if ($result) {
+                            $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
+                            $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
+                            // Encode the Chinese characters for inclusion in the URL
+                            $link_uri = home_url().'/display-profiles/?_id='.$line_user_id.'&_name='.urlencode($display_name);
+                            $flexMessage = set_flex_message($display_name, $link_uri, $text_message);
+                            $line_bot_api->replyMessage([
+                                'replyToken' => $event['replyToken'],
+                                'messages' => [$flexMessage],
+                            ]);
+
+                        } else {
+                            // Open-AI auto reply
+                            $response = $open_ai_api->createChatCompletion($message['text']);
+                            $line_bot_api->replyMessage([
+                                'replyToken' => $event['replyToken'],
+                                'messages' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => $response
+                                    ]                                                                    
+                                ]
+                            ]);
+                        }
                         break;
                     default:
                         error_log('Unsupported message type: ' . $message['type']);
@@ -171,6 +165,17 @@ function init_webhook_events() {
     }
 }
 add_action( 'parse_request', 'init_webhook_events' );
+
+function get_keyword_matchmaking($keyword) {
+    // Check if $keyword is contained within '我要註冊登入登錄'
+    if (strpos($keyword, '註冊') !== false) return true;
+    if (strpos($keyword, '登入') !== false) return true;
+    if (strpos($keyword, '登錄') !== false) return true;
+    if (strpos($keyword, 'login') !== false) return true;
+    if (strpos($keyword, 'Login') !== false) return true;
+        
+    return false;
+}
 
 function proceed_to_registration_login($line_user_id, $display_name) {
     // Using Line User ID to register and login into the system
