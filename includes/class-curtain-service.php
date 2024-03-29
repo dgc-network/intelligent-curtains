@@ -316,7 +316,7 @@ if (!class_exists('curtain_service')) {
                     return $output;    
                 }
 
-                wp_redirect(home_url());
+                return wp_redirect(home_url());
 
             } else {
 
