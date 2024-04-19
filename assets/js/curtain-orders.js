@@ -556,6 +556,27 @@ jQuery(document).ready(function($) {
                         });
                     }
                 });
+
+                $("#new-order-item").on("click", function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'set_order_item_dialog_data',
+                            //'_customer_order_id':$("#customer-order-id").val(),
+                            '_customer_order_id':customer_order_id,
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);                    
+                            alert(error);
+                        }
+                    });    
+                });
+            
             },
             error: function (error) {
                 console.log(error);
@@ -583,23 +604,5 @@ jQuery(document).ready(function($) {
         });    
     });
 
-    $("#new-order-item").on("click", function() {
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'set_order_item_dialog_data',
-                '_customer_order_id':$("#customer-order-id").val(),
-            },
-            success: function (response) {
-                window.location.replace(window.location.href);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-    });
 
 });
