@@ -73,7 +73,7 @@ if (!class_exists('curtain_orders')) {
                 'rewrite'       => array('slug' => 'order-items'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
         }
@@ -234,7 +234,7 @@ if (!class_exists('curtain_orders')) {
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <?php echo $this->display_quotation_detail($customer_order_id);?>
+                <?php echo $this->display_order_item_list($customer_order_id);?>
                 <hr>
                 <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                 <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
@@ -279,7 +279,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function display_quotation_detail($customer_order_id=false) {
+        function display_order_item_list($customer_order_id=false) {
             ob_start();
             ?>
             <div id="fields-container">
