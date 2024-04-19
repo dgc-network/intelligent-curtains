@@ -556,7 +556,7 @@ jQuery(document).ready(function($) {
                         });
                     }
                 });
-/*
+
                 $("#new-order-item").on("click", function() {
                     $.ajax({
                         type: 'POST',
@@ -580,12 +580,11 @@ jQuery(document).ready(function($) {
                         }
                     });    
                 });
-/*
+
                 $('[id^="edit-order-item-"]').on("click", function () {
                     const order_item_id = this.id.substring(16);
                     $("#order-item-dialog").dialog('open');
                 });
-*/            
 
                 
             },
@@ -634,7 +633,7 @@ jQuery(document).ready(function($) {
         });    
 
     }
-
+/*
     $("#order-item-dialog").dialog({
         width: 500,
         modal: true,
@@ -679,7 +678,7 @@ jQuery(document).ready(function($) {
         }
     });
     $("#order-item-dialog").dialog('close');        
-
+*/
 
 
 });
