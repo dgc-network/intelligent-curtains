@@ -37,9 +37,12 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
+            add_action( 'wp_ajax_set_quotation_dialog_data', 'set_quotation_dialog_data' );
+            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', 'set_quotation_dialog_data' );
+
         }
 
-        // Register doc report post type
+        // Register customer-order post type
         function register_customer_order_post_type() {
             $labels = array(
                 'menu_name'     => _x('customer-order', 'admin menu', 'textdomain'),
@@ -104,20 +107,15 @@ if (!class_exists('curtain_orders')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            $doc_id = (int) get_the_ID();
-                            $doc_number = get_post_meta($doc_id, 'doc_number', true);
-                            $doc_title = get_post_meta($doc_id, 'doc_title', true);
-                            $doc_revision = get_post_meta($doc_id, 'doc_revision', true);
-                            $todo_id = get_post_meta($doc_id, 'todo_status', true);
-                            $todo_status = ($todo_id) ? get_the_title($todo_id) : 'Draft';
-                            $todo_status = ($todo_id==-1) ? '文件發行' : $todo_status;
-                            $todo_status = ($todo_id==-2) ? '文件廢止' : $todo_status;
+                            $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
+                            $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
+                            $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
                             ?>
-                            <tr id="edit-quotation-<?php echo $doc_id;?>">
-                                <td style="text-align:center;"><?php echo esc_html($doc_number);?></td>
-                                <td><?php echo esc_html($doc_title);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($doc_revision);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($todo_status);?></td>
+                            <tr id="edit-quotation-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html(get_the_date());?></td>
+                                <td><?php echo esc_html($customer_name);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_amount);?></td>
+                                <td><?php echo esc_html($customer_order_remark);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -203,6 +201,38 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
+        function set_quotation_dialog_data() {
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                update_post_meta( $doc_id, 'doc_number', sanitize_text_field($_POST['_doc_number']));
+                update_post_meta( $doc_id, 'doc_title', sanitize_text_field($_POST['_doc_title']));
+                update_post_meta( $doc_id, 'doc_revision', sanitize_text_field($_POST['_doc_revision']));
+                update_post_meta( $doc_id, 'doc_category', sanitize_text_field($_POST['_doc_category']));
+                update_post_meta( $doc_id, 'start_job', sanitize_text_field($_POST['_start_job']));
+                update_post_meta( $doc_id, 'doc_frame', $_POST['_doc_frame']);
+                update_post_meta( $doc_id, 'is_doc_report', sanitize_text_field($_POST['_is_doc_report']));
+                update_post_meta( $doc_id, 'doc_report_start_setting', sanitize_text_field($_POST['_doc_report_start_setting']));
+                update_post_meta( $doc_id, 'doc_report_period_time', sanitize_text_field($_POST['_doc_report_period_time']));
+                //update_post_meta( $doc_id, 'doc_report_start_job', sanitize_text_field($_POST['_doc_report_start_job']));
+            } else {
+                $current_user_id = get_current_user_id();
+                $site_id = get_user_meta($current_user_id, 'site_id', true);
+                $new_post = array(
+                    'post_title'    => 'No title',
+                    'post_content'  => 'Your post content goes here.',
+                    'post_status'   => 'publish',
+                    'post_author'   => $current_user_id,
+                    'post_type'     => 'customer-order',
+                );    
+                $post_id = wp_insert_post($new_post);
+                //update_post_meta( $post_id, 'site_id', $site_id);
+                update_post_meta( $post_id, 'customer_name', 'New customer');
+                //update_post_meta( $post_id, 'doc_revision', 'A');
+                //update_post_meta( $post_id, 'doc_report_period_time', 1);
+            }
+            wp_send_json($response);
+        }
                 
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;

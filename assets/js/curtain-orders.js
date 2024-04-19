@@ -403,3 +403,113 @@ jQuery(document).ready(function($) {
     $("#sub-items-dialog").dialog('close');        
 
 });
+
+// display quotation
+jQuery(document).ready(function($) {
+    function copyToClipboard(text) {
+        // Create a temporary textarea element
+        var textarea = $("<textarea>")
+            .val(text)
+            .appendTo("body")
+            .select();
+    
+        // Execute the copy command
+        document.execCommand("copy");
+    
+        // Remove the textarea from the document
+        textarea.remove();
+    }
+    
+    $("#site-title").on("change", function () {
+        new_site_title = $(this).val();
+        if (window.confirm("Are you sure you want to use "+new_site_title+" as your new site title?")) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'set_new_site_by_title',
+                    '_new_site_title': new_site_title,
+                },
+                success: function (response) {
+                    $("#site-id").val(response.new_site_id);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });        
+        }
+    });
+    
+    $("#initial-next-step").on("click", function () {
+        doc_category = $("#doc-category").val();
+        count_category = $("#count-category").val();
+        if (window.confirm("Are you sure you want to add "+count_category+" "+ doc_category+" new documents?")) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'set_initial_iso_document',
+                    '_doc_category_id': $("#doc-category-id").val(),
+                    '_doc_site_id': $("#doc-site-id").val(),
+                },
+                success: function (response) {
+                    console.log(response)
+                    //window.location.replace("/display-profiles/?_initial=true");
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+    
+        }
+    });
+
+    $("#select-category").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#search-document").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#document-setting").on("click", function () {
+        $("#document-setting-dialog").dialog('open');
+    });
+
+    $("#document-setting-dialog").dialog({
+        width: 450,
+        modal: true,
+        autoOpen: false,
+    });
+
+    $('[id^="edit-quotation-"]').on("click", function () {
+        const order_id = this.id.substring(14);
+        get_document_dialog_data(order_id)
+    });            
+
+    $("#new-quotation").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_quotation_dialog_data',
+                //'_site_id': $("#site-id").val(),
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+});
