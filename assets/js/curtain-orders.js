@@ -568,7 +568,11 @@ jQuery(document).ready(function($) {
                             '_customer_order_id':customer_order_id,
                         },
                         success: function (response) {
-                            window.location.replace(window.location.href);
+                            //window.location.replace(window.location.href);
+                            //get_order_item_list_data(customer_order_id)
+                            $('#order-item-container').html(response.html_contain);
+                            activate_order_item_list_data(customer_order_id);
+            
                         },
                         error: function(error){
                             console.error(error);                    
@@ -604,5 +608,24 @@ jQuery(document).ready(function($) {
         });    
     });
 
+    function get_order_item_list_data(customer_order_id){
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'get_order_item_list_data',
+            },
+            success: function (response) {
+                $('#fields-container').html(response.html_contain);
+                activate_order_item_list_data(customer_order_id);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+
+    }
 
 });

@@ -282,7 +282,7 @@ if (!class_exists('curtain_orders')) {
         function display_order_item_list($customer_order_id=false) {
             ob_start();
             ?>
-            <div id="fields-container">
+            <div id="order-item-container">
             <fieldset>
                 <table style="width:100%;">
                     <thead>
@@ -340,23 +340,9 @@ if (!class_exists('curtain_orders')) {
             $query = new WP_Query($args);
             return $query;
         }
-/*        
-        function retrieve_order_item_data($customer_order_id=false) {
-            $args = array(
-                'post_type'      => 'order-item',
-                'posts_per_page' => -1,
-                'meta_key'       => array(
-                    array(
-                        'key'   => 'customer_order_id',
-                        'value' => $customer_order_id,    
-                    )
-                )
-            );
-            $query = new WP_Query($args);
-            return $query;
-        }
-*/        
+
         function set_order_item_dialog_data() {
+            $response = array();
             if( isset($_POST['_order_item_id']) ) {
                 // Update the quotation data
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
@@ -366,7 +352,6 @@ if (!class_exists('curtain_orders')) {
             } else {
                 $current_user_id = get_current_user_id();
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //$site_id = get_user_meta($current_user_id, 'site_id', true);
                 $new_post = array(
                     'post_title'    => 'No title',
                     'post_content'  => 'Your post content goes here.',
@@ -377,6 +362,7 @@ if (!class_exists('curtain_orders')) {
                 $post_id = wp_insert_post($new_post);
                 update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
                 update_post_meta( $post_id, 'order_item_name', 'New item');
+                $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             }
             wp_send_json($response);
         }
