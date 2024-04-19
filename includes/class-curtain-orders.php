@@ -37,8 +37,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
-            add_action( 'wp_ajax_set_quotation_dialog_data', 'set_quotation_dialog_data' );
-            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', 'set_quotation_dialog_data' );
+            add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
 
         }
 
