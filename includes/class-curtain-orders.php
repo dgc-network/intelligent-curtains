@@ -175,6 +175,7 @@ if (!class_exists('curtain_orders')) {
                 'post_type'      => 'customer-order',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+/*                
                 //'posts_per_page' => 30,
                 //'paged'          => (get_query_var('paged')) ? get_query_var('paged') : 1,
                 'meta_query'     => array(
@@ -195,6 +196,7 @@ if (!class_exists('curtain_orders')) {
                 'orderby'        => 'meta_value',
                 'meta_key'       => 'doc_number',
                 'order'          => 'ASC',
+*/                
             );
         
             $query = new WP_Query($args);
