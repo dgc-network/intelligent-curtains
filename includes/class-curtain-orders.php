@@ -280,7 +280,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
-            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
             <div id="order-item-container">
