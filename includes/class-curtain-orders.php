@@ -81,7 +81,6 @@ if (!class_exists('curtain_orders')) {
                     </div>
                     <div style="text-align:right; display:flex;">
                         <input type="text" id="search-document" style="display:inline" placeholder="Search..." />
-                        <span id="document-setting" style="margin-left:5px;" class="dashicons dashicons-admin-generic button"></span>
                     </div>
                 </div>
         
@@ -114,7 +113,7 @@ if (!class_exists('curtain_orders')) {
                             $todo_status = ($todo_id==-1) ? '文件發行' : $todo_status;
                             $todo_status = ($todo_id==-2) ? '文件廢止' : $todo_status;
                             ?>
-                            <tr id="edit-document-<?php echo $doc_id;?>">
+                            <tr id="edit-quotation-<?php echo $doc_id;?>">
                                 <td style="text-align:center;"><?php echo esc_html($doc_number);?></td>
                                 <td><?php echo esc_html($doc_title);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($doc_revision);?></td>
@@ -127,7 +126,7 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="new-document" class="button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <div id="new-quotation" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <?php
                     // Display pagination links
                     echo '<div class="pagination">';
