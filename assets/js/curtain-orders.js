@@ -569,7 +569,7 @@ jQuery(document).ready(function($) {
                 dataType: "json",
                 data: {
                     'action': 'set_order_item_dialog_data',
-                    'customer_order_id':$("#customer-order-id").val(),
+                    '_customer_order_id':$("#customer-order-id").val(),
                 },
                 success: function (response) {
                     window.location.replace(window.location.href);
