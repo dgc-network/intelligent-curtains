@@ -234,8 +234,8 @@ if (!class_exists('curtain_orders')) {
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php echo $this->display_quotation_detail($customer_order_id);?>
                 <hr>
-                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px;" />
-                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px;" />
+                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                 </fieldset>
                 <?php
                 $html = ob_get_clean();
@@ -276,7 +276,7 @@ if (!class_exists('curtain_orders')) {
             }
             wp_send_json($response);
         }
-                
+
         function display_quotation_detail($customer_order_id=false) {
             ob_start();
             ?>
@@ -297,15 +297,22 @@ if (!class_exists('curtain_orders')) {
                         if ($query->have_posts()) {
                             while ($query->have_posts()) : $query->the_post();
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_name', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_title', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_type', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'listing_style', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_name', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_description', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_qty', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_amount', true)).'</td>';
                                 echo '</tr>';
                             endwhile;
                             wp_reset_postdata();
                         }
                         ?>
+                        <tr>
+                            <th><?php echo __( '', 'your-text-domain' );?></th>
+                            <th><?php echo __( '', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Total', 'your-text-domain' );?></th>
+                            <th><?php echo $customer_order_amount;?></th>
+                        </tr>
+
                     </tbody>
                 </table>
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
@@ -366,7 +373,32 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
-        
+        function set_order_item_dialog_data() {
+            if( isset($_POST['_order_item_id']) ) {
+                // Update the quotation data
+                $order_item_id = sanitize_text_field($_POST['_order_item_id']);
+                update_post_meta( $order_item_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
+                update_post_meta( $order_item_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                update_post_meta( $order_item_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
+            } else {
+                $current_user_id = get_current_user_id();
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                //$site_id = get_user_meta($current_user_id, 'site_id', true);
+                $new_post = array(
+                    'post_title'    => 'No title',
+                    'post_content'  => 'Your post content goes here.',
+                    'post_status'   => 'publish',
+                    'post_author'   => $current_user_id,
+                    'post_type'     => 'order-item',
+                );    
+                $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
+                update_post_meta( $post_id, 'order_item_name', 'New item');
+            }
+            wp_send_json($response);
+        }
+
+
         
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
