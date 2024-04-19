@@ -217,7 +217,7 @@ if (!class_exists('curtain_orders')) {
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <?php //echo $this->display_quotation_detail($customer_order_id);?>
+                <?php echo $this->display_quotation_detail($customer_order_id);?>
                 <hr>
                 <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px;" />
                 <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px;" />
@@ -243,16 +243,9 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                update_post_meta( $doc_id, 'doc_number', sanitize_text_field($_POST['_doc_number']));
-                update_post_meta( $doc_id, 'doc_title', sanitize_text_field($_POST['_doc_title']));
-                update_post_meta( $doc_id, 'doc_revision', sanitize_text_field($_POST['_doc_revision']));
-                update_post_meta( $doc_id, 'doc_category', sanitize_text_field($_POST['_doc_category']));
-                update_post_meta( $doc_id, 'start_job', sanitize_text_field($_POST['_start_job']));
-                update_post_meta( $doc_id, 'doc_frame', $_POST['_doc_frame']);
-                update_post_meta( $doc_id, 'is_doc_report', sanitize_text_field($_POST['_is_doc_report']));
-                update_post_meta( $doc_id, 'doc_report_start_setting', sanitize_text_field($_POST['_doc_report_start_setting']));
-                update_post_meta( $doc_id, 'doc_report_period_time', sanitize_text_field($_POST['_doc_report_period_time']));
-                //update_post_meta( $doc_id, 'doc_report_start_job', sanitize_text_field($_POST['_doc_report_start_job']));
+                update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
+                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
             } else {
                 $current_user_id = get_current_user_id();
                 $site_id = get_user_meta($current_user_id, 'site_id', true);
@@ -264,14 +257,52 @@ if (!class_exists('curtain_orders')) {
                     'post_type'     => 'customer-order',
                 );    
                 $post_id = wp_insert_post($new_post);
-                //update_post_meta( $post_id, 'site_id', $site_id);
                 update_post_meta( $post_id, 'customer_name', 'New customer');
-                //update_post_meta( $post_id, 'doc_revision', 'A');
-                //update_post_meta( $post_id, 'doc_report_period_time', 1);
             }
             wp_send_json($response);
         }
                 
+        function display_quotation_detail($customer_order_id=false) {
+            ob_start();
+            ?>
+            <div id="fields-container">
+            <fieldset>
+                <table style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( 'Item', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Description', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'QTY', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Amount', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody id="sortable-doc-field-list">
+                        <?php
+                        $query = retrieve_order_item_data($customer_order_id);
+                        if ($query->have_posts()) {
+                            while ($query->have_posts()) : $query->the_post();
+                                echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_name', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_title', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'field_type', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'listing_style', true)).'</td>';
+                                echo '</tr>';
+                            endwhile;
+                            wp_reset_postdata();
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+            </fieldset>
+            </div>
+            <?php //display_order_item_dialog();?>
+            <?php
+            $html = ob_get_clean();
+            return $html;    
+        }
+        
+        
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
