@@ -250,7 +250,7 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if (isset($_POST['_customer_order_id'])) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+                //$response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
