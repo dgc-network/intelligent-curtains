@@ -9,9 +9,8 @@ if (!class_exists('curtain_orders')) {
         private $_wp_page_postid;
         private $see_more;
         private $curtain_agent_id;
-        /**
-         * Class constructor
-         */
+
+        // Class constructor
         public function __construct() {
             $this->create_tables();
             $this->_wp_page_title = 'Orders';
@@ -37,8 +36,113 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_sub_items_dialog_get_data', array( $this, 'sub_items_dialog_get_data' ) );
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
+            add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
         }
 
+        // Register doc report post type
+        function register_customer_order_post_type() {
+            $labels = array(
+                'menu_name'     => _x('customer-order', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'customer-orders'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                'show_in_menu'  => false,
+            );
+            register_post_type( 'customer-order', $args );
+        }
+        //add_action('init', 'register_doc_report_post_type');
+        
+        function display_quotation_list() {
+            if (isset($_GET['_is_admin'])) {
+                echo '<input type="hidden" id="is-admin" value="1" />';
+            }
+            $current_user_id = get_current_user_id();
+            $site_id = get_user_meta($current_user_id, 'site_id', true);
+            $image_url = get_post_meta($site_id, 'image_url', true);
+            ?>
+            <div class="ui-widget" id="result-container">
+            <img src="<?php echo esc_attr($image_url)?>" style="object-fit:cover; width:30px; height:30px; margin-left:5px;" />
+            <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
+            <fieldset>
+                <div id="document-setting-dialog" title="Document setting" style="display:none">
+                <fieldset>
+                    <input type="hidden" id="site-id" value="<?php echo $site_id;?>" />
+                    <label for="site-title"> Site: </label>
+                    <input type="text" id="site-title" value="<?php echo get_the_title($site_id);?>" class="text ui-widget-content ui-corner-all" disabled />
+                </fieldset>
+                </div>
+            
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <select id="select-category"><?php //echo select_doc_category_option_data($_GET['_category']);?></select>
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-document" style="display:inline" placeholder="Search..." />
+                        <span id="document-setting" style="margin-left:5px;" class="dashicons dashicons-admin-generic button"></span>
+                    </div>
+                </div>
+        
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '客戶', 'your-text-domain' );?></th>
+                            <th><?php echo __( '金額', 'your-text-domain' );?></th>
+                            <th><?php echo __( '備註', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = retrieve_quotation_data($current_page);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $doc_id = (int) get_the_ID();
+                            $doc_number = get_post_meta($doc_id, 'doc_number', true);
+                            $doc_title = get_post_meta($doc_id, 'doc_title', true);
+                            $doc_revision = get_post_meta($doc_id, 'doc_revision', true);
+                            $todo_id = get_post_meta($doc_id, 'todo_status', true);
+                            $todo_status = ($todo_id) ? get_the_title($todo_id) : 'Draft';
+                            $todo_status = ($todo_id==-1) ? '文件發行' : $todo_status;
+                            $todo_status = ($todo_id==-2) ? '文件廢止' : $todo_status;
+                            ?>
+                            <tr id="edit-document-<?php echo $doc_id;?>">
+                                <td style="text-align:center;"><?php echo esc_html($doc_number);?></td>
+                                <td><?php echo esc_html($doc_title);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($doc_revision);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($todo_status);?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <div id="new-document" class="button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <?php
+                    // Display pagination links
+                    echo '<div class="pagination">';
+                    if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    echo '</div>';
+                ?>
+            </fieldset>
+            </div>
+            <?php
+        }
+                
+        
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
@@ -144,7 +248,7 @@ if (!class_exists('curtain_orders')) {
                 );
             }
 
-            //* Print Customer Order */
+            // Print Customer Order
             if( isset($_POST['_order_status_submit']) ) {
                 $this->update_customer_orders(
                     array(
@@ -259,7 +363,7 @@ if (!class_exists('curtain_orders')) {
                 return $output;
             }
 
-            //* Customer Orders List */
+            // Customer Orders List
             if( isset($_POST['_customer_orders']) ) {
                 if($user->has_cap('manage_options')){
                     $output  = '<h2>Customer Orders - All</h2>';
@@ -306,7 +410,7 @@ if (!class_exists('curtain_orders')) {
                 return $output;
             }
 
-            //* Checkout */
+            // Checkout
             if( isset($_POST['_checkout_submit']) ) {
                 $customer_order_number=time();
                 $customer_order_amount=0;
@@ -357,7 +461,7 @@ if (!class_exists('curtain_orders')) {
                 $this->order_status_notice($customer_order_number, 'order01');
             }
             
-            /** Shopping Cart Item Create and Editing*/
+            // Shopping Cart Item Create and Editing
             if( isset($_POST['_create']) ) {
                 $width = 1;
                 $height = 1;
@@ -404,7 +508,10 @@ if (!class_exists('curtain_orders')) {
                 );
             }
 
-            /** Shopping Cart List */
+            // 2024-4-18 Wilson has requested to use the Quotation instead of the Shopping Cart List
+            $this->display_quotation_list();
+
+            // Shopping Cart List
             $output  = '<h2>Shopping Cart - '.$curtain_agents->get_name($this->curtain_agent_id).'</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -477,7 +584,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
 
-            /** Order Item Dialog */
+            // Order Item Dialog
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="order-item-id">';
@@ -498,7 +605,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</fieldset>';
             $output .= '</div>';
 
-            /** Sub Items Dialog */
+            // Sub Items Dialog
             $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
             $output .= '<thead><tr class="ui-widget-header ">';
