@@ -562,6 +562,26 @@ jQuery(document).ready(function($) {
             }
         });
 
+        $("#new-order-item").on("click", function() {
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'set_order_item_dialog_data',
+                    'customer_order_id':$("#customer-order-id").val(),
+                },
+                success: function (response) {
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+        });
+    
+
     });            
 
     $("#new-quotation").on("click", function() {
@@ -582,22 +602,4 @@ jQuery(document).ready(function($) {
         });    
     });
 
-    $("#new-order-item").on("click", function() {
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'set_order_item_dialog_data',
-                'customer_order_id':$("#customer-order-id").val(),
-            },
-            success: function (response) {
-                window.location.replace(window.location.href);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-    });
 });
