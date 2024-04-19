@@ -5,9 +5,9 @@
  * Description: The leading web api plugin for pig system by shortcode
  * Author: dgc.network
  * Author URI: https://dgc.network/
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires at least: 6.0
- * Tested up to: 6.0.2
+ * Tested up to: 6.5.2
  * 
  * Text Domain: intelligent-curtains
  * Domain Path: /languages/

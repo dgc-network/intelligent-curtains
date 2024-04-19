@@ -309,14 +309,15 @@ if (!class_exists('curtain_orders')) {
                             wp_reset_postdata();
                         }
                         ?>
-                        <tr>
-                            <th><?php echo __( '', 'your-text-domain' );?></th>
-                            <th><?php echo __( '', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Total', 'your-text-domain' );?></th>
-                            <th><?php echo $customer_order_amount;?></th>
-                        </tr>
-
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><?php echo __( 'Sum', 'your-text-domain' );?></th>
+                            <td]><?php echo $customer_order_amount;?></th>
+                        </tr>
+                    </tfoot>
                 </table>
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
             </fieldset>
