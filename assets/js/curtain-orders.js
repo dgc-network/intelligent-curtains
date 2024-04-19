@@ -556,7 +556,7 @@ jQuery(document).ready(function($) {
                         });
                     }
                 });
-
+/*
                 $("#new-order-item").on("click", function() {
                     $.ajax({
                         type: 'POST',
