@@ -378,6 +378,7 @@ if (!class_exists('curtain_orders')) {
                 $order_item_remark = get_post_meta($order_item_id, 'order_item_remark', true);
                 ob_start();
                 ?>
+                <div id="order-item-dialog" title="Order Item dialog" style="display:none">
                 <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo esc_attr($order_item_id);?>" />
                 <label for="order-item-name"><?php echo __( '產品名稱', 'your-text-domain' );?></label>
@@ -390,6 +391,7 @@ if (!class_exists('curtain_orders')) {
                 <input type="button" id="save-order-item" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                 <input type="button" id="del-order-item" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                 </fieldset>
+                </div>
                 <?php
                 $html = ob_get_clean();
                 return $html;
