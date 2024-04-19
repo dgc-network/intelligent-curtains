@@ -326,6 +326,21 @@ if (!class_exists('curtain_orders')) {
             return $html;    
         }
         
+        function retrieve_order_item_data($customer_order_id = false) {
+            $args = array(
+                'post_type'      => 'order-item',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array(
+                        'key'   => 'customer_order_id',
+                        'value' => $customer_order_id,    
+                    )
+                )
+            );
+            $query = new WP_Query($args);
+            return $query;
+        }
+/*        
         function retrieve_order_item_data($customer_order_id=false) {
             $args = array(
                 'post_type'      => 'order-item',
@@ -336,45 +351,11 @@ if (!class_exists('curtain_orders')) {
                         'value' => $customer_order_id,    
                     )
                 )
-                //'meta_key'       => 'sorting_key',
-                //'orderby'        => 'meta_value',
-                //'order'          => 'ASC',
             );
-/*        
-            if (!empty($params['doc_id'])) {
-                $args['meta_query'][] = array(
-                    'key'   => 'doc_id',
-                    'value' => $params['doc_id'],
-                );
-            }
-        
-            if (!empty($params['site_id'])) {
-                $args['meta_query'][] = array(
-                    'key'   => 'site_id',
-                    'value' => $params['site_id'],
-                );
-            }
-        
-            if (!empty($params['is_listing'])) {
-                $args['meta_query'][] = array(
-                    'key'     => 'listing_style',
-                    'value'   => '',
-                    'compare' => '!=',
-                );
-            }
-        
-            if (!empty($params['is_editing'])) {
-                $args['meta_query'][] = array(
-                    'key'     => 'field_type',
-                    'value'   => '',
-                    'compare' => '!=',
-                );
-            }
-*/        
             $query = new WP_Query($args);
             return $query;
         }
-        
+*/        
         function set_order_item_dialog_data() {
             if( isset($_POST['_order_item_id']) ) {
                 // Update the quotation data
