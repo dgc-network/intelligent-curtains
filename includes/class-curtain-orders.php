@@ -65,7 +65,6 @@ if (!class_exists('curtain_orders')) {
             $image_url = get_post_meta($site_id, 'image_url', true);
             ?>
             <div class="ui-widget" id="result-container">
-            <img src="<?php echo esc_attr($image_url)?>" style="object-fit:cover; width:30px; height:30px; margin-left:5px;" />
             <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
             <fieldset>
                 <div id="document-setting-dialog" title="Document setting" style="display:none">
@@ -100,7 +99,7 @@ if (!class_exists('curtain_orders')) {
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
                     $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = retrieve_quotation_data($current_page);
+                    $query = $this->retrieve_quotation_data($current_page);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
         
@@ -141,8 +140,71 @@ if (!class_exists('curtain_orders')) {
             </div>
             <?php
         }
-                
+
+        function retrieve_quotation_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+            // Calculate the offset to retrieve the posts for the current page
+            $offset = ($current_page - 1) * $posts_per_page;
         
+            $current_user_id = get_current_user_id();
+            $site_id = get_user_meta($current_user_id, 'site_id', true);
+            $site_filter = array(
+                'key'     => 'site_id',
+                'value'   => $site_id,
+                'compare' => '=',
+            );
+        
+            $select_category = sanitize_text_field($_GET['_category']);
+            $category_filter = array(
+                'key'     => 'doc_category',
+                'value'   => $select_category,
+                'compare' => '=',
+            );
+        
+            $search_query = sanitize_text_field($_GET['_search']);
+            $number_filter = array(
+                'key'     => 'doc_number',
+                'value'   => $search_query,
+                'compare' => 'LIKE',
+            );
+            $title_filter = array(
+                'key'     => 'doc_title',
+                'value'   => $search_query,
+                'compare' => 'LIKE',
+            );
+        
+            $args = array(
+                'post_type'      => 'customer-order',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+                //'posts_per_page' => 30,
+                //'paged'          => (get_query_var('paged')) ? get_query_var('paged') : 1,
+                'meta_query'     => array(
+                    'relation' => 'OR',
+                    array(
+                        'relation' => 'AND',
+                        ($site_id) ? $site_filter : '',
+                        ($select_category) ? $category_filter : '',
+                        ($search_query) ? $number_filter : '',
+                    ),
+                    array(
+                        'relation' => 'AND',
+                        ($site_id) ? $site_filter : '',
+                        ($select_category) ? $category_filter : '',
+                        ($search_query) ? $title_filter : '',
+                    )
+                ),
+                'orderby'        => 'meta_value',
+                'meta_key'       => 'doc_number',
+                'order'          => 'ASC',
+            );
+        
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
+                
         public function order_status_notice($customer_order_number, $customer_order_status) {
             global $wpdb;
             $system_status = new system_status();
