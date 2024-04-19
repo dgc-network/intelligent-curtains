@@ -253,7 +253,10 @@ if (!class_exists('curtain_service')) {
                         'display_name' => $_POST['_display_name'], 
                         'user_email' => $_POST['_user_email'], 
                     ) );
+                    /*
                     ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                    */
+                    ?><script>window.location.replace("https://aihome.tw/after_service/");</script><?php
                 }
 
                 if( isset($_GET['_menu']) ) {
@@ -315,8 +318,11 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                     return $output;    
                 }
+                    /*
+                    ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                    */
 
-                ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
+                ?><script>window.location.replace("https://aihome.tw/after_service/");</script><?php
 
                 //return wp_redirect(home_url());
 
@@ -339,7 +345,8 @@ if (!class_exists('curtain_service')) {
                     }
 
                     $link_uri = get_option('Service').'?_id='.$_GET['_id'].'&_agent_no='.$_GET['_agent_no'];
-                    $link_uri = home_url().'/support/after_service/';
+                    //$link_uri = home_url().'/support/after_service/';
+                    $link_uri = home_url().'/after_service/';
 
                     $output  = '<div style="text-align:center;">';
                     $output .= '<p>This is an automated process that helps you register for the system. ';
