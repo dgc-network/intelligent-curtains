@@ -225,7 +225,8 @@ if (!class_exists('curtain_orders')) {
         function display_quotation_dialog($customer_order_id=false) {
             if ($customer_order_id) {
                 $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
-                $customer_order_remark = get_post_meta($customer_order_id, 'order_remark', true);
+                $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
+                $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
                 ob_start();
                 ?>
                 <fieldset>
@@ -265,7 +266,6 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
             } else {
                 $current_user_id = get_current_user_id();
-                $site_id = get_user_meta($current_user_id, 'site_id', true);
                 $new_post = array(
                     'post_title'    => 'No title',
                     'post_content'  => 'Your post content goes here.',
@@ -280,6 +280,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
+            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
             <div id="order-item-container">
@@ -320,7 +321,7 @@ if (!class_exists('curtain_orders')) {
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
             </fieldset>
             </div>
-            <?php //display_order_item_dialog();?>
+            <?php display_order_item_dialog();?>
             <?php
             $html = ob_get_clean();
             return $html;    
@@ -346,9 +347,11 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_order_item_id']) ) {
                 // Update the quotation data
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                update_post_meta( $order_item_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
-                update_post_meta( $order_item_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                update_post_meta( $order_item_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
+                update_post_meta( $order_item_id, 'order_item_name', sanitize_text_field($_POST['_order_item_name']));
+                update_post_meta( $order_item_id, 'order_item_amount', sanitize_text_field($_POST['_order_item_amount']));
+                update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
+                $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+                $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
@@ -367,6 +370,32 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
+        function display_order_item_dialog($order_item_id=false) {
+            if ($order_item_id) {
+                $order_item_name = get_post_meta($order_item_id, 'order_item_name', true);
+                $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
+                $order_item_amount = get_post_meta($order_item_id, 'order_item_amount', true);
+                $order_item_remark = get_post_meta($order_item_id, 'order_item_remark', true);
+                ob_start();
+                ?>
+                <fieldset>
+                <input type="hidden" id="order-item-id" value="<?php echo esc_attr($order_item_id);?>" />
+                <label for="order-item-name"><?php echo __( '產品名稱', 'your-text-domain' );?></label>
+                <input type="text" id="order-item-name" value="<?php echo esc_html($order_item_name);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
+                <input type="text" id="order-item-qty" value="<?php echo esc_html($order_item_qty);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="order-item-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                <textarea id="order-item-remark" rows="3" style="width:100%;"><?php echo $order_item_remark;?></textarea>
+                <hr>
+                <input type="button" id="save-order-item" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="del-order-item" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                </fieldset>
+                <?php
+                $html = ob_get_clean();
+                return $html;
+            }
+        }
+        
 
         
         public function order_status_notice($customer_order_number, $customer_order_status) {
