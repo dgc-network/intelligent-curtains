@@ -37,6 +37,7 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
+            add_action( 'init', array( $this, 'register_order_item_post_type' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
@@ -59,8 +60,22 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'customer-order', $args );
         }
-        //add_action('init', 'register_doc_report_post_type');
-        
+
+        function register_order_item_post_type() {
+            $labels = array(
+                'menu_name'     => _x('order-item', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'order-items'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                'show_in_menu'  => false,
+            );
+            register_post_type( 'order-item', $args );
+        }
+
         function display_quotation_list() {
             if (isset($_GET['_is_admin'])) {
                 echo '<input type="hidden" id="is-admin" value="1" />';
@@ -278,7 +293,7 @@ if (!class_exists('curtain_orders')) {
                     </thead>
                     <tbody id="sortable-doc-field-list">
                         <?php
-                        $query = retrieve_order_item_data($customer_order_id);
+                        $query = $this->retrieve_order_item_data($customer_order_id);
                         if ($query->have_posts()) {
                             while ($query->have_posts()) : $query->the_post();
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
@@ -301,6 +316,56 @@ if (!class_exists('curtain_orders')) {
             $html = ob_get_clean();
             return $html;    
         }
+        
+        function retrieve_order_item_data($customer_order_id=false) {
+            $args = array(
+                'post_type'      => 'order-item',
+                'posts_per_page' => -1,
+                'meta_key'       => array(
+                    array(
+                        'key'   => 'customer_order_id',
+                        'value' => $customer_order_id,    
+                    )
+                )
+                //'meta_key'       => 'sorting_key',
+                //'orderby'        => 'meta_value',
+                //'order'          => 'ASC',
+            );
+/*        
+            if (!empty($params['doc_id'])) {
+                $args['meta_query'][] = array(
+                    'key'   => 'doc_id',
+                    'value' => $params['doc_id'],
+                );
+            }
+        
+            if (!empty($params['site_id'])) {
+                $args['meta_query'][] = array(
+                    'key'   => 'site_id',
+                    'value' => $params['site_id'],
+                );
+            }
+        
+            if (!empty($params['is_listing'])) {
+                $args['meta_query'][] = array(
+                    'key'     => 'listing_style',
+                    'value'   => '',
+                    'compare' => '!=',
+                );
+            }
+        
+            if (!empty($params['is_editing'])) {
+                $args['meta_query'][] = array(
+                    'key'     => 'field_type',
+                    'value'   => '',
+                    'compare' => '!=',
+                );
+            }
+*/        
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
         
         
         public function order_status_notice($customer_order_number, $customer_order_status) {
