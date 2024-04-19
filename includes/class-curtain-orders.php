@@ -250,7 +250,7 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if (isset($_POST['_customer_order_id'])) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //$response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
@@ -280,7 +280,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
-            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
             <div id="order-item-container">
@@ -321,7 +321,7 @@ if (!class_exists('curtain_orders')) {
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
             </fieldset>
             </div>
-            <?php display_order_item_dialog();?>
+            <?php $this->display_order_item_dialog();?>
             <?php
             $html = ob_get_clean();
             return $html;    
