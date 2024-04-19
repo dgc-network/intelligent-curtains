@@ -42,6 +42,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
     
         }
 
