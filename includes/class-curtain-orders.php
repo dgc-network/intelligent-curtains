@@ -39,7 +39,9 @@ if (!class_exists('curtain_orders')) {
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
-
+            add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
+    
         }
 
         // Register customer-order post type
@@ -203,6 +205,40 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
+        function display_quotation_dialog($customer_order_id=false) {
+            if ($customer_order_id) {
+                $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+                $customer_order_remark = get_post_meta($customer_order_id, 'order_remark', true);
+                ob_start();
+                ?>
+                <fieldset>
+                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
+                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php //echo $this->display_quotation_detail($customer_order_id);?>
+                <hr>
+                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px;" />
+                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px;" />
+                </fieldset>
+                <?php
+                $html = ob_get_clean();
+                return $html;
+            }
+        }
+        
+        function get_quotation_dialog_data() {
+            $response = array();
+            if (isset($_POST['_customer_order_id'])) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+            } else {
+                $response['html_contain'] = 'Invalid AJAX request!';
+            }
+            wp_send_json($response);
+        }
+
         function set_quotation_dialog_data() {
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data

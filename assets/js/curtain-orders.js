@@ -490,8 +490,78 @@ jQuery(document).ready(function($) {
     });
 
     $('[id^="edit-quotation-"]').on("click", function () {
-        const order_id = this.id.substring(14);
-        get_document_dialog_data(order_id)
+        const customer_order_id = this.id.substring(15);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_quotation_dialog_data',
+                _customer_order_id: customer_order_id,
+                _is_admin: $("#is-admin").val()
+            },
+            success: function (response) {
+                if (response.html_contain === undefined || response.html_contain === null) {
+                    alert("The document is in To-do process. Please wait for publishing.");
+                } else {
+                    $('#result-container').html(response.html_contain);
+                }
+
+                $(".datepicker").datepicker({
+                    onSelect: function(dateText, inst) {
+                        $(this).val(dateText);
+                    }
+                });            
+
+                $("#save-quotation").on("click", function() {
+                    const ajaxData = {
+                        'action': 'set_quotation_dialog_data',
+                    };
+                    ajaxData['_customer_order_id'] = customer_order_id;
+                    ajaxData['_customer_name'] = $("#customer-name").val();
+                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+                    ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
+                            
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: ajaxData,
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                });
+
+                $("#del-quotation").on("click", function() {
+                    if (window.confirm("Are you sure you want to delete this quotation?")) {
+                        $.ajax({
+                            type: 'POST',
+                            url: ajax_object.ajax_url,
+                            dataType: "json",
+                            data: {
+                                'action': 'del_quotation_dialog_data',
+                                '_customer_order_id': customer_order_id,
+                            },
+                            success: function (response) {
+                                window.location.replace(window.location.href);
+                            },
+                            error: function(error){
+                                console.error(error);
+                                alert(error);
+                            }
+                        });
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
     });            
 
     $("#new-quotation").on("click", function() {
