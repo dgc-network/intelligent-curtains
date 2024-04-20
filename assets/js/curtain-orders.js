@@ -180,7 +180,64 @@ jQuery(document).ready(function($) {
                     $("#order-item-dialog-2024").dialog('open');
                 });
 
-                
+                $("#order-item-dialog-2024").dialog({
+                    width: 500,
+                    modal: true,
+                    autoOpen: false,
+                    buttons: {
+                        "Save": function() {
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: ajax_object.ajax_url,
+                                dataType: "json",
+                                data: {
+                                    'action': 'set_order_item_dialog_data',
+                                    '_order_item_id': $("#order-item-id").val(),
+                                    '_curtain_category_id': $("#curtain-category-id").val(),
+                                    '_curtain_model_id': $("#curtain-model-id").val(),
+                                    '_curtain_remote_id': $("#curtain-remote-id").val(),
+                                    '_curtain_specification_id': $("#curtain-specification-id").val(),
+                                    '_curtain_width': $("#curtain-width").val(),
+                                    '_curtain_height': $("#curtain-height").val(),
+                                    '_order_item_qty': $("#order-item-qty").val(),
+                                },
+                                success: function (response) {
+                                    $('#order-item-container').html(response.html_contain);
+                                    //window.location.replace("?_update=");
+                                },
+                                error: function(error){
+                                    console.error(error);
+                                    alert(error);
+                                }
+                            });
+                        },
+                        "Delete": function() {
+                            if (window.confirm("Are you sure you want to delete this item?")) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: ajax_object.ajax_url,
+                                    dataType: "json",
+                                    data: {
+                                        'action': 'del_order_item_dialog_data',
+                                        '_order_item_id': order_item_id,
+                                    },
+                                    success: function (response) {
+                                        $('#order-item-container').html(response.html_contain);
+                                        //window.location.replace(window.location.href);
+                                    },
+                                    error: function(error){
+                                        console.error(error);
+                                        alert(error);
+                                    }
+                                });
+                            }
+            
+                            //$(this).dialog("close");
+                        }
+                    }
+                });
+                //$("#order-item-dialog").dialog('close');        
+                            
             },
             error: function (error) {
                 console.log(error);
@@ -226,63 +283,6 @@ jQuery(document).ready(function($) {
 
     }
 
-    $("#order-item-dialog-2024").dialog({
-        width: 500,
-        modal: true,
-        autoOpen: false,
-        buttons: {
-            "Save": function() {
-                jQuery.ajax({
-                    type: 'POST',
-                    url: ajax_object.ajax_url,
-                    dataType: "json",
-                    data: {
-                        'action': 'set_order_item_dialog_data',
-                        '_order_item_id': $("#order-item-id").val(),
-                        '_curtain_category_id': $("#curtain-category-id").val(),
-                        '_curtain_model_id': $("#curtain-model-id").val(),
-                        '_curtain_remote_id': $("#curtain-remote-id").val(),
-                        '_curtain_specification_id': $("#curtain-specification-id").val(),
-                        '_curtain_width': $("#curtain-width").val(),
-                        '_curtain_height': $("#curtain-height").val(),
-                        '_order_item_qty': $("#order-item-qty").val(),
-                    },
-                    success: function (response) {
-                        $('#order-item-container').html(response.html_contain);
-                        //window.location.replace("?_update=");
-                    },
-                    error: function(error){
-                        console.error(error);
-                        alert(error);
-                    }
-                });
-            },
-            "Delete": function() {
-                if (window.confirm("Are you sure you want to delete this item?")) {
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: {
-                            'action': 'del_order_item_dialog_data',
-                            '_order_item_id': order_item_id,
-                        },
-                        success: function (response) {
-                            $('#order-item-container').html(response.html_contain);
-                            //window.location.replace(window.location.href);
-                        },
-                        error: function(error){
-                            console.error(error);
-                            alert(error);
-                        }
-                    });
-                }
-
-                //$(this).dialog("close");
-            }
-        }
-    });
-    //$("#order-item-dialog").dialog('close');        
 
 
 });
