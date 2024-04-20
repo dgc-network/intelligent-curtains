@@ -1,3 +1,293 @@
+// 2024-4-19 revision
+jQuery(document).ready(function($) {
+    function copyToClipboard(text) {
+        // Create a temporary textarea element
+        var textarea = $("<textarea>")
+            .val(text)
+            .appendTo("body")
+            .select();
+    
+        // Execute the copy command
+        document.execCommand("copy");
+    
+        // Remove the textarea from the document
+        textarea.remove();
+    }
+    
+    $("#site-title").on("change", function () {
+        new_site_title = $(this).val();
+        if (window.confirm("Are you sure you want to use "+new_site_title+" as your new site title?")) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'set_new_site_by_title',
+                    '_new_site_title': new_site_title,
+                },
+                success: function (response) {
+                    $("#site-id").val(response.new_site_id);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });        
+        }
+    });
+    
+    $("#initial-next-step").on("click", function () {
+        doc_category = $("#doc-category").val();
+        count_category = $("#count-category").val();
+        if (window.confirm("Are you sure you want to add "+count_category+" "+ doc_category+" new documents?")) {
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: {
+                    'action': 'set_initial_iso_document',
+                    '_doc_category_id': $("#doc-category-id").val(),
+                    '_doc_site_id': $("#doc-site-id").val(),
+                },
+                success: function (response) {
+                    console.log(response)
+                    //window.location.replace("/display-profiles/?_initial=true");
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+    
+        }
+    });
+
+    $("#select-category").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#search-document").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#document-setting").on("click", function () {
+        $("#document-setting-dialog").dialog('open');
+    });
+
+    $("#document-setting-dialog").dialog({
+        width: 450,
+        modal: true,
+        autoOpen: false,
+    });
+
+    $('[id^="edit-quotation-"]').on("click", function () {
+        const customer_order_id = this.id.substring(15);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_quotation_dialog_data',
+                _customer_order_id: customer_order_id,
+                _is_admin: $("#is-admin").val()
+            },
+            success: function (response) {
+                if (response.html_contain === undefined || response.html_contain === null) {
+                    alert("The document is in To-do process. Please wait for publishing.");
+                } else {
+                    $('#result-container').html(response.html_contain);
+                }
+
+                $(".datepicker").datepicker({
+                    onSelect: function(dateText, inst) {
+                        $(this).val(dateText);
+                    }
+                });            
+
+                $("#save-quotation").on("click", function() {
+                    const ajaxData = {
+                        'action': 'set_quotation_dialog_data',
+                    };
+                    ajaxData['_customer_order_id'] = customer_order_id;
+                    ajaxData['_customer_name'] = $("#customer-name").val();
+                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+                    ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
+                            
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: ajaxData,
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                });
+
+                $("#del-quotation").on("click", function() {
+                    if (window.confirm("Are you sure you want to delete this quotation?")) {
+                        $.ajax({
+                            type: 'POST',
+                            url: ajax_object.ajax_url,
+                            dataType: "json",
+                            data: {
+                                'action': 'del_quotation_dialog_data',
+                                '_customer_order_id': customer_order_id,
+                            },
+                            success: function (response) {
+                                window.location.replace(window.location.href);
+                            },
+                            error: function(error){
+                                console.error(error);
+                                alert(error);
+                            }
+                        });
+                    }
+                });
+
+                $("#new-order-item").on("click", function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'set_order_item_dialog_data',
+                            //'_customer_order_id':$("#customer-order-id").val(),
+                            '_customer_order_id':customer_order_id,
+                        },
+                        success: function (response) {
+                            //window.location.replace(window.location.href);
+                            //get_order_item_list_data(customer_order_id)
+                            $('#order-item-container').html(response.html_contain);
+                            //activate_order_item_list_data(customer_order_id);
+            
+                        },
+                        error: function(error){
+                            console.error(error);                    
+                            alert(error);
+                        }
+                    });    
+                });
+
+                $('[id^="edit-order-item-"]').on("click", function () {
+                    const order_item_id = this.id.substring(16);
+                    $("#order-item-dialog-2024-4-19").dialog('open');
+                });
+
+                
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });            
+
+    $("#new-quotation").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_quotation_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    function get_order_item_list_data(customer_order_id){
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'get_order_item_list_data',
+            },
+            success: function (response) {
+                $('#fields-container').html(response.html_contain);
+                activate_order_item_list_data(customer_order_id);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+
+    }
+
+    $("#order-item-dialog-2024-4-19").dialog({
+        width: 500,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_order_item_dialog_data',
+                        '_order_item_id': $("#order-item-id").val(),
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_curtain_model_id': $("#curtain-model-id").val(),
+                        '_curtain_remote_id': $("#curtain-remote-id").val(),
+                        '_curtain_specification_id': $("#curtain-specification-id").val(),
+                        '_curtain_width': $("#curtain-width").val(),
+                        '_curtain_height': $("#curtain-height").val(),
+                        '_order_item_qty': $("#order-item-qty").val(),
+                    },
+                    success: function (response) {
+                        $('#order-item-container').html(response.html_contain);
+                        //window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_order_item_dialog_data',
+                            '_order_item_id': order_item_id,
+                        },
+                        success: function (response) {
+                            $('#order-item-container').html(response.html_contain);
+                            //window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+
+                //$(this).dialog("close");
+            }
+        }
+    });
+    //$("#order-item-dialog").dialog('close');        
+
+
+});
+
+
 jQuery(document).ready(function($) {
 
     /* Cart Button */
@@ -404,281 +694,3 @@ jQuery(document).ready(function($) {
 
 });
 
-// display quotation
-jQuery(document).ready(function($) {
-    function copyToClipboard(text) {
-        // Create a temporary textarea element
-        var textarea = $("<textarea>")
-            .val(text)
-            .appendTo("body")
-            .select();
-    
-        // Execute the copy command
-        document.execCommand("copy");
-    
-        // Remove the textarea from the document
-        textarea.remove();
-    }
-    
-    $("#site-title").on("change", function () {
-        new_site_title = $(this).val();
-        if (window.confirm("Are you sure you want to use "+new_site_title+" as your new site title?")) {
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'set_new_site_by_title',
-                    '_new_site_title': new_site_title,
-                },
-                success: function (response) {
-                    $("#site-id").val(response.new_site_id);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    alert(error);
-                }
-            });        
-        }
-    });
-    
-    $("#initial-next-step").on("click", function () {
-        doc_category = $("#doc-category").val();
-        count_category = $("#count-category").val();
-        if (window.confirm("Are you sure you want to add "+count_category+" "+ doc_category+" new documents?")) {
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'set_initial_iso_document',
-                    '_doc_category_id': $("#doc-category-id").val(),
-                    '_doc_site_id': $("#doc-site-id").val(),
-                },
-                success: function (response) {
-                    console.log(response)
-                    //window.location.replace("/display-profiles/?_initial=true");
-                    window.location.replace(window.location.href);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    alert(error);
-                }
-            });    
-    
-        }
-    });
-
-    $("#select-category").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
-        $(this).val('');
-    });
-
-    $("#search-document").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
-        $(this).val('');
-    });
-
-    $("#document-setting").on("click", function () {
-        $("#document-setting-dialog").dialog('open');
-    });
-
-    $("#document-setting-dialog").dialog({
-        width: 450,
-        modal: true,
-        autoOpen: false,
-    });
-
-    $('[id^="edit-quotation-"]').on("click", function () {
-        const customer_order_id = this.id.substring(15);
-        $.ajax({
-            url: ajax_object.ajax_url,
-            type: 'post',
-            data: {
-                action: 'get_quotation_dialog_data',
-                _customer_order_id: customer_order_id,
-                _is_admin: $("#is-admin").val()
-            },
-            success: function (response) {
-                if (response.html_contain === undefined || response.html_contain === null) {
-                    alert("The document is in To-do process. Please wait for publishing.");
-                } else {
-                    $('#result-container').html(response.html_contain);
-                }
-
-                $(".datepicker").datepicker({
-                    onSelect: function(dateText, inst) {
-                        $(this).val(dateText);
-                    }
-                });            
-
-                $("#save-quotation").on("click", function() {
-                    const ajaxData = {
-                        'action': 'set_quotation_dialog_data',
-                    };
-                    ajaxData['_customer_order_id'] = customer_order_id;
-                    ajaxData['_customer_name'] = $("#customer-name").val();
-                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
-                    ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
-                            
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: ajaxData,
-                        success: function (response) {
-                            window.location.replace(window.location.href);
-                        },
-                        error: function(error){
-                            console.error(error);
-                            alert(error);
-                        }
-                    });
-                });
-
-                $("#del-quotation").on("click", function() {
-                    if (window.confirm("Are you sure you want to delete this quotation?")) {
-                        $.ajax({
-                            type: 'POST',
-                            url: ajax_object.ajax_url,
-                            dataType: "json",
-                            data: {
-                                'action': 'del_quotation_dialog_data',
-                                '_customer_order_id': customer_order_id,
-                            },
-                            success: function (response) {
-                                window.location.replace(window.location.href);
-                            },
-                            error: function(error){
-                                console.error(error);
-                                alert(error);
-                            }
-                        });
-                    }
-                });
-
-                $("#new-order-item").on("click", function() {
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: {
-                            'action': 'set_order_item_dialog_data',
-                            //'_customer_order_id':$("#customer-order-id").val(),
-                            '_customer_order_id':customer_order_id,
-                        },
-                        success: function (response) {
-                            //window.location.replace(window.location.href);
-                            //get_order_item_list_data(customer_order_id)
-                            $('#order-item-container').html(response.html_contain);
-                            //activate_order_item_list_data(customer_order_id);
-            
-                        },
-                        error: function(error){
-                            console.error(error);                    
-                            alert(error);
-                        }
-                    });    
-                });
-
-                $('[id^="edit-order-item-"]').on("click", function () {
-                    const order_item_id = this.id.substring(16);
-                    $("#order-item-dialog").dialog('open');
-                });
-
-                
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-
-
-    });            
-
-    $("#new-quotation").on("click", function() {
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'set_quotation_dialog_data',
-            },
-            success: function (response) {
-                window.location.replace(window.location.href);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-    });
-
-    function get_order_item_list_data(customer_order_id){
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'get_order_item_list_data',
-            },
-            success: function (response) {
-                $('#fields-container').html(response.html_contain);
-                activate_order_item_list_data(customer_order_id);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-
-    }
-/*
-    $("#order-item-dialog").dialog({
-        width: 500,
-        modal: true,
-        autoOpen: false,
-        buttons: {
-            "Save": function() {
-                var order_item_id = $("#order-item-id").val();
-                var curtain_category_id = $("#curtain-category-id").val();
-                var curtain_model_id = $("#curtain-model-id").val();
-                var curtain_remote_id = $("#curtain-remote-id").val();
-                var curtain_specification_id = $("#curtain-specification-id").val();
-                var curtain_width = $("#curtain-width").val();
-                var curtain_height = $("#curtain-height").val();
-                var order_item_qty = $("#order-item-qty").val();
-
-                jQuery.ajax({
-                    type: 'POST',
-                    url: ajax_object.ajax_url,
-                    dataType: "json",
-                    data: {
-                        'action': 'order_item_dialog_save_data',
-                        '_order_item_id': order_item_id,
-                        '_curtain_category_id': curtain_category_id,
-                        '_curtain_model_id': curtain_model_id,
-                        '_curtain_remote_id': curtain_remote_id,
-                        '_curtain_specification_id': curtain_specification_id,
-                        '_curtain_width': curtain_width,
-                        '_curtain_height': curtain_height,
-                        '_order_item_qty': order_item_qty,
-                    },
-                    success: function (response) {
-                        window.location.replace("?_update=");
-                    },
-                    error: function(error){
-                        alert(error);
-                    }
-                });
-            },
-            "Cancel": function() {
-                $(this).dialog("close");
-            }
-        }
-    });
-    $("#order-item-dialog").dialog('close');        
-*/
-
-
-});

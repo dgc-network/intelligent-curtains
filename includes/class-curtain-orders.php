@@ -36,14 +36,22 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_sub_items_dialog_get_data', array( $this, 'sub_items_dialog_get_data' ) );
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
+
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
-            add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
+            add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+            add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
+            add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
             add_action( 'wp_ajax_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
+            add_action( 'wp_ajax_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
     
         }
 
@@ -76,6 +84,51 @@ if (!class_exists('curtain_orders')) {
                 //'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
+        }
+
+        function register_curtain_category_post_type() {
+            $labels = array(
+                'menu_name'     => _x('curtain-category', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'curtain-categories'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                //'show_in_menu'  => false,
+            );
+            register_post_type( 'curtain-category', $args );
+        }
+
+        function register_curtain_model_post_type() {
+            $labels = array(
+                'menu_name'     => _x('curtain-model', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'curtain-models'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                //'show_in_menu'  => false,
+            );
+            register_post_type( 'curtain-model', $args );
+        }
+
+        function register_curtain_specification_post_type() {
+            $labels = array(
+                'menu_name'     => _x('curtain-specification', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'curtain-specifications'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                //'show_in_menu'  => false,
+            );
+            register_post_type( 'curtain-specification', $args );
         }
 
         function display_quotation_list() {
@@ -275,6 +328,15 @@ if (!class_exists('curtain_orders')) {
                 );    
                 $post_id = wp_insert_post($new_post);
                 update_post_meta( $post_id, 'customer_name', 'New customer');
+            }
+            wp_send_json($response);
+        }
+
+        function del_quotation_dialog_data() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $response = wp_delete_post($customer_order_id, true);
             }
             wp_send_json($response);
         }
