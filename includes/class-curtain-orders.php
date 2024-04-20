@@ -441,7 +441,7 @@ if (!class_exists('curtain_orders')) {
                 $order_item_remark = get_post_meta($order_item_id, 'order_item_remark', true);
                 ob_start();
                 ?>
-                <div id="order-item-dialog-2024-4-19" title="Order Item dialog" style="display:none">
+                <div id="order-item-dialog-2024" title="Order Item dialog" style="display:none">
                 <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo esc_attr($order_item_id);?>" />
                 <label for="order-item-name"><?php echo __( '產品名稱', 'your-text-domain' );?></label>
@@ -461,6 +461,15 @@ if (!class_exists('curtain_orders')) {
             }
         }
         
+        function del_order_item_dialog_data() {
+            $response = array();
+            if( isset($_POST['_order_item_id']) ) {
+                $order_item_id = sanitize_text_field($_POST['_order_item_id']);
+                $response = wp_delete_post($order_item_id, true);
+            }
+            wp_send_json($response);
+        }
+
 
         
         public function order_status_notice($customer_order_number, $customer_order_status) {

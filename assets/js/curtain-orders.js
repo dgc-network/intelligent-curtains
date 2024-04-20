@@ -177,7 +177,7 @@ jQuery(document).ready(function($) {
 
                 $('[id^="edit-order-item-"]').on("click", function () {
                     const order_item_id = this.id.substring(16);
-                    $("#order-item-dialog-2024-4-19").dialog('open');
+                    $("#order-item-dialog-2024").dialog('open');
                 });
 
                 
@@ -226,7 +226,7 @@ jQuery(document).ready(function($) {
 
     }
 
-    $("#order-item-dialog-2024-4-19").dialog({
+    $("#order-item-dialog-2024").dialog({
         width: 500,
         modal: true,
         autoOpen: false,
