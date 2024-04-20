@@ -434,7 +434,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_dialog($order_item_id=false) {
-            if ($order_item_id) {
+            //if ($order_item_id) {
                 $order_item_name = get_post_meta($order_item_id, 'order_item_name', true);
                 $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
                 $order_item_amount = get_post_meta($order_item_id, 'order_item_amount', true);
@@ -458,7 +458,7 @@ if (!class_exists('curtain_orders')) {
                 <?php
                 $html = ob_get_clean();
                 return $html;
-            }
+            //}
         }
         
         function del_order_item_dialog_data() {
