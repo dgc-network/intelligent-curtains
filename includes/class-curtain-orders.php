@@ -81,7 +81,7 @@ if (!class_exists('curtain_orders')) {
                 'rewrite'       => array('slug' => 'order-items'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
         }
@@ -441,7 +441,7 @@ if (!class_exists('curtain_orders')) {
                 $order_item_remark = get_post_meta($order_item_id, 'order_item_remark', true);
                 ob_start();
                 ?>
-                <div id="order-item-dialog" title="Order Item dialog" style="display:none">
+                <div id="order-item-dialog-2024-4-19" title="Order Item dialog" style="display:none">
                 <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo esc_attr($order_item_id);?>" />
                 <label for="order-item-name"><?php echo __( '產品名稱', 'your-text-domain' );?></label>
