@@ -179,7 +179,7 @@ jQuery(document).ready(function($) {
                     const order_item_id = this.id.substring(16);
                     //alert("order item #"+order_item_id)
                     //$("#order-item-dialog").dialog('open');
-                    $("#order-item-dialog-2024").dialog('open');
+                    $("#order-item-div").dialog('open');
 
                 });
 
@@ -288,7 +288,7 @@ jQuery(document).ready(function($) {
     });
     //$("#order-item-dialog").dialog('close');        
 */
-    $("#order-item-dialog-2024").dialog({
+    $("#order-item-div").dialog({
         width: 350,
         modal: true,
         autoOpen: false,
@@ -331,7 +331,7 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    $("#order-item-dialog-2024").dialog('close');        
+    $("#order-item-div").dialog('close');        
 
 
 

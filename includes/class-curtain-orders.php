@@ -435,7 +435,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_dialog($order_item_id=false) {
-            $output = '<div id="order-item-dialog-2024" title="Order Item dialog">';
+            $output = '<div id="order-item-div" title="Order Item dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="order-item-id">';
             $output .= '<label for="curtain-category-id">窗簾種類</label>';
