@@ -504,7 +504,7 @@ if (!class_exists('curtain_orders')) {
                 $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
                 $response["curtain_category_id"] = $this->select_curtain_category_options($curtain_category_id);
             }
-
+/*
             global $wpdb;
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
@@ -531,7 +531,7 @@ if (!class_exists('curtain_orders')) {
             $response['max_width'] = $curtain_categories->get_max_width($row->curtain_category_id);
             $response['min_height'] = $curtain_categories->get_min_height($row->curtain_category_id);
             $response['max_height'] = $curtain_categories->get_max_height($row->curtain_category_id);
-
+*/
             wp_send_json($response);
         }
 
