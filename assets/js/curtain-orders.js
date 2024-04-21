@@ -228,7 +228,7 @@ jQuery(document).ready(function($) {
         });    
 
     }
-
+/*
     $("#order-item-dialog-2024").dialog({
         width: 500,
         modal: true,
@@ -287,6 +287,51 @@ jQuery(document).ready(function($) {
         }
     });
     //$("#order-item-dialog").dialog('close');        
+*/
+    $("#order-item-dialog-2024").dialog({
+        width: 350,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                var order_item_id = $("#order-item-id").val();
+                var curtain_category_id = $("#curtain-category-id").val();
+                var curtain_model_id = $("#curtain-model-id").val();
+                var curtain_remote_id = $("#curtain-remote-id").val();
+                var curtain_specification_id = $("#curtain-specification-id").val();
+                var curtain_width = $("#curtain-width").val();
+                var curtain_height = $("#curtain-height").val();
+                var order_item_qty = $("#order-item-qty").val();
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'order_item_dialog_save_data',
+                        '_order_item_id': order_item_id,
+                        '_curtain_category_id': curtain_category_id,
+                        '_curtain_model_id': curtain_model_id,
+                        '_curtain_remote_id': curtain_remote_id,
+                        '_curtain_specification_id': curtain_specification_id,
+                        '_curtain_width': curtain_width,
+                        '_curtain_height': curtain_height,
+                        '_order_item_qty': order_item_qty,
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $("#order-item-dialog-2024").dialog('close');        
 
 
 
