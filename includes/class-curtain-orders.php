@@ -41,7 +41,7 @@ if (!class_exists('curtain_orders')) {
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
             add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
-            //add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
+            add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
@@ -117,7 +117,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'curtain-model', $args );
         }
-/*
+
         function register_curtain_specification_post_type() {
             $labels = array(
                 'menu_name'     => _x('curtain-specification', 'admin menu', 'textdomain'),
@@ -132,7 +132,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'curtain-specification', $args );
         }
-*/
+
         function display_quotation_list() {
             if (isset($_GET['_is_admin'])) {
                 echo '<input type="hidden" id="is-admin" value="1" />';
@@ -502,7 +502,17 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_order_item_id']) ) {
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
                 $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
+                $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+                $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
                 $response["curtain_category_id"] = $this->select_curtain_category_options($curtain_category_id);
+                $response["curtain_model_id"] = $this->select_curtain_category_options($curtain_model_id);
+                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id);
+                $response["curtain_width"] = get_post_meta($order_item_id, 'curtain_width', true);
+                $response["curtain_height"] = get_post_meta($order_item_id, 'curtain_height', true);
+                $response["order_item_qty"] = get_post_meta($order_item_id, 'order_item_qty', true);
+                $response["order_item_remark"] = get_post_meta($order_item_id, 'order_item_remark', true);
+
+    
             }
 /*
             global $wpdb;
@@ -514,7 +524,7 @@ if (!class_exists('curtain_orders')) {
             $_id = $_POST['_id'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
 
-            //$response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
+            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
             $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_category_id, $row->curtain_model_id );
             $response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
             $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_category_id, $row->curtain_specification_id );
@@ -544,6 +554,38 @@ if (!class_exists('curtain_orders')) {
             //$query = retrieve_doc_category_data();
         
             $options = '<option value="">Select category</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
+        
+        function select_curtain_model_options($selected_option=0, $curtain_category_id=0) {
+            $args = array(
+                'post_type'      => 'curtain-model',
+                'posts_per_page' => -1,
+            );
+            $query = new WP_Query($args);
+        
+            $options = '<option value="">Select model</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
+        
+        function select_curtain_specification_options($selected_option=0, $curtain_category_id=0) {
+            $args = array(
+                'post_type'      => 'curtain-specification',
+                'posts_per_page' => -1,
+            );
+            $query = new WP_Query($args);
+        
+            $options = '<option value="">Select specification</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
