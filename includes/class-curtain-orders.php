@@ -441,16 +441,20 @@ if (!class_exists('curtain_orders')) {
             <div id="order-item-dialog-2024" title="Order Item dialog">
             <fieldset>
             <input type="hidden" id="order-item-id">
-            <label for="curtain-category-id">窗簾種類</label>
+            <label for="curtain-category-id">種類</label>
             <select id="curtain-category-id"></select>
             <label id="curtain-model-label" for="curtain-model-id">型號</label>
             <select id="curtain-model-id"></select>
-            <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
-            <select id="curtain-specification-id"></select>
-            <label id="curtain-width-label" for="curtain-width">寬</label>
-            <input type="text" id="curtain-width" />
-            <label id="curtain-height-label" for="curtain-height">高</label>
-            <input type="text" id="curtain-height" />
+            <div id="spec-div" style="display:none;">
+                <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
+                <select id="curtain-specification-id"></select>
+                <label id="curtain-width-label" for="curtain-width">寬</label>
+                <input type="text" id="curtain-width" />
+                <div id="height-div" style="display:none;">
+                    <label id="curtain-height-label" for="curtain-height">高</label>
+                    <input type="text" id="curtain-height" />
+                </div>
+            </div>
             <label for="order-item-qty">數量</label>
             <input type="text" id="order-item-qty" />
             <label for="order-item-note">備註</label>
@@ -505,14 +509,20 @@ if (!class_exists('curtain_orders')) {
                 $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
                 $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
                 $response["curtain_category_id"] = $this->select_curtain_category_options($curtain_category_id);
-                $response["curtain_model_id"] = $this->select_curtain_category_options($curtain_model_id);
-                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id);
+                $response["curtain_model_id"] = $this->select_curtain_model_options($curtain_model_id, $curtain_category_id);
+                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);
                 $response["curtain_width"] = get_post_meta($order_item_id, 'curtain_width', true);
                 $response["curtain_height"] = get_post_meta($order_item_id, 'curtain_height', true);
                 $response["order_item_qty"] = get_post_meta($order_item_id, 'order_item_qty', true);
-                $response["order_item_remark"] = get_post_meta($order_item_id, 'order_item_remark', true);
+                $response["order_item_note"] = get_post_meta($order_item_id, 'order_item_note', true);
 
     
+            }
+
+            if( isset($_POST['_curtain_category_id']) ) {
+                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+                $response["curtain_model_id"] = $this->select_curtain_model_options($curtain_model_id, $curtain_category_id);
+                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);
             }
 /*
             global $wpdb;

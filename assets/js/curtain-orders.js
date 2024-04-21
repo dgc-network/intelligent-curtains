@@ -187,14 +187,14 @@ jQuery(document).ready(function($) {
                         },
                         success: function (response) {
                             $("#order-item-id").val(order_item_id);
-                            $("#curtain-category-id").empty();
-                            $("#curtain-category-id").append(response.curtain_category_id);
-                            $("#curtain-model-id").empty();
-                            $("#curtain-model-id").append(response.curtain_model_id);
-                            $("#curtain-remote-id").empty();
-                            $("#curtain-remote-id").append(response.curtain_remote_id);
-                            $("#curtain-specification-id").empty();
-                            $("#curtain-specification-id").append(response.curtain_specification_id);
+                            //$("#curtain-category-id").empty();
+                            $("#curtain-category-id").empty().append(response.curtain_category_id);
+                            //$("#curtain-model-id").empty();
+                            $("#curtain-model-id").empty().append(response.curtain_model_id);
+                            //$("#curtain-remote-id").empty();
+                            $("#curtain-remote-id").empty().append(response.curtain_remote_id);
+                            //$("#curtain-specification-id").empty();
+                            $("#curtain-specification-id").empty().append(response.curtain_specification_id);
                             $("#curtain-width").val(response.curtain_width);
                             $("#curtain-height").val(response.curtain_height);
                             $("#order-item-qty").val(response.order_item_qty);
@@ -239,7 +239,30 @@ jQuery(document).ready(function($) {
                                 onSelect: function(dateText, inst) {
                                     $(this).val(dateText);
                                 }
-                            });            
+                            });
+
+                            $("#curtain-category-id").on("change", function () {
+                                var curtain_category_id = $(this).val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: ajax_object.ajax_url,
+                                    dataType: "json",
+                                    data: {
+                                        'action': 'get_order_item_dialog_data',
+                                        '_curtain_category_id': curtain_category_id,
+                                    },
+                                    success: function (response) {
+                                        $("#curtain-model-id").empty().append(response.curtain_model_id);
+                                        $("#curtain-specification-id").empty().append(response.curtain_specification_id);
+                                                    },
+                                    error: function(error){
+                                        console.error(error);                    
+                                        alert(error);
+                                    }
+                                });        
+                            });
+                            
+                        
             
                         },
                         error: function(error){
