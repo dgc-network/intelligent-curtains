@@ -385,6 +385,7 @@ if (!class_exists('curtain_orders')) {
             </fieldset>
             </div>
             <?php //echo $this->display_order_item_dialog();?>
+            <?php $this->display_order_item_dialog();?>
             <?php
             $html = ob_get_clean();
             return $html;    
@@ -434,6 +435,27 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_dialog($order_item_id=false) {
+            $output = '<div id="order-item-dialog-2024" title="Order Item dialog">';
+            $output .= '<fieldset>';
+            $output .= '<input type="hidden" id="order-item-id">';
+            $output .= '<label for="curtain-category-id">窗簾種類</label>';
+            $output .= '<select id="curtain-category-id"></select>';
+            $output .= '<label id="curtain-model-label" for="curtain-model-id">型號</label>';
+            $output .= '<select id="curtain-model-id"></select>';
+            $output .= '<label id="curtain-specification-label" for="curtain-specification-id">規格</label>';
+            $output .= '<select id="curtain-specification-id"></select>';
+            $output .= '<label id="curtain-width-label" for="curtain-width">寬</label>';
+            $output .= '<input type="text" id="curtain-width" />';
+            $output .= '<label id="curtain-height-label" for="curtain-height">高</label>';
+            $output .= '<input type="text" id="curtain-height" />';    
+            $output .= '<label for="order-item-qty">數量</label>';
+            $output .= '<input type="text" id="order-item-qty" />';
+            $output .= '<label for="order-item-note">備註</label>';
+            $output .= '<input type="text" id="order-item-note" />';
+            $output .= '</fieldset>';
+            $output .= '</div>';
+            return $output;
+
             //if ($order_item_id) {
                 $order_item_name = get_post_meta($order_item_id, 'order_item_name', true);
                 $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
@@ -469,6 +491,9 @@ if (!class_exists('curtain_orders')) {
             }
             wp_send_json($response);
         }
+
+
+
 
 
         

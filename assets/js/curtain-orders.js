@@ -178,7 +178,8 @@ jQuery(document).ready(function($) {
                 $('[id^="edit-order-item-"]').on("click", function () {
                     const order_item_id = this.id.substring(16);
                     //alert("order item #"+order_item_id)
-                    $("#order-item-dialog").dialog('open');
+                    //$("#order-item-dialog").dialog('open');
+                    $("#order-item-dialog-2024").dialog('open');
 
                 });
 
