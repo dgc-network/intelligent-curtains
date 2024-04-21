@@ -231,6 +231,7 @@ jQuery(document).ready(function($) {
                                 $('#curtain-height').show();
                             }
             
+                            //$("#order-item-dialog").dialog('open');
                             $("#order-item-dialog-2024").dialog('open');
                             //$("#order-item-div").dialog('open');
 

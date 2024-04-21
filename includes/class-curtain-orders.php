@@ -997,7 +997,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
-
+/*
             // Order Item Dialog
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
@@ -1018,7 +1018,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input type="text" id="order-item-note" />';
             $output .= '</fieldset>';
             $output .= '</div>';
-
+*/
             // Sub Items Dialog
             $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
