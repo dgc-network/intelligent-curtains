@@ -48,6 +48,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_get_order_item_dialog_data', array( $this, 'get_order_item_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_get_order_item_dialog_data', array( $this, 'get_order_item_dialog_data' ) );
             add_action( 'wp_ajax_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
             add_action( 'wp_ajax_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
@@ -492,6 +494,38 @@ if (!class_exists('curtain_orders')) {
                 $response = wp_delete_post($order_item_id, true);
             }
             wp_send_json($response);
+        }
+
+        function get_order_item_dialog_data() {
+            global $wpdb;
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_remotes = new curtain_remotes();
+            $curtain_specifications = new curtain_specifications();
+
+            $_id = $_POST['_id'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
+            $response = array();
+            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
+            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_category_id, $row->curtain_model_id );
+            $response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
+            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_category_id, $row->curtain_specification_id );
+            $response["curtain_width"] = $row->curtain_width;
+            $response["curtain_height"] = $row->curtain_height;
+            $response["order_item_qty"] = $row->order_item_qty;
+            $response["order_item_note"] = $row->order_item_note;
+
+            $response["is_remote_hided"] = $curtain_categories->is_remote_hided($row->curtain_category_id);
+            $response["is_specification_hided"] = $curtain_categories->is_specification_hided($row->curtain_category_id);
+            $response["is_width_hided"] = $curtain_categories->is_width_hided($row->curtain_category_id);
+            $response["is_height_hided"] = $curtain_categories->is_height_hided($row->curtain_category_id);
+            $response['min_width'] = $curtain_categories->get_min_width($row->curtain_category_id);
+            $response['max_width'] = $curtain_categories->get_max_width($row->curtain_category_id);
+            $response['min_height'] = $curtain_categories->get_min_height($row->curtain_category_id);
+            $response['max_height'] = $curtain_categories->get_max_height($row->curtain_category_id);
+
+            echo json_encode( $response );
+            wp_die();
         }
 
 
