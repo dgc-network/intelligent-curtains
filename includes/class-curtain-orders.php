@@ -384,7 +384,7 @@ if (!class_exists('curtain_orders')) {
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
             </fieldset>
             </div>
-            <?php echo $this->display_order_item_dialog();?>
+            <?php //echo $this->display_order_item_dialog();?>
             <?php
             $html = ob_get_clean();
             return $html;    
