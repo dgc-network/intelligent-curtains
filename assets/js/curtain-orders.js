@@ -250,7 +250,7 @@ jQuery(document).ready(function($) {
                     //alert("order item #"+order_item_id)
 
                 });
-
+/*
                 $("#order-item-div").dialog({
                     width: 350,
                     modal: true,
@@ -295,7 +295,7 @@ jQuery(document).ready(function($) {
                     }
                 });
                 $("#order-item-div").dialog('close');        
-            
+*/            
                 $("#order-item-dialog-2024").dialog({
                     width: 500,
                     modal: true,
@@ -308,8 +308,8 @@ jQuery(document).ready(function($) {
                                 dataType: "json",
                                 data: {
                                     'action': 'set_order_item_dialog_data',
-                                    '_order_item_id': order_item_id,
-                                    //'_order_item_id': $("#order-item-id").val(),
+                                    //'_order_item_id': order_item_id,
+                                    '_order_item_id': $("#order-item-id").val(),
                                     '_curtain_category_id': $("#curtain-category-id").val(),
                                     '_curtain_model_id': $("#curtain-model-id").val(),
                                     '_curtain_remote_id': $("#curtain-remote-id").val(),
@@ -336,7 +336,8 @@ jQuery(document).ready(function($) {
                                     dataType: "json",
                                     data: {
                                         'action': 'del_order_item_dialog_data',
-                                        '_order_item_id': order_item_id,
+                                        //'_order_item_id': order_item_id,
+                                        '_order_item_id': $("#order-item-id").val(),
                                     },
                                     success: function (response) {
                                         $('#order-item-container').html(response.html_contain);

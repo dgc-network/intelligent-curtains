@@ -117,7 +117,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'curtain-model', $args );
         }
-
+/*
         function register_curtain_specification_post_type() {
             $labels = array(
                 'menu_name'     => _x('curtain-specification', 'admin menu', 'textdomain'),
@@ -132,7 +132,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'curtain-specification', $args );
         }
-
+*/
         function display_quotation_list() {
             if (isset($_GET['_is_admin'])) {
                 echo '<input type="hidden" id="is-admin" value="1" />';
