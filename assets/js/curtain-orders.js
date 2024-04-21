@@ -231,7 +231,8 @@ jQuery(document).ready(function($) {
                                 $('#curtain-height').show();
                             }
             
-                            $("#order-item-dialog").dialog('open');
+                            //$("#order-item-dialog").dialog('open');
+                            $("#order-item-div").dialog('open');
 
                             $(".datepicker").datepicker({
                                 onSelect: function(dateText, inst) {
@@ -247,7 +248,6 @@ jQuery(document).ready(function($) {
                     });    
 
                     //alert("order item #"+order_item_id)
-                    //$("#order-item-div").dialog('open');
 
                 });
 
