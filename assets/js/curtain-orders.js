@@ -187,13 +187,9 @@ jQuery(document).ready(function($) {
                         },
                         success: function (response) {
                             $("#order-item-id").val(order_item_id);
-                            //$("#curtain-category-id").empty();
                             $("#curtain-category-id").empty().append(response.curtain_category_id);
-                            //$("#curtain-model-id").empty();
                             $("#curtain-model-id").empty().append(response.curtain_model_id);
-                            //$("#curtain-remote-id").empty();
                             $("#curtain-remote-id").empty().append(response.curtain_remote_id);
-                            //$("#curtain-specification-id").empty();
                             $("#curtain-specification-id").empty().append(response.curtain_specification_id);
                             $("#curtain-width").val(response.curtain_width);
                             $("#curtain-height").val(response.curtain_height);

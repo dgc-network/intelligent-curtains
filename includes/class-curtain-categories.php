@@ -19,8 +19,185 @@ if (!class_exists('curtain_categories')) {
             add_action( 'wp_ajax_nopriv_get_category_dialog_data', array( $this, 'get_category_dialog_data' ) );
             add_action( 'wp_ajax_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
+
+            add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+
         }
 
+        function register_curtain_category_post_type() {
+            $labels = array(
+                'menu_name'     => _x('curtain-category', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'curtain-categories'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                //'show_in_menu'  => false,
+            );
+            register_post_type( 'curtain-category', $args );
+        }
+
+        function display_curtain_category_list() {
+            if (isset($_GET['_is_admin'])) {
+                echo '<input type="hidden" id="is-admin" value="1" />';
+            }
+            $current_user_id = get_current_user_id();
+            $site_id = get_user_meta($current_user_id, 'site_id', true);
+            $image_url = get_post_meta($site_id, 'image_url', true);
+            ?>
+            <div class="ui-widget" id="result-container">
+            <h2 style="display:inline;"><?php echo __( '產品類別', 'your-text-domain' );?></h2>
+            <fieldset>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-category" style="display:inline" placeholder="Search..." />
+                    </div>
+                </div>
+        
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '類別', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'spec', 'your-text-domain' );?></th>
+                            <th><?php echo __( '寬度', 'your-text-domain' );?></th>
+                            <th><?php echo __( '高度', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_curtain_category_data($current_page);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $curtain_category_title = get_post_meta(get_the_ID(), 'customer_name', true);
+                            $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                            $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                            ?>
+                            <tr id="edit-category-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
+                                <td><?php echo esc_html($customer_name);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_width);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_height);?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <div id="new-quotation" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <?php
+                    // Display pagination links
+                    echo '<div class="pagination">';
+                    if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    echo '</div>';
+                ?>
+            </fieldset>
+            </div>
+            <?php
+        }
+
+        function retrieve_quotation_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+            // Calculate the offset to retrieve the posts for the current page
+            $offset = ($current_page - 1) * $posts_per_page;
+        
+            $current_user_id = get_current_user_id();
+            $site_id = get_user_meta($current_user_id, 'site_id', true);
+            $site_filter = array(
+                'key'     => 'site_id',
+                'value'   => $site_id,
+                'compare' => '=',
+            );
+        
+            $select_category = sanitize_text_field($_GET['_category']);
+            $category_filter = array(
+                'key'     => 'doc_category',
+                'value'   => $select_category,
+                'compare' => '=',
+            );
+        
+            $search_query = sanitize_text_field($_GET['_search']);
+            $number_filter = array(
+                'key'     => 'doc_number',
+                'value'   => $search_query,
+                'compare' => 'LIKE',
+            );
+            $title_filter = array(
+                'key'     => 'doc_title',
+                'value'   => $search_query,
+                'compare' => 'LIKE',
+            );
+        
+            $args = array(
+                'post_type'      => 'curtain-category',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+/*                
+                //'posts_per_page' => 30,
+                //'paged'          => (get_query_var('paged')) ? get_query_var('paged') : 1,
+                'meta_query'     => array(
+                    'relation' => 'OR',
+                    array(
+                        'relation' => 'AND',
+                        ($site_id) ? $site_filter : '',
+                        ($select_category) ? $category_filter : '',
+                        ($search_query) ? $number_filter : '',
+                    ),
+                    array(
+                        'relation' => 'AND',
+                        ($site_id) ? $site_filter : '',
+                        ($select_category) ? $category_filter : '',
+                        ($search_query) ? $title_filter : '',
+                    )
+                ),
+                'orderby'        => 'meta_value',
+                'meta_key'       => 'doc_number',
+                'order'          => 'ASC',
+*/                
+            );
+        
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
+        function display_curtain_category_dialog($customer_order_id=false) {
+            if ($customer_order_id) {
+                $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+                $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
+                $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+                ob_start();
+                ?>
+                <fieldset>
+                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
+                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php echo $this->display_order_item_list($customer_order_id);?>
+                <hr>
+                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                </fieldset>
+                <?php
+                $html = ob_get_clean();
+                return $html;
+            }
+        }
+        
         public function list_curtain_categories() {
             global $wpdb;
             /** Check the permission */

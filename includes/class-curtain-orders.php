@@ -39,7 +39,7 @@ if (!class_exists('curtain_orders')) {
 
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
-            add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
             add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
@@ -87,7 +87,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'order-item', $args );
         }
-
+/*
         function register_curtain_category_post_type() {
             $labels = array(
                 'menu_name'     => _x('curtain-category', 'admin menu', 'textdomain'),
@@ -102,7 +102,7 @@ if (!class_exists('curtain_orders')) {
             );
             register_post_type( 'curtain-category', $args );
         }
-
+*/
         function register_curtain_model_post_type() {
             $labels = array(
                 'menu_name'     => _x('curtain-model', 'admin menu', 'textdomain'),
@@ -413,7 +413,7 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_order_item_id']) ) {
                 // Update the quotation data
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                update_post_meta( $order_item_id, 'order_item_name', sanitize_text_field($_POST['_order_item_name']));
+                update_post_meta( $order_item_id, 'curtain_category_id', sanitize_text_field($_POST['_curtain_category_id']));
                 update_post_meta( $order_item_id, 'order_item_amount', sanitize_text_field($_POST['_order_item_amount']));
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
