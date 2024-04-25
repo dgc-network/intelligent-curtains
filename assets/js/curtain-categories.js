@@ -16,50 +16,12 @@ jQuery(document).ready(function($) {
             url: ajax_object.ajax_url,
             type: 'post',
             data: {
-/*                
-                'action': 'get_category_dialog_data',
-                '_id': curtain_category_id,
-*/
                 action: 'get_curtain_category_dialog_data',
                 _curtain_category_id: curtain_category_id,
                 _is_admin: $("#is-admin").val()
                 
             },
             success: function (response) {
-/*                
-                $("#curtain-category-id").val(curtain_category_id);
-                $("#curtain-category-name").val(response.curtain_category_name);
-                if (response.allow_parts==1) {
-                    $('#allow-parts').prop('checked', true);
-                } else {
-                    $('#allow-parts').prop('checked', false);
-                }           
-                if (response.hide_remote==1) {
-                    $('#hide-remote').prop('checked', true);
-                } else {
-                    $('#hide-remote').prop('checked', false);
-                }
-                if (response.hide_specification==1) {
-                    $('#hide-specification').prop('checked', true);
-                } else {
-                    $('#hide-specification').prop('checked', false);
-                }            
-                if (response.hide_width==1) {
-                    $('#hide-width').prop('checked', true);
-                } else {
-                    $('#hide-width').prop('checked', false);
-                }            
-                $("#min-width").val(response.min_width);
-                $("#max-width").val(response.max_width);
-                if (response.hide_height==1) {
-                    $('#hide-height').prop('checked', true);
-                } else {
-                    $('#hide-height').prop('checked', false);
-                }            
-                $("#min-height").val(response.min_height);
-                $("#max-height").val(response.max_height);
-                $("#category-dialog").dialog('open');
-*/
                 $('#curtain-category-dialog').html(response.html_contain);
                 
                 $("#curtain-category-dialog").dialog('open');
@@ -93,6 +55,51 @@ jQuery(document).ready(function($) {
         width: 450,
         modal: true,
         autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_curtain_category_dialog_data',
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_curtain_category_title': $("#curtain-category-title").val(),
+                        '_curtain_min_width': $("#curtain-min-width").val(),
+                        '_curtain_max_width': $("#curtain-max-width").val(),
+                        '_curtain_min_height': $("#curtain-min-height").val(),
+                        '_curtain_max_height': $("#curtain-max-height").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace("?_update=");
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_curtain_category_dialog_data',
+                            '_curtain_category_id': $("#curtain_category-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
     });
     $("#curtain-category-dialog").dialog('close');
 
