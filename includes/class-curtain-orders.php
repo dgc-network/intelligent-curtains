@@ -653,6 +653,10 @@ if (!class_exists('curtain_orders')) {
         }
 
         public function list_order_items() {
+            // 2024-4-18 Wilson has requested to use the Quotation instead of the Shopping Cart List
+            $this->display_quotation_list();
+
+
             global $wpdb;
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
@@ -973,9 +977,6 @@ if (!class_exists('curtain_orders')) {
                     )
                 );
             }
-
-            // 2024-4-18 Wilson has requested to use the Quotation instead of the Shopping Cart List
-            $this->display_quotation_list();
 
             // Shopping Cart List
             $output  = '<h2>Shopping Cart - '.$curtain_agents->get_name($this->curtain_agent_id).'</h2>';

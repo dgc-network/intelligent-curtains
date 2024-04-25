@@ -63,8 +63,8 @@ if (!class_exists('curtain_categories')) {
                         <tr>
                             <th><?php echo __( '類別', 'your-text-domain' );?></th>
                             <th><?php echo __( 'spec', 'your-text-domain' );?></th>
-                            <th><?php echo __( '寬度', 'your-text-domain' );?></th>
-                            <th><?php echo __( '高度', 'your-text-domain' );?></th>
+                            <th><?php echo __( '寬度設定', 'your-text-domain' );?></th>
+                            <th><?php echo __( '高度設定', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,15 +78,17 @@ if (!class_exists('curtain_categories')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            $curtain_category_title = get_post_meta(get_the_ID(), 'customer_name', true);
-                            $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
-                            $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                            //$curtain_category_title = get_post_meta(get_the_ID(), 'curtain_category_title', true);
+                            $curtain_min_width = get_post_meta(get_the_ID(), 'curtain_min_width', true);
+                            $curtain_max_width = get_post_meta(get_the_ID(), 'curtain_max_width', true);
+                            $curtain_min_height = get_post_meta(get_the_ID(), 'curtain_min_height', true);
+                            $curtain_max_height = get_post_meta(get_the_ID(), 'curtain_max_height', true);
                             ?>
-                            <tr id="edit-category-<?php the_ID();?>">
+                            <tr id="edit-curtain-category-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
-                                <td><?php echo esc_html($customer_name);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_width);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_height);?></td>
+                                <td><?php echo esc_html('spec');?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_min_width.'~'.$curtain_max_width);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_min_height.'~'.$curtain_max_height);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -95,94 +97,42 @@ if (!class_exists('curtain_categories')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="new-quotation" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <div id="new-curtain-category" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <?php
-                    // Display pagination links
-                    echo '<div class="pagination">';
-                    if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
-                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
-                    echo '</div>';
+                // Display pagination links
+                echo '<div class="pagination">';
+                if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                echo '</div>';
                 ?>
             </fieldset>
             </div>
             <?php
         }
 
-        function retrieve_quotation_data($current_page = 1) {
+        function retrieve_curtain_category_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
-            // Calculate the offset to retrieve the posts for the current page
-            $offset = ($current_page - 1) * $posts_per_page;
-        
-            $current_user_id = get_current_user_id();
-            $site_id = get_user_meta($current_user_id, 'site_id', true);
-            $site_filter = array(
-                'key'     => 'site_id',
-                'value'   => $site_id,
-                'compare' => '=',
-            );
-        
-            $select_category = sanitize_text_field($_GET['_category']);
-            $category_filter = array(
-                'key'     => 'doc_category',
-                'value'   => $select_category,
-                'compare' => '=',
-            );
-        
-            $search_query = sanitize_text_field($_GET['_search']);
-            $number_filter = array(
-                'key'     => 'doc_number',
-                'value'   => $search_query,
-                'compare' => 'LIKE',
-            );
-            $title_filter = array(
-                'key'     => 'doc_title',
-                'value'   => $search_query,
-                'compare' => 'LIKE',
-            );
-        
             $args = array(
                 'post_type'      => 'curtain-category',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
-/*                
-                //'posts_per_page' => 30,
-                //'paged'          => (get_query_var('paged')) ? get_query_var('paged') : 1,
-                'meta_query'     => array(
-                    'relation' => 'OR',
-                    array(
-                        'relation' => 'AND',
-                        ($site_id) ? $site_filter : '',
-                        ($select_category) ? $category_filter : '',
-                        ($search_query) ? $number_filter : '',
-                    ),
-                    array(
-                        'relation' => 'AND',
-                        ($site_id) ? $site_filter : '',
-                        ($select_category) ? $category_filter : '',
-                        ($search_query) ? $title_filter : '',
-                    )
-                ),
-                'orderby'        => 'meta_value',
-                'meta_key'       => 'doc_number',
-                'order'          => 'ASC',
-*/                
             );
         
             $query = new WP_Query($args);
             return $query;
         }
         
-        function display_curtain_category_dialog($customer_order_id=false) {
-            if ($customer_order_id) {
+        function display_curtain_category_dialog($curtain_category_id=false) {
+            
                 $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
                 $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
                 $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
                 ob_start();
                 ?>
                 <fieldset>
-                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
@@ -195,10 +145,14 @@ if (!class_exists('curtain_categories')) {
                 <?php
                 $html = ob_get_clean();
                 return $html;
-            }
+            
         }
         
         public function list_curtain_categories() {
+            // 2024-4-25 Modify the curtain-category as the post type
+            $this->display_curtain_category_list();
+
+            
             global $wpdb;
             /** Check the permission */
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
