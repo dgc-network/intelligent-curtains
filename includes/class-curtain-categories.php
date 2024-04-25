@@ -141,15 +141,15 @@ if (!class_exists('curtain_categories')) {
                 <div>
                     <input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.
                     <div id="show-width">
-                        <input type="text" id="min-width" value="<?php echo esc_html($curtain_min_width);?>" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="max-width" value="<?php echo esc_html($curtain_max_width);?>" style="display:inline-block; width:25%;" /> cm
+                        <input type="text" id="curtain-min-width" value="<?php echo esc_html($curtain_min_width);?>" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="curtain-max-width" value="<?php echo esc_html($curtain_max_width);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
                 <div>
                     <input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.
                     <div id="show-height">
-                        <input type="text" id="min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
+                        <input type="text" id="curtain-min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
                 <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
@@ -174,7 +174,7 @@ if (!class_exists('curtain_categories')) {
         function set_curtain_category_dialog_data() {
             $response = array();
             if( isset($_POST['_curtain_category_id']) ) {
-                // Update the data
+                // Update the meta data
                 $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
                 update_post_meta( $curtain_category_id, 'curtain_min_width', sanitize_text_field($_POST['_curtain_min_width']));
                 update_post_meta( $curtain_category_id, 'curtain_max_width', sanitize_text_field($_POST['_curtain_max_width']));
@@ -188,7 +188,6 @@ if (!class_exists('curtain_categories')) {
                     );
                     wp_update_post($updated_post);
                 }
-
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
@@ -199,7 +198,6 @@ if (!class_exists('curtain_categories')) {
                     'post_type'     => 'curtain-category',
                 );    
                 $post_id = wp_insert_post($new_post);
-                //update_post_meta( $post_id, 'customer_name', 'New customer');
             }
             wp_send_json($response);
         }
@@ -217,7 +215,7 @@ if (!class_exists('curtain_categories')) {
         
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type
-            //$this->display_curtain_category_list();
+            $this->display_curtain_category_list();
 
             
             global $wpdb;
