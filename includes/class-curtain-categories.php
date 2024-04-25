@@ -107,6 +107,7 @@ if (!class_exists('curtain_categories')) {
             </fieldset>
             </div>
             <?php
+            $this->display_curtain_category_dialog();
         }
 
         function retrieve_curtain_category_data($current_page = 1) {
