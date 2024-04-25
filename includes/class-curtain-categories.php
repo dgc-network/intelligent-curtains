@@ -154,6 +154,7 @@ if (!class_exists('curtain_categories')) {
                 </div>
                 <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
             </fieldset>
+            </div>
             <?php
             $html = ob_get_clean();
             return $html;
@@ -211,7 +212,17 @@ if (!class_exists('curtain_categories')) {
             wp_send_json($response);
         }
 
-
+        function select_curtain_category_option_data($selected_option=0) {
+            $query = $this->retrieve_curtain_category_data();
+            $options = '<option value="">Select category</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
+        
         
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type

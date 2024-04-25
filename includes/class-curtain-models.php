@@ -126,6 +126,7 @@ if (!class_exists('curtain_models')) {
         
         function display_curtain_model_dialog($curtain_model_id=false) {
             
+            $curtain_categories = new curtain_categories();
             $curtain_model_title = get_the_title($curtain_model_id);
             $curtain_model_description = get_post_field('post_content', $curtain_model_id);
             $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
@@ -139,13 +140,14 @@ if (!class_exists('curtain_models')) {
                 <input type="text" id="curtain-model-title" value="<?php echo esc_html($curtain_model_title);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-model-description"><?php echo __( 'Description', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-description" value="<?php echo esc_html($curtain_model_description);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-category-id"><?php echo __( 'Description', 'your-text-domain' );?></label>
-                <select id="curtain-category-id"><?php //echo select_curtain_category_option_data($curtain_category_id);?></select>
+                <label for="curtain-category-id"><?php echo __( 'Category', 'your-text-domain' );?></label>
+                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_option_data($curtain_category_id);?></select>
                 <label for="curtain-model-price"><?php echo __( 'Price', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-price" value="<?php echo esc_html($curtain_model_price);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-model-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-vendor" value="<?php echo esc_html($curtain_model_vendor);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
+            </div>
             <?php
             $html = ob_get_clean();
             return $html;

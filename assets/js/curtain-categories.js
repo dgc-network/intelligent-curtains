@@ -1,11 +1,6 @@
 // 2024-4-25 revision
 jQuery(document).ready(function($) {
-    $("#select-category").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
-        $(this).val('');
-    });
-
-    $("#search-document").on( "change", function() {
+    $("#search-category").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
     });
@@ -71,7 +66,7 @@ jQuery(document).ready(function($) {
                         '_curtain_max_height': $("#curtain-max-height").val(),
                     },
                     success: function (response) {
-                        window.location.replace("?_update=");
+                        window.location.replace(window.location.href);
                     },
                     error: function(error){
                         console.error(error);
@@ -102,8 +97,103 @@ jQuery(document).ready(function($) {
         }
     });
     $("#curtain-category-dialog").dialog('close');
+});
 
+jQuery(document).ready(function($) {
+    $("#search-model").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
 
+    $('[id^="edit-curtain-model-"]').on("click", function () {
+        const curtain_model_id = this.id.substring(19);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_curtain_model_dialog_data',
+                _curtain_model_id: curtain_model_id,
+                
+            },
+            success: function (response) {
+                $('#curtain-model-dialog').html(response.html_contain);         
+                $("#curtain-model-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });            
+
+    $("#new-curtain-model").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_curtain_model_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#curtain-model-dialog").dialog({
+        width: 450,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_curtain_model_dialog_data',
+                        '_curtain_model_id': $("#curtain-model-id").val(),
+                        '_curtain_model_title': $("#curtain-model-title").val(),
+                        '_curtain_model_description': $("#curtain-model-description").val(),
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_curtain_model_price': $("#curtain-model-price").val(),
+                        '_curtain_model_vendor': $("#curtain-model-vendor").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_curtain_model_dialog_data',
+                            '_curtain_model_id': $("#curtain-model-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+    $("#curtain-model-dialog").dialog('close');
 });
 
 
