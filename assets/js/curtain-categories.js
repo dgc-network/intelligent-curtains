@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
 */                
             },
             success: function (response) {
-                $("#curtain-category-id").val(id);
+                $("#curtain-category-id").val(curtain_category_id);
                 $("#curtain-category-name").val(response.curtain_category_name);
                 if (response.allow_parts==1) {
                     $('#allow-parts').prop('checked', true);
