@@ -62,7 +62,7 @@ jQuery(document).ready(function($) {
 */
                 $('#curtain-category-dialog').html(response.html_contain);
                 
-                $("#curtain-category-dialog").dialog('open');        
+                $("#curtain-category-dialog").dialog('open');
                                                     
             },
             error: function (error) {
@@ -94,6 +94,7 @@ jQuery(document).ready(function($) {
         modal: true,
         autoOpen: false,
     });
+    $("#curtain-category-dialog").dialog('close');
 
 
 });

@@ -130,7 +130,7 @@ if (!class_exists('curtain_categories')) {
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
             ob_start();
             ?>
-            <div id="curtain-category-dialog" title="Category dialog" style="display:none;">
+            <div id="curtain-category-dialog" title="Category dialog">
             <fieldset>
                 <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
                 <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
