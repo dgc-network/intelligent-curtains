@@ -130,16 +130,28 @@ if (!class_exists('curtain_categories')) {
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
             ob_start();
             ?>
+            <div id="curtain-category-dialog" title="Category dialog" style="display:none;">
             <fieldset>
-            <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
-            <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
-            <input type="text" id="curtain-category-title" value="<?php echo esc_html($curtain_category_title);?>" class="text ui-widget-content ui-corner-all" />
-            <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-            <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-            <?php echo $this->display_order_item_list($customer_order_id);?>
-            <hr>
-            <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-            <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
+                <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
+                <input type="text" id="curtain-category-title" value="<?php echo esc_html($curtain_category_title);?>" class="text ui-widget-content ui-corner-all" />
+
+                <input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.<br>
+                <div>
+                    <input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.
+                    <div id="show-width">
+                        <input type="text" id="min-width" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="max-width" style="display:inline-block; width:25%;" /> cm
+                    </div>
+                </div>
+                <div>
+                    <input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.
+                    <div id="show-height">
+                        <input type="text" id="min-height" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="max-height" style="display:inline-block; width:25%;" /> cm
+                    </div>
+                </div>
+                <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
             </fieldset>
             <?php
             $html = ob_get_clean();
@@ -149,9 +161,9 @@ if (!class_exists('curtain_categories')) {
 
         function get_curtain_category_dialog_data() {
             $response = array();
-            if (isset($_POST['_customer_order_id'])) {
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+            if (isset($_POST['_curtain_category_id'])) {
+                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+                $response['html_contain'] = $this->display_curtain_category_dialog($curtain_category_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
