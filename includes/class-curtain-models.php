@@ -128,6 +128,7 @@ if (!class_exists('curtain_models')) {
             $curtain_categories = new curtain_categories();
             $curtain_model_title = get_the_title($curtain_model_id);
             $curtain_model_description = get_post_field('post_content', $curtain_model_id);
+            $curtain_category_id = get_post_meta($curtain_model_id, 'curtain_category_id', true);
             $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
             $curtain_model_vendor = get_post_meta($curtain_model_id, 'curtain_model_vendor', true);
             ob_start();
