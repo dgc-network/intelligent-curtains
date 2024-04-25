@@ -1,68 +1,5 @@
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
-    function copyToClipboard(text) {
-        // Create a temporary textarea element
-        var textarea = $("<textarea>")
-            .val(text)
-            .appendTo("body")
-            .select();
-    
-        // Execute the copy command
-        document.execCommand("copy");
-    
-        // Remove the textarea from the document
-        textarea.remove();
-    }
-    
-    $("#site-title").on("change", function () {
-        new_site_title = $(this).val();
-        if (window.confirm("Are you sure you want to use "+new_site_title+" as your new site title?")) {
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'set_new_site_by_title',
-                    '_new_site_title': new_site_title,
-                },
-                success: function (response) {
-                    $("#site-id").val(response.new_site_id);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    alert(error);
-                }
-            });        
-        }
-    });
-    
-    $("#initial-next-step").on("click", function () {
-        doc_category = $("#doc-category").val();
-        count_category = $("#count-category").val();
-        if (window.confirm("Are you sure you want to add "+count_category+" "+ doc_category+" new documents?")) {
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'set_initial_iso_document',
-                    '_doc_category_id': $("#doc-category-id").val(),
-                    '_doc_site_id': $("#doc-site-id").val(),
-                },
-                success: function (response) {
-                    console.log(response)
-                    //window.location.replace("/display-profiles/?_initial=true");
-                    window.location.replace(window.location.href);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    alert(error);
-                }
-            });    
-    
-        }
-    });
-
     $("#select-category").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
         $(this).val('');
@@ -71,16 +8,6 @@ jQuery(document).ready(function($) {
     $("#search-document").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
-    });
-
-    $("#document-setting").on("click", function () {
-        $("#document-setting-dialog").dialog('open');
-    });
-
-    $("#document-setting-dialog").dialog({
-        width: 450,
-        modal: true,
-        autoOpen: false,
     });
 
     $('[id^="edit-quotation-"]').on("click", function () {
@@ -94,11 +21,8 @@ jQuery(document).ready(function($) {
                 _is_admin: $("#is-admin").val()
             },
             success: function (response) {
-                if (response.html_contain === undefined || response.html_contain === null) {
-                    alert("The document is in To-do process. Please wait for publishing.");
-                } else {
-                    $('#result-container').html(response.html_contain);
-                }
+
+                $('#result-container').html(response.html_contain);
 
                 $(".datepicker").datepicker({
                     onSelect: function(dateText, inst) {
@@ -400,29 +324,6 @@ jQuery(document).ready(function($) {
             }
         });    
     });
-
-    function get_order_item_list_data(customer_order_id){
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: {
-                'action': 'get_order_item_list_data',
-            },
-            success: function (response) {
-                $('#fields-container').html(response.html_contain);
-                activate_order_item_list_data(customer_order_id);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-
-    }
-/*
-*/
-
 
 });
 

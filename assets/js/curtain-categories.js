@@ -1,3 +1,96 @@
+// 2024-4-25 revision
+jQuery(document).ready(function($) {
+    $("#select-category").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#search-document").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-curtain-category-"]').on("click", function () {
+        const curtain_category_id = this.id.substring(22);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                'action': 'get_category_dialog_data',
+                '_id': id,
+/*
+                action: 'get_curtain_category_dialog_data',
+                _curtain_category_id: curtain_category_id,
+                _is_admin: $("#is-admin").val()
+*/                
+            },
+            success: function (response) {
+                $("#curtain-category-id").val(id);
+                $("#curtain-category-name").val(response.curtain_category_name);
+                if (response.allow_parts==1) {
+                    $('#allow-parts').prop('checked', true);
+                } else {
+                    $('#allow-parts').prop('checked', false);
+                }           
+                if (response.hide_remote==1) {
+                    $('#hide-remote').prop('checked', true);
+                } else {
+                    $('#hide-remote').prop('checked', false);
+                }
+                if (response.hide_specification==1) {
+                    $('#hide-specification').prop('checked', true);
+                } else {
+                    $('#hide-specification').prop('checked', false);
+                }            
+                if (response.hide_width==1) {
+                    $('#hide-width').prop('checked', true);
+                } else {
+                    $('#hide-width').prop('checked', false);
+                }            
+                $("#min-width").val(response.min_width);
+                $("#max-width").val(response.max_width);
+                if (response.hide_height==1) {
+                    $('#hide-height').prop('checked', true);
+                } else {
+                    $('#hide-height').prop('checked', false);
+                }            
+                $("#min-height").val(response.min_height);
+                $("#max-height").val(response.max_height);
+                $("#category-dialog").dialog('open');
+/*
+                $('#result-container').html(response.html_contain);
+                
+                $("#curtain-category-dialog").dialog('open');        
+*/                                                    
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });            
+
+    $("#new-curtain-category").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_curtain_category_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+});
+
+
+
 jQuery(document).ready(function($) {
 
     /**
@@ -17,25 +110,21 @@ jQuery(document).ready(function($) {
             success: function (response) {                    
                 $("#curtain-category-id").val(id);
                 $("#curtain-category-name").val(response.curtain_category_name);
-                //$('#allow-parts').empty();
                 if (response.allow_parts==1) {
                     $('#allow-parts').prop('checked', true);
                 } else {
                     $('#allow-parts').prop('checked', false);
                 }           
-                //$('#hide-remote').empty();
                 if (response.hide_remote==1) {
                     $('#hide-remote').prop('checked', true);
                 } else {
                     $('#hide-remote').prop('checked', false);
                 }
-                //$('#hide-specification').empty();
                 if (response.hide_specification==1) {
                     $('#hide-specification').prop('checked', true);
                 } else {
                     $('#hide-specification').prop('checked', false);
                 }            
-                //$('#hide-width').empty();
                 if (response.hide_width==1) {
                     $('#hide-width').prop('checked', true);
                 } else {
@@ -43,7 +132,6 @@ jQuery(document).ready(function($) {
                 }            
                 $("#min-width").val(response.min_width);
                 $("#max-width").val(response.max_width);
-                //$('#hide-height').empty();
                 if (response.hide_height==1) {
                     $('#hide-height').prop('checked', true);
                 } else {

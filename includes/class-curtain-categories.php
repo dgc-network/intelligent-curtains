@@ -21,6 +21,12 @@ if (!class_exists('curtain_categories')) {
             add_action( 'wp_ajax_nopriv_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
 
             add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+            add_action( 'wp_ajax_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
+            add_action( 'wp_ajax_set_curtain_category_dialog_data', array( $this, 'set_curtain_category_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_curtain_category_dialog_data', array( $this, 'set_curtain_category_dialog_data' ) );
+            add_action( 'wp_ajax_del_curtain_category_dialog_data', array( $this, 'del_curtain_category_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_del_curtain_category_dialog_data', array( $this, 'del_curtain_category_dialog_data' ) );
 
         }
 
@@ -40,12 +46,6 @@ if (!class_exists('curtain_categories')) {
         }
 
         function display_curtain_category_list() {
-            if (isset($_GET['_is_admin'])) {
-                echo '<input type="hidden" id="is-admin" value="1" />';
-            }
-            $current_user_id = get_current_user_id();
-            $site_id = get_user_meta($current_user_id, 'site_id', true);
-            $image_url = get_post_meta($site_id, 'image_url', true);
             ?>
             <div class="ui-widget" id="result-container">
             <h2 style="display:inline;"><?php echo __( '產品類別', 'your-text-domain' );?></h2>
@@ -61,8 +61,7 @@ if (!class_exists('curtain_categories')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '類別', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'spec', 'your-text-domain' );?></th>
+                            <th><?php echo __( '窗簾類別', 'your-text-domain' );?></th>
                             <th><?php echo __( '寬度設定', 'your-text-domain' );?></th>
                             <th><?php echo __( '高度設定', 'your-text-domain' );?></th>
                         </tr>
@@ -86,7 +85,6 @@ if (!class_exists('curtain_categories')) {
                             ?>
                             <tr id="edit-curtain-category-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
-                                <td><?php echo esc_html('spec');?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_min_width.'~'.$curtain_max_width);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_min_height.'~'.$curtain_max_height);?></td>
                             </tr>
@@ -118,35 +116,91 @@ if (!class_exists('curtain_categories')) {
                 'post_type'      => 'curtain-category',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
-            );
-        
+            );        
             $query = new WP_Query($args);
             return $query;
         }
         
         function display_curtain_category_dialog($curtain_category_id=false) {
             
-                $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
-                $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
-                $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
-                ob_start();
-                ?>
-                <fieldset>
-                <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
-                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
-                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <?php echo $this->display_order_item_list($customer_order_id);?>
-                <hr>
-                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                </fieldset>
-                <?php
-                $html = ob_get_clean();
-                return $html;
-            
+            $curtain_category_title = get_the_title($curtain_category_id);
+            $curtain_min_width = get_post_meta($curtain_category_id, 'curtain_min_width', true);
+            $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
+            $curtain_min_height = get_post_meta($curtain_category_id, 'curtain_min_height', true);
+            $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
+            ob_start();
+            ?>
+            <fieldset>
+            <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
+            <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
+            <input type="text" id="curtain-category-title" value="<?php echo esc_html($curtain_category_title);?>" class="text ui-widget-content ui-corner-all" />
+            <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+            <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+            <?php echo $this->display_order_item_list($customer_order_id);?>
+            <hr>
+            <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+            <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+            </fieldset>
+            <?php
+            $html = ob_get_clean();
+            return $html;
+        
         }
+
+        function get_curtain_category_dialog_data() {
+            $response = array();
+            if (isset($_POST['_customer_order_id'])) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+            } else {
+                $response['html_contain'] = 'Invalid AJAX request!';
+            }
+            wp_send_json($response);
+        }
+
+        function set_curtain_category_dialog_data() {
+            $response = array();
+            if( isset($_POST['_curtain_category_id']) ) {
+                // Update the data
+                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+                update_post_meta( $curtain_category_id, 'curtain_min_width', sanitize_text_field($_POST['_curtain_min_width']));
+                update_post_meta( $curtain_category_id, 'curtain_max_width', sanitize_text_field($_POST['_curtain_max_width']));
+                update_post_meta( $curtain_category_id, 'curtain_min_height', sanitize_text_field($_POST['_curtain_min_height']));
+                update_post_meta( $curtain_category_id, 'curtain_max_height', sanitize_text_field($_POST['_curtain_max_height']));
+                // Update the post title
+                if (isset($_POST['_curtain_category_title'])) {
+                    $updated_post = array(
+                        'ID'         => $curtain_category_id,
+                        'post_title' => sanitize_text_field($_POST['_curtain_category_title']),
+                    );
+                    wp_update_post($updated_post);
+                }
+
+            } else {
+                $current_user_id = get_current_user_id();
+                $new_post = array(
+                    'post_title'    => 'New category',
+                    'post_content'  => 'Your post content goes here.',
+                    'post_status'   => 'publish',
+                    'post_author'   => $current_user_id,
+                    'post_type'     => 'curtain-category',
+                );    
+                $post_id = wp_insert_post($new_post);
+                //update_post_meta( $post_id, 'customer_name', 'New customer');
+            }
+            wp_send_json($response);
+        }
+
+        function del_curtain_category_dialog_data() {
+            $response = array();
+            if( isset($_POST['_curtain_category_id']) ) {
+                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+                $response = wp_delete_post($curtain_category_id, true);
+            }
+            wp_send_json($response);
+        }
+
+
         
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type
