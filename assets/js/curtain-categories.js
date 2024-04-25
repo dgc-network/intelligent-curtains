@@ -87,7 +87,7 @@ jQuery(document).ready(function($) {
                         dataType: "json",
                         data: {
                             'action': 'del_curtain_category_dialog_data',
-                            '_curtain_category_id': $("#curtain_category-id").val(),
+                            '_curtain_category_id': $("#curtain-category-id").val(),
                         },
                         success: function (response) {
                             window.location.replace(window.location.href);

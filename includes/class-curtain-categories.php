@@ -141,15 +141,15 @@ if (!class_exists('curtain_categories')) {
                 <div>
                     <input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.
                     <div id="show-width">
-                        <input type="text" id="min-width" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="max-width" style="display:inline-block; width:25%;" /> cm
+                        <input type="text" id="min-width" value="<?php echo esc_html($curtain_min_width);?>" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="max-width" value="<?php echo esc_html($curtain_max_width);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
                 <div>
                     <input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.
                     <div id="show-height">
-                        <input type="text" id="min-height" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="max-height" style="display:inline-block; width:25%;" /> cm
+                        <input type="text" id="min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
+                        <input type="text" id="max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
                 <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
