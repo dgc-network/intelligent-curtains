@@ -217,7 +217,7 @@ if (!class_exists('curtain_categories')) {
         
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type
-            $this->display_curtain_category_list();
+            //$this->display_curtain_category_list();
 
             
             global $wpdb;
