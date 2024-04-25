@@ -84,7 +84,7 @@ if (!class_exists('curtain_models')) {
                             $curtain_model_price = get_post_meta(get_the_ID(), 'curtain_model_price', true);
                             $curtain_model_vendor = get_post_meta(get_the_ID(), 'curtain_model_vendor', true);
                             ?>
-                            <tr id="edit-curtain-category-<?php the_ID();?>">
+                            <tr id="edit-curtain-model-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
                                 <td><?php echo esc_html($curtain_model_description);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_model_price);?></td>
@@ -124,8 +124,7 @@ if (!class_exists('curtain_models')) {
             return $query;
         }
         
-        function display_curtain_model_dialog($curtain_model_id=false) {
-            
+        function display_curtain_model_dialog($curtain_model_id=false) {            
             $curtain_categories = new curtain_categories();
             $curtain_model_title = get_the_title($curtain_model_id);
             $curtain_model_description = get_post_field('post_content', $curtain_model_id);
@@ -150,8 +149,7 @@ if (!class_exists('curtain_models')) {
             </div>
             <?php
             $html = ob_get_clean();
-            return $html;
-        
+            return $html;        
         }
 
         function get_curtain_model_dialog_data() {
