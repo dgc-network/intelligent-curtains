@@ -17,7 +17,7 @@ jQuery(document).ready(function($) {
             type: 'post',
             data: {
                 'action': 'get_category_dialog_data',
-                '_id': id,
+                '_id': curtain_category_id,
 /*
                 action: 'get_curtain_category_dialog_data',
                 _curtain_category_id: curtain_category_id,
