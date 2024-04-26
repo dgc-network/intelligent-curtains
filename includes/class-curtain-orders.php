@@ -143,7 +143,7 @@ if (!class_exists('curtain_orders')) {
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_date());?></td>
                                 <td><?php echo esc_html($customer_name);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($customer_order_amount);?></td>
+                                <td style="text-align:center;"><?php echo esc_html(number_format_i18n($customer_order_amount));?></td>
                                 <td><?php echo esc_html($customer_order_remark);?></td>
                             </tr>
                             <?php
@@ -341,7 +341,7 @@ if (!class_exists('curtain_orders')) {
                                 echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
                                 echo '<td>'.esc_html($order_item_description).'</td>';
                                 echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html($order_item_amount).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html(number_format_i18n($order_item_amount)).'</td>';
                                 echo '</tr>';
                             endwhile;
                             wp_reset_postdata();
@@ -353,7 +353,7 @@ if (!class_exists('curtain_orders')) {
                             <td></td>
                             <td></td>
                             <td style="text-align:center;"><?php echo __( 'Sum', 'your-text-domain' );?></td>
-                            <td style="text-align:center;"><?php echo $customer_order_amount;?></td>
+                            <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -380,6 +380,36 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
 
+        function set_customer_order_amount($customer_order_id) {
+            $customer_order_amount = 0;
+            $query = $this->retrieve_order_item_data($customer_order_id);
+            if ($query->have_posts()) {
+                while ($query->have_posts()) : $query->the_post();
+                    $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                    $curtain_category_title = get_the_title($curtain_category_id);
+                    $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                    $curtain_model_description = get_post_field('post_content', $curtain_model_id);
+                    $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                    $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
+                    $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
+                    $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                    $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                    $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
+                    $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                    $curtain_width = ($curtain_width) ? $curtain_width : 1;
+                    $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                    $curtain_height = ($curtain_height) ? $curtain_height : 1;
+                    $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                    $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
+                    $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
+                    $customer_order_amount += $order_item_amount;
+                endwhile;
+                wp_reset_postdata();
+            }
+            update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
+            return $customer_order_amount;
+        }
+
         function set_order_item_dialog_data() {
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
@@ -394,6 +424,7 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
+                set_customer_order_amount($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
