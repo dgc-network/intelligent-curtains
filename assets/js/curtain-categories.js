@@ -1,4 +1,4 @@
-// 2024-4-25 revision
+// 2024-4-25 revision curtain-category
 jQuery(document).ready(function($) {
     $("#search-category").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
@@ -99,6 +99,7 @@ jQuery(document).ready(function($) {
     $("#curtain-category-dialog").dialog('close');
 });
 
+// 2024-4-25 revision curtain-model
 jQuery(document).ready(function($) {
     $("#search-model").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
@@ -194,6 +195,104 @@ jQuery(document).ready(function($) {
         }
     });
     $("#curtain-model-dialog").dialog('close');
+});
+
+// 2024-4-25 revision curtain-specification
+jQuery(document).ready(function($) {
+    $("#search-specification").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-curtain-specification-"]').on("click", function () {
+        const curtain_specification_id = this.id.substring(27);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_curtain_specification_dialog_data',
+                _curtain_specification_id: curtain_specification_id,
+                
+            },
+            success: function (response) {
+                $('#curtain-specification-dialog').html(response.html_contain);         
+                $("#curtain-specification-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });            
+
+    $("#new-curtain-specification").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_curtain_specification_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#curtain-specification-dialog").dialog({
+        width: 450,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_curtain_specification_dialog_data',
+                        '_curtain_specification_id': $("#curtain-specification-id").val(),
+                        '_curtain_specification_title': $("#curtain-specification-title").val(),
+                        '_curtain_specification_description': $("#curtain-specification-description").val(),
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_curtain_specification_price': $("#curtain-specification-price").val(),
+                        '_curtain_specification_unit': $("#curtain-specification-unit").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_curtain_specification_dialog_data',
+                            '_curtain_specification_id': $("#curtain-specification-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+    $("#curtain-specification-dialog").dialog('close');
 });
 
 
