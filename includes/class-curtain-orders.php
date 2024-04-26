@@ -380,8 +380,12 @@ if (!class_exists('curtain_orders')) {
                 // Update the quotation data
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
                 update_post_meta( $order_item_id, 'curtain_category_id', sanitize_text_field($_POST['_curtain_category_id']));
-                update_post_meta( $order_item_id, 'order_item_amount', sanitize_text_field($_POST['_order_item_amount']));
+                update_post_meta( $order_item_id, 'curtain_model_id', sanitize_text_field($_POST['_curtain_model_id']));
+                update_post_meta( $order_item_id, 'curtain_specification_id', sanitize_text_field($_POST['_curtain_specification_id']));
+                update_post_meta( $order_item_id, 'curtain_width', sanitize_text_field($_POST['_curtain_width']));
+                update_post_meta( $order_item_id, 'curtain_height', sanitize_text_field($_POST['_curtain_height']));
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
+                update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
@@ -420,12 +424,12 @@ if (!class_exists('curtain_orders')) {
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
                 <label for="curtain-category-id">類別</label>
-                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
+                <select id="curtain-category-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label id="curtain-model-label" for="curtain-model-id">型號</label>
-                <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id);?></select>
+                <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id);?></select>
                 <div id="spec-div" style="display:none;">
                     <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
-                    <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id);?></select>
+                    <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id);?></select>
                     <label id="curtain-width-label" for="curtain-width">寬</label>
                     <input type="text" id="curtain-width" value="<?php echo $curtain_width;?>" />
                     <div id="height-div" style="display:none;">
@@ -434,9 +438,9 @@ if (!class_exists('curtain_orders')) {
                     </div>
                 </div>
                 <label for="order-item-qty">數量</label>
-                <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" />
+                <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" class="text ui-widget-content ui-corner-all" />
                 <label for="order-item-note">備註</label>
-                <input type="text" id="order-item-note" value="<?php echo $order_item_note;?>" />
+                <input type="text" id="order-item-note" value="<?php echo $order_item_note;?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             </div>
             <?php
