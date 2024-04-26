@@ -143,7 +143,7 @@ if (!class_exists('curtain_orders')) {
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_date());?></td>
                                 <td><?php echo esc_html($customer_name);?></td>
-                                <td style="text-align:center;"><?php echo esc_html(number_format_i18n($customer_order_amount));?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_amount);?></td>
                                 <td><?php echo esc_html($customer_order_remark);?></td>
                             </tr>
                             <?php
@@ -341,7 +341,7 @@ if (!class_exists('curtain_orders')) {
                                 echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
                                 echo '<td>'.esc_html($order_item_description).'</td>';
                                 echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(number_format_i18n($order_item_amount)).'</td>';
+                                echo '<td style="text-align:center;">'.number_format_i18n($order_item_amount).'</td>';
                                 echo '</tr>';
                             endwhile;
                             wp_reset_postdata();
