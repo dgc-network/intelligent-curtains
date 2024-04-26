@@ -199,7 +199,7 @@ if (!class_exists('curtain_models')) {
             $response = array();
             if( isset($_POST['_curtain_model_id']) ) {
                 $curtain_model_id = sanitize_text_field($_POST['_curtain_model_id']);
-                $response = wp_delete_post($curtain_model_id, true);
+                wp_delete_post($curtain_model_id, true);
             }
             wp_send_json($response);
         }

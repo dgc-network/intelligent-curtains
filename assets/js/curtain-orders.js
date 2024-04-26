@@ -75,47 +75,8 @@ jQuery(document).ready(function($) {
                     }
                 });
 
-                activate_order_item_dialog_data(customer_order_id);
-/*
-                $("#new-order-item").on("click", function() {
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: {
-                            'action': 'set_order_item_dialog_data',
-                            '_customer_order_id':customer_order_id,
-                        },
-                        success: function (response) {
-                            $('#order-item-container').html(response.html_contain);
-                        },
-                        error: function(error){
-                            console.error(error);                    
-                            alert(error);
-                        }
-                    });    
-                });
+                activate_order_item_list_data(customer_order_id);
 
-                $('[id^="edit-order-item-"]').on("click", function () {
-                    const order_item_id = this.id.substring(16);
-                    $.ajax({
-                        url: ajax_object.ajax_url,
-                        type: 'post',
-                        data: {
-                            action: 'get_order_item_dialog_data',
-                            _order_item_id: order_item_id,
-                        },
-                        success: function (response) {
-                            $('#curtain-order-item-dialog').html(response.html_contain);
-                            $("#curtain-order-item-dialog").dialog('open');
-                        },
-                        error: function(error){
-                            console.error(error);                    
-                            alert(error);
-                        }
-                    });    
-                });
-*/                
             },
             error: function (error) {
                 console.log(error);
@@ -164,7 +125,7 @@ jQuery(document).ready(function($) {
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);
                         $("#curtain-order-item-dialog").dialog('close');
-                        activate_order_item_dialog_data($("#customer-order-id").val());
+                        activate_order_item_list_data($("#customer-order-id").val());
         
                     },
                     error: function(error){
@@ -186,7 +147,7 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
-                            activate_order_item_dialog_data($("#customer-order-id").val());
+                            activate_order_item_list_data($("#customer-order-id").val());
             
                         },
                         error: function(error){
@@ -200,7 +161,7 @@ jQuery(document).ready(function($) {
     });
     //$("#curtain-order-item-dialog").dialog('close');
 
-    function activate_order_item_dialog_data(customer_order_id) {
+    function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
             $.ajax({
                 type: 'POST',
@@ -212,7 +173,7 @@ jQuery(document).ready(function($) {
                 },
                 success: function (response) {
                     $('#order-item-container').html(response.html_contain);
-                    activate_order_item_dialog_data(customer_order_id);
+                    activate_order_item_list_data(customer_order_id);
                 },
                 error: function(error){
                     console.error(error);                    

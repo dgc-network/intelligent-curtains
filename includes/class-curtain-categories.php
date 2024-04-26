@@ -207,7 +207,7 @@ if (!class_exists('curtain_categories')) {
             $response = array();
             if( isset($_POST['_curtain_category_id']) ) {
                 $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
-                $response = wp_delete_post($curtain_category_id, true);
+                wp_delete_post($curtain_category_id, true);
             }
             wp_send_json($response);
         }

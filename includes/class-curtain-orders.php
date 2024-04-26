@@ -293,7 +293,7 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if( isset($_POST['_customer_order_id']) ) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $response = wp_delete_post($customer_order_id, true);
+                wp_delete_post($customer_order_id, true);
             }
             wp_send_json($response);
         }
@@ -386,7 +386,6 @@ if (!class_exists('curtain_orders')) {
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $new_post = array(
                     'post_title'    => 'No title',
                     'post_content'  => 'Your post content goes here.',
@@ -396,7 +395,7 @@ if (!class_exists('curtain_orders')) {
                 );    
                 $post_id = wp_insert_post($new_post);
                 update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
-                update_post_meta( $post_id, 'order_item_name', 'New item');
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             }
             wp_send_json($response);
@@ -449,7 +448,9 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                $response = wp_delete_post($order_item_id, true);
+                $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+                $response['html_contain'] = $this->display_order_item_list($customer_order_id);
+                wp_delete_post($order_item_id, true);
             }
             wp_send_json($response);
         }
