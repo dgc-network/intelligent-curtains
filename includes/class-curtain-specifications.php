@@ -33,19 +33,31 @@ if (!class_exists('curtain_specifications')) {
 
         function register_curtain_specification_post_type() {
             $labels = array(
-                'menu_name'     => _x('curtain-specification', 'admin menu', 'textdomain'),
+                'menu_name'     => _x('curtain-spec', 'admin menu', 'textdomain'),
             );
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-specifications'),
+                'rewrite'       => array('slug' => 'curtain-specs'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
                 //'show_in_menu'  => false,
             );
-            register_post_type( 'curtain-specification', $args );
+            register_post_type( 'curtain-spec', $args );
         }
 
+        function retrieve_curtain_specification_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+            $args = array(
+                'post_type'      => 'curtain-spec',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+            );        
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
         function display_curtain_specification_list() {
             ?>
             <div class="ui-widget" id="result-container">
@@ -116,18 +128,6 @@ if (!class_exists('curtain_specifications')) {
             echo $this->display_curtain_specification_dialog();
         }
 
-        function retrieve_curtain_specification_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-            $args = array(
-                'post_type'      => 'curtain-specification',
-                'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
-            );        
-            $query = new WP_Query($args);
-            return $query;
-        }
-        
         function display_curtain_specification_dialog($curtain_specification_id=false) {            
             $curtain_categories = new curtain_categories();
             $curtain_specification_title = get_the_title($curtain_specification_id);
