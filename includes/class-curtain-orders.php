@@ -323,13 +323,18 @@ if (!class_exists('curtain_orders')) {
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                 $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                                $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
+                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
                                 $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                                 $curtain_specification_price = get_post_meta($curtain_model_id, 'curtain_specification_price', true);
-                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
+                                $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
                                 $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                $curtain_width = ($curtain_width) ? $curtain_width : 1;
                                 $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                                $curtain_height = ($curtain_height) ? $curtain_height : 1;
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                                //$order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width*$curtain_height));
+                                $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
+                                $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
                                 $customer_order_amount += $order_item_amount;
 
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
