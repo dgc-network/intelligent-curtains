@@ -64,6 +64,8 @@ jQuery(document).ready(function($) {
                         '_curtain_max_width': $("#curtain-max-width").val(),
                         '_curtain_min_height': $("#curtain-min-height").val(),
                         '_curtain_max_height': $("#curtain-max-height").val(),
+                        '_is_specification': $('#is-specification').is(":checked") ? 1 : 0,
+                        '_is_height': $('#is-height').is(":checked") ? 1 : 0,
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);

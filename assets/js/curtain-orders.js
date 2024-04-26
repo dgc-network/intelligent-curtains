@@ -120,6 +120,7 @@ jQuery(document).ready(function($) {
                         '_curtain_width': $("#curtain-width").val(),
                         '_curtain_height': $("#curtain-height").val(),
                         '_order_item_qty': $("#order-item-qty").val(),
+                        '_order_item_note': $("#order-item-note").val(),
                     },
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);

@@ -129,6 +129,10 @@ if (!class_exists('curtain_categories')) {
             $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
             $curtain_min_height = get_post_meta($curtain_category_id, 'curtain_min_height', true);
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
+            $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
+            $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
+            $is_height = get_post_meta($curtain_category_id, 'is_height', true);
+            $is_height_checked = ($is_height == 1) ? 'checked' : '';
             ob_start();
             ?>
             <div id="curtain-category-dialog" title="Category dialog">
@@ -137,7 +141,7 @@ if (!class_exists('curtain_categories')) {
                 <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-category-title" value="<?php echo esc_html($curtain_category_title);?>" class="text ui-widget-content ui-corner-all" />
 
-                <input type="checkbox" id="hide-specification" style="display:inline-block; width:5%; " /> Hide the Specification.<br>
+                <input type="checkbox" id="is-specification" style="display:inline-block; width:5%; " <?php echo $is_specification_checked;?> /> Hide the Specification.
                 <div>
                     <input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.
                     <div id="show-width">
@@ -146,7 +150,7 @@ if (!class_exists('curtain_categories')) {
                     </div>
                 </div>
                 <div>
-                    <input type="checkbox" id="hide-height" style="display:inline-block; width:5%; " /> Hide the Height.
+                    <input type="checkbox" id="is-height" style="display:inline-block; width:5%; " <?php echo $is_height_checked;?> /> Hide the Height.
                     <div id="show-height">
                         <input type="text" id="curtain-min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
                         <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
@@ -181,6 +185,8 @@ if (!class_exists('curtain_categories')) {
                 update_post_meta( $curtain_category_id, 'curtain_max_width', sanitize_text_field($_POST['_curtain_max_width']));
                 update_post_meta( $curtain_category_id, 'curtain_min_height', sanitize_text_field($_POST['_curtain_min_height']));
                 update_post_meta( $curtain_category_id, 'curtain_max_height', sanitize_text_field($_POST['_curtain_max_height']));
+                update_post_meta( $curtain_category_id, 'is_specification', sanitize_text_field($_POST['_is_specification']));
+                update_post_meta( $curtain_category_id, 'is_height', sanitize_text_field($_POST['_is_height']));
                 // Update the post title
                 if (isset($_POST['_curtain_category_title'])) {
                     $updated_post = array(
@@ -212,24 +218,13 @@ if (!class_exists('curtain_categories')) {
             wp_send_json($response);
         }
 
-        function select_curtain_category_option_data($selected_option=0) {
-            $query = $this->retrieve_curtain_category_data();
-            $options = '<option value="">Select category</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
-        
         function select_curtain_category_options($selected_option=0) {
             $args = array(
                 'post_type'      => 'curtain-category',
                 'posts_per_page' => -1,
             );
             $query = new WP_Query($args);
-            //$query = $this->retrieve_curtain_category_data();        
+
             $options = '<option value="">Select category</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
