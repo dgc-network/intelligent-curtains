@@ -15,7 +15,7 @@ if (!class_exists('curtain_orders')) {
             $this->create_tables();
             $this->_wp_page_title = 'Orders';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'shopping-item-list', 'system');
-            add_shortcode( 'shopping-item-list', array( $this, 'list_order_items' ) );
+            //add_shortcode( 'shopping-item-list', array( $this, 'list_order_items' ) );
             if (file_exists(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json')) {
                 $this->see_more = file_get_contents(plugin_dir_path( __DIR__ ).'assets/templates/see_more.json');
                 $this->see_more = json_decode($this->see_more, true);
@@ -37,11 +37,9 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
 
+            add_shortcode( 'shopping-item-list', array( $this, 'display_quotation_list' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
-            //add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
-            //add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
-            //add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );

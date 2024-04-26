@@ -14,13 +14,13 @@ if (!class_exists('curtain_specifications')) {
             $this->create_tables();
             $this->_wp_page_title = 'Specifications';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-specification-list');
-            add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
+            //add_shortcode( 'curtain-specification-list', array( $this, 'list_curtain_specifications' ) );
             add_action( 'wp_ajax_specification_dialog_get_data', array( $this, 'specification_dialog_get_data' ) );
             add_action( 'wp_ajax_nopriv_specification_dialog_get_data', array( $this, 'specification_dialog_get_data' ) );
             add_action( 'wp_ajax_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
 
-
+            add_shortcode( 'curtain-specification-list', array( $this, 'display_curtain_specification_list' ) );
             add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_curtain_specification_dialog_data', array( $this, 'get_curtain_specification_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_specification_dialog_data', array( $this, 'get_curtain_specification_dialog_data' ) );
@@ -41,7 +41,7 @@ if (!class_exists('curtain_specifications')) {
                 'rewrite'       => array('slug' => 'curtain-specs'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'curtain-spec', $args );
         }
