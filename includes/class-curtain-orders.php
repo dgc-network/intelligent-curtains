@@ -40,8 +40,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
             //add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
-            add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
-            add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
@@ -86,51 +86,6 @@ if (!class_exists('curtain_orders')) {
                 'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
-        }
-/*
-        function register_curtain_category_post_type() {
-            $labels = array(
-                'menu_name'     => _x('curtain-category', 'admin menu', 'textdomain'),
-            );
-            $args = array(
-                'labels'        => $labels,
-                'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-categories'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                //'show_in_menu'  => false,
-            );
-            register_post_type( 'curtain-category', $args );
-        }
-*/
-        function register_curtain_model_post_type() {
-            $labels = array(
-                'menu_name'     => _x('curtain-model', 'admin menu', 'textdomain'),
-            );
-            $args = array(
-                'labels'        => $labels,
-                'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-models'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                //'show_in_menu'  => false,
-            );
-            register_post_type( 'curtain-model', $args );
-        }
-
-        function register_curtain_specification_post_type() {
-            $labels = array(
-                'menu_name'     => _x('curtain-specification', 'admin menu', 'textdomain'),
-            );
-            $args = array(
-                'labels'        => $labels,
-                'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-specifications'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                //'show_in_menu'  => false,
-            );
-            register_post_type( 'curtain-specification', $args );
         }
 
         function display_quotation_list() {
@@ -209,6 +164,7 @@ if (!class_exists('curtain_orders')) {
                 ?>
             </fieldset>
             </div>
+            <?php echo $this->display_order_item_dialog();?>
             <?php
         }
 
@@ -278,27 +234,25 @@ if (!class_exists('curtain_orders')) {
         }
         
         function display_quotation_dialog($customer_order_id=false) {
-            if ($customer_order_id) {
-                $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
-                $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
-                $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
-                ob_start();
-                ?>
-                <fieldset>
-                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
-                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
-                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <?php echo $this->display_order_item_list($customer_order_id);?>
-                <hr>
-                <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                </fieldset>
-                <?php
-                $html = ob_get_clean();
-                return $html;
-            }
+            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+            $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
+            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            ob_start();
+            ?>
+            <fieldset>
+            <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+            <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
+            <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+            <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+            <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+            <?php echo $this->display_order_item_list($customer_order_id);?>
+            <hr>
+            <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+            <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+            </fieldset>
+            <?php
+            $html = ob_get_clean();
+            return $html;
         }
         
         function get_quotation_dialog_data() {
@@ -386,8 +340,6 @@ if (!class_exists('curtain_orders')) {
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
             </fieldset>
             </div>
-            <?php //echo $this->display_order_item_dialog();?>
-            <?php $this->display_order_item_dialog();?>
             <?php
             $html = ob_get_clean();
             return $html;    
@@ -437,58 +389,46 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_dialog($order_item_id=false) {
+            $curtain_agents = new curtain_agents();
+            $curtain_categories = new curtain_categories();
+            $curtain_models = new curtain_models();
+            $curtain_specifications = new curtain_specifications();
+            $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
+            $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+            $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
+            $curtain_width = get_post_meta($order_item_id, 'curtain_width', true);
+            $curtain_height = get_post_meta($order_item_id, 'curtain_height', true);
+            $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
+            $order_item_note = get_post_meta($order_item_id, 'order_item_note', true);
+
+            ob_start();
             ?>
-            <div id="order-item-dialog-2024" title="Order Item dialog">
+            <div id="curtain-order-item-dialog" title="Order Item dialog">
             <fieldset>
-            <input type="hidden" id="order-item-id">
-            <label for="curtain-category-id">種類</label>
-            <select id="curtain-category-id"></select>
-            <label id="curtain-model-label" for="curtain-model-id">型號</label>
-            <select id="curtain-model-id"></select>
-            <div id="spec-div" style="display:none;">
-                <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
-                <select id="curtain-specification-id"></select>
-                <label id="curtain-width-label" for="curtain-width">寬</label>
-                <input type="text" id="curtain-width" />
-                <div id="height-div" style="display:none;">
-                    <label id="curtain-height-label" for="curtain-height">高</label>
-                    <input type="text" id="curtain-height" />
+                <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
+                <label for="curtain-category-id">類別</label>
+                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
+                <label id="curtain-model-label" for="curtain-model-id">型號</label>
+                <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id);?></select>
+                <div id="spec-div" style="display:none;">
+                    <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
+                    <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id);?></select>
+                    <label id="curtain-width-label" for="curtain-width">寬</label>
+                    <input type="text" id="curtain-width" value="<?php echo $curtain_width;?>" />
+                    <div id="height-div" style="display:none;">
+                        <label id="curtain-height-label" for="curtain-height">高</label>
+                        <input type="text" id="curtain-height" value="<?php echo $curtain_height;?>" />
+                    </div>
                 </div>
-            </div>
-            <label for="order-item-qty">數量</label>
-            <input type="text" id="order-item-qty" />
-            <label for="order-item-note">備註</label>
-            <input type="text" id="order-item-note" />
+                <label for="order-item-qty">數量</label>
+                <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" />
+                <label for="order-item-note">備註</label>
+                <input type="text" id="order-item-note" value="<?php echo $order_item_note;?>" />
             </fieldset>
             </div>
             <?php
-/*
-            //if ($order_item_id) {
-                $order_item_name = get_post_meta($order_item_id, 'order_item_name', true);
-                $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
-                $order_item_amount = get_post_meta($order_item_id, 'order_item_amount', true);
-                $order_item_remark = get_post_meta($order_item_id, 'order_item_remark', true);
-                ob_start();
-                ?>
-                <div id="order-item-dialog-2024" title="Order Item dialog" style="display:none">
-                <fieldset>
-                <input type="hidden" id="order-item-id" value="<?php echo esc_attr($order_item_id);?>" />
-                <label for="order-item-name"><?php echo __( '產品名稱', 'your-text-domain' );?></label>
-                <input type="text" id="order-item-name" value="<?php echo esc_html($order_item_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
-                <input type="text" id="order-item-qty" value="<?php echo esc_html($order_item_qty);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="order-item-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-                <textarea id="order-item-remark" rows="3" style="width:100%;"><?php echo $order_item_remark;?></textarea>
-                <hr>
-                <input type="button" id="save-order-item" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                <input type="button" id="del-order-item" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                </fieldset>
-                </div>
-                <?php
-                $html = ob_get_clean();
-                return $html;
-            //}
-*/            
+            $html = ob_get_clean();
+            return $html;
         }
         
         function del_order_item_dialog_data() {
@@ -501,7 +441,15 @@ if (!class_exists('curtain_orders')) {
         }
 
         function get_order_item_dialog_data() {
-
+            $response = array();
+            if (isset($_POST['_order_item_id'])) {
+                $order_item_id = sanitize_text_field($_POST['_order_item_id']);
+                $response['html_contain'] = $this->display_order_item_dialog($order_item_id);
+            } else {
+                $response['html_contain'] = 'Invalid AJAX request!';
+            }
+            wp_send_json($response);
+/*
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
@@ -552,106 +500,14 @@ if (!class_exists('curtain_orders')) {
             $response['min_height'] = $curtain_categories->get_min_height($row->curtain_category_id);
             $response['max_height'] = $curtain_categories->get_max_height($row->curtain_category_id);
 */
-            wp_send_json($response);
+            //wp_send_json($response);
         }
 
-        function select_curtain_category_options($selected_option=0) {
-            $args = array(
-                'post_type'      => 'curtain-category',
-                'posts_per_page' => -1,
-            );
-            $query = new WP_Query($args);
-            //$query = retrieve_doc_category_data();
-        
-            $options = '<option value="">Select category</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
-        
-        function select_curtain_model_options($selected_option=0, $curtain_category_id=0) {
-            $args = array(
-                'post_type'      => 'curtain-model',
-                'posts_per_page' => -1,
-            );
-            $query = new WP_Query($args);
-        
-            $options = '<option value="">Select model</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
-        
-        function select_curtain_specification_options($selected_option=0, $curtain_category_id=0) {
-            $args = array(
-                'post_type'      => 'curtain-specification',
-                'posts_per_page' => -1,
-            );
-            $query = new WP_Query($args);
-        
-            $options = '<option value="">Select specification</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
-        
 
 
 
 
         
-        public function order_status_notice($customer_order_number, $customer_order_status) {
-            global $wpdb;
-            $system_status = new system_status();
-            $line_bot_api = new line_bot_api();
-
-            $link_uri = get_option('Orders').'?_print='.$customer_order_number;
-            $order_status = 'Order status has been changed to '.$system_status->get_name($customer_order_status);
-
-            $all_users = get_users();
-            foreach($all_users as $user){
-                if($user->has_cap('manage_options')){
-                    $this->see_more["header"]["type"] = 'box';
-                    $this->see_more["header"]["layout"] = 'vertical';
-                    $this->see_more["header"]["backgroundColor"] = "#e3dee3";
-                    $this->see_more["header"]["contents"][0]["type"] = 'text';
-                    $this->see_more["header"]["contents"][0]["text"] = 'Order No.: '.$customer_order_number;
-
-                    $this->see_more["body"]["contents"][0]["type"] = 'text';
-                    $this->see_more["body"]["contents"][0]["text"] = $order_status;
-                    $this->see_more["body"]["contents"][0]["wrap"] = true;
-
-                    $this->see_more["footer"]["type"] = 'box';
-                    $this->see_more["footer"]["layout"] = 'vertical';
-                    $this->see_more["footer"]["backgroundColor"] = "#e3dee3";
-                    $this->see_more["footer"]["contents"][0]["type"] = 'button';
-                    $this->see_more["footer"]["contents"][0]["action"]["type"] = 'uri';
-                    $this->see_more["footer"]["contents"][0]["action"]["label"] = 'Go back Order';
-                    $this->see_more["footer"]["contents"][0]["action"]["uri"] = $link_uri;
-
-                    $line_bot_api->pushMessage([
-                        'to' => get_user_meta($user->ID, 'line_user_id', TRUE),
-                        'messages' => [
-                            [
-                                "type" => "flex",
-                                "altText" => 'System Notification',
-                                'contents' => $this->see_more
-                            ]
-                        ]
-                    ]);
-                }            
-            }
-        }
-
         public function list_order_items() {
             // 2024-4-18 Wilson has requested to use the Quotation instead of the Shopping Cart List
             $this->display_quotation_list();
@@ -1050,7 +906,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '</tbody></table></div>';
             $output .= '<input class="wp-block-button__link" type="submit" value="結帳" name="_checkout_submit">';
             $output .= '</form>';
-/*
+
             // Order Item Dialog
             $output .= '<div id="order-item-dialog" title="Order Item dialog">';
             $output .= '<fieldset>';
@@ -1071,7 +927,7 @@ if (!class_exists('curtain_orders')) {
             $output .= '<input type="text" id="order-item-note" />';
             $output .= '</fieldset>';
             $output .= '</div>';
-*/
+
             // Sub Items Dialog
             $output .= '<div id="sub-items-dialog" title="Sub Items dialog">';
             $output .= '<table id="sub-items" class="ui-widget ui-widget-content">';
@@ -1128,6 +984,49 @@ if (!class_exists('curtain_orders')) {
                 $output .= '</div>';
             }
             return $output;
+        }
+
+        public function order_status_notice($customer_order_number, $customer_order_status) {
+            global $wpdb;
+            $system_status = new system_status();
+            $line_bot_api = new line_bot_api();
+
+            $link_uri = get_option('Orders').'?_print='.$customer_order_number;
+            $order_status = 'Order status has been changed to '.$system_status->get_name($customer_order_status);
+
+            $all_users = get_users();
+            foreach($all_users as $user){
+                if($user->has_cap('manage_options')){
+                    $this->see_more["header"]["type"] = 'box';
+                    $this->see_more["header"]["layout"] = 'vertical';
+                    $this->see_more["header"]["backgroundColor"] = "#e3dee3";
+                    $this->see_more["header"]["contents"][0]["type"] = 'text';
+                    $this->see_more["header"]["contents"][0]["text"] = 'Order No.: '.$customer_order_number;
+
+                    $this->see_more["body"]["contents"][0]["type"] = 'text';
+                    $this->see_more["body"]["contents"][0]["text"] = $order_status;
+                    $this->see_more["body"]["contents"][0]["wrap"] = true;
+
+                    $this->see_more["footer"]["type"] = 'box';
+                    $this->see_more["footer"]["layout"] = 'vertical';
+                    $this->see_more["footer"]["backgroundColor"] = "#e3dee3";
+                    $this->see_more["footer"]["contents"][0]["type"] = 'button';
+                    $this->see_more["footer"]["contents"][0]["action"]["type"] = 'uri';
+                    $this->see_more["footer"]["contents"][0]["action"]["label"] = 'Go back Order';
+                    $this->see_more["footer"]["contents"][0]["action"]["uri"] = $link_uri;
+
+                    $line_bot_api->pushMessage([
+                        'to' => get_user_meta($user->ID, 'line_user_id', TRUE),
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'System Notification',
+                                'contents' => $this->see_more
+                            ]
+                        ]
+                    ]);
+                }            
+            }
         }
 
         function order_item_dialog_get_data() {

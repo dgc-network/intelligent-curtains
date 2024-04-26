@@ -143,7 +143,7 @@ if (!class_exists('curtain_models')) {
                 <label for="curtain-model-description"><?php echo __( 'Description', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-description" value="<?php echo esc_html($curtain_model_description);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-category-id"><?php echo __( 'Category', 'your-text-domain' );?></label>
-                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_option_data($curtain_category_id);?></select>
+                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="curtain-model-price"><?php echo __( 'Price', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-price" value="<?php echo esc_html($curtain_model_price);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-model-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
@@ -203,6 +203,23 @@ if (!class_exists('curtain_models')) {
             }
             wp_send_json($response);
         }
+
+        function select_curtain_model_options($selected_option=0, $curtain_category_id=0) {
+            $args = array(
+                'post_type'      => 'curtain-model',
+                'posts_per_page' => -1,
+            );
+            $query = new WP_Query($args);
+        
+            $options = '<option value="">Select model</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
+        
 
 
         public function list_curtain_models() {

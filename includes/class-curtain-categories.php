@@ -223,7 +223,24 @@ if (!class_exists('curtain_categories')) {
             return $options;
         }
         
+        function select_curtain_category_options($selected_option=0) {
+            $args = array(
+                'post_type'      => 'curtain-category',
+                'posts_per_page' => -1,
+            );
+            $query = new WP_Query($args);
+            //$query = $this->retrieve_curtain_category_data();        
+            $options = '<option value="">Select category</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
         
+        
+
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type
             $this->display_curtain_category_list();

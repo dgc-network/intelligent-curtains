@@ -215,8 +215,8 @@ jQuery(document).ready(function($) {
                 
             },
             success: function (response) {
-                $('#curtain-specification-dialog').html(response.html_contain);         
-                $("#curtain-specification-dialog").dialog('open');                                                    
+                $('#curtain-specification-dialog').html(response.html_contain);
+                $("#curtain-specification-dialog").dialog('open');
             },
             error: function (error) {
                 console.log(error);

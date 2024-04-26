@@ -146,7 +146,7 @@ if (!class_exists('curtain_specifications')) {
                 <label for="curtain-specification-description"><?php echo __( 'Description', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-specification-description" value="<?php echo esc_html($curtain_specification_description);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-category-id"><?php echo __( 'Category', 'your-text-domain' );?></label>
-                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_option_data($curtain_category_id);?></select>
+                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="curtain-specification-unit"><?php echo __( 'Unit', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-specification-unit" value="<?php echo esc_html($curtain_specification_unit);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-specification-price"><?php echo __( 'Price', 'your-text-domain' );?></label>
@@ -187,7 +187,7 @@ if (!class_exists('curtain_specifications')) {
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
-                    'post_title'    => 'New specification',
+                    'post_title'    => '-',
                     'post_content'  => 'Your post content goes here.',
                     'post_status'   => 'publish',
                     'post_author'   => $current_user_id,
@@ -205,6 +205,22 @@ if (!class_exists('curtain_specifications')) {
                 $response = wp_delete_post($curtain_specification_id, true);
             }
             wp_send_json($response);
+        }
+
+        function select_curtain_specification_options($selected_option=0, $curtain_category_id=0) {
+            $args = array(
+                'post_type'      => 'curtain-spec',
+                'posts_per_page' => -1,
+            );
+            $query = new WP_Query($args);
+        
+            $options = '<option value="">Select specification</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
         }
 
 
