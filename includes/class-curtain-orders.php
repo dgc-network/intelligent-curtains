@@ -239,6 +239,7 @@ if (!class_exists('curtain_orders')) {
             $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
+            <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
             <fieldset>
             <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
             <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>

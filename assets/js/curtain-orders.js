@@ -102,86 +102,11 @@ jQuery(document).ready(function($) {
                         data: {
                             action: 'get_order_item_dialog_data',
                             _order_item_id: order_item_id,
-                            //_is_admin: $("#is-admin").val()
                         },
                         success: function (response) {
+                            alert(order_item_id)
                             $('#curtain-order-item-dialog').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('open');
-/*            
-                            $("#order-item-id").val(order_item_id);
-                            $("#curtain-category-id").empty().append(response.curtain_category_id);
-                            $("#curtain-model-id").empty().append(response.curtain_model_id);
-                            $("#curtain-remote-id").empty().append(response.curtain_remote_id);
-                            $("#curtain-specification-id").empty().append(response.curtain_specification_id);
-                            $("#curtain-width").val(response.curtain_width);
-                            $("#curtain-height").val(response.curtain_height);
-                            $("#order-item-qty").val(response.order_item_qty);
-            
-                            if (response.is_remote_hided) {
-                                $('#curtain-remote-label').hide();
-                                $('#curtain-remote-id').hide();
-                            } else {
-                                $('#curtain-remote-label').show();
-                                $('#curtain-remote-id').show();
-                            }
-            
-                            if (response.is_specification_hided) {
-                                $('#curtain-specification-label').hide();
-                                $('#curtain-specification-id').hide();
-                            } else {
-                                $('#curtain-specification-label').show();
-                                $('#curtain-specification-id').show();
-                            }
-            
-                            if (response.is_width_hided) {
-                                $('#curtain-width-label').hide();
-                                $('#curtain-width').hide();
-                            } else {
-                                $('#curtain-width-label').show();
-                                $('#curtain-width').show();
-                            }
-            
-                            if (response.is_height_hided) {
-                                $('#curtain-height-label').hide();
-                                $('#curtain-height').hide();
-                            } else {
-                                $('#curtain-height-label').show();
-                                $('#curtain-height').show();
-                            }
-            
-                            //$("#order-item-dialog").dialog('open');
-                            $("#curtain-order-item-dialog").dialog('open');
-                            //$("#order-item-div").dialog('open');
-
-                            $(".datepicker").datepicker({
-                                onSelect: function(dateText, inst) {
-                                    $(this).val(dateText);
-                                }
-                            });
-
-                            $("#curtain-category-id").on("change", function () {
-                                var curtain_category_id = $(this).val();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: ajax_object.ajax_url,
-                                    dataType: "json",
-                                    data: {
-                                        'action': 'get_order_item_dialog_data',
-                                        '_curtain_category_id': curtain_category_id,
-                                    },
-                                    success: function (response) {
-                                        $("#curtain-model-id").empty().append(response.curtain_model_id);
-                                        $("#curtain-specification-id").empty().append(response.curtain_specification_id);
-                                                    },
-                                    error: function(error){
-                                        console.error(error);                    
-                                        alert(error);
-                                    }
-                                });        
-                            });
-*/                            
-                        
-            
                         },
                         error: function(error){
                             console.error(error);                    
