@@ -138,6 +138,7 @@ if (!class_exists('curtain_orders')) {
                         while ($query->have_posts()) : $query->the_post();
                             $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
+                            $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
                             $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
