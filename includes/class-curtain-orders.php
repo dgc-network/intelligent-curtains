@@ -326,7 +326,7 @@ if (!class_exists('curtain_orders')) {
                                 $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
                                 $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
                                 $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
-                                $curtain_specification_price = get_post_meta($curtain_model_id, 'curtain_specification_price', true);
+                                $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
                                 $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
                                 $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
                                 $curtain_width = ($curtain_width) ? $curtain_width : 1;
