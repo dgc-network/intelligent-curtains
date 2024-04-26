@@ -156,7 +156,6 @@ jQuery(document).ready(function($) {
                         '_order_item_id': $("#order-item-id").val(),
                         '_curtain_category_id': $("#curtain-category-id").val(),
                         '_curtain_model_id': $("#curtain-model-id").val(),
-                        //'_curtain_remote_id': $("#curtain-remote-id").val(),
                         '_curtain_specification_id': $("#curtain-specification-id").val(),
                         '_curtain_width': $("#curtain-width").val(),
                         '_curtain_height': $("#curtain-height").val(),
@@ -165,7 +164,7 @@ jQuery(document).ready(function($) {
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);
                         $("#curtain-order-item-dialog").dialog('close');
-                        activate_order_item_dialog_data();
+                        activate_order_item_dialog_data($("#customer-order-id").val());
         
                     },
                     error: function(error){
@@ -187,7 +186,7 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
-                            activate_order_item_dialog_data();
+                            activate_order_item_dialog_data($("#customer-order-id").val());
             
                         },
                         error: function(error){
@@ -213,6 +212,7 @@ jQuery(document).ready(function($) {
                 },
                 success: function (response) {
                     $('#order-item-container').html(response.html_contain);
+                    activate_order_item_dialog_data(customer_order_id);
                 },
                 error: function(error){
                     console.error(error);                    
