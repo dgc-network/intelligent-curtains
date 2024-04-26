@@ -211,13 +211,21 @@ if (!class_exists('curtain_specifications')) {
             $args = array(
                 'post_type'      => 'curtain-spec',
                 'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array(
+                        'key'   => 'curtain_category_id',
+                        'value' => $curtain_category_id,
+                    ),
+                ),
             );
             $query = new WP_Query($args);
         
             $options = '<option value="">Select specification</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
+                $option = get_the_content().'('.get_the_title().')';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($option) . '</option>';
+                //$options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;
