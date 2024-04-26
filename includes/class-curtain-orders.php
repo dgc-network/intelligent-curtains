@@ -143,7 +143,7 @@ if (!class_exists('curtain_orders')) {
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_date());?></td>
                                 <td><?php echo esc_html($customer_name);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($customer_order_amount);?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
                                 <td><?php echo esc_html($customer_order_remark);?></td>
                             </tr>
                             <?php
@@ -424,7 +424,7 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
-                //set_customer_order_amount($customer_order_id);
+                set_customer_order_amount($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
