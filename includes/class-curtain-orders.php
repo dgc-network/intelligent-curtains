@@ -328,7 +328,7 @@ if (!class_exists('curtain_orders')) {
                                 $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
                                 $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                                $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width*$curtain_height));
+                                //$order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width*$curtain_height));
                                 $customer_order_amount += $order_item_amount;
 
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
