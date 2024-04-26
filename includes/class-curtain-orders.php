@@ -299,7 +299,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
-            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            $customer_order_amount = 0;
             ob_start();
             ?>
             <div id="order-item-container">
@@ -317,7 +317,6 @@ if (!class_exists('curtain_orders')) {
                         <?php
                         $query = $this->retrieve_order_item_data($customer_order_id);
                         if ($query->have_posts()) {
-                            $customer_order_amount = 0;
                             while ($query->have_posts()) : $query->the_post();
                                 $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                                 $curtain_category_title = get_the_title($curtain_category_id);
@@ -464,58 +463,6 @@ if (!class_exists('curtain_orders')) {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
             wp_send_json($response);
-/*
-            $response = array();
-            if( isset($_POST['_order_item_id']) ) {
-                $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
-                $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
-                $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
-                $response["curtain_category_id"] = $this->select_curtain_category_options($curtain_category_id);
-                $response["curtain_model_id"] = $this->select_curtain_model_options($curtain_model_id, $curtain_category_id);
-                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);
-                $response["curtain_width"] = get_post_meta($order_item_id, 'curtain_width', true);
-                $response["curtain_height"] = get_post_meta($order_item_id, 'curtain_height', true);
-                $response["order_item_qty"] = get_post_meta($order_item_id, 'order_item_qty', true);
-                $response["order_item_note"] = get_post_meta($order_item_id, 'order_item_note', true);
-
-    
-            }
-
-            if( isset($_POST['_curtain_category_id']) ) {
-                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
-                $response["curtain_model_id"] = $this->select_curtain_model_options($curtain_model_id, $curtain_category_id);
-                $response["curtain_specification_id"] = $this->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);
-            }
-/*
-            global $wpdb;
-            $curtain_categories = new curtain_categories();
-            $curtain_models = new curtain_models();
-            $curtain_remotes = new curtain_remotes();
-            $curtain_specifications = new curtain_specifications();
-
-            $_id = $_POST['_id'];
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}order_items WHERE curtain_order_id = %d", $_id ), OBJECT );
-
-            $response["curtain_category_id"] = $curtain_categories->select_options($row->curtain_category_id);
-            $response["curtain_model_id"] = $curtain_models->select_options($row->curtain_category_id, $row->curtain_model_id );
-            $response["curtain_remote_id"] = $curtain_remotes->select_options($row->curtain_remote_id);
-            $response["curtain_specification_id"] = $curtain_specifications->select_options($row->curtain_category_id, $row->curtain_specification_id );
-            $response["curtain_width"] = $row->curtain_width;
-            $response["curtain_height"] = $row->curtain_height;
-            $response["order_item_qty"] = $row->order_item_qty;
-            $response["order_item_note"] = $row->order_item_note;
-
-            $response["is_remote_hided"] = $curtain_categories->is_remote_hided($row->curtain_category_id);
-            $response["is_specification_hided"] = $curtain_categories->is_specification_hided($row->curtain_category_id);
-            $response["is_width_hided"] = $curtain_categories->is_width_hided($row->curtain_category_id);
-            $response["is_height_hided"] = $curtain_categories->is_height_hided($row->curtain_category_id);
-            $response['min_width'] = $curtain_categories->get_min_width($row->curtain_category_id);
-            $response['max_width'] = $curtain_categories->get_max_width($row->curtain_category_id);
-            $response['min_height'] = $curtain_categories->get_min_height($row->curtain_category_id);
-            $response['max_height'] = $curtain_categories->get_max_height($row->curtain_category_id);
-*/
-            //wp_send_json($response);
         }
 
 
