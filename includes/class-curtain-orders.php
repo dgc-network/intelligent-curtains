@@ -418,6 +418,14 @@ if (!class_exists('curtain_orders')) {
             $curtain_height = get_post_meta($order_item_id, 'curtain_height', true);
             $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
             $order_item_note = get_post_meta($order_item_id, 'order_item_note', true);
+            $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
+            $is_specification_hided = ($is_specification == 1) ? 'display:none;' : '';
+            $is_height = get_post_meta($curtain_category_id, 'is_height', true);
+            $is_height_hided = ($is_height == 1) ? 'display:none;' : '';
+            $curtain_min_width = get_post_meta($curtain_category_id, 'curtain_min_width', true);
+            $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
+            $curtain_min_height = get_post_meta($curtain_category_id, 'curtain_min_height', true);
+            $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
 
             ob_start();
             ?>
@@ -428,14 +436,14 @@ if (!class_exists('curtain_orders')) {
                 <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label id="curtain-model-label" for="curtain-model-id">型號</label>
                 <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
-                <div id="spec-div" style="display:none;">
+                <div id="spec-div" style="<?php echo $is_specification_hided;?>">
                     <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
                     <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
                     <label id="curtain-width-label" for="curtain-width">寬</label>
-                    <input type="text" id="curtain-width" value="<?php echo $curtain_width;?>" />
-                    <div id="height-div" style="display:none;">
+                    <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" />
+                    <div id="height-div" style="<?php echo $is_height_hided;?>">
                         <label id="curtain-height-label" for="curtain-height">高</label>
-                        <input type="text" id="curtain-height" value="<?php echo $curtain_height;?>" />
+                        <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" />
                     </div>
                 </div>
                 <label for="order-item-qty">數量</label>
