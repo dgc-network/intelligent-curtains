@@ -190,7 +190,7 @@ if (!class_exists('curtain_specifications')) {
                     'post_content'  => 'Your post content goes here.',
                     'post_status'   => 'publish',
                     'post_author'   => $current_user_id,
-                    'post_type'     => 'curtain-specification',
+                    'post_type'     => 'curtain-spec',
                 );    
                 $post_id = wp_insert_post($new_post);
             }
