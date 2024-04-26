@@ -399,8 +399,8 @@ if (!class_exists('curtain_orders')) {
                     'post_type'     => 'order-item',
                 );    
                 $post_id = wp_insert_post($new_post);
-                update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             }
             wp_send_json($response);

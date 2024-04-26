@@ -18,7 +18,6 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'get_quotation_dialog_data',
                 _customer_order_id: customer_order_id,
-                //_is_admin: $("#is-admin").val()
             },
             success: function (response) {
 
