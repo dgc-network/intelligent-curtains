@@ -104,7 +104,6 @@ jQuery(document).ready(function($) {
                             _order_item_id: order_item_id,
                         },
                         success: function (response) {
-                            alert(order_item_id)
                             $('#curtain-order-item-dialog').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('open');
                         },
@@ -162,6 +161,7 @@ jQuery(document).ready(function($) {
                     },
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);
+                        $("#curtain-order-item-dialog").dialog('close');
                     },
                     error: function(error){
                         console.error(error);
@@ -182,6 +182,7 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             //window.location.replace(window.location.href);
+                            $("#curtain-order-item-dialog").dialog('close');
                         },
                         error: function(error){
                             console.error(error);
@@ -192,7 +193,7 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    $("#curtain-order-item-dialog").dialog('close');        
+    //$("#curtain-order-item-dialog").dialog('close');
 
 
 });

@@ -299,7 +299,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
-            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
             <div id="order-item-container">
@@ -317,12 +317,26 @@ if (!class_exists('curtain_orders')) {
                         <?php
                         $query = $this->retrieve_order_item_data($customer_order_id);
                         if ($query->have_posts()) {
+                            $customer_order_amount = 0;
                             while ($query->have_posts()) : $query->the_post();
+                                $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                                $curtain_category_title = get_the_title($curtain_category_id);
+                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                                $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                                $curtain_specification_price = get_post_meta($curtain_model_id, 'curtain_specification_price', true);
+                                $order_item_description = get_the_title($curtain_model_id).'/'.get_the_title($curtain_specification_id);
+                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                                $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width*$curtain_height));
+                                $customer_order_amount += $order_item_amount;
+
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_name', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_description', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_qty', true)).'</td>';
-                                echo '<td style="text-align:center;">'.esc_html(get_post_meta(get_the_ID(), 'order_item_amount', true)).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
+                                echo '<td>'.esc_html($order_item_description).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
+                                echo '<td style="text-align:center;">'.esc_html($order_item_amount).'</td>';
                                 echo '</tr>';
                             endwhile;
                             wp_reset_postdata();
