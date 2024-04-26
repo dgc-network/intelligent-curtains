@@ -346,8 +346,8 @@ if (!class_exists('curtain_orders')) {
                         <tr>
                             <td></td>
                             <td></td>
-                            <td><?php echo __( 'Sum', 'your-text-domain' );?></th>
-                            <td]><?php echo $customer_order_amount;?></th>
+                            <td style="text-align:center;"><?php echo __( 'Sum', 'your-text-domain' );?></td>
+                            <td style="text-align:center;"><?php echo $customer_order_amount;?></td>
                         </tr>
                     </tfoot>
                 </table>
