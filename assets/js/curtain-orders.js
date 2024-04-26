@@ -194,7 +194,7 @@ jQuery(document).ready(function($) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     $("#curtain-order-item-dialog").dialog('open');
 
-                    $("#cutain-category-id").on( "change", function() {
+                    $("#curtain-category-id").on( "change", function() {
                         $.ajax({
                             url: ajax_object.ajax_url,
                             type: 'post',
