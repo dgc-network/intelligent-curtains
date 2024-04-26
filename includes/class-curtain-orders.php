@@ -406,12 +406,12 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function display_order_item_dialog($order_item_id=false) {
+        function display_order_item_dialog($order_item_id=false, $curtain_category_id=false) {
             $curtain_agents = new curtain_agents();
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
             $curtain_specifications = new curtain_specifications();
-            $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
+            if (!$curtain_category_id) $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
             $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
             $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
             $curtain_width = get_post_meta($order_item_id, 'curtain_width', true);
@@ -425,12 +425,12 @@ if (!class_exists('curtain_orders')) {
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
                 <label for="curtain-category-id">類別</label>
-                <select id="curtain-category-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
+                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label id="curtain-model-label" for="curtain-model-id">型號</label>
-                <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
+                <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
                 <div id="spec-div" style="display:none;">
                     <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
-                    <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
+                    <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
                     <label id="curtain-width-label" for="curtain-width">寬</label>
                     <input type="text" id="curtain-width" value="<?php echo $curtain_width;?>" />
                     <div id="height-div" style="display:none;">
@@ -464,7 +464,8 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if (isset($_POST['_order_item_id'])) {
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                $response['html_contain'] = $this->display_order_item_dialog($order_item_id);
+                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+                $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
