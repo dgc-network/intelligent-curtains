@@ -119,6 +119,8 @@ if (!class_exists('curtain_models')) {
                 'post_type'      => 'curtain-model',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+                'orderby'        => 'title', // Sort by title
+                'order'          => 'ASC',
             );        
             $query = new WP_Query($args);
             return $query;

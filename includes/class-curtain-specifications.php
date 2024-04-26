@@ -53,6 +53,8 @@ if (!class_exists('curtain_specifications')) {
                 'post_type'      => 'curtain-spec',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+                'orderby'        => 'title', // Sort by title
+                'order'          => 'ASC',
             );        
             $query = new WP_Query($args);
             return $query;
@@ -95,14 +97,13 @@ if (!class_exists('curtain_specifications')) {
                             $curtain_specification_title = get_the_title();
                             $curtain_specification_description = get_post_field('post_content', get_the_ID());
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                            $curtain_category_title = get_post_meta($curtain_category_id, 'curtain_category_title', true);
                             $curtain_specification_unit = get_post_meta(get_the_ID(), 'curtain_specification_unit', true);
                             $curtain_specification_price = get_post_meta(get_the_ID(), 'curtain_specification_price', true);
                             ?>
                             <tr id="edit-curtain-specification-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
                                 <td><?php echo esc_html($curtain_specification_description);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_category_title);?></td>
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_category_id));?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_specification_unit);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_specification_price);?></td>
                             </tr>
