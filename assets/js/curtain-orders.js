@@ -160,6 +160,30 @@ jQuery(document).ready(function($) {
     });
     //$("#curtain-order-item-dialog").dialog('close');
 
+    function activate_curtain_category_id_data(order_item_id) {
+        $("#curtain-category-id").on( "change", function() {
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                    _curtain_category_id: $(this).val(),
+                },
+                success: function (response) {
+                    $('#curtain-order-item-dialog').html(response.html_contain);
+                    //$("#curtain-order-item-dialog").dialog('open');
+                    activate_order_item_list_data(customer_order_id);
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+    }
+
     function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
             $.ajax({
@@ -193,27 +217,8 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     $("#curtain-order-item-dialog").dialog('open');
+                    activate_curtain_category_id_data(order_item_id);
 
-                    $("#curtain-category-id").on( "change", function() {
-                        $.ajax({
-                            url: ajax_object.ajax_url,
-                            type: 'post',
-                            data: {
-                                action: 'get_order_item_dialog_data',
-                                _order_item_id: order_item_id,
-                                _curtain_category_id: $(this).val(),
-                            },
-                            success: function (response) {
-                                $('#curtain-order-item-dialog').html(response.html_contain);
-                                //$("#curtain-order-item-dialog").dialog('open');
-                                activate_order_item_list_data(customer_order_id);
-                            },
-                            error: function(error){
-                                console.error(error);
-                                alert(error);
-                            }
-                        });    
-                    });
                 
             
                 },
