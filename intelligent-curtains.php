@@ -53,7 +53,7 @@ function enqueue_scripts() {
     wp_localize_script( 'curtain-orders', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-misc', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+//add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/general-helps.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
@@ -67,7 +67,6 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'web-services/options-setting.php';
-//add_option('_line_account', 'https://line.me/ti/p/@490tjxdt');
 
 function set_flex_message($display_name, $link_uri, $text_message) {
     // Flex Message JSON structure with a button
