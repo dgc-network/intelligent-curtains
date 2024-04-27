@@ -77,12 +77,12 @@ if (!class_exists('curtain_specifications')) {
             );        
         
             $query = new WP_Query($args);
-        
+/*        
             // Modify the post title to include both title and content
             foreach ($query->posts as &$post) {
                 $post->post_title = $post->post_title . ': ' . wp_strip_all_tags($post->post_content); // Concatenate title and content
             }
-        
+*/        
             return $query;
         }
 /*        
