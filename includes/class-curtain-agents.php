@@ -21,7 +21,7 @@ if (!class_exists('curtain_agents')) {
             add_action( 'wp_ajax_nopriv_agent_dialog_save_data', array( $this, 'agent_dialog_save_data' ) );
 
             //add_shortcode( 'curtain-agent-list', array( $this, 'display_curtain_agent_list' ) );
-            add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
             add_action( 'wp_ajax_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_dialog_data', array( $this, 'set_curtain_agent_dialog_data' ) );
