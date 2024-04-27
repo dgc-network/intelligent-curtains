@@ -164,7 +164,7 @@ if (!class_exists('curtain_agents')) {
             <?php
             echo $this->display_curtain_agent_dialog();
         }
-
+/*
         function retrieve_curtain_agent_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
@@ -248,7 +248,7 @@ if (!class_exists('curtain_agents')) {
         
             return $query;
         }
-/*
+*/
         function retrieve_curtain_agent_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
@@ -274,11 +274,14 @@ if (!class_exists('curtain_agents')) {
                     ($search_query) ? $number_filter : '',
                     ($search_query) ? $name_filter : '',
                 ),
+                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
+                'orderby'        => 'meta_value', // Sort by meta value
+                'order'          => 'ASC', // Sorting order (ascending)
             );        
             $query = new WP_Query($args);
             return $query;
         }
-*/
+
         function display_curtain_agent_dialog($curtain_agent_id=false) {            
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
