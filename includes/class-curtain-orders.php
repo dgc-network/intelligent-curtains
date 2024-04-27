@@ -102,7 +102,11 @@ if (!class_exists('curtain_orders')) {
                 echo '<input type="hidden" id="is-admin" value="1" />';
             }
             $current_user_id = get_current_user_id();
-            $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            if (isset($_GET['_curtain_agent_id'])) {
+                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            } else {
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            }
             ?>
             <div class="ui-widget" id="result-container">
             <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
@@ -189,7 +193,13 @@ if (!class_exists('curtain_orders')) {
         
             $current_user_id = get_current_user_id();
             //if (!$curtain_agent_id) $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-            $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            //$curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            if (isset($_GET['_curtain_agent_id'])) {
+                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            } else {
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            }
+
             $curtain_agent_filter = array(
                 'key'     => 'curtain_agent_id',
                 'value'   => $curtain_agent_id,
