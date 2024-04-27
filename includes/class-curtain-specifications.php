@@ -67,6 +67,7 @@ if (!class_exists('curtain_specifications')) {
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
+                        <select id="select-category-in-spec"><?php echo $curtain_categories->select_curtain_category_options($_GET['_category']);?></select>
                     </div>
                     <div style="text-align:right; display:flex;">
                         <input type="text" id="search-model" style="display:inline" placeholder="Search..." />

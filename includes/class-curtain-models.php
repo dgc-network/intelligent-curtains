@@ -47,12 +47,14 @@ if (!class_exists('curtain_models')) {
         }
 
         function display_curtain_model_list() {
+            $curtain_categories = new curtain_categories();
             ?>
             <div class="ui-widget" id="result-container">
             <h2 style="display:inline;"><?php echo __( 'Curtain models', 'your-text-domain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
+                        <select id="select-category-in-model"><?php echo $curtain_categories->select_curtain_category_options($_GET['_category']);?></select>
                     </div>
                     <div style="text-align:right; display:flex;">
                         <input type="text" id="search-model" style="display:inline" placeholder="Search..." />
