@@ -26,6 +26,10 @@ jQuery(document).ready(function($) {
 
 
     $("#select-order-category").on( "change", function() {
+        $("#quotation-title").toggle();
+        $("#quotation-select").toggle();
+        $("#customer-order-title").toggle();
+        $("#customer-order-select").toggle();
         window.location.replace("?_category="+$(this).val());
         $(this).val('');
     });

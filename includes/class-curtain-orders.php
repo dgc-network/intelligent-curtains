@@ -136,13 +136,20 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
+            <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2 style="display:none;"><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
-                    <div>
+                    <div id="quotation-select">
                         <select id="select-order-category">
                             <option value="0" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
                             <option value="1"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                        </select>
+                    </div>
+                    <div id="customer-order-select" style="display:none;">
+                        <select id="select-order-category">
+                            <option value="0"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
