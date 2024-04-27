@@ -1,4 +1,4 @@
-// 2024-4-25 revision curtain-category
+// curtain-category 2024-4-25 revision
 jQuery(document).ready(function($) {
     $("#search-category").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
@@ -101,7 +101,7 @@ jQuery(document).ready(function($) {
     $("#curtain-category-dialog").dialog('close');
 });
 
-// 2024-4-25 revision curtain-model
+// curtain-model 2024-4-26 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-model").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
@@ -204,7 +204,7 @@ jQuery(document).ready(function($) {
     $("#curtain-model-dialog").dialog('close');
 });
 
-// 2024-4-25 revision curtain-specification
+// curtain-specification 2024-4-26 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-spec").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
@@ -305,6 +305,104 @@ jQuery(document).ready(function($) {
         }
     });
     $("#curtain-specification-dialog").dialog('close');
+});
+
+// curtain-agent 2024-4-27 revision
+jQuery(document).ready(function($) {
+    $("#search-agent").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-curtain-agent-"]').on("click", function () {
+        const curtain_agent_id = this.id.substring(19);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_curtain_agent_dialog_data',
+                _curtain_agent_id: curtain_agent_id,
+                
+            },
+            success: function (response) {
+                $('#curtain-agent-dialog').html(response.html_contain);
+                $("#curtain-agent-dialog").dialog('open');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });            
+
+    $("#new-curtain-agent").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_curtain_agent_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#curtain-agent-dialog").dialog({
+        width: 450,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_curtain_agent_dialog_data',
+                        '_curtain_agent_id': $("#curtain-agent-id").val(),
+                        '_curtain_agent_number': $("#curtain-agent-number").val(),
+                        '_curtain_agent_name': $("#curtain-agent-name").val(),
+                        '_curtain_agent_contact': $("#curtain-agent-contact").val(),
+                        '_curtain_agent_phone': $("#curtain-agent-phone").val(),
+                        '_curtain_agent_address': $("#curtain-agent-address").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_curtain_agent_dialog_data',
+                            '_curtain_agent_id': $("#curtain-agent-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+    //$("#curtain-specification-dialog").dialog('close');
 });
 
 

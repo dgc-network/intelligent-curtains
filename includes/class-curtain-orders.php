@@ -127,10 +127,13 @@ if (!class_exists('curtain_orders')) {
             
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <select id="select-category"><?php //echo select_doc_category_option_data($_GET['_category']);?></select>
+                        <select id="select-order">
+                            <option value="0" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                        </select>
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="text" id="search-document" style="display:inline" placeholder="Search..." />
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
                     </div>
                 </div>
         
@@ -176,11 +179,25 @@ if (!class_exists('curtain_orders')) {
                 <?php
                     // Display pagination links
                     echo '<div class="pagination">';
-                    if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                     echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
                     echo '</div>';
                 ?>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
+                        <input type="button" id="proceed-to-order" value="轉出貨單" />
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <select id="select-order">
+                            <option value="0" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                        </select>
+                    </div>
+                </div>
+        
+
             </fieldset>
             </div>
             <?php echo $this->display_order_item_dialog();?>
