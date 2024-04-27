@@ -36,18 +36,18 @@ function remove_admin_bar() {
 add_action('after_setup_theme', 'remove_admin_bar');  
   
 function enqueue_scripts() {		
-    wp_enqueue_script( 'qrcode-js', plugins_url( '/assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
+    wp_enqueue_script( 'qrcode-js', plugins_url( 'assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
     wp_enqueue_script( 'jquery-ui-dialog' );
 
-    wp_enqueue_style( 'custom-options-view', plugins_url( '/assets/css/custom-options-view.css' , __FILE__ ), '', time() );
-    //wp_enqueue_style( 'chat-css', plugins_url( '/assets/css/chat.css' , __FILE__ ), '', time() );
+    wp_enqueue_style( 'custom-options-view', plugins_url( 'assets/css/custom-options-view.css' , __FILE__ ), '', time() );
+    wp_enqueue_style( 'chat-css', plugins_url( 'assets/css/chat.css' , __FILE__ ), '', time() );
     wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
     wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 
-    wp_enqueue_script( 'custom-script', plugins_url( '/assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
-    wp_enqueue_script( 'curtain-orders', plugins_url( '/assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
+    wp_enqueue_script( 'custom-script', plugins_url( 'assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
+    wp_enqueue_script( 'curtain-orders', plugins_url( 'assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-misc', plugins_url( 'assets/js/curtain-misc.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_localize_script( 'custom-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-orders', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
