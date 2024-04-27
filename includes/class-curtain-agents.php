@@ -143,7 +143,7 @@ if (!class_exists('curtain_agents')) {
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'OR',
-                    $meta_queries, // Use the constructed meta queries array
+                    //$meta_queries, // Use the constructed meta queries array
                 ),
             );        
         
