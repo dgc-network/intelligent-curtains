@@ -197,8 +197,6 @@ if (!class_exists('curtain_agents')) {
                 <input type="hidden" id="curtain-agent-id" value="<?php echo esc_attr($curtain_agent_id);?>" />
                 <label for="curtain-agent-number"><?php echo __( 'Number', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-agent-number" value="<?php echo esc_html($curtain_agent_number);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-number"><?php echo __( 'Number', 'your-text-domain' );?></label>
-                <input type="text" id="curtain-agent-number" value="<?php echo esc_html($curtain_agent_number);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-agent-name"><?php echo __( 'Name', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-agent-name" value="<?php echo esc_html($curtain_agent_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-agent-contact"><?php echo __( 'Contact', 'your-text-domain' );?></label>
@@ -297,7 +295,7 @@ if (!class_exists('curtain_agents')) {
 
         public function list_curtain_agents() {
             // 2024-4-27 Modify the curtain-agent as the post type
-            $this->display_curtain_agent_list();
+            //$this->display_curtain_agent_list();
 
             
 
