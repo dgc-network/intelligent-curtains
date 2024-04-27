@@ -118,17 +118,31 @@ if (!class_exists('curtain_models')) {
         function retrieve_curtain_model_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
+        
+            $search_query = sanitize_text_field($_GET['_search']);
+            $select_category = sanitize_text_field($_GET['_category']);
+            $category_filter = array(
+                'key'     => 'curtain_category_id',
+                'value'   => $select_category,
+                'compare' => '=',
+            );
+        
             $args = array(
                 'post_type'      => 'curtain-model',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+                's'              => $search_query,  
+                'meta_query'     => array(
+                    ($select_category) ? $category_filter : '',
+                ),
                 'orderby'        => 'title', // Sort by title
                 'order'          => 'ASC',
             );        
+        
             $query = new WP_Query($args);
             return $query;
         }
-        
+
         function display_curtain_model_dialog($curtain_model_id=false) {            
             $curtain_categories = new curtain_categories();
             $curtain_model_title = get_the_title($curtain_model_id);
