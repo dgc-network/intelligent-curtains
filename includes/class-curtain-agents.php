@@ -164,6 +164,56 @@ if (!class_exists('curtain_agents')) {
             <?php
             echo $this->display_curtain_agent_dialog();
         }
+
+        function retrieve_curtain_agent_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+            
+            $search_query = sanitize_text_field($_GET['_search']);
+            
+            // Initialize an empty array to store meta queries
+            $meta_queries = array();
+            
+            // Get all meta keys associated with the post type 'curtain-agent'
+            global $wpdb;
+            $meta_keys = $wpdb->get_col(
+                $wpdb->prepare(
+                    "SELECT DISTINCT meta_key FROM $wpdb->postmeta WHERE meta_key NOT LIKE %s",
+                    '\_%'
+                )
+            );
+        
+            if ($search_query) {
+                // Loop through each meta key and construct a meta query
+                foreach ($meta_keys as $meta_key) {
+                    $meta_queries[] = array(
+                        'key'     => $meta_key,
+                        'value'   => $search_query,
+                        'compare' => 'LIKE',
+                    );
+                }    
+            }
+            
+            // Define the arguments for the WP_Query
+            $args = array(
+                'post_type'      => 'curtain-agent',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+                'meta_query'     => array(
+                    'relation' => 'OR',
+                    $meta_queries, // Use the constructed meta queries array
+                ),
+                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
+                'orderby'        => 'meta_value', // Sort by meta value
+                'order'          => 'ASC', // Sorting order (ascending)
+            );        
+            
+            // Execute the query
+            $query = new WP_Query($args);
+            
+            return $query;
+        }
+        
 /*
         function retrieve_curtain_agent_data($current_page = 1) {
             // Define the custom pagination parameters
@@ -249,6 +299,7 @@ if (!class_exists('curtain_agents')) {
             return $query;
         }
 */
+/*
         function retrieve_curtain_agent_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
@@ -281,7 +332,7 @@ if (!class_exists('curtain_agents')) {
             $query = new WP_Query($args);
             return $query;
         }
-
+*/
         function display_curtain_agent_dialog($curtain_agent_id=false) {            
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
