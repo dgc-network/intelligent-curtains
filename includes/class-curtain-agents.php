@@ -49,6 +49,23 @@ if (!class_exists('curtain_agents')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
+
+                // delete curtain-agent post 2024-4-27
+                if (isset($_GET['_delete_curtain_agents_post'])) {
+                    // Get all curtain-agent posts
+                    $args = array(
+                        'post_type'      => 'curtain-agent',
+                        'posts_per_page' => -1, // Get all posts
+                        'fields'         => 'ids', // Retrieve only post IDs
+                    );
+                    $posts = get_posts($args);
+                
+                    // Loop through each post and delete it
+                    foreach ($posts as $post_id) {
+                        wp_delete_post($post_id, true); // Set the second parameter to true to force delete
+                    }
+                }
+
                 // curtain_agents_table_to_post migration 2024-4-27
                 if (isset($_GET['_migrate_curtain_agents_table_to_post'])) {
                     global $wpdb;
