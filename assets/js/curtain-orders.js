@@ -1,5 +1,30 @@
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
+    $("#agent-submit").on("click", function() {
+        const ajaxData = {
+            'action': 'set_curtain_agent_id',
+        };
+        ajaxData['_agent_number'] = $("#agent-number").val();
+        ajaxData['_agent_password'] = $("#agent-password").val();
+        ajaxData['_display_name'] = $("#display-name").val();
+        ajaxData['_user_email'] = $("#user-email").val();
+
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: ajaxData,
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+
     $("#select-order-category").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
         $(this).val('');

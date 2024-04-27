@@ -52,6 +52,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_set_order_item_dialog_data', array( $this, 'set_order_item_dialog_data' ) );
             add_action( 'wp_ajax_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
+            add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
+            add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
     
         }
 
@@ -310,7 +312,56 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
+        function set_curtain_agent_id() {
+            $response = array();
+            if( isset($_POST['_agent_number']) ) {
+                // Update the quotation data
+                $agent_number = sanitize_text_field($_POST['_agent_number']);
+                $agent_password = sanitize_text_field($_POST['_agent_password']);
+                $display_name = sanitize_text_field($_POST['_display_name']);
+                $user_email = sanitize_text_field($_POST['_user_email']);
+
+                $args = array(
+                    'post_type'      => 'curtain-agent',
+                    'posts_per_page' => 1, // Assuming you only want to retrieve one post
+                    'meta_query'     => array(
+                        'relation' => 'AND',
+                        array(
+                            'key'     => 'curtain_agent_number',
+                            'value'   => $agent_number,
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key'     => 'curtain_agent_password',
+                            'value'   => $agent_password,
+                            'compare' => '=',
+                        ),
+                    ),
+                );
+            
+                $query = new WP_Query($args);
+
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        // Output or manipulate post data here
+                        $current_user = wp_get_current_user();
+                        update_user_meta($current_user->ID, 'curtain_agent_id', get_the_ID());
+                        wp_update_user([
+                            'ID' => $current_user->ID,
+                            'display_name' => $display_name,
+                            'user_email' => $user_email,
+                        ]);
+
+                    }
+                    wp_reset_postdata(); // Restore global post data
+                }
+            }
+            wp_send_json($response);
+        }
+
         function set_quotation_dialog_data() {
+            $response = array();
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
