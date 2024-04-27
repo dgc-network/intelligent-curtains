@@ -100,9 +100,9 @@ if (!class_exists('curtain_categories')) {
                 <?php
                 // Display pagination links
                 echo '<div class="pagination">';
-                if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                 echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
                 echo '</div>';
                 ?>
             </fieldset>
@@ -114,10 +114,12 @@ if (!class_exists('curtain_categories')) {
         function retrieve_curtain_category_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
+            $search_query = sanitize_text_field($_GET['_search']);
             $args = array(
                 'post_type'      => 'curtain-category',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+                's'              => $search_query,  
             );        
             $query = new WP_Query($args);
             return $query;

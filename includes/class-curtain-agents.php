@@ -154,9 +154,9 @@ if (!class_exists('curtain_agents')) {
                 <?php
                 // Display pagination links
                 echo '<div class="pagination">';
-                if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                 echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
                 echo '</div>';
                 ?>
             </fieldset>
@@ -176,7 +176,6 @@ if (!class_exists('curtain_agents')) {
                 'post_type'      => 'curtain-agent',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
-                //'meta_query'     => array(),
                 'meta_key'       => 'curtain_agent_number', // Meta key for sorting
                 'orderby'        => 'meta_value', // Sort by meta value
                 'order'          => 'ASC', // Sorting order (ascending)
@@ -200,126 +199,7 @@ if (!class_exists('curtain_agents')) {
             
             return $query;
         }
-        
-/*
-        function retrieve_curtain_agent_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-            
-            $search_query = sanitize_text_field($_GET['_search']);
-            
-            // Initialize an empty array to store meta queries
-            $meta_queries = array();
-            
-            // Retrieve all meta keys associated with the post type 'curtain-agent'
-            $meta_keys = get_post_meta_keys('curtain-agent');
-            
-            if ($search_query) {
-                // Loop through each meta key and construct a meta query
-                foreach ($meta_keys as $meta_key) {
-                    $meta_queries[] = array(
-                        'key'     => $meta_key,
-                        'value'   => $search_query,
-                        'compare' => 'LIKE',
-                    );
-                }    
-            }
-            
-            // Define the arguments for the WP_Query
-            $args = array(
-                'post_type'      => 'curtain-agent',
-                'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
-                'meta_query'     => array(
-                    'relation' => 'OR',
-                    $meta_queries, // Use the constructed meta queries array
-                ),
-                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
-                'orderby'        => 'meta_value', // Sort by meta value
-                'order'          => 'ASC', // Sorting order (ascending)
-            );        
-            
-            // Execute the query
-            $query = new WP_Query($args);
-            
-            return $query;
-        }
-/*        
 
-        function retrieve_curtain_agent_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-        
-            $search_query = sanitize_text_field($_GET['_search']);
-        
-            // Initialize an empty array to store meta queries
-            $meta_queries = array();
-        
-            // Retrieve all meta keys associated with the post type 'curtain-agent'
-            $meta_keys = get_post_meta_keys('curtain-agent');
-        
-            if ($search_query) {
-                // Loop through each meta key and construct a meta query
-                foreach ($meta_keys as $meta_key) {
-                    $meta_queries[] = array(
-                        'key'     => $meta_key,
-                        'value'   => $search_query,
-                        'compare' => 'LIKE',
-                    );
-                }    
-            }
-        
-            // Define the arguments for the WP_Query
-            $args = array(
-                'post_type'      => 'curtain-agent',
-                'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
-                'meta_query'     => array(
-                    'relation' => 'OR',
-                    $meta_queries, // Use the constructed meta queries array
-                ),
-            );        
-        
-            // Execute the query
-            $query = new WP_Query($args);
-        
-            return $query;
-        }
-*/
-/*
-        function retrieve_curtain_agent_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-
-            $search_query = sanitize_text_field($_GET['_search']);
-            $number_filter = array(
-                'key'     => 'curtain_agent_number',
-                'value'   => $search_query,
-                'compare' => 'LIKE',
-            );
-            $name_filter = array(
-                'key'     => 'curtain_agent_name',
-                'value'   => $search_query,
-                'compare' => 'LIKE',
-            );
-
-            $args = array(
-                'post_type'      => 'curtain-agent',
-                'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
-                'meta_query'     => array(
-                    'relation' => 'OR',
-                    ($search_query) ? $number_filter : '',
-                    ($search_query) ? $name_filter : '',
-                ),
-                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
-                'orderby'        => 'meta_value', // Sort by meta value
-                'order'          => 'ASC', // Sorting order (ascending)
-            );        
-            $query = new WP_Query($args);
-            return $query;
-        }
-*/
         function display_curtain_agent_dialog($curtain_agent_id=false) {            
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
