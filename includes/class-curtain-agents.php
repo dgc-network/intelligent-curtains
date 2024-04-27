@@ -51,6 +51,7 @@ if (!class_exists('curtain_agents')) {
             if (is_user_logged_in()) {
                 // curtain_agents_table_to_post migration 2024-4-27
                 if (isset($_GET['_migrate_curtain_agents_table_to_post'])) {
+                    global $wpdb;
                     $results = general_helps::get_search_results($wpdb->prefix.'curtain_agents', $_POST['_where']);
                     foreach ( $results as $result ) {
                         $current_user_id = get_current_user_id();
