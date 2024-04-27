@@ -166,12 +166,8 @@ if (!class_exists('curtain_agents')) {
         }
 
         function retrieve_curtain_agent_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-            
-            $search_query = sanitize_text_field($_GET['_search']);
-            
             // Define the arguments for the WP_Query
+            $posts_per_page = get_option('operation_row_counts');
             $args = array(
                 'post_type'      => 'curtain-agent',
                 'posts_per_page' => $posts_per_page,
@@ -182,6 +178,7 @@ if (!class_exists('curtain_agents')) {
             );        
             
             // Add meta query for searching across all meta keys
+            $search_query = sanitize_text_field($_GET['_search']);
             $meta_keys = get_post_type_meta_keys('curtain-agent');
             $meta_query_all_keys = array('relation' => 'OR');
             foreach ($meta_keys as $meta_key) {
@@ -190,8 +187,7 @@ if (!class_exists('curtain_agents')) {
                     'value'   => $search_query,
                     'compare' => 'LIKE',
                 );
-            }
-            
+            }            
             $args['meta_query'] = $meta_query_all_keys;
         
             // Execute the query
@@ -279,12 +275,12 @@ if (!class_exists('curtain_agents')) {
             );
             $query = new WP_Query($args);
 
-            $options = '<option value="">Select category</option>';
+            $options = '<option value="">Select agent</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $curtain_agent_number = get_post_meta(get_the_ID(), 'curtain_agent_number', true);
                 $curtain_agent_name = get_post_meta(get_the_ID(), 'curtain_agent_name', true);
-                $curtain_agent_title = $curtain_agent_number.':'.$curtain_agent_name;
+                $curtain_agent_title = $curtain_agent_name.'('.$curtain_agent_number.')';
                 $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($curtain_agent_title) . '</option>';
             endwhile;
             wp_reset_postdata();

@@ -140,7 +140,8 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
-                            $modified_time = get_post_modified_time('F j, Y g:i a', false, get_the_ID());
+                            //$modified_time = get_post_modified_time('F j, Y g:i a', false, get_the_ID());
+                            $modified_time = get_post_modified_time(get_option('date_format'), false, get_the_ID());
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
                             $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
@@ -188,7 +189,7 @@ if (!class_exists('curtain_orders')) {
             $posts_per_page = get_option('operation_row_counts');
         
             $current_user_id = get_current_user_id();
-            if (!$curtain_agent_id) $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            //if (!$curtain_agent_id) $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
             $curtain_agent_filter = array(
                 'key'     => 'curtain_agent_id',
                 'value'   => $curtain_agent_id,
@@ -196,7 +197,7 @@ if (!class_exists('curtain_orders')) {
             );
         
             $select_order_category = sanitize_text_field($_GET['_category']);
-            $category_filter = array(
+            $order_category_filter = array(
                 'key'     => 'customer_order_category',
                 'value'   => $select_order_category,
                 'compare' => '=',
@@ -209,11 +210,28 @@ if (!class_exists('curtain_orders')) {
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 'meta_query'     => array(
+                    'relation' => 'AND',
+                    ($curtain_agent_id) ? $curtain_agent_filter : '',
+                    ($select_order_category) ? $order_category_filter : '',
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
             );
         
+            // Add meta query for searching across all meta keys
+            $search_query = sanitize_text_field($_GET['_search']);
+            $meta_keys = get_post_type_meta_keys('curtain-order');
+            $meta_query_all_keys = array('relation' => 'OR');
+            foreach ($meta_keys as $meta_key) {
+                $meta_query_all_keys[] = array(
+                    'key'     => $meta_key,
+                    'value'   => $search_query,
+                    'compare' => 'LIKE',
+                );
+            }            
+            $args['meta_query'][] = $meta_query_all_keys;
+            //$args['meta_query'] = $meta_query_all_keys;
+                    
             $query = new WP_Query($args);
             return $query;
         }
