@@ -103,6 +103,11 @@ jQuery(document).ready(function($) {
 
 // 2024-4-25 revision curtain-model
 jQuery(document).ready(function($) {
+    $("#select-category-in-model").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
     $("#search-model").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
@@ -201,6 +206,11 @@ jQuery(document).ready(function($) {
 
 // 2024-4-25 revision curtain-specification
 jQuery(document).ready(function($) {
+    $("#select-category-in-spec").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
     $("#search-specification").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');

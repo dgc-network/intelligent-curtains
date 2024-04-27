@@ -49,6 +49,46 @@ if (!class_exists('curtain_specifications')) {
         function retrieve_curtain_specification_data($current_page = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
+        
+            $select_category = sanitize_text_field($_GET['_category']);
+            $category_filter = array(
+                'key'     => 'curtain_category_id',
+                'value'   => $select_category,
+                'compare' => '=',
+            );
+        
+            $search_query = sanitize_text_field($_GET['_search']);
+            $number_filter = array(
+                'key'     => 'post_title', // Change the meta key to post_title
+                'value'   => $search_query,
+                'compare' => 'LIKE',
+            );
+        
+            $args = array(
+                'post_type'      => 'curtain-spec',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+                'meta_query'     => array(
+                    ($select_category) ? $category_filter : '',
+                    ($search_query) ? $number_filter : '', // Include the number filter condition if search query is provided
+                ),
+                'orderby'        => 'title', // Sort by title
+                'order'          => 'ASC',
+            );        
+        
+            $query = new WP_Query($args);
+        
+            // Modify the post title to include both title and content
+            foreach ($query->posts as &$post) {
+                $post->post_title = $post->post_title . ': ' . wp_strip_all_tags($post->post_content); // Concatenate title and content
+            }
+        
+            return $query;
+        }
+/*        
+        function retrieve_curtain_specification_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
             $args = array(
                 'post_type'      => 'curtain-spec',
                 'posts_per_page' => $posts_per_page,
@@ -59,8 +99,9 @@ if (!class_exists('curtain_specifications')) {
             $query = new WP_Query($args);
             return $query;
         }
-        
+*/        
         function display_curtain_specification_list() {
+            $curtain_categories = new curtain_categories();
             ?>
             <div class="ui-widget" id="result-container">
             <h2 style="display:inline;"><?php echo __( 'Curtain specifications', 'your-text-domain' );?></h2>
@@ -70,7 +111,7 @@ if (!class_exists('curtain_specifications')) {
                         <select id="select-category-in-spec"><?php echo $curtain_categories->select_curtain_category_options($_GET['_category']);?></select>
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="text" id="search-model" style="display:inline" placeholder="Search..." />
+                        <input type="text" id="search-specification" style="display:inline" placeholder="Search..." />
                     </div>
                 </div>
         
