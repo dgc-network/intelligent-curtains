@@ -16,11 +16,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
+/*
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+*/
 function register_session() {
     if ( ! session_id() ) {
         session_start();
@@ -53,14 +53,14 @@ function enqueue_scripts() {
     wp_localize_script( 'curtain-orders', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
     wp_localize_script( 'curtain-misc', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
 }
-//add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/general-helps.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-misc.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-models.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specifications.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
