@@ -68,9 +68,9 @@ if (!class_exists('curtain_specifications')) {
                 'post_type'      => 'curtain-spec',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
+                's'              => $search_query,  
                 'meta_query'     => array(
                     ($select_category) ? $category_filter : '',
-                    ($search_query) ? $number_filter : '', // Include the number filter condition if search query is provided
                 ),
                 'orderby'        => 'title', // Sort by title
                 'order'          => 'ASC',
@@ -118,7 +118,7 @@ if (!class_exists('curtain_specifications')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Specification', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Spec', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Description', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Category', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Unit', 'your-text-domain' );?></th>
