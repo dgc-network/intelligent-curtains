@@ -14,13 +14,13 @@ if (!class_exists('curtain_agents')) {
             $this->create_tables();
             $this->_wp_page_title = 'Agents';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-agent-list');
-            add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
+            //add_shortcode( 'curtain-agent-list', array( $this, 'list_curtain_agents' ) );
             add_action( 'wp_ajax_agent_dialog_get_data', array( $this, 'agent_dialog_get_data' ) );
             add_action( 'wp_ajax_nopriv_agent_dialog_get_data', array( $this, 'agent_dialog_get_data' ) );
             add_action( 'wp_ajax_agent_dialog_save_data', array( $this, 'agent_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_agent_dialog_save_data', array( $this, 'agent_dialog_save_data' ) );
 
-            //add_shortcode( 'curtain-agent-list', array( $this, 'display_curtain_agent_list' ) );
+            add_shortcode( 'curtain-agent-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
             add_action( 'wp_ajax_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
@@ -44,6 +44,38 @@ if (!class_exists('curtain_agents')) {
                 'show_in_menu'  => false,
             );
             register_post_type( 'curtain-agent', $args );
+        }
+
+        function display_shortcode() {
+            // Check if the user is logged in
+            if (is_user_logged_in()) {
+                // curtain_agents_table_to_post migration 2024-4-27
+                if (isset($_GET['_migrate_curtain_agents_table_to_post'])) {
+                    $results = general_helps::get_search_results($wpdb->prefix.'curtain_agents', $_POST['_where']);
+                    foreach ( $results as $result ) {
+                        $current_user_id = get_current_user_id();
+                        $new_post = array(
+                            'post_title'    => 'New agent',
+                            'post_content'  => 'Your post content goes here.',
+                            'post_status'   => 'publish',
+                            'post_author'   => $current_user_id,
+                            'post_type'     => 'curtain-agent',
+                        );    
+                        $curtain_agent_id = wp_insert_post($new_post);
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_number', $result->agent_number );
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_name', $result->agent_name );
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_contact', $result->contact1 );
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_phone', $result->phone1 );
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_address', $result->agent_address );
+                        update_post_meta( $curtain_agent_id, 'curtain_agent_password', $result->agent_password );                
+                    }
+                }
+
+                // curtain-agents start point 2024-4-27
+                $this->display_curtain_agent_list();
+            } else {
+                //user_did_not_login_yet();
+            }        
         }
 
         function display_curtain_agent_list() {

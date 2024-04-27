@@ -37,7 +37,7 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
 
-            add_shortcode( 'shopping-item-list', array( $this, 'display_curtain_orders' ) );
+            add_shortcode( 'shopping-item-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
@@ -86,20 +86,10 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
-        function display_curtain_orders() {
+        function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-
                 $this->display_quotation_list();
-/*
-                echo '<div class="ui-widget" id="result-container">';
-                if ($_GET['_initial']=='true') echo display_site_profile(true);
-                if ($_GET['_select_profile']=='1') echo display_site_profile();
-                if ($_GET['_select_profile']=='2') echo display_site_job_list();
-                if ($_GET['_select_profile']=='3') echo display_doc_category_list();
-                if ($_GET['_select_profile']!='1'&&$_GET['_select_profile']!='2'&&$_GET['_select_profile']!='3'&&!isset($_GET['_initial'])) echo display_my_profile();
-                echo '</div>';
-*/                
             } else {
                 //user_did_not_login_yet();
             }
