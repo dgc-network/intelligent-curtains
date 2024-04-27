@@ -89,7 +89,32 @@ if (!class_exists('curtain_orders')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-                $this->display_quotation_list();
+                $current_user_id = get_current_user_id();
+                $current_user = wp_get_current_user();
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+                if ($curtain_agent_id) {
+                    $this->display_quotation_list();
+                } else {
+                    ?>
+                    <div style="text-align:center;">
+                        <h4>經銷商登入/註冊</h4>
+                        <form method="post" style="display:inline-block; text-align:-webkit-center;">
+                        <fieldset>
+                            <label style="text-align:left;" for="agent-number">代碼:</label>
+                            <input type="text" id="agent-number" />
+                            <label style="text-align:left;" for="agent-password">密碼:</label>
+                            <input type="password" id="agent-password" />
+                            <label style="text-align:left;" for="display-name">Name:</label>
+                            <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
+                            <label style="text-align:left;" for="user-email">Email:</label>
+                            <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
+                            <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
+                        </fieldset>
+                        </form>
+                    </div>
+                    <?php
+                }
+
             } else {
                 //user_did_not_login_yet();
             }
