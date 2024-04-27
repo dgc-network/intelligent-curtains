@@ -141,7 +141,7 @@ if (!class_exists('curtain_agents')) {
                                 <td style="text-align:center;"><?php echo esc_html($curtain_agent_name);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_agent_contact);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_agent_phone);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_agent_address);?></td>
+                                <td><?php echo esc_html($curtain_agent_address);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -233,8 +233,7 @@ if (!class_exists('curtain_agents')) {
             return $query;
         }
 
-        function display_curtain_agent_dialog($curtain_agent_id=false) {
-            
+        function display_curtain_agent_dialog($curtain_agent_id=false) {            
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             $curtain_agent_contact = get_post_meta($curtain_agent_id, 'curtain_agent_contact', true);
@@ -255,27 +254,11 @@ if (!class_exists('curtain_agents')) {
                 <input type="text" id="curtain-agent-phone" value="<?php echo esc_html($curtain_agent_phone);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-agent-address"><?php echo __( 'Address', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-agent-address" value="<?php echo esc_html($curtain_agent_address);?>" class="text ui-widget-content ui-corner-all" />
-
-                <div>
-                    <input type="checkbox" id="hide-width" style="display:inline-block; width:5%; " /> Hide the Width.
-                    <div id="show-width">
-                        <input type="text" id="curtain-min-width" value="<?php echo esc_html($curtain_min_width);?>" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="curtain-max-width" value="<?php echo esc_html($curtain_max_width);?>" style="display:inline-block; width:25%;" /> cm
-                    </div>
-                </div>
-                <div>
-                    <input type="checkbox" id="is-height" style="display:inline-block; width:5%; " <?php echo $is_height_checked;?> /> Hide the Height.
-                    <div id="show-height">
-                        <input type="text" id="curtain-min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
-                        <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
-                    </div>
-                </div>
             </fieldset>
             </div>
             <?php
             $html = ob_get_clean();
-            return $html;
-        
+            return $html;        
         }
 
         function get_curtain_agent_dialog_data() {
