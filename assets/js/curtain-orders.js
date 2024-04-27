@@ -1,12 +1,17 @@
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
-    $("#select-category").on( "change", function() {
+    $("#select-order-category").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
         $(this).val('');
     });
 
-    $("#search-document").on( "change", function() {
+    $("#search-order").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#select-curtain-agent").on( "change", function() {
+        window.location.replace("?_curtain_agent_id="+$(this).val());
         $(this).val('');
     });
 
@@ -84,13 +89,17 @@ jQuery(document).ready(function($) {
     });            
 
     $("#new-quotation").on("click", function() {
+        const ajaxData = {
+            'action': 'set_quotation_dialog_data',
+        };
+        ajaxData['_curtain_agent_id'] = $("#select-curtain-agent").val();
+        ajaxData['_customer_order_category'] = $("#select-order-category").val();
+
         $.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
             dataType: "json",
-            data: {
-                'action': 'set_quotation_dialog_data',
-            },
+            data: ajaxData,
             success: function (response) {
                 window.location.replace(window.location.href);
             },

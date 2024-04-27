@@ -170,10 +170,9 @@ if (!class_exists('curtain_orders')) {
                 ?>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <input type="button" id="proceed-to-order" value="轉出貨單" />
+                        <select id="select-curtain-agent"><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <select id="select-agent"><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
                     </div>
                 </div>
         
@@ -190,6 +189,7 @@ if (!class_exists('curtain_orders')) {
         
             $current_user_id = get_current_user_id();
             //if (!$curtain_agent_id) $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
             $curtain_agent_filter = array(
                 'key'     => 'curtain_agent_id',
                 'value'   => $curtain_agent_id,
@@ -202,8 +202,6 @@ if (!class_exists('curtain_orders')) {
                 'value'   => $select_order_category,
                 'compare' => '=',
             );
-        
-            $search_query = sanitize_text_field($_GET['_search']);
         
             $args = array(
                 'post_type'      => 'customer-order',
@@ -244,15 +242,22 @@ if (!class_exists('curtain_orders')) {
             ?>
             <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
             <fieldset>
-            <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
-            <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
-            <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
-            <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-            <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-            <?php echo $this->display_order_item_list($customer_order_id);?>
-            <hr>
-            <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-            <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
+                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php echo $this->display_order_item_list($customer_order_id);?>
+                <hr>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="button" id="proceed-to-order" value="<?php echo __( '轉出貨單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                    </div>
+                </div>
             </fieldset>
             <?php
             $html = ob_get_clean();
@@ -287,7 +292,8 @@ if (!class_exists('curtain_orders')) {
                     'post_type'     => 'customer-order',
                 );    
                 $post_id = wp_insert_post($new_post);
-                update_post_meta( $post_id, 'customer_name', 'New customer');
+                update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
+                update_post_meta( $post_id, 'curtain_order_category', sanitize_text_field($_POST['_curtain_order_category']));
             }
             wp_send_json($response);
         }
@@ -426,8 +432,8 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+                $response['customer_order_amount'] = $this->set_customer_order_amount($customer_order_id);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
-                $this->set_customer_order_amount($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(

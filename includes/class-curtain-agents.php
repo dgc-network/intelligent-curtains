@@ -272,6 +272,9 @@ if (!class_exists('curtain_agents')) {
             $args = array(
                 'post_type'      => 'curtain-agent',
                 'posts_per_page' => -1,
+                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
+                'orderby'        => 'meta_value', // Sort by meta value
+                'order'          => 'ASC', // Sorting order (ascending)
             );
             $query = new WP_Query($args);
 
