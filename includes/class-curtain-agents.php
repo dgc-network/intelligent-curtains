@@ -171,43 +171,30 @@ if (!class_exists('curtain_agents')) {
             
             $search_query = sanitize_text_field($_GET['_search']);
             
-            // Initialize an empty array to store meta queries
-            $meta_queries = array();
-            
-            // Get all meta keys associated with the post type 'curtain-agent'
-            global $wpdb;
-            $meta_keys = $wpdb->get_col(
-                $wpdb->prepare(
-                    "SELECT DISTINCT meta_key FROM $wpdb->postmeta WHERE meta_key NOT LIKE %s",
-                    '\_%'
-                )
-            );
-        
-            if ($search_query) {
-                // Loop through each meta key and construct a meta query
-                foreach ($meta_keys as $meta_key) {
-                    $meta_queries[] = array(
-                        'key'     => $meta_key,
-                        'value'   => $search_query,
-                        'compare' => 'LIKE',
-                    );
-                }    
-            }
-            
             // Define the arguments for the WP_Query
             $args = array(
                 'post_type'      => 'curtain-agent',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
-                'meta_query'     => array(
-                    'relation' => 'OR',
-                    $meta_queries, // Use the constructed meta queries array
-                ),
+                //'meta_query'     => array(),
                 'meta_key'       => 'curtain_agent_number', // Meta key for sorting
                 'orderby'        => 'meta_value', // Sort by meta value
                 'order'          => 'ASC', // Sorting order (ascending)
             );        
             
+            // Add meta query for searching across all meta keys
+            $meta_keys = get_post_type_meta_keys('curtain-agent');
+            $meta_query_all_keys = array('relation' => 'OR');
+            foreach ($meta_keys as $meta_key) {
+                $meta_query_all_keys[] = array(
+                    'key'     => $meta_key,
+                    'value'   => $search_query,
+                    'compare' => 'LIKE',
+                );
+            }
+            
+            $args['meta_query'] = $meta_query_all_keys;
+        
             // Execute the query
             $query = new WP_Query($args);
             

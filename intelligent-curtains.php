@@ -257,3 +257,15 @@ function user_did_not_login_yet() {
     }    
 }
 
+function get_post_type_meta_keys($post_type) {
+    global $wpdb;
+    $query = $wpdb->prepare("
+        SELECT DISTINCT(meta_key)
+        FROM $wpdb->postmeta
+        INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->postmeta.post_id
+        WHERE $wpdb->posts.post_type = %s
+    ", $post_type);
+
+    return $wpdb->get_col($query);
+}
+
