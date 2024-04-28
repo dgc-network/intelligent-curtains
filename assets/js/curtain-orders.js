@@ -1,27 +1,6 @@
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
 
-    $("#proceed-to-customer-order").on("click", function() {
-        const ajaxData = {
-            'action': 'proceed_to_customer_order',
-        };
-        ajaxData['_customer_order_id'] = $("#customer-order-id").val();
-
-        $.ajax({
-            type: 'POST',
-            url: ajax_object.ajax_url,
-            dataType: "json",
-            data: ajaxData,
-            success: function (response) {
-                window.location.replace(window.location.href);
-            },
-            error: function(error){
-                console.error(error);                    
-                alert(error);
-            }
-        });    
-    });
-
     $("#agent-submit").on("click", function() {
         const ajaxData = {
             'action': 'set_curtain_agent_id',
@@ -129,6 +108,27 @@ jQuery(document).ready(function($) {
                     }
                 });
 
+                $("#proceed-to-customer-order").on("click", function() {
+                    const ajaxData = {
+                        'action': 'proceed_to_customer_order',
+                    };
+                    ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+            
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: ajaxData,
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);                    
+                            alert(error);
+                        }
+                    });    
+                });
+                        
                 activate_order_item_list_data(customer_order_id);
 
             },
@@ -278,10 +278,7 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     $("#curtain-order-item-dialog").dialog('open');
-                    activate_curtain_category_id_data(order_item_id);
-
-                
-            
+                    activate_curtain_category_id_data(order_item_id);                            
                 },
                 error: function(error){
                     console.error(error);
