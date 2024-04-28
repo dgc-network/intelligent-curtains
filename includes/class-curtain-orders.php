@@ -97,6 +97,8 @@ if (!class_exists('curtain_orders')) {
                 if ($curtain_agent_id) {
                     if (isset($_GET['_category'])) {
                         //$customer_order_category = sanitize_text_field($_GET['_category']);
+                    }
+                    if ($_GET['_category']==1) {
                         $this->display_customer_order_list();
                     } else {
                         $this->display_quotation_list();
@@ -146,7 +148,7 @@ if (!class_exists('curtain_orders')) {
             <div id="customer-order-title"><h2><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
-                    <div id="customer-order-select" style="display:none;">
+                    <div id="customer-order-select">
                         <select id="select-order-category">
                             <option value="0"><?php echo __( '報價單', 'your-text-domain' );?></option>
                             <option value="1" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
