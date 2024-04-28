@@ -97,16 +97,11 @@ if (!class_exists('curtain_orders')) {
                 $current_user = wp_get_current_user();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
-                    if (isset($_GET['_category'])) {
-                        //$customer_order_category = sanitize_text_field($_GET['_category']);
-                    }
-                    if ($_GET['_category']==1) {
+                    if ($_GET['_category']==2) {
                         $this->display_customer_order_list();
                     } else {
                         $this->display_quotation_list();
-                    }
-
-        
+                    }        
                 } else {
                     ?>
                     <div style="text-align:center;">
@@ -152,8 +147,8 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
-                            <option value="0"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="1" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -244,8 +239,8 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
-                            <option value="0" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="1"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="2"><?php echo __( '出貨單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -334,10 +329,10 @@ if (!class_exists('curtain_orders')) {
                 'compare' => '=',
             );
         
-            $select_order_category = sanitize_text_field($_GET['_category']);
+            $customer_order_category = sanitize_text_field($_GET['_category']);
             $order_category_filter = array(
                 'key'     => 'customer_order_category',
-                'value'   => $select_order_category,
+                'value'   => $customer_order_category,
                 'compare' => '=',
             );
         
@@ -348,7 +343,7 @@ if (!class_exists('curtain_orders')) {
                 'meta_query'     => array(
                     'relation' => 'AND',
                     ($curtain_agent_id) ? $curtain_agent_filter : '',
-                    ($select_order_category) ? $order_category_filter : '',
+                    ($customer_order_category) ? $order_category_filter : '',
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
@@ -466,10 +461,8 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
-                update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                update_post_meta( $customer_order_id, 'customer_order_category', 2);
                 update_post_meta( $customer_order_id, 'customer_order_number', time());
-                //update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
             }
             wp_send_json($response);
         }
@@ -493,7 +486,8 @@ if (!class_exists('curtain_orders')) {
                 );    
                 $post_id = wp_insert_post($new_post);
                 update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
-                update_post_meta( $post_id, 'curtain_order_category', sanitize_text_field($_POST['_curtain_order_category']));
+                update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                //update_post_meta( $post_id, 'customer_order_category', sanitize_text_field($_POST['_customer_order_category']));
             }
             wp_send_json($response);
         }
@@ -590,36 +584,6 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
 
-        function set_customer_order_amount($customer_order_id) {
-            $customer_order_amount = 0;
-            $query = $this->retrieve_order_item_data($customer_order_id);
-            if ($query->have_posts()) {
-                while ($query->have_posts()) : $query->the_post();
-                    $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                    $curtain_category_title = get_the_title($curtain_category_id);
-                    $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                    $curtain_model_description = get_post_field('post_content', $curtain_model_id);
-                    $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
-                    $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
-                    $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
-                    $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
-                    $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
-                    $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
-                    $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
-                    $curtain_width = ($curtain_width) ? $curtain_width : 1;
-                    $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
-                    $curtain_height = ($curtain_height) ? $curtain_height : 1;
-                    $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                    $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
-                    $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
-                    $customer_order_amount += $order_item_amount;
-                endwhile;
-                wp_reset_postdata();
-            }
-            update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
-            return $customer_order_amount;
-        }
-
         function set_order_item_dialog_data() {
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
@@ -634,7 +598,6 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                //$response['customer_order_amount'] = $this->set_customer_order_amount($customer_order_id);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();

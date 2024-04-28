@@ -143,7 +143,7 @@ jQuery(document).ready(function($) {
             'action': 'set_quotation_dialog_data',
         };
         ajaxData['_curtain_agent_id'] = $("#select-curtain-agent").val();
-        ajaxData['_customer_order_category'] = $("#select-order-category").val();
+        //ajaxData['_customer_order_category'] = $("#select-order-category").val();
 
         $.ajax({
             type: 'POST',
