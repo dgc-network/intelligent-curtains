@@ -41,7 +41,7 @@ if (!class_exists('curtain_agents')) {
                 'rewrite'       => array('slug' => 'curtain-agents'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'curtain-agent', $args );
         }

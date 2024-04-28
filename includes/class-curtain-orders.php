@@ -131,7 +131,7 @@ if (!class_exists('curtain_orders')) {
                             'post_content'  => 'Your post content goes here.',
                             'post_status'   => 'publish',
                             'post_author'   => $current_user_id,
-                            'post_type'     => 'curtain-agent',
+                            'post_type'     => 'customer-order',
                         );    
                         $post_id = wp_insert_post($new_post);
                         update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
