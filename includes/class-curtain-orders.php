@@ -95,7 +95,14 @@ if (!class_exists('curtain_orders')) {
                 $current_user = wp_get_current_user();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
-                    $this->display_quotation_list();
+                    if (isset($_GET['_category'])) {
+                        //$customer_order_category = sanitize_text_field($_GET['_category']);
+                        $this->display_customer_order_list();
+                    } else {
+                        $this->display_quotation_list();
+                    }
+
+        
                 } else {
                     ?>
                     <div style="text-align:center;">
@@ -123,6 +130,98 @@ if (!class_exists('curtain_orders')) {
         
         }
 
+        function display_customer_order_list() {
+            $curtain_agents = new curtain_agents();
+            if (isset($_GET['_is_admin'])) {
+                echo '<input type="hidden" id="is-admin" value="1" />';
+            }
+            $current_user_id = get_current_user_id();
+            if (isset($_GET['_curtain_agent_id'])) {
+                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            } else {
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            }
+            ?>
+            <div class="ui-widget" id="result-container">
+            <div id="customer-order-title"><h2><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
+            <fieldset>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div id="customer-order-select" style="display:none;">
+                        <select id="select-order-category">
+                            <option value="0"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                        </select>
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
+                    </div>
+                </div>
+        
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '訂單', 'your-text-domain' );?></th>
+                            <th><?php echo __( '客戶', 'your-text-domain' );?></th>
+                            <th><?php echo __( '金額', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_customer_order_data($current_page, $curtain_agent_id);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
+                            //$modified_time = get_post_modified_time('F j, Y g:i a', false, get_the_ID());
+                            $customer_order_time = get_post_meta(get_the_ID(), 'customer_order_time', true);
+                            $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                            $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
+                            $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
+                            $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
+                            ?>
+                            <tr id="edit-quotation-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                                <td><?php echo esc_html($customer_name);?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <?php
+                    // Display pagination links
+                    echo '<div class="pagination">';
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    echo '</div>';
+                ?>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <select id="select-curtain-agent"><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                    </div>
+                </div>
+        
+
+            </fieldset>
+            </div>
+            <?php echo $this->display_order_item_dialog();?>
+            <?php
+        }
+
         function display_quotation_list() {
             $curtain_agents = new curtain_agents();
             if (isset($_GET['_is_admin'])) {
@@ -137,19 +236,12 @@ if (!class_exists('curtain_orders')) {
             ?>
             <div class="ui-widget" id="result-container">
             <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2></div>
-            <div id="customer-order-title"><h2 style="display:none;"><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
                             <option value="0" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
                             <option value="1"><?php echo __( '出貨單', 'your-text-domain' );?></option>
-                        </select>
-                    </div>
-                    <div id="customer-order-select" style="display:none;">
-                        <select id="select-order-category">
-                            <option value="0"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="1" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -171,7 +263,7 @@ if (!class_exists('curtain_orders')) {
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
                     $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = $this->retrieve_quotation_data($current_page, $curtain_agent_id);
+                    $query = $this->retrieve_customer_order_data($current_page, $curtain_agent_id);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
         
@@ -221,7 +313,7 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
-        function retrieve_quotation_data($current_page = 1, $curtain_agent_id=false) {
+        function retrieve_customer_order_data($current_page = 1, $curtain_agent_id=false) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
         
