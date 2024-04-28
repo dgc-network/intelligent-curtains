@@ -70,7 +70,7 @@ if (!class_exists('curtain_orders')) {
                 'rewrite'       => array('slug' => 'customer-orders'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'customer-order', $args );
         }
