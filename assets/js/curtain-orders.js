@@ -1,5 +1,27 @@
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
+
+    $("#proceed-to-customer-order").on("click", function() {
+        const ajaxData = {
+            'action': 'proceed_to_customer_order',
+        };
+        ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: ajaxData,
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
     $("#agent-submit").on("click", function() {
         const ajaxData = {
             'action': 'set_curtain_agent_id',
@@ -23,7 +45,6 @@ jQuery(document).ready(function($) {
             }
         });    
     });
-
 
     $("#select-order-category").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
@@ -159,6 +180,7 @@ jQuery(document).ready(function($) {
                         '_curtain_height': $("#curtain-height").val(),
                         '_order_item_qty': $("#order-item-qty").val(),
                         '_order_item_note': $("#order-item-note").val(),
+                        '_customer_order_amount': $("#customer-order-amount").val(),
                     },
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);

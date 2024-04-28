@@ -54,6 +54,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
+            add_action( 'wp_ajax_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
+            add_action( 'wp_ajax_nopriv_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
     
         }
 
@@ -320,8 +322,6 @@ if (!class_exists('curtain_orders')) {
             $posts_per_page = get_option('operation_row_counts');
         
             $current_user_id = get_current_user_id();
-            //if (!$curtain_agent_id) $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-            //$curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
             if (isset($_GET['_curtain_agent_id'])) {
                 $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
             } else {
@@ -375,7 +375,7 @@ if (!class_exists('curtain_orders')) {
         function display_quotation_dialog($customer_order_id=false) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
-            $customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
             ob_start();
             ?>
             <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
@@ -393,7 +393,7 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-to-order" value="<?php echo __( '轉出貨單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-to-customer-order" value="<?php echo __( '轉出貨單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
             </fieldset>
@@ -457,6 +457,19 @@ if (!class_exists('curtain_orders')) {
                     }
                     wp_reset_postdata(); // Restore global post data
                 }
+            }
+            wp_send_json($response);
+        }
+
+        function proceed_to_customer_order() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                //update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
+                update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                update_post_meta( $customer_order_id, 'customer_order_number', time());
+                //update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
             }
             wp_send_json($response);
         }
@@ -550,6 +563,7 @@ if (!class_exists('curtain_orders')) {
                             <td></td>
                             <td style="text-align:center;"><?php echo __( 'Sum', 'your-text-domain' );?></td>
                             <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
+                            <input type="hidden" id="customer-order-amount" value="<?php echo esc_attr($customer_order_amount);?>" />
                         </tr>
                     </tfoot>
                 </table>
@@ -619,7 +633,8 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
-                $response['customer_order_amount'] = $this->set_customer_order_amount($customer_order_id);
+                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                //$response['customer_order_amount'] = $this->set_customer_order_amount($customer_order_id);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
