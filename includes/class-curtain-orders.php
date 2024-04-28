@@ -210,10 +210,11 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
                             <th><?php echo __( '訂單', 'your-text-domain' );?></th>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
                             <th><?php echo __( '客戶', 'your-text-domain' );?></th>
                             <th><?php echo __( '金額', 'your-text-domain' );?></th>
+                            <th><?php echo __( '狀態', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -228,19 +229,18 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
-                            //$modified_time = get_post_modified_time('F j, Y g:i a', false, get_the_ID());
-                            $customer_order_time = get_post_meta(get_the_ID(), 'customer_order_time', true);
                             $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
-                            $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
+                            $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
-                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td><?php echo esc_html($customer_name);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
+                                <td><?php echo esc_html($customer_order_status);?></td>
                             </tr>
                             <?php
                         endwhile;
