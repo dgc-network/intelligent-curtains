@@ -93,7 +93,65 @@ if (!class_exists('curtain_orders')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-                // curtain_agents_table_to_post migration 2024-4-27
+                // order_items_table_to_post migration 2024-4-29
+                if (isset($_GET['_migrate_order_items_table_to_post'])) {
+                    global $wpdb;
+                    $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
+                    foreach ( $results as $result ) {
+                        //$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number = %s", $result->customer_order_number ), OBJECT );
+
+                        $args = array(
+                            'post_type'      => 'customer-order',
+                            'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
+                            'meta_query'     => array(
+                                array(
+                                    'key'     => 'customer_order_number',
+                                    'value'   => $result->customer_order_number,
+                                    'compare' => '=',
+                                ),
+                            ),
+                        );
+                    
+                        $filtered_query = new WP_Query($args);
+
+                        $customer_order_id=0;
+                        // Check if there are any posts found
+                        if ($filtered_query->have_posts()) {
+                            while ($filtered_query->have_posts()) {
+                                $filtered_query->the_post();
+                                // Output or manipulate post data here
+                                $customer_order_id = get_the_ID();
+                            }
+                            wp_reset_postdata(); // Restore global post data
+                        }
+                        
+                        $current_user_id = get_current_user_id();
+                        $new_post = array(
+                            'post_title'    => 'New item',
+                            'post_content'  => 'Your post content goes here.',
+                            'post_status'   => 'publish',
+                            'post_author'   => $current_user_id,
+                            'post_type'     => 'order-item',
+                        );    
+                        $post_id = wp_insert_post($new_post);
+                        update_post_meta( $post_id, 'customer_order_id', $customer_order_id );
+                        update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
+                        update_post_meta( $post_id, 'curtain_agent_id', $curtain_agent_id );
+                        update_post_meta( $post_id, 'curtain_category_id', $result->curtain_category_id );
+                        update_post_meta( $post_id, 'curtain_model_id', $result->curtain_model_id );
+                        update_post_meta( $post_id, 'curtain_remote_id', $result->curtain_remote_id );
+                        update_post_meta( $post_id, 'curtain_specification_id', $result->curtain_specification_id );
+                        update_post_meta( $post_id, 'curtain_width', $result->curtain_width );
+                        update_post_meta( $post_id, 'curtain_height', $result->curtain_height );
+                        update_post_meta( $post_id, 'order_item_qty', $result->order_item_qty );
+                        update_post_meta( $post_id, 'order_item_amount', $result->order_item_amount );
+                        update_post_meta( $post_id, 'order_item_note', $result->order_item_note );
+                        update_post_meta( $post_id, 'is_checkout', $result->is_checkout );
+                       
+                    }
+                }
+
+                // customer_orders_table_to_post migration 2024-4-29
                 if (isset($_GET['_migrate_customer_orders_table_to_post'])) {
                     global $wpdb;
                     $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
