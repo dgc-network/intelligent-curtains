@@ -14,14 +14,14 @@ if (!class_exists('curtain_models')) {
             $this->create_tables();
             $this->_wp_page_title = 'Models';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-model-list');
-            //add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
+            add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
             add_action( 'wp_ajax_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
             add_action( 'wp_ajax_nopriv_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
             add_action( 'wp_ajax_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
 
             //add_shortcode( 'curtain-model-list', array( $this, 'display_curtain_model_list' ) );
-            add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
+            //add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
             add_action( 'wp_ajax_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
@@ -50,7 +50,6 @@ if (!class_exists('curtain_models')) {
         function display_shortcode() {
             if (is_user_logged_in()) {
                 $this->display_curtain_model_list();
-                $this->list_curtain_models();
             }
         }
 
