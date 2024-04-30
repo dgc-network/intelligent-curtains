@@ -896,6 +896,8 @@ if (!class_exists('curtain_orders')) {
             $curtain_categories = new curtain_categories();
             $curtain_models = new curtain_models();
             $curtain_specifications = new curtain_specifications();
+            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+            $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             if (!$curtain_category_id) $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
             $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
             $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
@@ -913,6 +915,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
 
             ob_start();
+            if ($customer_order_category<=1) {
             ?>
             <div id="curtain-order-item-dialog" title="Order Item dialog">
             <fieldset>
@@ -938,6 +941,7 @@ if (!class_exists('curtain_orders')) {
             </fieldset>
             </div>
             <?php
+            }
             $html = ob_get_clean();
             return $html;
         }
