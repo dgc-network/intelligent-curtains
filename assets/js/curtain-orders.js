@@ -108,10 +108,12 @@ jQuery(document).ready(function($) {
                     }
                 });
 
-                $("#proceed-to-customer-order").on("click", function() {
+                $('[id^="proceed-to-customer-order-"]').on("click", function () {
+                    const customer_order_status = this.id.substring(26);
                     const ajaxData = {
-                        'action': 'proceed_to_customer_order_01',
+                        'action': 'proceed_to_customer_order',
                     };
+                    ajaxData['_customer_order_status'] = customer_order_status;
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();
             
                     $.ajax({

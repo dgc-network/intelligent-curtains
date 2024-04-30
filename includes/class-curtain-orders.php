@@ -55,8 +55,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
-            add_action( 'wp_ajax_proceed_to_customer_order_01', array( $this, 'proceed_to_customer_order_01' ) );
-            add_action( 'wp_ajax_nopriv_proceed_to_customer_order_01', array( $this, 'proceed_to_customer_order_01' ) );
+            add_action( 'wp_ajax_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
+            add_action( 'wp_ajax_nopriv_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
     
         }
 
@@ -624,14 +624,15 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-to-customer-order-01" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-to-customer-order-2248" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
                     } else {
-                        if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-02" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-03" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-04" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2251) echo '<input type="button" id="proceed-to-customer-order-0" value="'.__( 'OK', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                     }
                 ?>
             </fieldset>
@@ -647,6 +648,40 @@ if (!class_exists('curtain_orders')) {
                 $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
+            }
+            wp_send_json($response);
+        }
+
+        function set_quotation_dialog_data() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
+                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
+            } else {
+                $current_user_id = get_current_user_id();
+                $new_post = array(
+                    'post_title'    => 'No title',
+                    'post_content'  => 'Your post content goes here.',
+                    'post_status'   => 'publish',
+                    'post_author'   => $current_user_id,
+                    'post_type'     => 'customer-order',
+                );    
+                $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
+                update_post_meta( $post_id, 'customer_name', 'New customer');
+                update_post_meta( $post_id, 'customer_order_category', 1);
+            }
+            wp_send_json($response);
+        }
+
+        function del_quotation_dialog_data() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                wp_delete_post($customer_order_id, true);
             }
             wp_send_json($response);
         }
@@ -699,14 +734,15 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function proceed_to_customer_order_01() {
+        function proceed_to_customer_order() {
             $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
+            if( isset($_POST['_customer_order_id'])  && isset($_POST['_customer_order_status']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
                 update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                update_post_meta( $customer_order_id, 'customer_order_status', 2248); // order01:2248 ~ order04:2251
-                update_post_meta( $customer_order_id, 'customer_order_number', time());
+                update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
+                if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
             }
             wp_send_json($response);
         }
@@ -743,40 +779,6 @@ if (!class_exists('curtain_orders')) {
                 //update_post_meta( $customer_order_id, 'customer_order_category', 2);
                 update_post_meta( $customer_order_id, 'customer_order_status', 2251); // order01:2248 ~ order04:2251
                 //update_post_meta( $customer_order_id, 'customer_order_number', time());
-            }
-            wp_send_json($response);
-        }
-
-        function set_quotation_dialog_data() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
-                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
-            } else {
-                $current_user_id = get_current_user_id();
-                $new_post = array(
-                    'post_title'    => 'No title',
-                    'post_content'  => 'Your post content goes here.',
-                    'post_status'   => 'publish',
-                    'post_author'   => $current_user_id,
-                    'post_type'     => 'customer-order',
-                );    
-                $post_id = wp_insert_post($new_post);
-                update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
-                update_post_meta( $post_id, 'customer_order_category', 1);
-                //update_post_meta( $post_id, 'customer_order_category', sanitize_text_field($_POST['_customer_order_category']));
-            }
-            wp_send_json($response);
-        }
-
-        function del_quotation_dialog_data() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                wp_delete_post($customer_order_id, true);
             }
             wp_send_json($response);
         }
