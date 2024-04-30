@@ -110,6 +110,41 @@ if (!class_exists('curtain_orders')) {
             // Check if the user is logged in
             if (is_user_logged_in()) {
 
+                // Customer Order Status Migration - 2024-04-30
+                if (isset($_GET['_migrate_customer_order_status'])) {
+                    $args = array(
+                        'post_type'      => 'order-item',
+                        'posts_per_page' => -1, // Retrieve all matching posts
+                    );
+                    $query = new WP_Query($args);
+                    if ($query->have_posts()) {
+                        while ($query->have_posts()) {
+                            $query->the_post();
+                            // Output or manipulate post data here
+                            $order_item_id = get_the_ID();
+                            $customer_order_status = get_post_meta($order_item_id, 'customer_order_status', true);
+                            
+                            // Query the "order-status" post based on the post content
+                            $order_status_query = new WP_Query(array(
+                                'post_type'      => 'order-status',
+                                'posts_per_page' => 1,
+                                's'              => $customer_order_status, // Search term to look for in post content
+                            ));
+                            
+                            // Check if any posts were found
+                            if ($order_status_query->have_posts()) {
+                                $order_status_query->the_post();
+                                $customer_order_status = get_the_ID();
+                            }
+                            wp_reset_postdata(); // Reset the post data
+                            
+                            // Update post meta
+                            update_post_meta($order_item_id, 'customer_order_status', $customer_order_status);
+                        }
+                        wp_reset_postdata(); // Restore global post data
+                    }
+                }
+
                 // Curtain Model ID Migration - 2024-04-30
                 if (isset($_GET['_migrate_model_id_part_3'])) {
                     $args = array(
@@ -357,7 +392,6 @@ if (!class_exists('curtain_orders')) {
                         <tr>
                             <th><?php echo __( '訂單', 'your-text-domain' );?></th>
                             <th><?php echo __( '日期', 'your-text-domain' );?></th>
-                            <th><?php echo __( '客戶', 'your-text-domain' );?></th>
                             <th><?php echo __( '金額', 'your-text-domain' );?></th>
                             <th><?php echo __( '狀態', 'your-text-domain' );?></th>
                         </tr>
@@ -383,9 +417,8 @@ if (!class_exists('curtain_orders')) {
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
-                                <td><?php echo esc_html($customer_name);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
-                                <td><?php echo esc_html($customer_order_status);?></td>
+                                <td><?php echo esc_html(get_the_title($customer_order_status));?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -578,7 +611,7 @@ if (!class_exists('curtain_orders')) {
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php echo $this->display_order_item_list($customer_order_id);?>
-                <?php if ($customer_order_category==1) {?>
+                <?php if ($customer_order_category<=1) {?>
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -707,6 +740,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false) {
+            $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_amount = 0;
             ob_start();
             ?>
@@ -766,7 +800,9 @@ if (!class_exists('curtain_orders')) {
                         </tr>
                     </tfoot>
                 </table>
+                <?php if ($customer_order_category==1) {?>
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <?php }?>
             </fieldset>
             </div>
             <?php
