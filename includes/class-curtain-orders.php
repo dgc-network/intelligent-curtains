@@ -140,7 +140,7 @@ if (!class_exists('curtain_orders')) {
                 // Customer Order Status Migration - 2024-04-30
                 if (isset($_GET['_customer_order_status_migration'])) {
                     $args = array(
-                        'post_type'      => 'order-item',
+                        'post_type'      => 'customer-order',
                         'posts_per_page' => -1, // Retrieve all matching posts
                     );
                     $query = new WP_Query($args);
