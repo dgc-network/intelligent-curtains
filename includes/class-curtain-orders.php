@@ -363,6 +363,8 @@ if (!class_exists('curtain_orders')) {
 
         function display_customer_order_list() {
             $curtain_agents = new curtain_agents();
+            if (!current_user_can('administrator')) $is_disabled='disabled';
+
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
                 $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
@@ -435,7 +437,7 @@ if (!class_exists('curtain_orders')) {
                 ?>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <select id="select-curtain-agent"><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
+                        <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
                     </div>
                     <div style="text-align:right; display:flex;">
                     </div>
