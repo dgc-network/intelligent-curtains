@@ -127,7 +127,7 @@ if (!class_exists('curtain_orders')) {
                             // Query the "order-status" post based on the post content
                             $order_status_query = new WP_Query(array(
                                 'post_type'      => 'order-status',
-                                'posts_per_page' => 1,
+                                'posts_per_page' => -1,
                                 's'              => $customer_order_status, // Search term to look for in post content
                             ));
                             
