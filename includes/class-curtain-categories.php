@@ -90,7 +90,6 @@ if (!class_exists('curtain_categories')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            //$curtain_category_title = get_post_meta(get_the_ID(), 'curtain_category_title', true);
                             $curtain_min_width = get_post_meta(get_the_ID(), 'curtain_min_width', true);
                             $curtain_max_width = get_post_meta(get_the_ID(), 'curtain_max_width', true);
                             $curtain_min_height = get_post_meta(get_the_ID(), 'curtain_min_height', true);
@@ -176,8 +175,7 @@ if (!class_exists('curtain_categories')) {
             </div>
             <?php
             $html = ob_get_clean();
-            return $html;
-        
+            return $html;        
         }
 
         function get_curtain_category_dialog_data() {
