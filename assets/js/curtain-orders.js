@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
 
                 $("#proceed-to-customer-order").on("click", function() {
                     const ajaxData = {
-                        'action': 'proceed_to_customer_order',
+                        'action': 'proceed_to_customer_order_01',
                     };
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();
             

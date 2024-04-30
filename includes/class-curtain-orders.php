@@ -55,8 +55,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
-            add_action( 'wp_ajax_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
-            add_action( 'wp_ajax_nopriv_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
+            add_action( 'wp_ajax_proceed_to_customer_order_01', array( $this, 'proceed_to_customer_order_01' ) );
+            add_action( 'wp_ajax_nopriv_proceed_to_customer_order_01', array( $this, 'proceed_to_customer_order_01' ) );
     
         }
 
@@ -110,33 +110,6 @@ if (!class_exists('curtain_orders')) {
             // Check if the user is logged in
             if (is_user_logged_in()) {
 
-                // Customer Order Status Migration - 2024-04-30
-                if (isset($_GET['_migrate_customer_order_status'])) {
-                    global $wpdb;
-                    
-                    // Get all order items
-                    $order_item_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'order-item'");
-                    
-                    // Loop through each order item
-                    foreach ($order_item_ids as $order_item_id) {
-                        $customer_order_status = get_post_meta($order_item_id, 'customer_order_status', true);
-                        
-                        // Search for the order status post by its content
-                        $order_status_id = $wpdb->get_var($wpdb->prepare("
-                            SELECT ID 
-                            FROM {$wpdb->posts} 
-                            WHERE post_type = 'order-status' 
-                            AND post_content LIKE %s", 
-                            '%' . $wpdb->esc_like($customer_order_status) . '%'
-                        ));
-                        
-                        // Update the meta value for customer order status
-                        if ($order_status_id) {
-                            update_post_meta($order_item_id, 'customer_order_status', $order_status_id);
-                        }
-                    }
-                }
-                
                 // Customer Order Status Migration - 2024-04-30
                 if (isset($_GET['_customer_order_status_migration'])) {
                     $args = array(
@@ -350,7 +323,7 @@ if (!class_exists('curtain_orders')) {
                     }
                 }
 
-                
+                // Start point
                 $current_user_id = get_current_user_id();
                 $current_user = wp_get_current_user();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
@@ -363,16 +336,16 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     ?>
                     <div style="text-align:center;">
-                        <h4>經銷商登入/註冊</h4>
+                        <h4><?php echo __( '經銷商登入/註冊', 'your-text-domain' );?></h4>
                         <form method="post" style="display:inline-block; text-align:-webkit-center;">
                         <fieldset>
-                            <label style="text-align:left;" for="agent-number">代碼:</label>
+                            <label style="text-align:left;" for="agent-number"><?php echo __( '代碼:', 'your-text-domain' );?></label>
                             <input type="text" id="agent-number" />
-                            <label style="text-align:left;" for="agent-password">密碼:</label>
+                            <label style="text-align:left;" for="agent-password"><?php echo __( '密碼:', 'your-text-domain' );?></label>
                             <input type="password" id="agent-password" />
-                            <label style="text-align:left;" for="display-name">Name:</label>
+                            <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
                             <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
-                            <label style="text-align:left;" for="user-email">Email:</label>
+                            <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
                             <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
                             <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
                         </fieldset>
@@ -627,6 +600,7 @@ if (!class_exists('curtain_orders')) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
+            $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
             ob_start();            
             if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
@@ -637,23 +611,25 @@ if (!class_exists('curtain_orders')) {
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
+                <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php echo $this->display_order_item_list($customer_order_id);?>
-                <?php if ($customer_order_category<=1) {?>
                 <hr>
+                <?php if ($customer_order_category<=1) {?>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-to-customer-order" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-to-customer-order-01" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
                     } else {
-                        echo '<select id="select-status">';
-                        echo $this->select_order_status_options($customer_order_status);
-                        echo '</select>';
+                        if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-02" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-03" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-04" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                     }
                 ?>
             </fieldset>
@@ -721,13 +697,50 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function proceed_to_customer_order() {
+        function proceed_to_customer_order_01() {
             $response = array();
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 update_post_meta( $customer_order_id, 'customer_order_category', 2);
+                update_post_meta( $customer_order_id, 'customer_order_status', 2248); // order01:2248 ~ order04:2251
                 update_post_meta( $customer_order_id, 'customer_order_number', time());
+            }
+            wp_send_json($response);
+        }
+
+        function proceed_to_customer_order_02() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
+                update_post_meta( $customer_order_id, 'customer_order_status', 2249); // order01:2248 ~ order04:2251
+                //update_post_meta( $customer_order_id, 'customer_order_number', time());
+            }
+            wp_send_json($response);
+        }
+
+        function proceed_to_customer_order_03() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
+                update_post_meta( $customer_order_id, 'customer_order_status', 2250); // order01:2248 ~ order04:2251
+                //update_post_meta( $customer_order_id, 'customer_order_number', time());
+            }
+            wp_send_json($response);
+        }
+
+        function proceed_to_customer_order_04() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
+                update_post_meta( $customer_order_id, 'customer_order_status', 2251); // order01:2248 ~ order04:2251
+                //update_post_meta( $customer_order_id, 'customer_order_number', time());
             }
             wp_send_json($response);
         }
@@ -751,7 +764,7 @@ if (!class_exists('curtain_orders')) {
                 );    
                 $post_id = wp_insert_post($new_post);
                 update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
-                update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                update_post_meta( $post_id, 'customer_order_category', 1);
                 //update_post_meta( $post_id, 'customer_order_category', sanitize_text_field($_POST['_customer_order_category']));
             }
             wp_send_json($response);
