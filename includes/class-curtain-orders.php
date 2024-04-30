@@ -111,7 +111,7 @@ if (!class_exists('curtain_orders')) {
             if (is_user_logged_in()) {
 
                 // Customer Order Status Migration - 2024-04-30
-                if (isset($_GET['_migrate_customer_order_status'])) {
+                if (isset($_GET['_customer_order_status_migration'])) {
                     $args = array(
                         'post_type'      => 'order-item',
                         'posts_per_page' => -1, // Retrieve all matching posts
@@ -133,8 +133,10 @@ if (!class_exists('curtain_orders')) {
                             
                             // Check if any posts were found
                             if ($order_status_query->have_posts()) {
-                                $order_status_query->the_post();
-                                $customer_order_status = get_the_ID();
+                                while ($order_status_query->have_posts()) {
+                                    $order_status_query->the_post();
+                                    $customer_order_status = get_the_ID();
+                                }
                             }
                             wp_reset_postdata(); // Reset the post data
                             
