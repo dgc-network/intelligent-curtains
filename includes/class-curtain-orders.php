@@ -634,9 +634,9 @@ if (!class_exists('curtain_orders')) {
                     } else {
                         if (current_user_can('administrator')) {
                             echo '<hr>';
-                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             if ($customer_order_status==2251) echo '<input type="button" id="proceed-to-customer-order-0" value="'.__( 'OK', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }
                     }
