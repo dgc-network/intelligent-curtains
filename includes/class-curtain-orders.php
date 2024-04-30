@@ -40,6 +40,7 @@ if (!class_exists('curtain_orders')) {
             add_shortcode( 'shopping-item-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
+            add_action( 'init', array( $this, 'register_order_status_post_type' ) );
             add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
@@ -90,12 +91,89 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
+        function register_order_status_post_type() {
+            $labels = array(
+                'menu_name'     => _x('order-status', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+                'rewrite'       => array('slug' => 'order-statuses'),
+                'supports'      => array('title', 'editor', 'custom-fields'),
+                'has_archive'   => true,
+                //'show_in_menu'  => false,
+            );
+            register_post_type( 'order-status', $args );
+        }
+
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
+
+                if (isset($_GET['_migrate_category_model_spec_id_2'])) {
+                    $args = array(
+                        'post_type'      => 'order-item',
+                        'posts_per_page' => -1, // Retrieve all matching posts
+                    );
+                    $query = new WP_Query($args);
+                    if ($query->have_posts()) {
+                        while ($query->have_posts()) {
+                            $query->the_post();
+                            // Output or manipulate post data here
+                            $order_item_id = get_the_ID();
+                            $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
+                            $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+                            $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
+                
+                            // Curtain Category
+                            global $wpdb;
+                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $curtain_category_id ), OBJECT );
+                            $curtain_category_name = $row->curtain_category_name;
+                            $curtain_category_post = get_page_by_title($curtain_category_name, OBJECT, 'curtain-category');
+                            if ($curtain_category_post) {
+                                $curtain_category_id = $curtain_category_post->ID;
+                            }
+                
+                            // Curtain Model
+                            global $wpdb;
+                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
+                            $curtain_model_name = $row->curtain_model_name;
+                            // Query to retrieve the post ID based on the meta key and value for the "curtain-model" post type
+                            $post_id = $wpdb->get_var( $wpdb->prepare( 
+                                "SELECT p.ID
+                                FROM {$wpdb->posts} AS p
+                                INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+                                WHERE p.post_type = 'curtain-model'
+                                AND pm.meta_key = %s
+                                AND pm.meta_value = %s", 
+                                'curtain_model_name',
+                                $curtain_model_name
+                            ) );
+                            
+                            if ($post_id) {
+                                $curtain_model_id = $post_id;
+                            }
+                
+                            // Curtain Specification
+                            global $wpdb;
+                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $curtain_specification_id ), OBJECT );
+                            $curtain_specification_name = $row->curtain_specification_name;
+                            $curtain_specification_post = get_page_by_title($curtain_specification_name, OBJECT, 'curtain-spec');
+                            if ($curtain_specification_post) {
+                                $curtain_specification_id = $curtain_specification_post->ID;
+                            }
+                
+                            // Update post meta
+                            update_post_meta($order_item_id, 'curtain_category_id', $curtain_category_id);
+                            update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
+                            update_post_meta($order_item_id, 'curtain_specification_id', $curtain_specification_id);
+                        }
+                        wp_reset_postdata(); // Restore global post data
+                    }
+                }
+                
                 // curtain_category_id, curtain_model_id, curtain_specification_id migration 2024-4-29
                 if (isset($_GET['_migrate_category_model_spec_id'])) {
-                    global $wpdb;
                     $args = array(
                         'post_type'      => 'order-item',
                         'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
@@ -109,8 +187,8 @@ if (!class_exists('curtain_orders')) {
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
 
-                            global $wpdb;
                             // curtain-category
+                            global $wpdb;
                             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $curtain_category_id ), OBJECT );
                             $args = array(
                                 'post_type'      => 'curtain-category',
@@ -130,6 +208,7 @@ if (!class_exists('curtain_orders')) {
                             }
 
                             // curtain-model
+                            global $wpdb;
                             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
                             $args = array(
                                 'post_type'      => 'curtain-model',
@@ -155,6 +234,7 @@ if (!class_exists('curtain_orders')) {
                             }
 
                             // curtain-specification
+                            global $wpdb;
                             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $curtain_specification_id ), OBJECT );
                             $args = array(
                                 'post_type'      => 'curtain-spec',
@@ -179,10 +259,7 @@ if (!class_exists('curtain_orders')) {
             
                         }
                         wp_reset_postdata(); // Restore global post data
-
-                    }
-            
-                   
+                    }                               
                 }
 
                 // order_items_table_to_post migration 2024-4-29
@@ -343,13 +420,13 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '訂單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '採購單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
                             <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '訂單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '採購單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -441,7 +518,7 @@ if (!class_exists('curtain_orders')) {
                     <div id="quotation-select">
                         <select id="select-order-category">
                             <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2"><?php echo __( '訂單', 'your-text-domain' );?></option>
+                            <option value="2"><?php echo __( '採購單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -572,9 +649,9 @@ if (!class_exists('curtain_orders')) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
-            ob_start();
-            echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
-            if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '訂單', 'your-text-domain' ).'</h2>';
+            ob_start();            
+            if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
+            else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
@@ -590,7 +667,7 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-to-customer-order" value="<?php echo __( '轉出貨單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-to-customer-order" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
             </fieldset>
