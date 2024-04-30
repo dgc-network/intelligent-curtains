@@ -41,8 +41,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
             add_action( 'init', array( $this, 'register_order_status_post_type' ) );
-            add_action( 'wp_ajax_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_get_quotation_dialog_data', array( $this, 'get_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
             add_action( 'wp_ajax_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
@@ -596,7 +596,7 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
-        function display_customer_order_dialog($customer_order_id=false) {
+        function display_customer_order_dialog($customer_order_id=false, $is_admin=false) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
@@ -617,7 +617,7 @@ if (!class_exists('curtain_orders')) {
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id);?>
                 <hr>
-                <?php if ($customer_order_category<=1) {?>
+                <?php if ($customer_order_category<=1 || $is_admin==1) {?>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
@@ -641,11 +641,19 @@ if (!class_exists('curtain_orders')) {
             return $html;
         }
         
-        function get_quotation_dialog_data() {
+        function get_customer_order_dialog_data() {
             $response = array();
             if (isset($_POST['_customer_order_id'])) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id);
+
+                if (isset($_POST['_is_admin'])) {
+                    $is_admin = sanitize_text_field($_POST['_is_admin']);
+                    if (current_user_can('administrator') && $is_admin=="1") {
+                        $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id, $is_admin);
+                    }
+                }        
+    
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
@@ -740,45 +748,11 @@ if (!class_exists('curtain_orders')) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
-                update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
-                if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
-            }
-            wp_send_json($response);
-        }
-
-        function proceed_to_customer_order_02() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                update_post_meta( $customer_order_id, 'customer_order_status', 2249); // order01:2248 ~ order04:2251
-                //update_post_meta( $customer_order_id, 'customer_order_number', time());
-            }
-            wp_send_json($response);
-        }
-
-        function proceed_to_customer_order_03() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                update_post_meta( $customer_order_id, 'customer_order_status', 2250); // order01:2248 ~ order04:2251
-                //update_post_meta( $customer_order_id, 'customer_order_number', time());
-            }
-            wp_send_json($response);
-        }
-
-        function proceed_to_customer_order_04() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                //update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                update_post_meta( $customer_order_id, 'customer_order_status', 2251); // order01:2248 ~ order04:2251
-                //update_post_meta( $customer_order_id, 'customer_order_number', time());
+                if ($customer_order_status>0) {
+                    update_post_meta( $customer_order_id, 'customer_order_category', 2);
+                    update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
+                    if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());    
+                }
             }
             wp_send_json($response);
         }

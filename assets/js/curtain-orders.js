@@ -50,7 +50,7 @@ jQuery(document).ready(function($) {
             url: ajax_object.ajax_url,
             type: 'post',
             data: {
-                action: 'get_quotation_dialog_data',
+                action: 'get_customer_order_dialog_data',
                 _customer_order_id: customer_order_id,
             },
             success: function (response) {
