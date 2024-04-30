@@ -578,6 +578,7 @@ if (!class_exists('curtain_orders')) {
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php echo $this->display_order_item_list($customer_order_id);?>
+                <?php if ($customer_order_category==1) {?>
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -585,18 +586,16 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <?php
-                        if ($customer_order_category==1) {
-                            echo '<input type="button" id="proceed-to-customer-order" value="'.__( '轉採購單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        } else {
-                            echo '<select id="select-status">';
-                            echo $this->select_order_status_options($customer_order_status);
-                            echo '</select>';
-                        }
-                        ?>
-                        
+                        <input type="button" id="proceed-to-customer-order" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
+                <?php 
+                    } else {
+                        echo '<select id="select-status">';
+                        echo $this->select_order_status_options($customer_order_status);
+                        echo '</select>';
+                    }
+                ?>
             </fieldset>
             <?php
             $html = ob_get_clean();
