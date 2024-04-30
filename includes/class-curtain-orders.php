@@ -110,6 +110,7 @@ if (!class_exists('curtain_orders')) {
             // Check if the user is logged in
             if (is_user_logged_in()) {
 
+                // curtain_model_id migration 2024-4-30
                 if (isset($_GET['_migrate_model_id_part_3'])) {
                     $args = array(
                         'post_type'      => 'order-item',
@@ -135,7 +136,7 @@ if (!class_exists('curtain_orders')) {
                                 INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
                                 WHERE p.post_type = 'curtain-model'
                                 AND pm.meta_key = 'curtain_model_name'
-                                AND pm.meta_value = %d", 
+                                AND pm.meta_value LIKE %s", 
                                 $curtain_model_name
                             ) );
                             
