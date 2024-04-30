@@ -20,7 +20,7 @@ if (!class_exists('curtain_specifications')) {
             add_action( 'wp_ajax_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
 
-            add_shortcode( 'curtain-specification-list', array( $this, 'display_curtain_specification_list' ) );
+            add_shortcode( 'curtain-specification-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_curtain_specification_dialog_data', array( $this, 'get_curtain_specification_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_specification_dialog_data', array( $this, 'get_curtain_specification_dialog_data' ) );
@@ -46,32 +46,16 @@ if (!class_exists('curtain_specifications')) {
             register_post_type( 'curtain-spec', $args );
         }
 
-        function retrieve_curtain_specification_data($current_page = 1) {
-            // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
-        
-            $search_query = sanitize_text_field($_GET['_search']);
-            $select_category = sanitize_text_field($_GET['_category']);
-            $category_filter = array(
-                'key'     => 'curtain_category_id',
-                'value'   => $select_category,
-                'compare' => '=',
-            );
-        
-            $args = array(
-                'post_type'      => 'curtain-spec',
-                'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
-                's'              => $search_query,  
-                'meta_query'     => array(
-                    ($select_category) ? $category_filter : '',
-                ),
-                'orderby'        => 'title', // Sort by title
-                'order'          => 'ASC',
-            );        
-        
-            $query = new WP_Query($args);
-            return $query;
+        function display_shortcode() {
+            if (current_user_can('administrator')) {
+                $this->display_curtain_specification_list();
+            } else {
+                ?>
+                <div style="text-align:center;">
+                    <h4><?php echo __( '你沒有權限讀取目前網頁!', 'your-text-domain' );?></h4>
+                </div>
+                <?php
+            }
         }
 
         function display_curtain_specification_list() {
@@ -143,6 +127,34 @@ if (!class_exists('curtain_specifications')) {
             </div>
             <?php
             echo $this->display_curtain_specification_dialog();
+        }
+
+        function retrieve_curtain_specification_data($current_page = 1) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+        
+            $search_query = sanitize_text_field($_GET['_search']);
+            $select_category = sanitize_text_field($_GET['_category']);
+            $category_filter = array(
+                'key'     => 'curtain_category_id',
+                'value'   => $select_category,
+                'compare' => '=',
+            );
+        
+            $args = array(
+                'post_type'      => 'curtain-spec',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+                's'              => $search_query,  
+                'meta_query'     => array(
+                    ($select_category) ? $category_filter : '',
+                ),
+                'orderby'        => 'title', // Sort by title
+                'order'          => 'ASC',
+            );        
+        
+            $query = new WP_Query($args);
+            return $query;
         }
 
         function display_curtain_specification_dialog($curtain_specification_id=false) {            

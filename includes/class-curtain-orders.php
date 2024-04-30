@@ -71,7 +71,7 @@ if (!class_exists('curtain_orders')) {
                 'rewrite'       => array('slug' => 'customer-orders'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'customer-order', $args );
         }
@@ -101,7 +101,7 @@ if (!class_exists('curtain_orders')) {
                 'rewrite'       => array('slug' => 'order-statuses'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'order-status', $args );
         }
@@ -340,7 +340,6 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     <div style="text-align:center;">
                         <h4><?php echo __( '經銷商登入/註冊', 'your-text-domain' );?></h4>
-                        <form method="post" style="display:inline-block; text-align:-webkit-center;">
                         <fieldset>
                             <label style="text-align:left;" for="agent-number"><?php echo __( '代碼:', 'your-text-domain' );?></label>
                             <input type="text" id="agent-number" />
@@ -352,7 +351,6 @@ if (!class_exists('curtain_orders')) {
                             <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
                             <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
                         </fieldset>
-                        </form>
                     </div>
                     <?php
                 }

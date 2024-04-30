@@ -47,8 +47,14 @@ if (!class_exists('curtain_models')) {
         }
 
         function display_shortcode() {
-            if (is_user_logged_in()) {
+            if (current_user_can('administrator')) {
                 $this->display_curtain_model_list();
+            } else {
+                ?>
+                <div style="text-align:center;">
+                    <h4><?php echo __( '你沒有權限讀取目前網頁!', 'your-text-domain' );?></h4>
+                </div>
+                <?php
             }
         }
 

@@ -41,15 +41,13 @@ if (!class_exists('curtain_agents')) {
                 'rewrite'       => array('slug' => 'curtain-agents'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'curtain-agent', $args );
         }
 
         function display_shortcode() {
-            // Check if the user is logged in
-            if (is_user_logged_in()) {
-
+            if (current_user_can('administrator')) {
                 // delete curtain-agent post 2024-4-27
                 if (isset($_GET['_delete_curtain_agents_post'])) {
                     // Get all curtain-agent posts
@@ -91,9 +89,14 @@ if (!class_exists('curtain_agents')) {
 
                 // curtain-agents start point 2024-4-27
                 $this->display_curtain_agent_list();
+
             } else {
-                //user_did_not_login_yet();
-            }        
+                ?>
+                <div style="text-align:center;">
+                    <h4><?php echo __( '你沒有權限讀取目前網頁!', 'your-text-domain' );?></h4>
+                </div>
+                <?php
+            }
         }
 
         function display_curtain_agent_list() {

@@ -20,7 +20,7 @@ if (!class_exists('curtain_categories')) {
             add_action( 'wp_ajax_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
 
-            add_shortcode( 'curtain-category-list', array( $this, 'display_curtain_category_list' ) );
+            add_shortcode( 'curtain-category-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
             add_action( 'wp_ajax_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
@@ -44,6 +44,18 @@ if (!class_exists('curtain_categories')) {
                 'show_in_menu'  => false,
             );
             register_post_type( 'curtain-category', $args );
+        }
+
+        function display_shortcode() {
+            if (current_user_can('administrator')) {
+                $this->display_curtain_category_list();
+            } else {
+                ?>
+                <div style="text-align:center;">
+                    <h4><?php echo __( '你沒有權限讀取目前網頁!', 'your-text-domain' );?></h4>
+                </div>
+                <?php
+            }
         }
 
         function display_curtain_category_list() {
