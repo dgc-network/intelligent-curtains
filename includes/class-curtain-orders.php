@@ -110,7 +110,60 @@ if (!class_exists('curtain_orders')) {
             // Check if the user is logged in
             if (is_user_logged_in()) {
 
-                if (isset($_GET['_migrate_category_model_spec_id_2'])) {
+                if (isset($_GET['_migrate_model_id_part_3'])) {
+                    $args = array(
+                        'post_type'      => 'order-item',
+                        'posts_per_page' => -1, // Retrieve all matching posts
+                    );
+                    $query = new WP_Query($args);
+                    if ($query->have_posts()) {
+                        while ($query->have_posts()) {
+                            $query->the_post();
+                            // Output or manipulate post data here
+                            $order_item_id = get_the_ID();
+                            $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+                
+                            // Curtain Model
+                            global $wpdb;
+                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
+                            $curtain_model_name = $row->curtain_model_name;
+
+                            // Query to retrieve the post ID based on the meta key and value for the "curtain-model" post type
+                            $post_id = $wpdb->get_var( $wpdb->prepare( 
+                                "SELECT p.ID
+                                FROM {$wpdb->posts} AS p
+                                INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+                                WHERE p.post_type = 'curtain-model'
+                                AND pm.meta_key = 'curtain_model_name'
+                                AND pm.meta_value = %s", 
+                                $curtain_model_name
+                            ) );
+                            
+                            // Check if a post ID was found
+                            if ( $post_id ) {
+                                // Get the post object using the retrieved post ID
+                                $post = get_post( $post_id );
+                            
+                                // Check if the post object exists
+                                if ( $post ) {
+                                    // The post was found, you can now work with the $post object
+                                    $curtain_model_id = $post->ID;
+                                } else {
+                                    // The post was not found
+                                }
+                            } else {
+                                // No post ID found for the specified meta value
+                            }
+                            
+                            // Update post meta
+                            update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
+                        }
+                        wp_reset_postdata(); // Restore global post data
+                    }
+                }
+                
+                // curtain_category_id, curtain_specification_id migration 2024-4-30
+                if (isset($_GET['_migrate_category_spec_id'])) {
                     $args = array(
                         'post_type'      => 'order-item',
                         'posts_per_page' => -1, // Retrieve all matching posts
@@ -132,26 +185,6 @@ if (!class_exists('curtain_orders')) {
                             $curtain_category_post = get_page_by_title($curtain_category_name, OBJECT, 'curtain-category');
                             if ($curtain_category_post) {
                                 $curtain_category_id = $curtain_category_post->ID;
-                            }
-                
-                            // Curtain Model
-                            global $wpdb;
-                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
-                            $curtain_model_name = $row->curtain_model_name;
-                            // Query to retrieve the post ID based on the meta key and value for the "curtain-model" post type
-                            $post_id = $wpdb->get_var( $wpdb->prepare( 
-                                "SELECT p.ID
-                                FROM {$wpdb->posts} AS p
-                                INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-                                WHERE p.post_type = 'curtain-model'
-                                AND pm.meta_key = %s
-                                AND pm.meta_value = %s", 
-                                'curtain_model_name',
-                                $curtain_model_name
-                            ) );
-                            
-                            if ($post_id) {
-                                $curtain_model_id = $post_id;
                             }
                 
                             // Curtain Specification
