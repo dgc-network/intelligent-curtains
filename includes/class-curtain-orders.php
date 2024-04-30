@@ -613,7 +613,7 @@ if (!class_exists('curtain_orders')) {
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-                <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php if ($customer_order_category>1) {?>
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
@@ -920,24 +920,24 @@ if (!class_exists('curtain_orders')) {
             <div id="curtain-order-item-dialog" title="Order Item dialog">
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
-                <label for="curtain-category-id">類別</label>
+                <label for="curtain-category-id"><?php echo __( '類別', 'your-text-domain' );?></label>
                 <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
-                <label id="curtain-model-label" for="curtain-model-id">型號</label>
+                <label id="curtain-model-label" for="curtain-model-id"><?php echo __( '型號', 'your-text-domain' );?></label>
                 <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
                 <div id="spec-div" style="<?php echo $is_specification_hided;?>">
-                    <label id="curtain-specification-label" for="curtain-specification-id">規格</label>
+                    <label id="curtain-specification-label" for="curtain-specification-id"><?php echo __( '規格', 'your-text-domain' );?></label>
                     <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
-                    <label id="curtain-width-label" for="curtain-width">寬</label>
+                    <label id="curtain-width-label" for="curtain-width"><?php echo __( '寬', 'your-text-domain' );?></label>
                     <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" />
                     <div id="height-div" style="<?php echo $is_height_hided;?>">
-                        <label id="curtain-height-label" for="curtain-height">高</label>
+                        <label id="curtain-height-label" for="curtain-height"><?php echo __( '高', 'your-text-domain' );?></label>
                         <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" />
                     </div>
                 </div>
-                <label for="order-item-qty">數量</label>
+                <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
                 <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" class="text ui-widget-content ui-corner-all" />
-                <label for="order-item-note">備註</label>
-                <input type="text" id="order-item-note" value="<?php echo $order_item_note;?>" class="text ui-widget-content ui-corner-all" />
+                <label for="order-item-note"><?php echo __( '備註', 'your-text-domain' );?></label>
+                <textarea id="order-item-note" rows="2" style="width:100%;"><?php echo $order_item_note;?></textarea>
             </fieldset>
             </div>
             <?php
