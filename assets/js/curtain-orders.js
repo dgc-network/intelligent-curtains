@@ -25,6 +25,60 @@ jQuery(document).ready(function($) {
         });    
     });
 
+    $("#select-order-category").on("change", function() {
+        // Initialize an empty array to store query parameters
+        var queryParams = [];
+    
+        // Check the selected value for each select element and add it to the queryParams array
+        var categoryValue = $("#select-order-category").val();
+        if (categoryValue) {
+            queryParams.push("_category=" + categoryValue);
+        }
+    
+        var agentIdValue = $("#select-curtain-agent").val();
+        if (agentIdValue) {
+            queryParams.push("_curtain_agent_id=" + agentIdValue);
+        }
+    
+        // Combine all query parameters into a single string
+        var queryString = queryParams.join("&");
+    
+        // Redirect to the new URL with all combined query parameters
+        window.location.href = "?" + queryString;
+    
+        // Clear the values of all select elements after redirection
+        $("#select-order-category, #select-curtain-agent").val('');
+    
+        // Toggle visibility of elements if needed
+        $("#quotation-title, #quotation-select, #customer-order-title, #customer-order-select").toggle();
+    });
+    
+    $("#select-curtain-agent").on("change", function() {
+        // Initialize an empty array to store query parameters
+        var queryParams = [];
+    
+        // Check the selected value for each select element and add it to the queryParams array
+        var categoryValue = $("#select-order-category").val();
+        if (categoryValue) {
+            queryParams.push("_category=" + categoryValue);
+        }
+    
+        var agentIdValue = $("#select-curtain-agent").val();
+        if (agentIdValue) {
+            queryParams.push("_curtain_agent_id=" + agentIdValue);
+        }
+    
+        // Combine all query parameters into a single string
+        var queryString = queryParams.join("&");
+    
+        // Redirect to the new URL with all combined query parameters
+        window.location.href = "?" + queryString;
+    
+        // Clear the values of all select elements after redirection
+        $("#select-order-category, #select-curtain-agent").val('');
+    
+    });
+/*    
     $("#select-order-category").on( "change", function() {
         window.location.replace("?_category="+$(this).val());
         $(this).val('');
@@ -34,13 +88,13 @@ jQuery(document).ready(function($) {
         $("#customer-order-select").toggle();
     });
 
-    $("#search-order").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
-        $(this).val('');
-    });
-
     $("#select-curtain-agent").on( "change", function() {
         window.location.replace("?_curtain_agent_id="+$(this).val());
+        $(this).val('');
+    });
+*/
+    $("#search-order").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
         $(this).val('');
     });
 
