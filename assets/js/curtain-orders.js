@@ -78,21 +78,7 @@ jQuery(document).ready(function($) {
         $("#select-order-category, #select-curtain-agent").val('');
     
     });
-/*    
-    $("#select-order-category").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
-        $(this).val('');
-        $("#quotation-title").toggle();
-        $("#quotation-select").toggle();
-        $("#customer-order-title").toggle();
-        $("#customer-order-select").toggle();
-    });
 
-    $("#select-curtain-agent").on( "change", function() {
-        window.location.replace("?_curtain_agent_id="+$(this).val());
-        $(this).val('');
-    });
-*/
     $("#search-order").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
