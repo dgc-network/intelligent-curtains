@@ -97,7 +97,7 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    $("#curtain-category-dialog").dialog('close');
+    //$("#curtain-category-dialog").dialog('close');
 });
 
 // curtain-model 2024-4-26 revision
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    $("#curtain-model-dialog").dialog('close');
+    //$("#curtain-model-dialog").dialog('close');
 });
 
 // curtain-specification 2024-4-26 revision
@@ -303,7 +303,7 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    $("#curtain-specification-dialog").dialog('close');
+    //$("#curtain-specification-dialog").dialog('close');
 });
 
 // curtain-agent 2024-4-27 revision

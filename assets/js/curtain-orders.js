@@ -186,7 +186,6 @@ jQuery(document).ready(function($) {
             'action': 'set_quotation_dialog_data',
         };
         ajaxData['_curtain_agent_id'] = $("#select-curtain-agent").val();
-        //ajaxData['_customer_order_category'] = $("#select-order-category").val();
 
         $.ajax({
             type: 'POST',
@@ -250,8 +249,7 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
-                            activate_order_item_list_data($("#customer-order-id").val());
-            
+                            activate_order_item_list_data($("#customer-order-id").val());            
                         },
                         error: function(error){
                             console.error(error);
@@ -262,7 +260,6 @@ jQuery(document).ready(function($) {
             }
         }
     });
-    //$("#curtain-order-item-dialog").dialog('close');
 
     function activate_curtain_category_id_data(order_item_id) {
         $("#curtain-category-id").on( "change", function() {
@@ -276,7 +273,6 @@ jQuery(document).ready(function($) {
                 },
                 success: function (response) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
-                    //$("#curtain-order-item-dialog").dialog('open');
                     activate_order_item_list_data(customer_order_id);
                 },
                 error: function(error){
@@ -285,7 +281,6 @@ jQuery(document).ready(function($) {
                 }
             });    
         });
-
     }
 
     function activate_order_item_list_data(customer_order_id) {
@@ -329,9 +324,7 @@ jQuery(document).ready(function($) {
                 }
             });    
         });
-
     };
-
 });
 
 
