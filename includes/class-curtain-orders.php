@@ -111,6 +111,33 @@ if (!class_exists('curtain_orders')) {
             if (is_user_logged_in()) {
 
                 // Customer Order Status Migration - 2024-04-30
+                if (isset($_GET['_migrate_customer_order_status'])) {
+                    global $wpdb;
+                    
+                    // Get all order items
+                    $order_item_ids = $wpdb->get_col("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'order-item'");
+                    
+                    // Loop through each order item
+                    foreach ($order_item_ids as $order_item_id) {
+                        $customer_order_status = get_post_meta($order_item_id, 'customer_order_status', true);
+                        
+                        // Search for the order status post by its content
+                        $order_status_id = $wpdb->get_var($wpdb->prepare("
+                            SELECT ID 
+                            FROM {$wpdb->posts} 
+                            WHERE post_type = 'order-status' 
+                            AND post_content LIKE %s", 
+                            '%' . $wpdb->esc_like($customer_order_status) . '%'
+                        ));
+                        
+                        // Update the meta value for customer order status
+                        if ($order_status_id) {
+                            update_post_meta($order_item_id, 'customer_order_status', $order_status_id);
+                        }
+                    }
+                }
+                
+                // Customer Order Status Migration - 2024-04-30
                 if (isset($_GET['_customer_order_status_migration'])) {
                     $args = array(
                         'post_type'      => 'order-item',
@@ -764,6 +791,8 @@ if (!class_exists('curtain_orders')) {
                             while ($query->have_posts()) : $query->the_post();
                                 $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                                 $curtain_category_title = get_the_title($curtain_category_id);
+                                $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
+                                $is_height = get_post_meta($curtain_category_id, 'is_height', true);
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                 $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
@@ -779,6 +808,8 @@ if (!class_exists('curtain_orders')) {
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
                                 $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
                                 $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
+                                if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
                                 $customer_order_amount += $order_item_amount;
 
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
