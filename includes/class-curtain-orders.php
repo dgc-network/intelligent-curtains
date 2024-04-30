@@ -365,9 +365,6 @@ if (!class_exists('curtain_orders')) {
 
         function display_customer_order_list() {
             $curtain_agents = new curtain_agents();
-            if (isset($_GET['_is_admin'])) {
-                //echo '<input type="hidden" id="is-admin" value="1" />';
-            }
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
                 $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
@@ -455,9 +452,6 @@ if (!class_exists('curtain_orders')) {
 
         function display_quotation_list() {
             $curtain_agents = new curtain_agents();
-            if (isset($_GET['_is_admin'])) {
-                //echo '<input type="hidden" id="is-admin" value="1" />';
-            }
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
                 $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
@@ -560,8 +554,12 @@ if (!class_exists('curtain_orders')) {
                 'value'   => $curtain_agent_id,
                 'compare' => '=',
             );
-        
-            $customer_order_category = sanitize_text_field($_GET['_category']);
+
+            if (isset($_GET['_category'])) {
+                $customer_order_category = sanitize_text_field($_GET['_category']);
+            } else {
+                $customer_order_category = 1;
+            }
             $order_category_filter = array(
                 'key'     => 'customer_order_category',
                 'value'   => $customer_order_category,
