@@ -13,7 +13,6 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'get_curtain_category_dialog_data',
                 _curtain_category_id: curtain_category_id,
-                _is_admin: $("#is-admin").val()
                 
             },
             success: function (response) {

@@ -324,8 +324,11 @@ if (!class_exists('curtain_orders')) {
                 }
 
                 // Start point
-                $current_user_id = get_current_user_id();
+                if (isset($_GET['_is_admin'])) {
+                    echo '<input type="hidden" id="is-admin" value="1" />';
+                }    
                 $current_user = wp_get_current_user();
+                $current_user_id = get_current_user_id();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
                     if ($_GET['_category']==2) {
@@ -363,7 +366,7 @@ if (!class_exists('curtain_orders')) {
         function display_customer_order_list() {
             $curtain_agents = new curtain_agents();
             if (isset($_GET['_is_admin'])) {
-                echo '<input type="hidden" id="is-admin" value="1" />';
+                //echo '<input type="hidden" id="is-admin" value="1" />';
             }
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
@@ -453,7 +456,7 @@ if (!class_exists('curtain_orders')) {
         function display_quotation_list() {
             $curtain_agents = new curtain_agents();
             if (isset($_GET['_is_admin'])) {
-                echo '<input type="hidden" id="is-admin" value="1" />';
+                //echo '<input type="hidden" id="is-admin" value="1" />';
             }
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
