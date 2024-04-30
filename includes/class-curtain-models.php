@@ -21,7 +21,7 @@ if (!class_exists('curtain_models')) {
             add_action( 'wp_ajax_nopriv_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
 
             //add_shortcode( 'curtain-model-list', array( $this, 'display_curtain_model_list' ) );
-            add_shortcode( 'shopping-item-list', array( $this, 'display_shortcode' ) );
+            add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
             add_action( 'wp_ajax_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
