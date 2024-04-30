@@ -815,7 +815,7 @@ if (!class_exists('curtain_orders')) {
 
                                 echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
                                 echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
-                                echo '<td>'.esc_html($order_item_description).'</td>';
+                                echo '<td>'.$order_item_description.'</td>';
                                 echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
                                 echo '<td style="text-align:center;">'.number_format_i18n($order_item_amount).'</td>';
                                 echo '</tr>';
