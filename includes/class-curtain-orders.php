@@ -135,7 +135,7 @@ if (!class_exists('curtain_orders')) {
                                 INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
                                 WHERE p.post_type = 'curtain-model'
                                 AND pm.meta_key = 'curtain_model_name'
-                                AND pm.meta_value = %s", 
+                                AND pm.meta_value = %d", 
                                 $curtain_model_name
                             ) );
                             
