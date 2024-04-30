@@ -418,7 +418,7 @@ if (!class_exists('curtain_orders')) {
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
-                                <td><?php echo esc_html(get_the_title($customer_order_status));?></td>
+                                <td><?php echo esc_html(get_the_title($customer_order_status).$customer_order_status);?></td>
                             </tr>
                             <?php
                         endwhile;
