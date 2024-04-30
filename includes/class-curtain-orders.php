@@ -127,39 +127,12 @@ if (!class_exists('curtain_orders')) {
                             // Curtain Model
                             global $wpdb;
                             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
-                            if ($row) {
-                                $curtain_model_name = $row->curtain_model_name;
-                
-                                // Query to retrieve the post ID based on the meta key and value for the "curtain-model" post type
-                                $post_id = $wpdb->get_var( $wpdb->prepare( 
-                                    "SELECT p.ID
-                                    FROM {$wpdb->posts} AS p
-                                    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-                                    WHERE p.post_type = 'curtain-model'
-                                    AND pm.meta_key = 'curtain_model_number'
-                                    AND pm.meta_value LIKE %s", 
-                                    '%' . $curtain_model_name . '%'
-                                ) );
-                                
-                                // Check if a post ID was found
-                                if ( $post_id ) {
-                                    // Get the post object using the retrieved post ID
-                                    $post = get_post( $post_id );
-                                
-                                    // Check if the post object exists
-                                    if ( $post ) {
-                                        // The post was found, you can now work with the $post object
-                                        $curtain_model_id = $post->ID;
-                                    } else {
-                                        // The post was not found
-                                    }
-                                } else {
-                                    // No post ID found for the specified meta value
-                                }
-                                
-                                // Update post meta
-                                update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
+                            $curtain_model_name = $row->curtain_model_name;
+                            $curtain_model_post = get_page_by_title($curtain_model_name, OBJECT, 'curtain-model');
+                            if ($curtain_model_post) {
+                                $curtain_model_id = $curtain_model_post->ID;
                             }
+                            update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
                         }
                         wp_reset_postdata(); // Restore global post data
                     }
