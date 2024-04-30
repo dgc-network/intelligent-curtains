@@ -14,14 +14,13 @@ if (!class_exists('curtain_models')) {
             $this->create_tables();
             $this->_wp_page_title = 'Models';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-model-list');
-            add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
+            //add_shortcode( 'curtain-model-list', array( $this, 'list_curtain_models' ) );
             add_action( 'wp_ajax_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
             add_action( 'wp_ajax_nopriv_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
             add_action( 'wp_ajax_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
 
-            //add_shortcode( 'curtain-model-list', array( $this, 'display_curtain_model_list' ) );
-            //add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
+            add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
             add_action( 'wp_ajax_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
@@ -343,7 +342,7 @@ if (!class_exists('curtain_models')) {
                 //$output .= '<span id="btn-edit-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '<span id="btn-model-'.$result->curtain_model_id.'"><i class="fa-regular fa-pen-to-square"></i></span>';
                 $output .= '</td>';
-                $output .= '<td style="text-align: center;">'.$result->curtain_model_name.':'.$result->curtain_model_id.'</td>';
+                $output .= '<td style="text-align: center;">'.$result->curtain_model_name.'</td>';
                 $output .= '<td>'.$result->model_description.'</td>';
                 $output .= '<td style="text-align: center;">'.$result->model_price.'</td>';
                 $output .= '<td>'.$result->curtain_vendor_name.'</td>';
