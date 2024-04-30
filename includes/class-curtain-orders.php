@@ -343,13 +343,13 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '訂單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
                             <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '訂單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -441,7 +441,7 @@ if (!class_exists('curtain_orders')) {
                     <div id="quotation-select">
                         <select id="select-order-category">
                             <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <option value="2"><?php echo __( '訂單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -568,13 +568,14 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
-        function display_quotation_dialog($customer_order_id=false) {
+        function display_customer_order_dialog($customer_order_id=false) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
-            //$customer_order_amount = get_post_meta($customer_order_id, 'customer_order_amount', true);
+            $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             ob_start();
+            echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
+            if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '訂單', 'your-text-domain' ).'</h2>';
             ?>
-            <h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2>
             <fieldset>
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
@@ -602,7 +603,7 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if (isset($_POST['_customer_order_id'])) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $response['html_contain'] = $this->display_quotation_dialog($customer_order_id);
+                $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id);
             } else {
                 $response['html_contain'] = 'Invalid AJAX request!';
             }
@@ -723,12 +724,12 @@ if (!class_exists('curtain_orders')) {
                         if ($query->have_posts()) {
                             while ($query->have_posts()) : $query->the_post();
                                 $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                                $curtain_category_title = get_the_title($curtain_category_id);
+                                $curtain_category_title = get_the_title($curtain_category_id).$curtain_category_id;
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                 $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
                                 $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
-                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';
+                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')'.$curtain_model_id;
                                 $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                                 $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
                                 $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
