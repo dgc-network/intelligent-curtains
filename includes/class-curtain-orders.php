@@ -356,7 +356,7 @@ if (!class_exists('curtain_orders')) {
                 }
 
             } else {
-                //user_did_not_login_yet();
+                user_did_not_login_yet();
             }
         
         }

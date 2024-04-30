@@ -196,10 +196,7 @@ function user_did_not_login_yet() {
                 "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'line_user_id' AND meta_value = %s",
                 $_GET['_id']
             ));
-            $site_id = get_user_meta( $user_id, 'site_id', true);
-            $site_title = get_the_title($site_id);
         }
-        //$user = get_user_by( 'ID', $user_id );
         $user_data = get_userdata( $user_id );
         ?>
         <div class="ui-widget">
@@ -209,10 +206,6 @@ function user_did_not_login_yet() {
                 <input type="text" id="display-name" value="<?php echo esc_attr($_GET['_name']);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="user-email">Email:</label>
                 <input type="text" id="user-email" value="<?php echo esc_attr($user_data->user_email);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="site-id">Site:</label>
-                <input type="text" id="site-title" value="<?php echo esc_attr($site_title);?>" class="text ui-widget-content ui-corner-all" />
-                <div id="site-hint" style="display:none; color:#999;"></div>
-                <input type="hidden" id="site-id" value="<?php echo esc_attr($site_id);?>" />
                 <input type="hidden" id="log" value="<?php echo esc_attr($_GET['_id']);?>" />
                 <input type="hidden" id="pwd" value="<?php echo esc_attr($_GET['_id']);?>" />
                 <hr>
@@ -220,7 +213,7 @@ function user_did_not_login_yet() {
             </fieldset>
         </div>
         <?php        
-} else {
+    } else {
         // Display a message or redirect to the login/registration page
         $one_time_password = random_int(100000, 999999);
         update_option('_one_time_password', $one_time_password);
