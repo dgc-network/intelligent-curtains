@@ -154,16 +154,14 @@ if (!class_exists('curtain_orders')) {
                             // Query the "order-status" post based on the post content
                             $order_status_query = new WP_Query(array(
                                 'post_type'      => 'order-status',
-                                'posts_per_page' => -1,
+                                'posts_per_page' => 1,
                                 's'              => $customer_order_status, // Search term to look for in post content
                             ));
                             
                             // Check if any posts were found
                             if ($order_status_query->have_posts()) {
-                                while ($order_status_query->have_posts()) {
-                                    $order_status_query->the_post();
-                                    $customer_order_status = get_the_ID();
-                                }
+                                $order_status_query->the_post();
+                                $customer_order_status = get_the_ID();
                             }
                             wp_reset_postdata(); // Reset the post data
                             
