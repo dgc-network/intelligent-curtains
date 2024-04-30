@@ -418,7 +418,7 @@ if (!class_exists('curtain_orders')) {
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
-                                <td><?php echo esc_html(get_the_title($customer_order_status).$customer_order_status);?></td>
+                                <td><?php echo esc_html(get_the_title($customer_order_status));?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -611,8 +611,10 @@ if (!class_exists('curtain_orders')) {
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="customer-order-remark" rows="3" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                <?php if ($customer_order_category>1) {?>
+                    <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
+                    <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id);?>
                 <hr>
                 <?php if ($customer_order_category<=1) {?>
