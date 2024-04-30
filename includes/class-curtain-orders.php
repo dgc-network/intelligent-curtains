@@ -618,7 +618,7 @@ if (!class_exists('curtain_orders')) {
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
-                <?php echo $this->display_order_item_list($customer_order_id);?>
+                <?php echo $this->display_order_item_list($customer_order_id, $is_admin=false);?>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
@@ -763,7 +763,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function display_order_item_list($customer_order_id=false) {
+        function display_order_item_list($customer_order_id=false, $is_admin=false) {
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_amount = 0;
             ob_start();
@@ -813,7 +813,8 @@ if (!class_exists('curtain_orders')) {
                                 else $order_item_description .= '<br>'.$curtain_specification_description;
                                 $customer_order_amount += $order_item_amount;
 
-                                echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
+                                if ($customer_order_category<=1 || $is_admin==1) echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
+                                else echo '<tr>';                                
                                 echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
                                 echo '<td>'.$order_item_description.'</td>';
                                 echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
@@ -834,7 +835,7 @@ if (!class_exists('curtain_orders')) {
                         </tr>
                     </tfoot>
                 </table>
-                <?php if ($customer_order_category==1) {?>
+                <?php if ($customer_order_category<=1 || $is_admin==1) {?>
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <?php }?>
             </fieldset>
@@ -915,7 +916,6 @@ if (!class_exists('curtain_orders')) {
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
 
             ob_start();
-            if ($customer_order_category<=1) {
             ?>
             <div id="curtain-order-item-dialog" title="Order Item dialog">
             <fieldset>
@@ -941,7 +941,6 @@ if (!class_exists('curtain_orders')) {
             </fieldset>
             </div>
             <?php
-            }
             $html = ob_get_clean();
             return $html;
         }
