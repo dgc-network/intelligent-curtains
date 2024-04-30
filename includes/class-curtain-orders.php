@@ -619,8 +619,8 @@ if (!class_exists('curtain_orders')) {
                     <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id);?>
-                <hr>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
+                <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
@@ -632,10 +632,13 @@ if (!class_exists('curtain_orders')) {
                 </div>
                 <?php 
                     } else {
-                        if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        if ($customer_order_status==2251) echo '<input type="button" id="proceed-to-customer-order-0" value="'.__( 'OK', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        if (current_user_can('administrator')) {
+                            echo '<hr>';
+                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '生產中', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '已出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '已收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2251) echo '<input type="button" id="proceed-to-customer-order-0" value="'.__( 'OK', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        }
                     }
                 ?>
             </fieldset>
