@@ -335,13 +335,14 @@ if (!class_exists('curtain_orders')) {
                         if (current_user_can('administrator')) {
                             $this->display_customer_order_list();
                         }
+                    } else {
+                        if ($_GET['_category']==2) {
+                            $this->display_customer_order_list();
+                        } else {
+                            $this->display_quotation_list();
+                        }    
                     }
 
-                    if ($_GET['_category']==2) {
-                        $this->display_purchase_order_list();
-                    } else {
-                        $this->display_quotation_list();
-                    }        
                 } else {
                     ?>
                     <div style="text-align:center;">
@@ -629,9 +630,7 @@ if (!class_exists('curtain_orders')) {
                     </div>
                     <div style="text-align:right; display:flex;">
                     </div>
-                </div>
-        
-
+                </div>        
             </fieldset>
             </div>
             <?php echo $this->display_order_item_dialog();?>
@@ -657,6 +656,7 @@ if (!class_exists('curtain_orders')) {
 
             if (isset($_GET['_category'])) {
                 $customer_order_category = sanitize_text_field($_GET['_category']);
+                if ($customer_order_category==2 && current_user_can('administrator')) $curtain_agent_id='';
             } else {
                 $customer_order_category = 1;
             }
@@ -855,7 +855,8 @@ if (!class_exists('curtain_orders')) {
                 if ($customer_order_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
                     update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
-                    if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());    
+                    if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
+                    //if ($customer_order_status==2249) update_post_meta( $customer_order_id, 'customer_order_category', 3);
                 }
             }
             wp_send_json($response);
