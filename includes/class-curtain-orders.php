@@ -693,7 +693,78 @@ if (!class_exists('curtain_orders')) {
                             <td colspan=3><?php echo esc_html($curtain_agent_address);?></td>
                         </tr>
                     </table>
+
                     <?php echo $this->display_order_item_list($customer_order_id);?>
+
+                    <fieldset>
+                    <table style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th><?php echo __( '產品', 'your-text-domain' );?></th>
+                                <th><?php echo __( '規格', 'your-text-domain' );?></th>
+                                <th><?php echo __( '尺寸', 'your-text-domain' );?></th>
+                                <th><?php echo __( '數量', 'your-text-domain' );?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = $this->retrieve_order_item_data($customer_order_id);
+                            if ($query->have_posts()) {
+                                while ($query->have_posts()) : $query->the_post();
+                                    $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                                    $curtain_category_title = get_the_title($curtain_category_id);
+                                    $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
+                                    $is_height = get_post_meta($curtain_category_id, 'is_height', true);
+                                    $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                                    $curtain_model_description = get_post_field('post_content', $curtain_model_id);
+                                    $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                                    $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
+                                    $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                                    $curtain_specification_description = get_post_field('post_content', $curtain_specification_id);
+                                    $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                                    $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
+    
+                                    $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                    $curtain_width = ($curtain_width) ? $curtain_width : 1;
+                                    $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                                    $curtain_height = ($curtain_height) ? $curtain_height : 1;
+                                    $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                                    $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
+    
+                                    $curtain_specification_description .= ' W:'.$curtain_width;
+                                    $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
+                                    $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
+                                    if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    else $curtain_specification_description .= ' H:'.$curtain_height;
+                                    if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
+                                    else $order_item_description .= '<br>'.$curtain_specification_description;
+                                    $customer_order_amount += $order_item_amount;
+    
+                                    echo '<tr>';
+                                    echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
+                                    echo '<td style="text-align:center;">'.esc_html($curtain_model_description).'</td>';
+                                    echo '<td>'.$curtain_specification_description.'</td>';
+                                    echo '<td style="text-align:center;">'.number_format_i18n($order_item_qty).'</td>';
+                                    echo '</tr>';
+                                endwhile;
+                                wp_reset_postdata();
+                            }
+                            ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td style="text-align:center;"><?php echo __( 'Sum', 'your-text-domain' );?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
+                                <input type="hidden" id="customer-order-amount" value="<?php echo esc_attr($customer_order_amount);?>" />
+                            </tr>
+                        </tfoot>
+                    </table>
+                    </fieldset>
+    
+
+
                     <hr>
                     <div style="display:flex; justify-content:space-between; margin:5px;">
                         <div>

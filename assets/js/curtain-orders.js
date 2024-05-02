@@ -162,9 +162,11 @@ jQuery(document).ready(function($) {
                             action: 'print_customer_order_data',
                             _customer_order_id: customer_order_id,
                         },
-                        success: function (response) {
-            
+                        success: function (response) {            
                             $('#result-container').html(response.html_contain);
+                            $("#exit-customer-order-printing").on("click", function () {
+                                window.location.replace(window.location.href);
+                            });                        
                         }
                     });
 
