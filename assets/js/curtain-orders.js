@@ -149,6 +149,10 @@ jQuery(document).ready(function($) {
                     }
                 });
 
+                $("#exit-customer-order-dialog").on("click", function () {
+                    window.location.replace(window.location.href);
+                });
+
                 $('[id^="proceed-to-customer-order-"]').on("click", function () {
                     const customer_order_status = this.id.substring(26);
                     const ajaxData = {

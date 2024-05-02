@@ -735,7 +735,8 @@ if (!class_exists('curtain_orders')) {
                             if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2251) echo '<input type="button" id="proceed-to-customer-order-0" value="'.__( 'OK', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }
                     }
                 ?>
