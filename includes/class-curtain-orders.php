@@ -57,6 +57,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
             add_action( 'wp_ajax_nopriv_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
+            add_action( 'wp_ajax_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
+            add_action( 'wp_ajax_nopriv_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
     
         }
 
@@ -374,7 +376,7 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '採購單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
@@ -411,7 +413,7 @@ if (!class_exists('curtain_orders')) {
                             $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
                             $agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
                             $curtain_agent_number = get_post_meta($agent_id, 'curtain_agent_number', true);
-                            $curtain_agent_namer = get_post_meta($agent_id, 'curtain_agent_name', true);
+                            $curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
                             $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             if (current_user_can('administrator')) $customer_order_number .= ':'.$curtain_agent_name.'('.$curtain_agent_number.')';
@@ -650,6 +652,66 @@ if (!class_exists('curtain_orders')) {
             return $html;
         }
         
+        function print_customer_order_data() {
+            $response = array();
+            if (isset($_POST['_customer_order_id'])) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
+                $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
+                $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+                $curtain_agent_contact = get_post_meta($curtain_agent_id, 'curtain_agent_contact', true);
+                $curtain_agent_phone = get_post_meta($curtain_agent_id, 'curtain_agent_phone', true);
+                $curtain_agent_address = get_post_meta($curtain_agent_id, 'curtain_agent_address', true);
+                $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
+                $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
+                ob_start();            
+                ?>
+                <h2 style="display:inline;"><?php echo __( '出貨單', 'your-text-domain' );?></h2>
+                <fieldset>
+                    <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                    <table>
+                        <tr>
+                            <td><?php echo __( '訂單號碼：', 'your-text-domain' );?></td>
+                            <td><?php echo esc_html($customer_order_number);?></td>
+                            <td><?php echo __( '訂單日期：', 'your-text-domain' );?></td>
+                            <td><?php echo esc_html($customer_order_time);?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo __( '客戶名稱：', 'your-text-domain' );?></td>
+                            <td colspan=3><?php echo esc_html($curtain_agent_name.'('.$curtain_agent_number.')');?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo __( '收件人：', 'your-text-domain' );?></td>
+                            <td><?php echo esc_html($curtain_agent_contact);?></td>
+                            <td><?php echo __( '聯絡電話：', 'your-text-domain' );?></td>
+                            <td><?php echo esc_html($curtain_agent_phone);?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo __( '收件地址：', 'your-text-domain' );?></td>
+                            <td colspan=3><?php echo esc_html($curtain_agent_address);?></td>
+                        </tr>
+                    </table>
+                    <?php echo $this->display_order_item_list($customer_order_id);?>
+                    <hr>
+                    <div style="display:flex; justify-content:space-between; margin:5px;">
+                        <div>
+                            <input type="button" id="exit-customer-order-printing" value="<?php echo __( 'Exit', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        </div>
+                        <div style="text-align:right; display:flex;">
+                        </div>
+                    </div>
+                </fieldset>
+                <?php
+                $html = ob_get_clean();
+                $response['html_contain'] = $html;
+            } else {
+                $response['html_contain'] = 'Invalid AJAX request!';
+            }
+            wp_send_json($response);
+        }
+
         function get_customer_order_dialog_data() {
             $response = array();
             if (isset($_POST['_customer_order_id'])) {

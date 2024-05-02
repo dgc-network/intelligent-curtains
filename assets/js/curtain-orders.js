@@ -153,6 +153,23 @@ jQuery(document).ready(function($) {
                     window.location.replace(window.location.href);
                 });
 
+                $('[id^="print-customer-order-"]').on("click", function () {
+                    const customer_order_id = this.id.substring(21);
+                    $.ajax({
+                        url: ajax_object.ajax_url,
+                        type: 'post',
+                        data: {
+                            action: 'print_customer_order_data',
+                            _customer_order_id: customer_order_id,
+                        },
+                        success: function (response) {
+            
+                            $('#result-container').html(response.html_contain);
+                        }
+                    });
+
+                });
+
                 $('[id^="proceed-to-customer-order-"]').on("click", function () {
                     const customer_order_status = this.id.substring(26);
                     const ajaxData = {
