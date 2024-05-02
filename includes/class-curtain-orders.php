@@ -694,8 +694,6 @@ if (!class_exists('curtain_orders')) {
                         </tr>
                     </table>
 
-                    <?php echo $this->display_order_item_list($customer_order_id);?>
-
                     <fieldset>
                     <table style="width:100%;">
                         <thead>
@@ -743,7 +741,8 @@ if (!class_exists('curtain_orders')) {
                                     echo '<tr>';
                                     echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
                                     echo '<td style="text-align:center;">'.esc_html($curtain_model_description).'</td>';
-                                    echo '<td>'.$curtain_specification_description.'</td>';
+                                    if ($is_specification==1) echo '<td></td>';
+                                    else echo '<td>'.$curtain_specification_description.'</td>';
                                     echo '<td style="text-align:center;">'.number_format_i18n($order_item_qty).'</td>';
                                     echo '</tr>';
                                 endwhile;
@@ -751,20 +750,9 @@ if (!class_exists('curtain_orders')) {
                             }
                             ?>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td style="text-align:center;"><?php echo __( 'Sum', 'your-text-domain' );?></td>
-                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
-                                <input type="hidden" id="customer-order-amount" value="<?php echo esc_attr($customer_order_amount);?>" />
-                            </tr>
-                        </tfoot>
                     </table>
                     </fieldset>
     
-
-
                     <hr>
                     <div style="display:flex; justify-content:space-between; margin:5px;">
                         <div>
