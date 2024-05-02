@@ -1012,6 +1012,7 @@ if (!class_exists('curtain_orders')) {
                 $post_id = wp_insert_post($new_post);
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
+                update_post_meta( $post_id, 'order_item_qty', 1);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             }
             wp_send_json($response);
@@ -1052,10 +1053,10 @@ if (!class_exists('curtain_orders')) {
                 <div id="spec-div" style="<?php echo $is_specification_hided;?>">
                     <label id="curtain-specification-label" for="curtain-specification-id"><?php echo __( '規格', 'your-text-domain' );?></label>
                     <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
-                    <label id="curtain-width-label" for="curtain-width"><?php echo __( '寬', 'your-text-domain' );?></label>
+                    <label id="curtain-width-label" for="curtain-width"><?php echo __( '寬', 'your-text-domain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
                     <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" />
                     <div id="height-div" style="<?php echo $is_height_hided;?>">
-                        <label id="curtain-height-label" for="curtain-height"><?php echo __( '高', 'your-text-domain' );?></label>
+                        <label id="curtain-height-label" for="curtain-height"><?php echo __( '高', 'your-text-domain' );?>(min:<?php echo $curtain_min_height;?>/max:<?php echo $curtain_max_height;?>)</label>
                         <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" />
                     </div>
                 </div>
