@@ -331,8 +331,14 @@ if (!class_exists('curtain_orders')) {
                 $current_user_id = get_current_user_id();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
+                    if ($_GET['_category']==3) {
+                        if (current_user_can('administrator')) {
+                            $this->display_customer_order_list();
+                        }
+                    }
+
                     if ($_GET['_category']==2) {
-                        $this->display_customer_order_list();
+                        $this->display_purchase_order_list();
                     } else {
                         $this->display_quotation_list();
                     }        
@@ -373,13 +379,14 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '採購單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '出貨單', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
                             <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <option value="2"><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <option value="3" selected><?php echo __( '出貨單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -441,9 +448,97 @@ if (!class_exists('curtain_orders')) {
                     </div>
                     <div style="text-align:right; display:flex;">
                     </div>
+                </div>        
+            </fieldset>
+            </div>
+            <?php echo $this->display_order_item_dialog();?>
+            <?php
+        }
+
+        function display_purchase_order_list() {
+            $curtain_agents = new curtain_agents();
+            if (!current_user_can('administrator')) $is_disabled='disabled';
+
+            $current_user_id = get_current_user_id();
+            if (isset($_GET['_curtain_agent_id'])) {
+                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            } else {
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            }
+            ?>
+            <div class="ui-widget" id="result-container">
+            <div id="customer-order-title"><h2><?php echo __( '採購單', 'your-text-domain' );?></h2></div>
+            <fieldset>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div id="customer-order-select">
+                        <select id="select-order-category">
+                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <?php if (current_user_can('administrator')) {?>
+                            <option value="3"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
+                    </div>
                 </div>
         
-
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '訂單', 'your-text-domain' );?></th>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '金額', 'your-text-domain' );?></th>
+                            <th><?php echo __( '狀態', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_customer_order_data($current_page, $curtain_agent_id);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
+                            $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                            $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
+                            $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
+                            $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            ?>
+                            <tr id="edit-quotation-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
+                                <td><?php echo esc_html(get_the_title($customer_order_status));?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <?php
+                    // Display pagination links
+                    echo '<div class="pagination">';
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    echo '</div>';
+                ?>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                    </div>
+                </div>        
             </fieldset>
             </div>
             <?php echo $this->display_order_item_dialog();?>
@@ -469,6 +564,9 @@ if (!class_exists('curtain_orders')) {
                         <select id="select-order-category">
                             <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
                             <option value="2"><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <?php if (current_user_can('administrator')) {?>
+                            <option value="3"><?php echo __( '出貨單', 'your-text-domain' );?></option>
+                            <?php }?>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
