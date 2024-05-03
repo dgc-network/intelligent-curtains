@@ -418,14 +418,14 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
-                            $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            $customer_order_status = get_the_title(get_post_meta(get_the_ID(), 'customer_order_status', true));
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
-                                <td><?php echo esc_html(get_the_title($customer_order_status));?></td>
+                                <td><?php echo esc_html($customer_order_status);?></td>
                             </tr>
                             <?php
                         endwhile;
