@@ -416,10 +416,10 @@ if (!class_exists('curtain_orders')) {
                             $curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
                             $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
-                            if (current_user_can('administrator')) $customer_order_number .= ':'.$curtain_agent_name.'('.$curtain_agent_number.')';
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
                             $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
