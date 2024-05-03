@@ -672,26 +672,28 @@ if (!class_exists('curtain_orders')) {
                 <fieldset>
                     <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                     <table>
+                        <thead>
                         <tr>
-                            <td><?php echo __( '訂單號碼：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '訂單號碼：', 'your-text-domain' );?></th>
                             <td><?php echo esc_html($customer_order_number);?></td>
-                            <td><?php echo __( '訂單日期：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '訂單日期：', 'your-text-domain' );?></th>
                             <td><?php echo esc_html($customer_order_time);?></td>
                         </tr>
                         <tr>
-                            <td><?php echo __( '客戶名稱：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '客戶名稱：', 'your-text-domain' );?></th>
                             <td colspan=3><?php echo esc_html($curtain_agent_name.'('.$curtain_agent_number.')');?></td>
                         </tr>
                         <tr>
-                            <td><?php echo __( '收件人：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '收件人：', 'your-text-domain' );?></th>
                             <td><?php echo esc_html($curtain_agent_contact);?></td>
-                            <td><?php echo __( '聯絡電話：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '聯絡電話：', 'your-text-domain' );?></th>
                             <td><?php echo esc_html($curtain_agent_phone);?></td>
                         </tr>
                         <tr>
-                            <td><?php echo __( '收件地址：', 'your-text-domain' );?></td>
+                            <th><?php echo __( '收件地址：', 'your-text-domain' );?></th>
                             <td colspan=3><?php echo esc_html($curtain_agent_address);?></td>
                         </tr>
+                        </thead>
                     </table>
 
                     <fieldset>
@@ -703,8 +705,6 @@ if (!class_exists('curtain_orders')) {
                                 <th><?php echo __( '尺寸', 'your-text-domain' );?></th>
                                 <th><?php echo __( '數量', 'your-text-domain' );?></th>
                             </tr>
-                        </thead>
-                        <tbody>
                             <?php
                             $query = $this->retrieve_order_item_data($customer_order_id);
                             if ($query->have_posts()) {
@@ -749,7 +749,7 @@ if (!class_exists('curtain_orders')) {
                                 wp_reset_postdata();
                             }
                             ?>
-                        </tbody>
+                        </thead>
                     </table>
                     </fieldset>
     
