@@ -12,17 +12,14 @@ jQuery(document).ready(function($) {
             type: 'post',
             data: {
                 action: 'get_curtain_category_dialog_data',
-                _curtain_category_id: curtain_category_id,
-                
+                _curtain_category_id: curtain_category_id,                
             },
             success: function (response) {
-                $('#curtain-category-dialog').html(response.html_contain);
-                
-                $("#curtain-category-dialog").dialog('open');
-                                                    
+                $('#curtain-category-dialog').html(response.html_contain);                
+                $("#curtain-category-dialog").dialog('open');                                                    
             },
             error: function (error) {
-                console.log(error);
+                console.error(error);
             }
         });
     });            
@@ -40,7 +37,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                alert(error);
+                //alert(error);
             }
         });    
     });
@@ -71,7 +68,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -90,14 +87,13 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            alert(error);
+                            //alert(error);
                         }
                     });
                 }
             }
         }
     });
-    //$("#curtain-category-dialog").dialog('close');
 });
 
 // curtain-model 2024-4-26 revision
@@ -119,15 +115,14 @@ jQuery(document).ready(function($) {
             type: 'post',
             data: {
                 action: 'get_curtain_model_dialog_data',
-                _curtain_model_id: curtain_model_id,
-                
+                _curtain_model_id: curtain_model_id,                
             },
             success: function (response) {
                 $('#curtain-model-dialog').html(response.html_contain);         
                 $("#curtain-model-dialog").dialog('open');                                                    
             },
             error: function (error) {
-                console.log(error);
+                console.error(error);
             }
         });
     });            
@@ -145,7 +140,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                alert(error);
+                //alert(error);
             }
         });    
     });
@@ -174,7 +169,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -193,14 +188,13 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            alert(error);
+                            //alert(error);
                         }
                     });
                 }
             }
         }
     });
-    //$("#curtain-model-dialog").dialog('close');
 });
 
 // curtain-specification 2024-4-26 revision
@@ -222,15 +216,14 @@ jQuery(document).ready(function($) {
             type: 'post',
             data: {
                 action: 'get_curtain_specification_dialog_data',
-                _curtain_specification_id: curtain_specification_id,
-                
+                _curtain_specification_id: curtain_specification_id,                
             },
             success: function (response) {
                 $('#curtain-specification-dialog').html(response.html_contain);
                 $("#curtain-specification-dialog").dialog('open');
             },
             error: function (error) {
-                console.log(error);
+                console.error(error);
             }
         });
     });            
@@ -248,7 +241,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                alert(error);
+                //alert(error);
             }
         });    
     });
@@ -277,7 +270,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -296,14 +289,13 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            alert(error);
+                            //alert(error);
                         }
                     });
                 }
             }
         }
     });
-    //$("#curtain-specification-dialog").dialog('close');
 });
 
 // curtain-agent 2024-4-27 revision
@@ -320,15 +312,14 @@ jQuery(document).ready(function($) {
             type: 'post',
             data: {
                 action: 'get_curtain_agent_dialog_data',
-                _curtain_agent_id: curtain_agent_id,
-                
+                _curtain_agent_id: curtain_agent_id,                
             },
             success: function (response) {
                 $('#curtain-agent-dialog').html(response.html_contain);
                 $("#curtain-agent-dialog").dialog('open');
             },
             error: function (error) {
-                console.log(error);
+                console.error(error);
             }
         });
     });            
@@ -346,7 +337,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                alert(error);
+                //alert(error);
             }
         });    
     });
@@ -375,7 +366,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -394,14 +385,13 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            alert(error);
+                            //alert(error);
                         }
                     });
                 }
             }
         }
     });
-    //$("#curtain-specification-dialog").dialog('close');
 });
 
 
@@ -457,7 +447,7 @@ jQuery(document).ready(function($) {
                 $("#category-dialog").dialog('open');
             },
             error: function(error){
-                alert(error);
+                //alert(error);
             }
         });
     });
@@ -517,7 +507,7 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -554,7 +544,7 @@ jQuery(document).ready(function($) {
                 $("#agent-dialog").dialog('open');
             },
             error: function(error){
-                alert(error);
+                //alert(error);
             }
         });
     });
@@ -591,7 +581,7 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -628,7 +618,7 @@ jQuery(document).ready(function($) {
                 $("#model-dialog").dialog('open');
             },
             error: function(error){
-                alert(error);
+                //alert(error);
             }
         });
     });
@@ -663,7 +653,7 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -700,7 +690,7 @@ jQuery(document).ready(function($) {
                 $("#specification-dialog").dialog('open');
             },
             error: function(error){
-                alert(error);
+                //alert(error);
             }
         });
     });
@@ -735,7 +725,7 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },
@@ -768,7 +758,7 @@ jQuery(document).ready(function($) {
                 $("#remote-dialog").dialog('open');
             },
             error: function(error){
-                alert(error);
+                //alert(error);
             }
         });
     });
@@ -797,7 +787,7 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             },

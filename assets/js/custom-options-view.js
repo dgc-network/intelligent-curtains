@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
                         $(".chatboxcontent").scrollTop($(".chatboxcontent")[0].scrollHeight);
                     },
                     error: function(error){
-                        alert(error);
+                        //alert(error);
                     }
                 });
             }
