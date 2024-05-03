@@ -753,6 +753,7 @@ if (!class_exists('curtain_orders')) {
                             ?>
                         </tfoot>
                     </table>
+                    <div><?php echo __( '備註:', 'your-text-domain' );?><?php echo esc_html($customer_order_remark);?></div>
                     </fieldset>
     
                     <hr>
