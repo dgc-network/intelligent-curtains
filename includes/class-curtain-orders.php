@@ -434,14 +434,14 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     </tbody>
                 </table>
-                <?php
+                <div class="pagination">
+                    <?php
                     // Display pagination links
-                    echo '<div class="pagination">';
                     if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                     echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
                     if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
-                    echo '</div>';
-                ?>
+                    ?>
+                </div>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
@@ -522,14 +522,14 @@ if (!class_exists('curtain_orders')) {
                     </tbody>
                 </table>
                 <div id="new-quotation" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
-                <?php
+                <div class="pagination">
+                    <?php
                     // Display pagination links
-                    echo '<div class="pagination">';
                     if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                     echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
                     if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
-                    echo '</div>';
-                ?>
+                    ?>
+                </div>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
