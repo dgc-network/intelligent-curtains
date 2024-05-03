@@ -668,7 +668,7 @@ if (!class_exists('curtain_orders')) {
                 $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
                 ob_start();            
                 ?>
-                <h2 style="display:inline;"><?php echo __( '出貨單', 'your-text-domain' );?></h2>
+                <h2 style="text-align:center;"><?php echo __( '出貨單', 'your-text-domain' );?></h2>
                 <fieldset>
                     <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                     <table>
@@ -705,6 +705,8 @@ if (!class_exists('curtain_orders')) {
                                 <th><?php echo __( '尺寸', 'your-text-domain' );?></th>
                                 <th><?php echo __( '數量', 'your-text-domain' );?></th>
                             </tr>
+                        </thead>
+                        </tfoot>
                             <?php
                             $query = $this->retrieve_order_item_data($customer_order_id);
                             if ($query->have_posts()) {
@@ -749,7 +751,7 @@ if (!class_exists('curtain_orders')) {
                                 wp_reset_postdata();
                             }
                             ?>
-                        </thead>
+                        </tfoot>
                     </table>
                     </fieldset>
     
