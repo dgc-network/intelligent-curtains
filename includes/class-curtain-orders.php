@@ -111,219 +111,7 @@ if (!class_exists('curtain_orders')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-
-                // Customer Order Status Migration - 2024-04-30
-                if (isset($_GET['_customer_order_status_migration'])) {
-                    $args = array(
-                        'post_type'      => 'customer-order',
-                        'posts_per_page' => -1, // Retrieve all matching posts
-                    );
-                    $query = new WP_Query($args);
-                    if ($query->have_posts()) {
-                        while ($query->have_posts()) {
-                            $query->the_post();
-                            // Output or manipulate post data here
-                            $order_item_id = get_the_ID();
-                            $customer_order_status = get_post_meta($order_item_id, 'customer_order_status', true);
-                            
-                            // Query the "order-status" post based on the post content
-                            $order_status_query = new WP_Query(array(
-                                'post_type'      => 'order-status',
-                                'posts_per_page' => 1,
-                                's'              => $customer_order_status, // Search term to look for in post content
-                            ));
-                            
-                            // Check if any posts were found
-                            if ($order_status_query->have_posts()) {
-                                $order_status_query->the_post();
-                                $customer_order_status = get_the_ID();
-                            }
-                            wp_reset_postdata(); // Reset the post data
-                            
-                            // Update post meta
-                            update_post_meta($order_item_id, 'customer_order_status', $customer_order_status);
-                        }
-                        wp_reset_postdata(); // Restore global post data
-                    }
-                }
-
-                // Curtain Model ID Migration - 2024-04-30
-                if (isset($_GET['_migrate_model_id_part_3'])) {
-                    $args = array(
-                        'post_type'      => 'order-item',
-                        'posts_per_page' => -1, // Retrieve all matching posts
-                    );
-                    $query = new WP_Query($args);
-                    if ($query->have_posts()) {
-                        while ($query->have_posts()) {
-                            $query->the_post();
-                            // Output or manipulate post data here
-                            $order_item_id = get_the_ID();
-                            $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
-                            
-                            // Curtain Model
-                            global $wpdb;
-                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
-                            $curtain_model_name = $row->curtain_model_name;
-                            $curtain_model_post = get_page_by_title($curtain_model_name, OBJECT, 'curtain-model');
-                            if ($curtain_model_post) {
-                                $curtain_model_id = $curtain_model_post->ID;
-                            }
-                            update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
-                        }
-                        wp_reset_postdata(); // Restore global post data
-                    }
-                }
-
-                // curtain_category_id, curtain_specification_id migration 2024-4-30
-                if (isset($_GET['_migrate_category_spec_id'])) {
-                    $args = array(
-                        'post_type'      => 'order-item',
-                        'posts_per_page' => -1, // Retrieve all matching posts
-                    );
-                    $query = new WP_Query($args);
-                    if ($query->have_posts()) {
-                        while ($query->have_posts()) {
-                            $query->the_post();
-                            // Output or manipulate post data here
-                            $order_item_id = get_the_ID();
-                            $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
-                            $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
-                            $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
-                
-                            // Curtain Category
-                            global $wpdb;
-                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $curtain_category_id ), OBJECT );
-                            $curtain_category_name = $row->curtain_category_name;
-                            $curtain_category_post = get_page_by_title($curtain_category_name, OBJECT, 'curtain-category');
-                            if ($curtain_category_post) {
-                                $curtain_category_id = $curtain_category_post->ID;
-                            }
-                
-                            // Curtain Specification
-                            global $wpdb;
-                            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $curtain_specification_id ), OBJECT );
-                            $curtain_specification_name = $row->curtain_specification_name;
-                            $curtain_specification_post = get_page_by_title($curtain_specification_name, OBJECT, 'curtain-spec');
-                            if ($curtain_specification_post) {
-                                $curtain_specification_id = $curtain_specification_post->ID;
-                            }
-                
-                            // Update post meta
-                            update_post_meta($order_item_id, 'curtain_category_id', $curtain_category_id);
-                            update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
-                            update_post_meta($order_item_id, 'curtain_specification_id', $curtain_specification_id);
-                        }
-                        wp_reset_postdata(); // Restore global post data
-                    }
-                }
-                // order_items_table_to_post migration 2024-4-29
-                if (isset($_GET['_migrate_order_items_table_to_post'])) {
-                    global $wpdb;
-                    $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
-                    foreach ( $results as $result ) {
-                        //$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number = %s", $result->customer_order_number ), OBJECT );
-
-                        $args = array(
-                            'post_type'      => 'customer-order',
-                            'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
-                            'meta_query'     => array(
-                                array(
-                                    'key'     => 'customer_order_number',
-                                    'value'   => $result->customer_order_number,
-                                    'compare' => '=',
-                                ),
-                            ),
-                        );
-                    
-                        $filtered_query = new WP_Query($args);
-
-                        $customer_order_id=0;
-                        // Check if there are any posts found
-                        if ($filtered_query->have_posts()) {
-                            while ($filtered_query->have_posts()) {
-                                $filtered_query->the_post();
-                                // Output or manipulate post data here
-                                $customer_order_id = get_the_ID();
-                            }
-                            wp_reset_postdata(); // Restore global post data
-                        }
-                        
-                        $current_user_id = get_current_user_id();
-                        $new_post = array(
-                            'post_title'    => 'New item',
-                            'post_content'  => 'Your post content goes here.',
-                            'post_status'   => 'publish',
-                            'post_author'   => $current_user_id,
-                            'post_type'     => 'order-item',
-                        );    
-                        $post_id = wp_insert_post($new_post);
-                        update_post_meta( $post_id, 'customer_order_id', $customer_order_id );
-                        update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
-                        update_post_meta( $post_id, 'curtain_agent_id', $curtain_agent_id );
-                        update_post_meta( $post_id, 'curtain_category_id', $result->curtain_category_id );
-                        update_post_meta( $post_id, 'curtain_model_id', $result->curtain_model_id );
-                        update_post_meta( $post_id, 'curtain_remote_id', $result->curtain_remote_id );
-                        update_post_meta( $post_id, 'curtain_specification_id', $result->curtain_specification_id );
-                        update_post_meta( $post_id, 'curtain_width', $result->curtain_width );
-                        update_post_meta( $post_id, 'curtain_height', $result->curtain_height );
-                        update_post_meta( $post_id, 'order_item_qty', $result->order_item_qty );
-                        update_post_meta( $post_id, 'order_item_amount', $result->order_item_amount );
-                        update_post_meta( $post_id, 'order_item_note', $result->order_item_note );
-                        update_post_meta( $post_id, 'is_checkout', $result->is_checkout );
-                       
-                    }
-                }
-
-                // customer_orders_table_to_post migration 2024-4-29
-                if (isset($_GET['_migrate_customer_orders_table_to_post'])) {
-                    global $wpdb;
-                    $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
-                    foreach ( $results as $result ) {
-                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );
-
-                        $args = array(
-                            'post_type'      => 'curtain-agent',
-                            'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
-                            'meta_query'     => array(
-                                array(
-                                    'key'     => 'curtain_agent_number',
-                                    'value'   => $row->agent_number,
-                                    'compare' => '=',
-                                ),
-                            ),
-                        );
-                    
-                        $filtered_query = new WP_Query($args);
-
-                        $curtain_agent_id=0;
-                        // Check if there are any posts found
-                        if ($filtered_query->have_posts()) {
-                            while ($filtered_query->have_posts()) {
-                                $filtered_query->the_post();
-                                // Output or manipulate post data here
-                                $curtain_agent_id = get_the_ID();
-                            }
-                            wp_reset_postdata(); // Restore global post data
-                        }
-                        
-                        $current_user_id = get_current_user_id();
-                        $new_post = array(
-                            'post_title'    => 'New order',
-                            'post_content'  => 'Your post content goes here.',
-                            'post_status'   => 'publish',
-                            'post_author'   => $current_user_id,
-                            'post_type'     => 'customer-order',
-                        );    
-                        $post_id = wp_insert_post($new_post);
-                        update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
-                        update_post_meta( $post_id, 'curtain_agent_id', $curtain_agent_id );
-                        update_post_meta( $post_id, 'customer_order_amount', $result->customer_order_amount );
-                        update_post_meta( $post_id, 'customer_order_status', $result->customer_order_status );
-                        update_post_meta( $post_id, 'customer_order_category', 2 );
-               
-                    }
-                }
+                $this->data_migration();
 
                 // Start point
                 if (isset($_GET['_is_admin'])) {
@@ -1113,6 +901,220 @@ if (!class_exists('curtain_orders')) {
             return $options;
         }
         
+        function data_migration() {
+            // Customer Order Status Migration - 2024-04-30
+            if (isset($_GET['_customer_order_status_migration'])) {
+                $args = array(
+                    'post_type'      => 'customer-order',
+                    'posts_per_page' => -1, // Retrieve all matching posts
+                );
+                $query = new WP_Query($args);
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        // Output or manipulate post data here
+                        $order_item_id = get_the_ID();
+                        $customer_order_status = get_post_meta($order_item_id, 'customer_order_status', true);
+                        
+                        // Query the "order-status" post based on the post content
+                        $order_status_query = new WP_Query(array(
+                            'post_type'      => 'order-status',
+                            'posts_per_page' => 1,
+                            's'              => $customer_order_status, // Search term to look for in post content
+                        ));
+                        
+                        // Check if any posts were found
+                        if ($order_status_query->have_posts()) {
+                            $order_status_query->the_post();
+                            $customer_order_status = get_the_ID();
+                        }
+                        wp_reset_postdata(); // Reset the post data
+                        
+                        // Update post meta
+                        update_post_meta($order_item_id, 'customer_order_status', $customer_order_status);
+                    }
+                    wp_reset_postdata(); // Restore global post data
+                }
+            }
+
+            // Curtain Model ID Migration - 2024-04-30
+            if (isset($_GET['_migrate_model_id_part_3'])) {
+                $args = array(
+                    'post_type'      => 'order-item',
+                    'posts_per_page' => -1, // Retrieve all matching posts
+                );
+                $query = new WP_Query($args);
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        // Output or manipulate post data here
+                        $order_item_id = get_the_ID();
+                        $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+                        
+                        // Curtain Model
+                        global $wpdb;
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = %d", $curtain_model_id ), OBJECT );
+                        $curtain_model_name = $row->curtain_model_name;
+                        $curtain_model_post = get_page_by_title($curtain_model_name, OBJECT, 'curtain-model');
+                        if ($curtain_model_post) {
+                            $curtain_model_id = $curtain_model_post->ID;
+                        }
+                        update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
+                    }
+                    wp_reset_postdata(); // Restore global post data
+                }
+            }
+
+            // curtain_category_id, curtain_specification_id migration 2024-4-30
+            if (isset($_GET['_migrate_category_spec_id'])) {
+                $args = array(
+                    'post_type'      => 'order-item',
+                    'posts_per_page' => -1, // Retrieve all matching posts
+                );
+                $query = new WP_Query($args);
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        // Output or manipulate post data here
+                        $order_item_id = get_the_ID();
+                        $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
+                        $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
+                        $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
+            
+                        // Curtain Category
+                        global $wpdb;
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_categories WHERE curtain_category_id = %d", $curtain_category_id ), OBJECT );
+                        $curtain_category_name = $row->curtain_category_name;
+                        $curtain_category_post = get_page_by_title($curtain_category_name, OBJECT, 'curtain-category');
+                        if ($curtain_category_post) {
+                            $curtain_category_id = $curtain_category_post->ID;
+                        }
+            
+                        // Curtain Specification
+                        global $wpdb;
+                        $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_specifications WHERE curtain_specification_id = %d", $curtain_specification_id ), OBJECT );
+                        $curtain_specification_name = $row->curtain_specification_name;
+                        $curtain_specification_post = get_page_by_title($curtain_specification_name, OBJECT, 'curtain-spec');
+                        if ($curtain_specification_post) {
+                            $curtain_specification_id = $curtain_specification_post->ID;
+                        }
+            
+                        // Update post meta
+                        update_post_meta($order_item_id, 'curtain_category_id', $curtain_category_id);
+                        update_post_meta($order_item_id, 'curtain_model_id', $curtain_model_id);
+                        update_post_meta($order_item_id, 'curtain_specification_id', $curtain_specification_id);
+                    }
+                    wp_reset_postdata(); // Restore global post data
+                }
+            }
+            // order_items_table_to_post migration 2024-4-29
+            if (isset($_GET['_migrate_order_items_table_to_post'])) {
+                global $wpdb;
+                $results = general_helps::get_search_results($wpdb->prefix.'order_items', $_POST['_where']);
+                foreach ( $results as $result ) {
+                    //$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}customer_orders WHERE customer_order_number = %s", $result->customer_order_number ), OBJECT );
+
+                    $args = array(
+                        'post_type'      => 'customer-order',
+                        'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
+                        'meta_query'     => array(
+                            array(
+                                'key'     => 'customer_order_number',
+                                'value'   => $result->customer_order_number,
+                                'compare' => '=',
+                            ),
+                        ),
+                    );
+                
+                    $filtered_query = new WP_Query($args);
+
+                    $customer_order_id=0;
+                    // Check if there are any posts found
+                    if ($filtered_query->have_posts()) {
+                        while ($filtered_query->have_posts()) {
+                            $filtered_query->the_post();
+                            // Output or manipulate post data here
+                            $customer_order_id = get_the_ID();
+                        }
+                        wp_reset_postdata(); // Restore global post data
+                    }
+                    
+                    $current_user_id = get_current_user_id();
+                    $new_post = array(
+                        'post_title'    => 'New item',
+                        'post_content'  => 'Your post content goes here.',
+                        'post_status'   => 'publish',
+                        'post_author'   => $current_user_id,
+                        'post_type'     => 'order-item',
+                    );    
+                    $post_id = wp_insert_post($new_post);
+                    update_post_meta( $post_id, 'customer_order_id', $customer_order_id );
+                    update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
+                    update_post_meta( $post_id, 'curtain_agent_id', $curtain_agent_id );
+                    update_post_meta( $post_id, 'curtain_category_id', $result->curtain_category_id );
+                    update_post_meta( $post_id, 'curtain_model_id', $result->curtain_model_id );
+                    update_post_meta( $post_id, 'curtain_remote_id', $result->curtain_remote_id );
+                    update_post_meta( $post_id, 'curtain_specification_id', $result->curtain_specification_id );
+                    update_post_meta( $post_id, 'curtain_width', $result->curtain_width );
+                    update_post_meta( $post_id, 'curtain_height', $result->curtain_height );
+                    update_post_meta( $post_id, 'order_item_qty', $result->order_item_qty );
+                    update_post_meta( $post_id, 'order_item_amount', $result->order_item_amount );
+                    update_post_meta( $post_id, 'order_item_note', $result->order_item_note );
+                    update_post_meta( $post_id, 'is_checkout', $result->is_checkout );
+                   
+                }
+            }
+
+            // customer_orders_table_to_post migration 2024-4-29
+            if (isset($_GET['_migrate_customer_orders_table_to_post'])) {
+                global $wpdb;
+                $results = general_helps::get_search_results($wpdb->prefix.'customer_orders', $_POST['_where']);
+                foreach ( $results as $result ) {
+                    $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}curtain_agents WHERE curtain_agent_id = %d", $result->curtain_agent_id ), OBJECT );
+
+                    $args = array(
+                        'post_type'      => 'curtain-agent',
+                        'posts_per_page' => -1, // Set to -1 to retrieve all matching posts
+                        'meta_query'     => array(
+                            array(
+                                'key'     => 'curtain_agent_number',
+                                'value'   => $row->agent_number,
+                                'compare' => '=',
+                            ),
+                        ),
+                    );
+                
+                    $filtered_query = new WP_Query($args);
+
+                    $curtain_agent_id=0;
+                    // Check if there are any posts found
+                    if ($filtered_query->have_posts()) {
+                        while ($filtered_query->have_posts()) {
+                            $filtered_query->the_post();
+                            // Output or manipulate post data here
+                            $curtain_agent_id = get_the_ID();
+                        }
+                        wp_reset_postdata(); // Restore global post data
+                    }
+                    
+                    $current_user_id = get_current_user_id();
+                    $new_post = array(
+                        'post_title'    => 'New order',
+                        'post_content'  => 'Your post content goes here.',
+                        'post_status'   => 'publish',
+                        'post_author'   => $current_user_id,
+                        'post_type'     => 'customer-order',
+                    );    
+                    $post_id = wp_insert_post($new_post);
+                    update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
+                    update_post_meta( $post_id, 'curtain_agent_id', $curtain_agent_id );
+                    update_post_meta( $post_id, 'customer_order_amount', $result->customer_order_amount );
+                    update_post_meta( $post_id, 'customer_order_status', $result->customer_order_status );
+                    update_post_meta( $post_id, 'customer_order_category', 2 );
+           
+                }
+            }
+        }
 
 
 
