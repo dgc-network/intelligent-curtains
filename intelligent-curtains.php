@@ -197,7 +197,7 @@ function user_did_not_login_yet() {
                 $_GET['_id']
             ));
         }
-        $user_data = get_userdata( $user_id );
+        $current_user = get_userdata( $user_id );
         ?>
         <div class="ui-widget">
             <h2>User registration/login</h2>
@@ -205,7 +205,7 @@ function user_did_not_login_yet() {
                 <label for="display-name">Name:</label>
                 <input type="text" id="display-name" value="<?php echo esc_attr($_GET['_name']);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="user-email">Email:</label>
-                <input type="text" id="user-email" value="<?php echo esc_attr($user_data->user_email);?>" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="user-email" value="<?php echo esc_attr($current_user->user_email);?>" class="text ui-widget-content ui-corner-all" />
                 <input type="hidden" id="log" value="<?php echo esc_attr($_GET['_id']);?>" />
                 <input type="hidden" id="pwd" value="<?php echo esc_attr($_GET['_id']);?>" />
                 <hr>
