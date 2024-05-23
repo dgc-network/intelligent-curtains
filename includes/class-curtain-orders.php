@@ -239,7 +239,10 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <?php echo $this->display_order_item_dialog();?>
+            <div id="curtain-order-item-dialog" title="Order Item dialog">
+            </div>
+
+            <?php //echo $this->display_order_item_dialog();?>
             <?php
         }
 
@@ -327,7 +330,10 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <?php echo $this->display_order_item_dialog();?>
+            <div id="curtain-order-item-dialog" title="Order Item dialog">
+            </div>
+
+            <?php //echo $this->display_order_item_dialog();?>
             <?php
         }
 
@@ -834,21 +840,20 @@ if (!class_exists('curtain_orders')) {
 
             ob_start();
             ?>
-            <div id="curtain-order-item-dialog" title="Order Item dialog">
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
                 <label for="curtain-category-id"><?php echo __( '類別', 'your-text-domain' );?></label>
-                <select id="curtain-category-id"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
+                <select id="curtain-category-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label id="curtain-model-label" for="curtain-model-id"><?php echo __( '型號', 'your-text-domain' );?></label>
-                <select id="curtain-model-id"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
+                <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
                 <div id="spec-div" style="<?php echo $is_specification_hided;?>">
                     <label id="curtain-specification-label" for="curtain-specification-id"><?php echo __( '規格', 'your-text-domain' );?></label>
-                    <select id="curtain-specification-id"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
+                    <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
                     <label id="curtain-width-label" for="curtain-width"><?php echo __( '寬', 'your-text-domain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
-                    <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" />
+                    <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" class="text ui-widget-content ui-corner-all" />
                     <div id="height-div" style="<?php echo $is_height_hided;?>">
                         <label id="curtain-height-label" for="curtain-height"><?php echo __( '高', 'your-text-domain' );?>(min:<?php echo $curtain_min_height;?>/max:<?php echo $curtain_max_height;?>)</label>
-                        <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" />
+                        <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" class="text ui-widget-content ui-corner-all" />
                     </div>
                 </div>
                 <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
@@ -856,7 +861,6 @@ if (!class_exists('curtain_orders')) {
                 <label for="order-item-note"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="order-item-note" rows="2" style="width:100%;"><?php echo $order_item_note;?></textarea>
             </fieldset>
-            </div>
             <?php
             $html = ob_get_clean();
             return $html;
