@@ -226,7 +226,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#curtain-order-item-dialog").dialog({
-        width: 430,
+        width: 400,
         modal: true,
         autoOpen: false,
         buttons: {
