@@ -125,8 +125,10 @@ if (!class_exists('curtain_specifications')) {
                 </div>
             </fieldset>
             </div>
+            <div id="curtain-specification-dialog" title="Specification dialog">
+            </div>
             <?php
-            echo $this->display_curtain_specification_dialog();
+            //echo $this->display_curtain_specification_dialog();
         }
 
         function retrieve_curtain_specification_data($current_page = 1) {
@@ -166,7 +168,6 @@ if (!class_exists('curtain_specifications')) {
             $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
             ob_start();
             ?>
-            <div id="curtain-specification-dialog" title="Specification dialog">
             <fieldset>
                 <input type="hidden" id="curtain-specification-id" value="<?php echo esc_attr($curtain_specification_id);?>" />
                 <label for="curtain-specification-title"><?php echo __( 'Title', 'your-text-domain' );?></label>
@@ -180,7 +181,6 @@ if (!class_exists('curtain_specifications')) {
                 <label for="curtain-specification-price"><?php echo __( 'Price', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-specification-price" value="<?php echo esc_html($curtain_specification_price);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
-            </div>
             <?php
             $html = ob_get_clean();
             return $html;        

@@ -123,8 +123,10 @@ if (!class_exists('curtain_models')) {
                 </div>
             </fieldset>
             </div>
+            <div id="curtain-model-dialog" title="Model dialog">
+            </div>
             <?php
-            echo $this->display_curtain_model_dialog();
+            //echo $this->display_curtain_model_dialog();
         }
 
         function retrieve_curtain_model_data($current_page = 1) {
@@ -164,7 +166,6 @@ if (!class_exists('curtain_models')) {
             $curtain_model_vendor = get_post_meta($curtain_model_id, 'curtain_model_vendor', true);
             ob_start();
             ?>
-            <div id="curtain-model-dialog" title="Model dialog">
             <fieldset>
                 <input type="hidden" id="curtain-model-id" value="<?php echo esc_attr($curtain_model_id);?>" />
                 <label for="curtain-model-title"><?php echo __( 'Title', 'your-text-domain' );?></label>
@@ -178,7 +179,6 @@ if (!class_exists('curtain_models')) {
                 <label for="curtain-model-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-model-vendor" value="<?php echo esc_html($curtain_model_vendor);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
-            </div>
             <?php
             $html = ob_get_clean();
             return $html;        

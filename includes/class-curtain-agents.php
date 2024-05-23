@@ -164,8 +164,10 @@ if (!class_exists('curtain_agents')) {
                 </div>
             </fieldset>
             </div>
+            <div id="curtain-agent-dialog" title="Agent dialog">
+            </div>
             <?php
-            echo $this->display_curtain_agent_dialog();
+            //echo $this->display_curtain_agent_dialog();
         }
 
         function retrieve_curtain_agent_data($current_page = 1) {
@@ -207,7 +209,6 @@ if (!class_exists('curtain_agents')) {
             $curtain_agent_address = get_post_meta($curtain_agent_id, 'curtain_agent_address', true);
             ob_start();
             ?>
-            <div id="curtain-agent-dialog" title="Agent dialog">
             <fieldset>
                 <input type="hidden" id="curtain-agent-id" value="<?php echo esc_attr($curtain_agent_id);?>" />
                 <label for="curtain-agent-number"><?php echo __( 'Number', 'your-text-domain' );?></label>
@@ -221,7 +222,6 @@ if (!class_exists('curtain_agents')) {
                 <label for="curtain-agent-address"><?php echo __( 'Address', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-agent-address" value="<?php echo esc_html($curtain_agent_address);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
-            </div>
             <?php
             $html = ob_get_clean();
             return $html;        

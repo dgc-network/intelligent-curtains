@@ -118,8 +118,10 @@ if (!class_exists('curtain_categories')) {
                 </div>
             </fieldset>
             </div>
+            <div id="curtain-category-dialog" title="Category dialog">
+            </div>
             <?php
-            echo $this->display_curtain_category_dialog();
+            //echo $this->display_curtain_category_dialog();
         }
 
         function retrieve_curtain_category_data($current_page = 1) {
@@ -149,7 +151,6 @@ if (!class_exists('curtain_categories')) {
             $is_height_checked = ($is_height == 1) ? 'checked' : '';
             ob_start();
             ?>
-            <div id="curtain-category-dialog" title="Category dialog">
             <fieldset>
                 <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
                 <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
@@ -172,7 +173,6 @@ if (!class_exists('curtain_categories')) {
                 </div>
                 <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
             </fieldset>
-            </div>
             <?php
             $html = ob_get_clean();
             return $html;        
