@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#curtain-category-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -146,7 +146,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#curtain-model-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -247,7 +247,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#curtain-specification-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -343,7 +343,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#curtain-agent-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -453,7 +453,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#category-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
@@ -550,7 +550,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#agent-dialog").dialog({
-        width: 450,
+        width: 390,
         modal: true,
         autoOpen: false,
         buttons: {
