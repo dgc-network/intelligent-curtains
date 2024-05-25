@@ -358,6 +358,7 @@ jQuery(document).ready(function($) {
                     _curtain_category_id: $(this).val(),
                 },
                 success: function (response) {
+                    $('#insert-order-item-dialog').html(response.html_contain);
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     activate_order_item_list_data($("#customer-order-id").val());
                     //activate_order_item_list_data(customer_order_id);
