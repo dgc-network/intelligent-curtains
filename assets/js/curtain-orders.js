@@ -245,6 +245,7 @@ jQuery(document).ready(function($) {
                         '_curtain_height': $("#curtain-height").val(),
                         '_order_item_qty': $("#order-item-qty").val(),
                         '_order_item_note': $("#order-item-note").val(),
+                        '_customer_order_id': $("#customer-order-id").val(),
                         '_customer_order_amount': $("#customer-order-amount").val(),
                     },
                     success: function (response) {
@@ -370,7 +371,7 @@ jQuery(document).ready(function($) {
 
     function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
-            $("#curtain-order-item-dialog").dialog('open');
+            $("#insert-order-item-dialog").dialog('open');
 /*
             $.ajax({
                 type: 'POST',

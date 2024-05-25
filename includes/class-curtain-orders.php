@@ -807,10 +807,18 @@ if (!class_exists('curtain_orders')) {
                     'post_author'   => $current_user_id,
                     'post_type'     => 'order-item',
                 );    
-                $post_id = wp_insert_post($new_post);
+                $order_item_id = wp_insert_post($new_post);
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                update_post_meta( $post_id, 'customer_order_id', $customer_order_id);
-                update_post_meta( $post_id, 'order_item_qty', 1);
+                update_post_meta( $order_item_id, 'customer_order_id', $customer_order_id);
+                update_post_meta( $order_item_id, 'curtain_category_id', sanitize_text_field($_POST['_curtain_category_id']));
+                update_post_meta( $order_item_id, 'curtain_model_id', sanitize_text_field($_POST['_curtain_model_id']));
+                update_post_meta( $order_item_id, 'curtain_specification_id', sanitize_text_field($_POST['_curtain_specification_id']));
+                update_post_meta( $order_item_id, 'curtain_width', sanitize_text_field($_POST['_curtain_width']));
+                update_post_meta( $order_item_id, 'curtain_height', sanitize_text_field($_POST['_curtain_height']));
+                update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
+                update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
+                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                //update_post_meta( $post_id, 'order_item_qty', 1);
                 $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             }
             wp_send_json($response);
