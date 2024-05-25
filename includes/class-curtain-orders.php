@@ -693,7 +693,7 @@ if (!class_exists('curtain_orders')) {
 
                         foreach ($users as $user) {
                             // Check if the user has the 'administrator' role
-                            if (user_can($user, 'administrator')) {
+                            //if (user_can($user, 'administrator')) {
                                 $params = [
                                     'display_name' => $user->display_name,
                                     'link_uri' => $link_uri,
@@ -705,7 +705,7 @@ if (!class_exists('curtain_orders')) {
                                     'to' => get_user_meta($user->ID, 'line_user_id', true),
                                     'messages' => [$flexMessage],
                                 ]);
-                            }
+                            //}
                         }
 /*                        
                         $users = get_users();
