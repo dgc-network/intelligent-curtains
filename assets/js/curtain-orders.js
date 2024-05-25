@@ -225,6 +225,68 @@ jQuery(document).ready(function($) {
         });    
     });
 
+    $("#insert-order-item-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Add": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_order_item_dialog_data',
+                        //'_order_item_id': $("#order-item-id").val(),
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_curtain_model_id': $("#curtain-model-id").val(),
+                        '_curtain_specification_id': $("#curtain-specification-id").val(),
+                        '_curtain_width': $("#curtain-width").val(),
+                        '_curtain_height': $("#curtain-height").val(),
+                        '_order_item_qty': $("#order-item-qty").val(),
+                        '_order_item_note': $("#order-item-note").val(),
+                        '_customer_order_amount': $("#customer-order-amount").val(),
+                    },
+                    success: function (response) {
+                        $('#order-item-container').html(response.html_contain);
+                        $("#insert-order-item-dialog").dialog('close');
+                        activate_order_item_list_data($("#customer-order-id").val());
+        
+                    },
+                    error: function(error){
+                        console.error(error);
+                        //alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                if (window.confirm("Are you sure you want to cancel this item?")) {
+                    $("#insert-order-item-dialog").dialog('close');
+/*
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_order_item_dialog_data',
+                            '_order_item_id': $("#order-item-id").val(),
+                        },
+                        success: function (response) {
+                            $('#order-item-container').html(response.html_contain);
+                            $("#insert-order-item-dialog").dialog('close');
+                            activate_order_item_list_data($("#customer-order-id").val());            
+                        },
+                        error: function(error){
+                            console.error(error);
+                            //alert(error);
+                        }
+                    });
+*/                    
+                }
+            }
+        }
+    });
+
     $("#curtain-order-item-dialog").dialog({
         width: 390,
         modal: true,
@@ -308,6 +370,8 @@ jQuery(document).ready(function($) {
 
     function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
+            $("#curtain-order-item-dialog").dialog('open');
+/*
             $.ajax({
                 type: 'POST',
                 url: ajax_object.ajax_url,
@@ -324,7 +388,8 @@ jQuery(document).ready(function($) {
                     console.error(error);                    
                     //alert(error);
                 }
-            });    
+            });
+*/            
         });
 
         $('[id^="edit-order-item-"]').on("click", function () {
