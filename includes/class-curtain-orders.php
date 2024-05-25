@@ -888,13 +888,11 @@ if (!class_exists('curtain_orders')) {
 
         function get_order_item_dialog_data() {
             $response = array();
-            if (isset($_POST['_order_item_id'])) {
+            //if (isset($_POST['_order_item_id'])) {
                 $order_item_id = sanitize_text_field($_POST['_order_item_id']);
                 $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
                 $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
-            } else {
-                $response['html_contain'] = 'Invalid AJAX request!';
-            }
+            //}
             wp_send_json($response);
         }
 

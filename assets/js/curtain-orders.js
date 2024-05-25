@@ -371,7 +371,24 @@ jQuery(document).ready(function($) {
 
     function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
-            $("#insert-order-item-dialog").dialog('open');
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                },
+                success: function (response) {
+                    $('#insert-order-item-dialog').html(response.html_contain);
+                    $("#insert-order-item-dialog").dialog('open');
+                    activate_curtain_category_id_data(order_item_id);                            
+                },
+                error: function(error){
+                    console.error(error);
+                    //alert(error);
+                }
+            });    
+
 /*
             $.ajax({
                 type: 'POST',
