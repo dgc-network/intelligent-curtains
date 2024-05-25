@@ -689,6 +689,19 @@ if (!class_exists('curtain_orders')) {
                         $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
 
+                        $args = array(
+                            'role' => 'administrator',
+                        );                        
+                        $users = get_users($args);                        
+                        foreach ($users as $user) {
+                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+/*
                         $users = get_users();
 
                         foreach ($users as $user) {
@@ -726,25 +739,6 @@ if (!class_exists('curtain_orders')) {
                             }
                         }
 /*                        
-                        $args = array(
-                            'role' => 'administrator',
-                        );
-                        
-                        $users = get_users($args);
-                        
-                        foreach ($users as $user) {
-                            $params = [
-                                'display_name' => $user->display_name,
-                                'link_uri' => $link_uri,
-                                'text_message' => $text_message,
-                            ];        
-                            $flexMessage = set_flex_message($params);
-                            $line_bot_api = new line_bot_api();
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                'messages' => [$flexMessage],
-                            ]);
-                        }
 /*                        
                         $args = array(
                             //'role' => 'administrator',
