@@ -683,7 +683,51 @@ if (!class_exists('curtain_orders')) {
                 if ($customer_order_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
                     //update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
-                    if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
+                    if ($customer_order_status==2248) {
+                        update_post_meta( $customer_order_id, 'customer_order_number', time());
+                        $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+
+                        $args = array(
+                            'role' => 'administrator',
+                        );
+                        $query = new WP_User_Query($args);
+                        $users = $query->get_results();
+                        
+                        foreach ($users as $user) {
+                            $params = [
+                                'display_name' => $user->display_name,
+                                'link_uri' => $link_uri,
+                                'text_message' => $text_message,
+                            ];        
+                            $flexMessage = set_flex_message($params);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+/*                        
+                        $args = array(
+                        );
+                        $query = new WP_User_Query($args);
+                        $users = $query->get_results();
+                        foreach ($users as $user) {
+                            $params = [
+                                'display_name' => $user->display_name,
+                                'link_uri' => $link_uri,
+                                'text_message' => $text_message,
+                            ];        
+                            $flexMessage = set_flex_message($params);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', TRUE),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+*/    
+                    }
+        
                     //if ($customer_order_status==2249) update_post_meta( $customer_order_id, 'customer_order_category', 3);
                 }
                 if ($customer_order_status==0) {
