@@ -676,16 +676,19 @@ if (!class_exists('curtain_orders')) {
             if( isset($_POST['_customer_order_id'])  && isset($_POST['_customer_order_status']) ) {
                 // Update the quotation data
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
                 $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
+                update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
+                update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 if ($customer_order_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                    update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
+                    //update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
                     if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
                     //if ($customer_order_status==2249) update_post_meta( $customer_order_id, 'customer_order_category', 3);
                 }
                 if ($customer_order_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
-                    update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
+                    //update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 }
             }
             wp_send_json($response);

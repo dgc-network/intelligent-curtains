@@ -154,26 +154,28 @@ jQuery(document).ready(function($) {
                 });
 
                 $('[id^="cancel-customer-order-"]').on("click", function () {
-                    const customer_order_id = this.id.substring(22);
-                    const ajaxData = {
-                        'action': 'proceed_customer_order_status',
-                    };
-                    ajaxData['_customer_order_status'] = 0;
-                    ajaxData['_customer_order_id'] = customer_order_id;
-            
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: ajaxData,
-                        success: function (response) {
-                            window.location.replace(window.location.href);
-                        },
-                        error: function(error){
-                            console.error(error);                    
-                            alert(error);
-                        }
-                    });    
+                    if (window.confirm("Are you sure you want to cancel this order?")) {
+                        const customer_order_id = this.id.substring(22);
+                        const ajaxData = {
+                            'action': 'proceed_customer_order_status',
+                        };
+                        ajaxData['_customer_order_status'] = 0;
+                        ajaxData['_customer_order_id'] = customer_order_id;
+                
+                        $.ajax({
+                            type: 'POST',
+                            url: ajax_object.ajax_url,
+                            dataType: "json",
+                            data: ajaxData,
+                            success: function (response) {
+                                window.location.replace(window.location.href);
+                            },
+                            error: function(error){
+                                console.error(error);                    
+                                alert(error);
+                            }
+                        });
+                    }
                 });
 
                 $('[id^="print-customer-order-"]').on("click", function () {
@@ -202,6 +204,7 @@ jQuery(document).ready(function($) {
                     };
                     ajaxData['_customer_order_status'] = customer_order_status;
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
             
                     $.ajax({
                         type: 'POST',
