@@ -690,6 +690,25 @@ if (!class_exists('curtain_orders')) {
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
 
                         $users = get_users();
+
+                        foreach ($users as $user) {
+                            // Check if the user has the 'administrator' role
+                            if (user_can($user, 'administrator')) {
+                                $params = [
+                                    'display_name' => $user->display_name,
+                                    'link_uri' => $link_uri,
+                                    'text_message' => $text_message,
+                                ];        
+                                $flexMessage = set_flex_message($params);
+                                $line_bot_api = new line_bot_api();
+                                $line_bot_api->pushMessage([
+                                    'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                    'messages' => [$flexMessage],
+                                ]);
+                            }
+                        }
+/*                        
+                        $users = get_users();
                         foreach ($users as $user) {
                             // Check if the user has the 'administrator' role
                             if (in_array('administrator', $user->roles)) {
