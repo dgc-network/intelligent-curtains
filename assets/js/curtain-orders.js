@@ -347,7 +347,7 @@ jQuery(document).ready(function($) {
         }
     });
 
-    function activate_curtain_category_id_data(order_item_id) {
+    function activate_curtain_category_id_data(order_item_id=false) {
         $("#curtain-category-id").on( "change", function() {
             $.ajax({
                 url: ajax_object.ajax_url,
@@ -382,7 +382,7 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#insert-order-item-dialog').html(response.html_contain);
                     $("#insert-order-item-dialog").dialog('open');
-                    activate_curtain_category_id_data($("#order-item-id").val());
+                    activate_curtain_category_id_data();
                 },
                 error: function(error){
                     console.error(error);
