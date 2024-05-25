@@ -376,12 +376,12 @@ jQuery(document).ready(function($) {
                 type: 'post',
                 data: {
                     action: 'get_order_item_dialog_data',
-                    _order_item_id: order_item_id,
+                    //_order_item_id: order_item_id,
                 },
                 success: function (response) {
                     $('#insert-order-item-dialog').html(response.html_contain);
                     $("#insert-order-item-dialog").dialog('open');
-                    activate_curtain_category_id_data(order_item_id);                            
+                    activate_curtain_category_id_data($("#order-item-id").val());                            
                 },
                 error: function(error){
                     console.error(error);
