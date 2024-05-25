@@ -153,6 +153,29 @@ jQuery(document).ready(function($) {
                     window.location.replace(window.location.href);
                 });
 
+                $('[id^="cancel-customer-order-"]').on("click", function () {
+                    const customer_order_id = this.id.substring(22);
+                    const ajaxData = {
+                        'action': 'proceed_customer_order_status',
+                    };
+                    ajaxData['_customer_order_status'] = 0;
+                    ajaxData['_customer_order_id'] = customer_order_id;
+            
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: ajaxData,
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);                    
+                            alert(error);
+                        }
+                    });    
+                });
+
                 $('[id^="print-customer-order-"]').on("click", function () {
                     const customer_order_id = this.id.substring(21);
                     $.ajax({
@@ -172,10 +195,10 @@ jQuery(document).ready(function($) {
 
                 });
 
-                $('[id^="proceed-to-customer-order-"]').on("click", function () {
-                    const customer_order_status = this.id.substring(26);
+                $('[id^="proceed-customer-order-status-"]').on("click", function () {
+                    const customer_order_status = this.id.substring(30);
                     const ajaxData = {
-                        'action': 'proceed_to_customer_order',
+                        'action': 'proceed_customer_order_status',
                     };
                     ajaxData['_customer_order_status'] = customer_order_status;
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();

@@ -55,8 +55,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_del_order_item_dialog_data', array( $this, 'del_order_item_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
-            add_action( 'wp_ajax_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
-            add_action( 'wp_ajax_nopriv_proceed_to_customer_order', array( $this, 'proceed_to_customer_order' ) );
+            add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
+            add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
             add_action( 'wp_ajax_nopriv_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
     
@@ -426,17 +426,18 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-to-customer-order-2248" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-customer-order-status-2248" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
                     } else {
                         if (current_user_can('administrator')) {
                             echo '<hr>';
-                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-to-customer-order-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-to-customer-order-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-to-customer-order-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-customer-order-status-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-customer-order-status-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-customer-order-status-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }
                     }
@@ -670,7 +671,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function proceed_to_customer_order() {
+        function proceed_customer_order_status() {
             $response = array();
             if( isset($_POST['_customer_order_id'])  && isset($_POST['_customer_order_status']) ) {
                 // Update the quotation data
@@ -681,6 +682,10 @@ if (!class_exists('curtain_orders')) {
                     update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status); // order01:2248 ~ order04:2251
                     if ($customer_order_status==2248) update_post_meta( $customer_order_id, 'customer_order_number', time());
                     //if ($customer_order_status==2249) update_post_meta( $customer_order_id, 'customer_order_category', 3);
+                }
+                if ($customer_order_status==0) {
+                    update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                    update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 }
             }
             wp_send_json($response);
