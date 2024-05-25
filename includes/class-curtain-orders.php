@@ -236,11 +236,8 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <div id="curtain-order-item-dialog" title="Order Item dialog">
-            <div id="insert-order-item-dialog" title="Order Item dialog">
-            </div>
-
-            <?php //echo $this->display_order_item_dialog();?>
+            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
+            <div id="insert-order-item-dialog" title="Order Item dialog"></div>
             <?php
         }
 
@@ -331,10 +328,7 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <div id="curtain-order-item-dialog" title="Order Item dialog">
-            </div>
-
-            <?php //echo $this->display_order_item_dialog();?>
+            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
             <?php
         }
 
@@ -564,8 +558,6 @@ if (!class_exists('curtain_orders')) {
                 <?php
                 $html = ob_get_clean();
                 $response['html_contain'] = $html;
-            } else {
-                $response['html_contain'] = 'Invalid AJAX request!';
             }
             wp_send_json($response);
         }
@@ -582,9 +574,6 @@ if (!class_exists('curtain_orders')) {
                         $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id, $is_admin);
                     }
                 }        
-    
-            } else {
-                $response['html_contain'] = 'Invalid AJAX request!';
             }
             wp_send_json($response);
         }
@@ -701,70 +690,10 @@ if (!class_exists('curtain_orders')) {
                                 'messages' => [$flexMessage],
                             ]);
                         }
-/*
-                        $users = get_users();
-
-                        foreach ($users as $user) {
-                            // Check if the user has the 'administrator' role
-                            //if (user_can($user, 'administrator')) {
-                                $params = [
-                                    'display_name' => $user->display_name,
-                                    'link_uri' => $link_uri,
-                                    'text_message' => $text_message,
-                                ];        
-                                $flexMessage = set_flex_message($params);
-                                $line_bot_api = new line_bot_api();
-                                $line_bot_api->pushMessage([
-                                    'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                    'messages' => [$flexMessage],
-                                ]);
-                            //}
-                        }
-/*                        
-                        $users = get_users();
-                        foreach ($users as $user) {
-                            // Check if the user has the 'administrator' role
-                            if (in_array('administrator', $user->roles)) {
-                                $params = [
-                                    'display_name' => $user->display_name,
-                                    'link_uri' => $link_uri,
-                                    'text_message' => $text_message,
-                                ];        
-                                $flexMessage = set_flex_message($params);
-                                $line_bot_api = new line_bot_api();
-                                $line_bot_api->pushMessage([
-                                    'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                    'messages' => [$flexMessage],
-                                ]);
-                            }
-                        }
-/*                        
-/*                        
-                        $args = array(
-                            //'role' => 'administrator',
-                        );
-                        $query = new WP_User_Query($args);
-                        $users = $query->get_results();
-                        
-                        foreach ($users as $user) {
-                            $params = [
-                                'display_name' => $user->display_name,
-                                'link_uri' => $link_uri,
-                                'text_message' => $text_message,
-                            ];        
-                            $flexMessage = set_flex_message($params);
-                            $line_bot_api = new line_bot_api();
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                'messages' => [$flexMessage],
-                            ]);
-                        }
-*/                        
                     }
                 }
                 if ($customer_order_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
-                    //update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 }
             }
             wp_send_json($response);
@@ -972,11 +901,9 @@ if (!class_exists('curtain_orders')) {
 
         function get_order_item_dialog_data() {
             $response = array();
-            //if (isset($_POST['_order_item_id'])) {
-                $order_item_id = sanitize_text_field($_POST['_order_item_id']);
-                $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
-                $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
-            //}
+            $order_item_id = sanitize_text_field($_POST['_order_item_id']);
+            $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
+            $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
             wp_send_json($response);
         }
 
@@ -1102,6 +1029,7 @@ if (!class_exists('curtain_orders')) {
                     wp_reset_postdata(); // Restore global post data
                 }
             }
+
             // order_items_table_to_post migration 2024-4-29
             if (isset($_GET['_migrate_order_items_table_to_post'])) {
                 global $wpdb;
@@ -1210,7 +1138,7 @@ if (!class_exists('curtain_orders')) {
                 }
             }
         }
-
+/*
 
 
 
@@ -2064,6 +1992,7 @@ if (!class_exists('curtain_orders')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
+*/        
     }
-    $my_class = new curtain_orders();
+    $orders_class = new curtain_orders();
 }
