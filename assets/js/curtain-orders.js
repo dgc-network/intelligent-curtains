@@ -160,8 +160,10 @@ jQuery(document).ready(function($) {
                             'action': 'proceed_customer_order_status',
                         };
                         ajaxData['_customer_order_status'] = 0;
-                        ajaxData['_customer_order_id'] = customer_order_id;
-                
+                        //ajaxData['_customer_order_id'] = customer_order_id;
+                        ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+                        ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+                    
                         $.ajax({
                             type: 'POST',
                             url: ajax_object.ajax_url,
