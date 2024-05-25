@@ -690,6 +690,26 @@ if (!class_exists('curtain_orders')) {
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
 
                         $args = array(
+                            'role' => 'administrator',
+                        );
+                        
+                        $users = get_users($args);
+                        
+                        foreach ($users as $user) {
+                            $params = [
+                                'display_name' => $user->display_name,
+                                'link_uri' => $link_uri,
+                                'text_message' => $text_message,
+                            ];        
+                            $flexMessage = set_flex_message($params);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+/*                        
+                        $args = array(
                             //'role' => 'administrator',
                         );
                         $query = new WP_User_Query($args);
@@ -708,6 +728,7 @@ if (!class_exists('curtain_orders')) {
                                 'messages' => [$flexMessage],
                             ]);
                         }
+*/                        
                     }
                 }
                 if ($customer_order_status==0) {
