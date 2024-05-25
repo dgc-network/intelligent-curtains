@@ -20,7 +20,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -123,7 +123,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 });
@@ -143,7 +143,7 @@ jQuery(document).ready(function($) {
                             },
                             error: function(error){
                                 console.error(error);
-                                //alert(error);
+                                alert(error);
                             }
                         });
                     }
@@ -190,7 +190,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);                    
-                            //alert(error);
+                            alert(error);
                         }
                     });    
                 });
@@ -220,7 +220,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -256,7 +256,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -318,7 +318,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -335,11 +335,11 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
-                            activate_order_item_list_data($("#customer-order-id").val());            
+                            activate_order_item_list_data($("#customer-order-id").val());
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 }
@@ -359,11 +359,12 @@ jQuery(document).ready(function($) {
                 },
                 success: function (response) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
-                    activate_order_item_list_data(customer_order_id);
+                    activate_order_item_list_data($("#customer-order-id").val());
+                    //activate_order_item_list_data(customer_order_id);
                 },
                 error: function(error){
                     console.error(error);
-                    //alert(error);
+                    alert(error);
                 }
             });    
         });
@@ -381,11 +382,11 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#insert-order-item-dialog').html(response.html_contain);
                     $("#insert-order-item-dialog").dialog('open');
-                    activate_curtain_category_id_data($("#order-item-id").val());                            
+                    activate_curtain_category_id_data($("#order-item-id").val());
                 },
                 error: function(error){
                     console.error(error);
-                    //alert(error);
+                    alert(error);
                 }
             });    
 
@@ -426,7 +427,7 @@ jQuery(document).ready(function($) {
                 },
                 error: function(error){
                     console.error(error);
-                    //alert(error);
+                    alert(error);
                 }
             });    
         });
