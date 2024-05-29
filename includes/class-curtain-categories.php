@@ -5,12 +5,13 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_categories')) {
     class curtain_categories {
+/*        
         private $_wp_page_title;
         private $_wp_page_postid;
-        /**
-         * Class constructor
-         */
+*/        
+        // Class constructor
         public function __construct() {
+/*            
             $this->create_tables();
             $this->_wp_page_title = 'Categories';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-category-list');
@@ -19,7 +20,7 @@ if (!class_exists('curtain_categories')) {
             add_action( 'wp_ajax_nopriv_get_category_dialog_data', array( $this, 'get_category_dialog_data' ) );
             add_action( 'wp_ajax_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_save_category_dialog_data', array( $this, 'save_category_dialog_data' ) );
-
+*/
             add_shortcode( 'curtain-category-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
             add_action( 'wp_ajax_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
@@ -118,10 +119,8 @@ if (!class_exists('curtain_categories')) {
                 </div>
             </fieldset>
             </div>
-            <div id="curtain-category-dialog" title="Category dialog">
-            </div>
+            <div id="curtain-category-dialog" title="Category dialog"></div>            
             <?php
-            //echo $this->display_curtain_category_dialog();
         }
 
         function retrieve_curtain_category_data($current_page = 1) {
@@ -248,19 +247,19 @@ if (!class_exists('curtain_categories')) {
         }
         
         
-
+/*
         public function list_curtain_categories() {
             // 2024-4-25 Modify the curtain-category as the post type
             $this->display_curtain_category_list();
 
             
             global $wpdb;
-            /** Check the permission */
+            //** Check the permission
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
             if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            /** Post the result */
+            //** Post the result
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_category(
                     array(
@@ -297,7 +296,7 @@ if (!class_exists('curtain_categories')) {
                 );
             }
 
-            /** List */
+            //** List
             $output  = '<h2>Curtain Categories</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -342,7 +341,7 @@ if (!class_exists('curtain_categories')) {
                     $remotes_page_url = '/remotes/?_curtain_category_id='.$result->curtain_category_id;
                     $output .= '<td style="text-align: center;"><a href="'.$remotes_page_url.'">remote</a></td>';
                 }
-*/
+
                 if ($result->hide_specification==1) {
                     $output .= '<td style="text-align: center;">N/A</td>';
                 } else {
@@ -369,7 +368,7 @@ if (!class_exists('curtain_categories')) {
             $output .= '<tr><td colspan="6"><div id="btn-category" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
 
-            /** Category Dialog */
+            //** Category Dialog
             $output .= '<div id="category-dialog" title="Category dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-category-id" />';
@@ -666,6 +665,7 @@ if (!class_exists('curtain_categories')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
+*/        
     }
-    $my_class = new curtain_categories();
+    $categories_class = new curtain_categories();
 }

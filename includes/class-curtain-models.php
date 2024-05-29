@@ -5,12 +5,13 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_models')) {
     class curtain_models {
+/*        
         private $_wp_page_title;
         private $_wp_page_postid;
-        /**
-         * Class constructor
-         */
+*/        
+         // Class constructor
         public function __construct() {
+/*            
             $this->create_tables();
             $this->_wp_page_title = 'Models';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-model-list');
@@ -19,7 +20,7 @@ if (!class_exists('curtain_models')) {
             add_action( 'wp_ajax_nopriv_model_dialog_get_data', array( $this, 'model_dialog_get_data' ) );
             add_action( 'wp_ajax_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_model_dialog_save_data', array( $this, 'model_dialog_save_data' ) );
-
+*/
             add_shortcode( 'curtain-model-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_model_post_type' ) );
             add_action( 'wp_ajax_get_curtain_model_dialog_data', array( $this, 'get_curtain_model_dialog_data' ) );
@@ -123,10 +124,8 @@ if (!class_exists('curtain_models')) {
                 </div>
             </fieldset>
             </div>
-            <div id="curtain-model-dialog" title="Model dialog">
-            </div>
+            <div id="curtain-model-dialog" title="Model dialog"></div>            
             <?php
-            //echo $this->display_curtain_model_dialog();
         }
 
         function retrieve_curtain_model_data($current_page = 1) {
@@ -256,7 +255,7 @@ if (!class_exists('curtain_models')) {
             return $options;
         }
         
-
+/*
 
         public function list_curtain_models() {
             // 2024-4-26 Modify the curtain-model as the post type
@@ -265,12 +264,12 @@ if (!class_exists('curtain_models')) {
 
             global $wpdb;
             $curtain_categories = new curtain_categories();
-            /** Check the permission */
+            /** Check the permission 
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
             if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            /** Post the result */
+            /** Post the result 
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_model(
                     array(
@@ -307,7 +306,7 @@ if (!class_exists('curtain_models')) {
                 );
             }
 
-            /** List */
+            /** List
             $output  = '<h2>Curtain Models</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -361,7 +360,7 @@ if (!class_exists('curtain_models')) {
             $output .= '<tr><td colspan="7"><div id="btn-model" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
 
-            /** Model Dialog */
+            /** Model Dialog 
             $output .= '<div id="model-dialog" title="Model dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-model-id" />';
@@ -544,6 +543,7 @@ if (!class_exists('curtain_models')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
+*/        
     }
-    $my_class = new curtain_models();
+    $models_class = new curtain_models();
 }

@@ -5,12 +5,13 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_specifications')) {
     class curtain_specifications {
+/*        
         private $_wp_page_title;
         private $_wp_page_postid;
-        /**
-         * Class constructor
-         */
+*/        
+        // Class constructor
         public function __construct() {
+/*            
             $this->create_tables();
             $this->_wp_page_title = 'Specifications';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'curtain-specification-list');
@@ -19,7 +20,7 @@ if (!class_exists('curtain_specifications')) {
             add_action( 'wp_ajax_nopriv_specification_dialog_get_data', array( $this, 'specification_dialog_get_data' ) );
             add_action( 'wp_ajax_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_specification_dialog_save_data', array( $this, 'specification_dialog_save_data' ) );
-
+*/
             add_shortcode( 'curtain-specification-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_curtain_specification_post_type' ) );
             add_action( 'wp_ajax_get_curtain_specification_dialog_data', array( $this, 'get_curtain_specification_dialog_data' ) );
@@ -125,10 +126,8 @@ if (!class_exists('curtain_specifications')) {
                 </div>
             </fieldset>
             </div>
-            <div id="curtain-specification-dialog" title="Specification dialog">
-            </div>
+            <div id="curtain-specification-dialog" title="Specification dialog"></div>            
             <?php
-            //echo $this->display_curtain_specification_dialog();
         }
 
         function retrieve_curtain_specification_data($current_page = 1) {
@@ -253,13 +252,12 @@ if (!class_exists('curtain_specifications')) {
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $option = get_the_content().'('.get_the_title().')';
                 $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($option) . '</option>';
-                //$options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;
         }
 
-
+/*
         public function list_curtain_specifications() {
             // 2024-4-26 Modify the curtain-specification as the post type
             $this->display_curtain_specification_list();
@@ -269,12 +267,12 @@ if (!class_exists('curtain_specifications')) {
             global $wpdb;
             $curtain_categories = new curtain_categories();
 
-            /** Check the permission */
+            /** Check the permission 
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
             if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            /** Post the result */
+            /** Post the result 
             if( isset($_POST['_create']) ) {
                 $this->insert_curtain_specification(
                     array(
@@ -313,7 +311,7 @@ if (!class_exists('curtain_specifications')) {
                 );
             }
 
-            /** List */
+            /** List 
             $output  = '<h2>Curtain Specifications</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -371,7 +369,7 @@ if (!class_exists('curtain_specifications')) {
             $output .= '<tr><td colspan="8"><div id="btn-specification" style="border:solid; margin:3px; text-align:center; border-radius:5px">+</div></td></tr>';
             $output .= '</tbody></table></div>';
 
-            /** Specification Dialog */
+            /** Specification Dialog 
             $output .= '<div id="specification-dialog" title="Specification dialog">';
             $output .= '<fieldset>';
             $output .= '<input type="hidden" id="curtain-specification-id" />';
@@ -574,6 +572,7 @@ if (!class_exists('curtain_specifications')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
+*/        
     }
-    $my_class = new curtain_specifications();
+    $specs_class = new curtain_specifications();
 }
