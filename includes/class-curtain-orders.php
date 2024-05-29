@@ -124,7 +124,9 @@ if (!class_exists('curtain_orders')) {
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
                     if (isset($_GET['_id'])) {
-                        $this->display_customer_order_dialog($_GET['_id']);
+                        echo '<div class="ui-widget" id="result-container">';
+                        echo $this->display_customer_order_dialog($_GET['_id']);
+                        echo '</div>';
                     } else if ($_GET['_category']==2) {
                         $this->display_customer_order_list();
                     } else {
