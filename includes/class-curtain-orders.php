@@ -5,13 +5,15 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_orders')) {
     class curtain_orders {
+/*        
         private $_wp_page_title;
         private $_wp_page_postid;
         private $see_more;
         private $curtain_agent_id;
-
+*/
         // Class constructor
         public function __construct() {
+/*            
             $this->create_tables();
             $this->_wp_page_title = 'Orders';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'shopping-item-list', 'system');
@@ -36,7 +38,7 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_sub_items_dialog_get_data', array( $this, 'sub_items_dialog_get_data' ) );
             add_action( 'wp_ajax_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
             add_action( 'wp_ajax_nopriv_sub_items_dialog_save_data', array( $this, 'sub_items_dialog_save_data' ) );
-
+*/
             add_shortcode( 'shopping-item-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
@@ -121,7 +123,9 @@ if (!class_exists('curtain_orders')) {
                 $current_user_id = get_current_user_id();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 if ($curtain_agent_id) {
-                    if ($_GET['_category']==2) {
+                    if (isset($_GET['_id'])) {
+                        $this->display_customer_order_dialog($_GET['_id']);
+                    } else if ($_GET['_category']==2) {
                         $this->display_customer_order_list();
                     } else {
                         $this->display_quotation_list();
