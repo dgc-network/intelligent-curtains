@@ -130,7 +130,7 @@ function init_webhook_events() {
                 $message = $event['message'];
                 switch ($message['type']) {
                     case 'text':
-                        $result = get_keyword_matchmaking($message['text']);
+                        $result = get_keyword_matched($message['text']);
                         if ($result) {
                             $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
                             $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
@@ -170,7 +170,7 @@ function init_webhook_events() {
 }
 add_action( 'parse_request', 'init_webhook_events' );
 
-function get_keyword_matchmaking($keyword) {
+function get_keyword_matched($keyword) {
     // Check if $keyword is contained within '我要註冊登入登錄'
     if (strpos($keyword, '註冊') !== false) return true;
     if (strpos($keyword, '登入') !== false) return true;
