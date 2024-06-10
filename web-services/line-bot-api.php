@@ -21,47 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
-        /** @var string */
-        public $channel_access_token;
+        private $channel_access_token;
 
-        public function __construct($channelAccessToken='', $channelSecret='') {
-    
-            if ($channelAccessToken==''||$channelSecret=='') {
-                if (file_exists(dirname( __FILE__ ) . '/config.ini')) {
-                    $config = parse_ini_file(dirname( __FILE__ ) . '/config.ini', true);
-                    if ($config['LineBot']['Token'] == null || $config['LineBot']['Secret'] == null) {
-                        error_log("config.ini uncompleted!", 0);
-                    } else {
-                        $channelAccessToken = $config['LineBot']['Token'];
-                        $channelSecret = $config['LineBot']['Secret'];
-                    }
-                }    
-            } 
-            $this->channel_access_token = $channelAccessToken;
-
+        public function __construct() {
             $this->channel_access_token = get_option('line_bot_token_option');
-        }
-
-        /**
-         * @return mixed
-         */
-        public function parseEvents() {
-         
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                http_response_code(405);
-                error_log('Method not allowed');
-            }
-    
-            $entityBody = file_get_contents('php://input');            
-    
-            if ($entityBody === false || strlen($entityBody) === 0) {
-                http_response_code(400);
-                error_log('Missing request body');
-            }
-
-            $data = json_decode($entityBody, true);
-
-            return $data['events'];
         }
 
         /**
