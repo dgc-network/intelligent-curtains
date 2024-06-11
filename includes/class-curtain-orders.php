@@ -108,8 +108,7 @@ if (!class_exists('curtain_orders')) {
 
             } else {
                 user_did_not_login_yet();
-            }
-        
+            }        
         }
 
         function display_quotation_list() {
@@ -336,7 +335,7 @@ if (!class_exists('curtain_orders')) {
         
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
-            $meta_keys = get_post_type_meta_keys('curtain-order');
+            $meta_keys = get_post_type_meta_keys('customer-order');
             $meta_query_all_keys = array('relation' => 'OR');
             foreach ($meta_keys as $meta_key) {
                 $meta_query_all_keys[] = array(
