@@ -408,10 +408,16 @@ if (!class_exists('curtain_orders')) {
                     <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order02") { //填寫快遞單號?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_html($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order03") { //填寫送貨單號及運費?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_html($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_html($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="customer-order-freight"><?php echo __( '運費', 'your-text-domain' );?></label>
