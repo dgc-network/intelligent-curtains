@@ -356,7 +356,7 @@ if (!class_exists('curtain_orders')) {
                 'post_type'  => 'order-status',
                 'meta_query' => array(
                     array(
-                        'key'   => 'next_status',
+                        'key'   => 'status_code',
                         'value' => $next_status_value,
                         'compare' => '='
                     )
