@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
                 _order_status_id: order_status_id,                
             },
             success: function (response) {
-                $('#order-status-dialog').html(response.html_contain);                
+                $("#order-status-dialog").html(response.html_contain);                
                 $("#order-status-dialog").dialog('open');                                                    
             },
             error: function (error) {
@@ -55,9 +55,9 @@ jQuery(document).ready(function($) {
                     data: {
                         'action': 'set_order_status_dialog_data',
                         '_order_status_id': $("#order-status-id").val(),
-                        '_order_status_code': $("#status-code").val(),
-                        '_order_status_title': $("#status-title").val(),
-                        '_order_status_description': $("#status-description").val(),
+                        '_status_code': $("#status-code").val(),
+                        '_status_title': $("#status-title").val(),
+                        '_status_description': $("#status-description").val(),
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);
