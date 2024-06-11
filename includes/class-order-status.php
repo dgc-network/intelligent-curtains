@@ -66,7 +66,7 @@ if (!class_exists('order_status')) {
                             <th><?php echo __( 'Action', 'your-text-domain' );?></th>
                             <th><?php echo __( 'ID', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Title', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Description', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Next', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +82,7 @@ if (!class_exists('order_status')) {
                         while ($query->have_posts()) : $query->the_post();
                             $status_action = get_post_meta(get_the_ID(), 'status_action', true);
                             $status_code = get_post_meta(get_the_ID(), 'status_code', true);
+                            $next_status = get_post_meta(get_the_ID(), 'next_status', true);
                             $status_title = get_the_title();
                             $status_description = get_the_content();
                             ?>
@@ -89,7 +90,7 @@ if (!class_exists('order_status')) {
                                 <td style="text-align:center;"><?php echo esc_html($status_action);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($status_code);?></td>
                                 <td><?php echo esc_html($status_title);?></td>
-                                <td><?php echo esc_html($status_description);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($next_status);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -147,6 +148,8 @@ if (!class_exists('order_status')) {
                 <input type="text" id="status-title" value="<?php echo esc_html($status_title);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="status-description"><?php echo __( '狀態說明', 'your-text-domain' );?></label>
                 <textarea id="status-description" rows="3" style="width:100%;"><?php echo $status_description;?></textarea>
+                <label for="next-status"><?php echo __( 'Next代碼', 'your-text-domain' );?></label>
+                <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
             $html = ob_get_clean();
@@ -167,6 +170,7 @@ if (!class_exists('order_status')) {
                 $order_status_id = sanitize_text_field($_POST['_order_status_id']);
                 update_post_meta( $order_status_id, 'status_action', sanitize_text_field($_POST['_status_action']));
                 update_post_meta( $order_status_id, 'status_code', sanitize_text_field($_POST['_status_code']));
+                update_post_meta( $order_status_id, 'next_status', sanitize_text_field($_POST['_next_status']));
                 // Update the post title
                 if (isset($_POST['_status_title'])) {
                     $updated_post = array(

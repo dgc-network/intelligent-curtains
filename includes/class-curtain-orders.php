@@ -356,8 +356,17 @@ if (!class_exists('curtain_orders')) {
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
+            $status_action = get_post_meta($customer_order_status, 'status_action', true);
+            $status_code = get_post_meta($customer_order_status, 'status_code', true);
+            $next_status = get_post_meta($customer_order_status, 'next_status', true);
             ob_start();            
-            if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
+            //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
+
+            if ($status_code=="order01") echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order02") echo '<h2 style="display:inline;">'.__( '生產單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '備貨單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '結案單', 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
@@ -386,9 +395,10 @@ if (!class_exists('curtain_orders')) {
                     } else {
                         if (current_user_can('administrator')) {
                             echo '<hr>';
-                            if ($customer_order_status==2248) echo '<input type="button" id="proceed-customer-order-status-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2249) echo '<input type="button" id="proceed-customer-order-status-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if ($customer_order_status==2250) echo '<input type="button" id="proceed-customer-order-status-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="proceed-customer-order-status-'.$next_status.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            //if ($customer_order_status==2248) echo '<input type="button" id="proceed-customer-order-status-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            //if ($customer_order_status==2249) echo '<input type="button" id="proceed-customer-order-status-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            //if ($customer_order_status==2250) echo '<input type="button" id="proceed-customer-order-status-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
@@ -626,6 +636,7 @@ if (!class_exists('curtain_orders')) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
                 $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
+                $status_code = get_post_meta($customer_order_status, 'status_code', true);
                 //$customer_order_status; 
                 //2248:order01:轉採購單->訂單已發送->產生訂單號碼
                 //2249:order02:準備生產->生產中->填寫淘寶訂單號
@@ -636,7 +647,8 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 if ($customer_order_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                    if ($customer_order_status==2248) {
+                    if ($status_code=="order01") {
+                    //if ($customer_order_status==2248) {
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
 
                         $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';

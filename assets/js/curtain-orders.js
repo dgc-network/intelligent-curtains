@@ -57,6 +57,7 @@ jQuery(document).ready(function($) {
                         '_order_status_id': $("#order-status-id").val(),
                         '_status_action': $("#status-action").val(),
                         '_status_code': $("#status-code").val(),
+                        '_next_status': $("#next-status").val(),
                         '_status_title': $("#status-title").val(),
                         '_status_description': $("#status-description").val(),
                     },
