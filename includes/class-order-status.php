@@ -30,7 +30,7 @@ if (!class_exists('order_status')) {
                 'rewrite'       => array('slug' => 'order-statuses'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'order-status', $args );
         }
@@ -65,6 +65,7 @@ if (!class_exists('order_status')) {
                         <tr>
                             <th><?php echo __( 'ID', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Title', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Description', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Action', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Next', 'your-text-domain' );?></th>
                         </tr>
@@ -82,13 +83,14 @@ if (!class_exists('order_status')) {
                         while ($query->have_posts()) : $query->the_post();
                             $status_code = get_post_meta(get_the_ID(), 'status_code', true);
                             $status_title = get_the_title();
+                            $status_description = get_the_content();
                             $status_action = get_post_meta(get_the_ID(), 'status_action', true);
                             $next_status = get_post_meta(get_the_ID(), 'next_status', true);
-                            $status_description = get_the_content();
                             ?>
                             <tr id="edit-order-status-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($status_code);?></td>
-                                <td><?php echo esc_html($status_title);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($status_title);?></td>
+                                <td><?php echo esc_html($status_description);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($status_action);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($next_status);?></td>
                             </tr>
@@ -142,13 +144,13 @@ if (!class_exists('order_status')) {
             ?>
             <fieldset>
                 <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />
-                <label for="status-code"><?php echo __( '狀態代碼', 'your-text-domain' );?></label>
+                <label for="status-code"><?php echo __( '代碼', 'your-text-domain' );?></label>
                 <input type="text" id="status-code" value="<?php echo esc_html($status_code);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="status-title"><?php echo __( '狀態標題', 'your-text-domain' );?></label>
+                <label for="status-title"><?php echo __( '標題', 'your-text-domain' );?></label>
                 <input type="text" id="status-title" value="<?php echo esc_html($status_title);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="status-description"><?php echo __( '狀態說明', 'your-text-domain' );?></label>
+                <label for="status-description"><?php echo __( '說明', 'your-text-domain' );?></label>
                 <textarea id="status-description" rows="3" style="width:100%;"><?php echo $status_description;?></textarea>
-                <label for="status-action"><?php echo __( '執行狀態', 'your-text-domain' );?></label>
+                <label for="status-action"><?php echo __( '執行', 'your-text-domain' );?></label>
                 <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="next-status"><?php echo __( 'Next代碼', 'your-text-domain' );?></label>
                 <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
@@ -192,6 +194,7 @@ if (!class_exists('order_status')) {
                     'post_type'     => 'order-status',
                 );    
                 $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'status_code', 'order0');
             }
             wp_send_json($response);
         }

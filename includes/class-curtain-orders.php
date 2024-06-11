@@ -81,10 +81,10 @@ if (!class_exists('curtain_orders')) {
                         echo '<div class="ui-widget" id="result-container">';
                         echo $this->display_customer_order_dialog($_GET['_id']);
                         echo '</div>';
-                    } else if ($_GET['_category']==2) {
-                        $this->display_customer_order_list();
-                    } else {
+                    } else if ($_GET['_category']==1) {
                         $this->display_quotation_list();
+                    } else {
+                        $this->display_customer_order_list();
                     }    
 
                 } else {
@@ -254,7 +254,8 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
-                            $customer_order_status = get_the_title(get_post_meta(get_the_ID(), 'customer_order_status', true));
+                            $customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
+                            //$customer_order_status = get_the_title(get_post_meta(get_the_ID(), 'customer_order_status', true));
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
@@ -388,12 +389,14 @@ if (!class_exists('curtain_orders')) {
             $customer_order_freight = get_post_meta($customer_order_id, 'customer_order_freight', true);
             ob_start();            
             //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
-
+/*
             if ($status_code=="order01") echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order02") echo '<h2 style="display:inline;">'.__( '生產單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '備貨單', 'your-text-domain' ).'</h2>';
             //elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
+*/
+            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
@@ -420,7 +423,7 @@ if (!class_exists('curtain_orders')) {
 
                 <?php if ($customer_order_category>1) {?>
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="customer-order-status" value="<?php echo esc_html(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
