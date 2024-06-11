@@ -128,8 +128,8 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
-                            <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2"><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                        <option value="2"><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                        <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -217,8 +217,8 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
-                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                        <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                        <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -309,7 +309,7 @@ if (!class_exists('curtain_orders')) {
                 'compare' => '=',
             );
 
-            if (isset($_GET['_category'])) {
+            if (!isset($_GET['_category'])) {
                 $customer_order_category = sanitize_text_field($_GET['_category']);
                 if ($customer_order_category==2 && current_user_can('administrator')) $curtain_agent_id='';
             } else {
