@@ -30,7 +30,7 @@ if (!class_exists('order_status')) {
                 'rewrite'       => array('slug' => 'order-statuses'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'order-status', $args );
         }
@@ -85,8 +85,8 @@ if (!class_exists('order_status')) {
                             ?>
                             <tr id="edit-order-status-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($status_code);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($status_title);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($status_description);?></td>
+                                <td><?php echo esc_html($status_title);?></td>
+                                <td><?php echo esc_html($status_description);?></td>
                             </tr>
                             <?php
                         endwhile;
