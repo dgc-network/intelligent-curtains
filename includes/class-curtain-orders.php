@@ -392,9 +392,9 @@ if (!class_exists('curtain_orders')) {
 
             if ($status_code=="order01") echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order02") echo '<h2 style="display:inline;">'.__( '生產單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '備貨單', 'your-text-domain' ).'</h2>';
             //elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '結案單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
