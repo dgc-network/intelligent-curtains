@@ -130,7 +130,7 @@ if (!class_exists('curtain_orders')) {
                     <div id="quotation-select">
                         <select id="select-order-category">
                             <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2"><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <option value="2"><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -213,13 +213,13 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '採購單', 'your-text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '訂單總覽', 'your-text-domain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
                             <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '採購單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -383,6 +383,7 @@ if (!class_exists('curtain_orders')) {
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_post_id_by_next_status($next_status);
+            $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
             ob_start();            
             //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
 
@@ -397,8 +398,14 @@ if (!class_exists('curtain_orders')) {
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
-                <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php if ($status_code=="order02") { //填寫淘寶訂單號?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                <?php } else {?>
+                    <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                    <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php }?>
+
                 <?php if ($customer_order_category>1) {?>
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_html(get_the_title($customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
