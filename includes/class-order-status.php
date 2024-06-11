@@ -141,15 +141,15 @@ if (!class_exists('order_status')) {
             ob_start();
             ?>
             <fieldset>
-                <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
+                <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />
                 <label for="status-code"><?php echo __( '狀態代碼', 'your-text-domain' );?></label>
                 <input type="text" id="status-code" value="<?php echo esc_html($status_code);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="status-title"><?php echo __( '狀態標題', 'your-text-domain' );?></label>
                 <input type="text" id="status-title" value="<?php echo esc_html($status_title);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="status-description"><?php echo __( '狀態說明', 'your-text-domain' );?></label>
                 <textarea id="status-description" rows="3" style="width:100%;"><?php echo $status_description;?></textarea>
-                <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />
                 <label for="status-action"><?php echo __( '執行狀態', 'your-text-domain' );?></label>
+                <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="next-status"><?php echo __( 'Next代碼', 'your-text-domain' );?></label>
                 <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
