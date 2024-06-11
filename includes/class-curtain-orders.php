@@ -351,6 +351,29 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
+        function get_post_id_by_next_status($next_status_value) {
+            $args = array(
+                'post_type'  => 'order-status',
+                'meta_query' => array(
+                    array(
+                        'key'   => 'next_status',
+                        'value' => $next_status_value,
+                        'compare' => '='
+                    )
+                ),
+                'fields' => 'ids',
+                'posts_per_page' => 1
+            );
+        
+            $posts = get_posts($args);
+        
+            if (!empty($posts)) {
+                return $posts[0];
+            } else {
+                return false;
+            }
+        }
+        
         function display_customer_order_dialog($customer_order_id=false, $is_admin=false) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
@@ -359,6 +382,7 @@ if (!class_exists('curtain_orders')) {
             $status_action = get_post_meta($customer_order_status, 'status_action', true);
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status = get_post_meta($customer_order_status, 'next_status', true);
+            $next_status_id = $this->get_post_id_by_next_status($next_status);
             ob_start();            
             //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
 
@@ -395,7 +419,7 @@ if (!class_exists('curtain_orders')) {
                     } else {
                         if (current_user_can('administrator')) {
                             echo '<hr>';
-                            echo '<input type="button" id="proceed-customer-order-status-'.$next_status.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             //if ($customer_order_status==2248) echo '<input type="button" id="proceed-customer-order-status-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             //if ($customer_order_status==2249) echo '<input type="button" id="proceed-customer-order-status-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             //if ($customer_order_status==2250) echo '<input type="button" id="proceed-customer-order-status-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
