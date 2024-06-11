@@ -60,6 +60,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-models.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specifications.php';

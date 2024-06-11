@@ -253,7 +253,7 @@ jQuery(document).ready(function($) {
         });    
     });
 
-    $("#insert-order-item-dialog").dialog({
+    $("#new-order-item-dialog").dialog({
         width: 390,
         modal: true,
         autoOpen: false,
@@ -278,7 +278,7 @@ jQuery(document).ready(function($) {
                     },
                     success: function (response) {
                         $('#order-item-container').html(response.html_contain);
-                        $("#insert-order-item-dialog").dialog('close');
+                        $("#new-order-item-dialog").dialog('close');
                         activate_order_item_list_data($("#customer-order-id").val());
         
                     },
@@ -290,7 +290,7 @@ jQuery(document).ready(function($) {
             },
             "Cancel": function() {
                 if (window.confirm("Are you sure you want to cancel this item?")) {
-                    $("#insert-order-item-dialog").dialog('close');
+                    $("#new-order-item-dialog").dialog('close');
 /*
                     $.ajax({
                         type: 'POST',
@@ -302,7 +302,7 @@ jQuery(document).ready(function($) {
                         },
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
-                            $("#insert-order-item-dialog").dialog('close');
+                            $("#new-order-item-dialog").dialog('close');
                             activate_order_item_list_data($("#customer-order-id").val());            
                         },
                         error: function(error){
@@ -386,7 +386,7 @@ jQuery(document).ready(function($) {
                     _curtain_category_id: $(this).val(),
                 },
                 success: function (response) {
-                    $('#insert-order-item-dialog').html(response.html_contain);
+                    $('#new-order-item-dialog').html(response.html_contain);
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     activate_order_item_list_data($("#customer-order-id").val());
                     //activate_order_item_list_data(customer_order_id);
@@ -409,8 +409,8 @@ jQuery(document).ready(function($) {
                     //_order_item_id: order_item_id,
                 },
                 success: function (response) {
-                    $('#insert-order-item-dialog').html(response.html_contain);
-                    $("#insert-order-item-dialog").dialog('open');
+                    $('#new-order-item-dialog').html(response.html_contain);
+                    $("#new-order-item-dialog").dialog('open');
                     activate_curtain_category_id_data();
                 },
                 error: function(error){
