@@ -55,6 +55,7 @@ jQuery(document).ready(function($) {
                     data: {
                         'action': 'set_order_status_dialog_data',
                         '_order_status_id': $("#order-status-id").val(),
+                        '_status_action': $("#status-action").val(),
                         '_status_code': $("#status-code").val(),
                         '_status_title': $("#status-title").val(),
                         '_status_description': $("#status-description").val(),

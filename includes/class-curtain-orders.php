@@ -346,7 +346,6 @@ if (!class_exists('curtain_orders')) {
                 );
             }            
             $args['meta_query'][] = $meta_query_all_keys;
-            //$args['meta_query'] = $meta_query_all_keys;
                     
             $query = new WP_Query($args);
             return $query;
@@ -630,7 +629,7 @@ if (!class_exists('curtain_orders')) {
                 //$customer_order_status; 
                 //2248:order01:轉採購單->訂單已發送->產生訂單號碼
                 //2249:order02:準備生產->生產中->填寫淘寶訂單號
-                //xxxx:order03:生產中->xxx->填寫快遞單號
+                //xxxx:order03:生產中->繼續生產->填寫快遞單號
                 //2250:order04:出貨->已出貨等待收款->填寫送貨單號
                 //2251:order05:收款->已收款，訂單完成
                 update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
@@ -872,22 +871,6 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function select_order_status_options($selected_option=0) {
-            $args = array(
-                'post_type'      => 'order-status',
-                'posts_per_page' => -1,
-            );
-            $query = new WP_Query($args);
-
-            $options = '<option value="">Select status</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
-        
         function data_migration() {
             // Customer Order Status Migration - 2024-04-30
             if (isset($_GET['_customer_order_status_migration'])) {

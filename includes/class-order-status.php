@@ -63,6 +63,7 @@ if (!class_exists('order_status')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
+                            <th><?php echo __( 'Action', 'your-text-domain' );?></th>
                             <th><?php echo __( 'ID', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Title', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Description', 'your-text-domain' );?></th>
@@ -79,11 +80,13 @@ if (!class_exists('order_status')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
+                            $status_action = get_post_meta(get_the_ID(), 'status_action', true);
                             $status_code = get_post_meta(get_the_ID(), 'status_code', true);
                             $status_title = get_the_title();
                             $status_description = get_the_content();
                             ?>
                             <tr id="edit-order-status-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($status_action);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($status_code);?></td>
                                 <td><?php echo esc_html($status_title);?></td>
                                 <td><?php echo esc_html($status_description);?></td>
@@ -136,6 +139,8 @@ if (!class_exists('order_status')) {
             ?>
             <fieldset>
                 <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />
+                <label for="status-action"><?php echo __( '執行狀態', 'your-text-domain' );?></label>
+                <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="status-code"><?php echo __( '狀態代碼', 'your-text-domain' );?></label>
                 <input type="text" id="status-code" value="<?php echo esc_html($status_code);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="status-title"><?php echo __( '狀態標題', 'your-text-domain' );?></label>
@@ -160,6 +165,7 @@ if (!class_exists('order_status')) {
             if( isset($_POST['_order_status_id']) ) {
                 // Update the meta data
                 $order_status_id = sanitize_text_field($_POST['_order_status_id']);
+                update_post_meta( $order_status_id, 'status_action', sanitize_text_field($_POST['_status_action']));
                 update_post_meta( $order_status_id, 'status_code', sanitize_text_field($_POST['_status_code']));
                 // Update the post title
                 if (isset($_POST['_status_title'])) {
@@ -191,21 +197,6 @@ if (!class_exists('order_status')) {
             wp_send_json($response);
         }
 
-        function select_order_status_options($selected_option=0) {
-            $args = array(
-                'post_type'      => 'order-status',
-                'posts_per_page' => -1,
-            );
-            $query = new WP_Query($args);
-
-            $options = '<option value="">Select status</option>';
-            while ($query->have_posts()) : $query->the_post();
-                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
-            endwhile;
-            wp_reset_postdata();
-            return $options;
-        }
    }
     $order_status = new order_status();
 }
