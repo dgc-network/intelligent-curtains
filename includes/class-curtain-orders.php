@@ -386,13 +386,14 @@ if (!class_exists('curtain_orders')) {
             $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
             $taobao_ship_number = get_post_meta($customer_order_id, 'taobao_ship_number', true);
             $curtain_ship_number = get_post_meta($customer_order_id, 'curtain_ship_number', true);
+            $customer_order_freight = get_post_meta($customer_order_id, 'customer_order_freight', true);
             ob_start();            
             //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
 
             if ($status_code=="order01") echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order02") echo '<h2 style="display:inline;">'.__( '生產單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '備貨單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
+            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
+            //elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
             elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '結案單', 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
@@ -400,17 +401,19 @@ if (!class_exists('curtain_orders')) {
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
-                <?php if ($status_code=="order02") { //填寫淘寶訂單號?>
+                <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
-                <?php if ($status_code=="order03") { //填寫快遞單號?>
+                <?php if ($status_code=="order02") { //填寫快遞單號?>
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_html($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
-                <?php if ($status_code=="order04") { //填寫送貨單號?>
+                <?php if ($status_code=="order03") { //填寫送貨單號及運費?>
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_html($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="customer-order-freight"><?php echo __( '運費', 'your-text-domain' );?></label>
+                    <input type="text" id="customer-order-freight" value="<?php echo esc_html($customer_order_freight);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                     <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
@@ -712,7 +715,9 @@ if (!class_exists('curtain_orders')) {
                     }
                     if ($status_code=="order03") {
                         $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
+                        $customer_order_freight = sanitize_text_field($_POST['_customer_order_freight']);
                         update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
+                        update_post_meta( $customer_order_id, 'customer_order_freight', $customer_order_freight);
                     }
                 }
                 if ($customer_order_status==0) {
