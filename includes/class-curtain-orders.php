@@ -379,14 +379,15 @@ if (!class_exists('curtain_orders')) {
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
-            $status_action = get_post_meta($customer_order_status, 'status_action', true);
-            $status_code = get_post_meta($customer_order_status, 'status_code', true);
-            $next_status = get_post_meta($customer_order_status, 'next_status', true);
-            $next_status_id = $this->get_post_id_by_next_status($next_status);
             $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
             $taobao_ship_number = get_post_meta($customer_order_id, 'taobao_ship_number', true);
             $curtain_ship_number = get_post_meta($customer_order_id, 'curtain_ship_number', true);
             $customer_order_freight = get_post_meta($customer_order_id, 'customer_order_freight', true);
+
+            $status_action = get_post_meta($customer_order_status, 'status_action', true);
+            $status_code = get_post_meta($customer_order_status, 'status_code', true);
+            $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
+            $next_status_id = $this->get_post_id_by_next_status($next_status_code);
             ob_start();            
             //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
 /*
@@ -402,26 +403,26 @@ if (!class_exists('curtain_orders')) {
             <fieldset>
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
-                <input type="text" id="customer-name" value="<?php echo esc_html($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="customer-name" value="<?php echo esc_attr($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order02") { //填寫快遞單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-ship-number" value="<?php echo esc_html($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
-                <?php if ($status_code=="order03") { //填寫送貨單號及運費?>
+                <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號及運費?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_html($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-ship-number" value="<?php echo esc_html($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
-                    <input type="text" id="curtain-ship-number" value="<?php echo esc_html($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="customer-order-freight"><?php echo __( '運費', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-freight" value="<?php echo esc_html($customer_order_freight);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="customer-order-freight" value="<?php echo esc_attr($customer_order_freight);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                     <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
@@ -429,7 +430,7 @@ if (!class_exists('curtain_orders')) {
 
                 <?php if ($customer_order_category>1) {?>
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-status" value="<?php echo esc_html(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
