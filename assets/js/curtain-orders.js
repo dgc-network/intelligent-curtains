@@ -1,3 +1,97 @@
+// order-status 2024-6-11 revision
+jQuery(document).ready(function($) {
+    $("#search-status").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-order-status-"]').on("click", function () {
+        const order_status_id = this.id.substring(18);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_order_status_dialog_data',
+                _order_status_id: order_status_id,                
+            },
+            success: function (response) {
+                $('#order-status-dialog').html(response.html_contain);                
+                $("#order-status-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });            
+
+    $("#new-order-status").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_order_status_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#order-status-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_order_status_dialog_data',
+                        '_order_status_id': $("#order-status-id").val(),
+                        '_order_status_code': $("#status-code").val(),
+                        '_order_status_title': $("#status-title").val(),
+                        '_order_status_description': $("#status-description").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_order_status_dialog_data',
+                            '_order_status_id': $("#order-status-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+});
+
 // 2024-4-19 revision
 jQuery(document).ready(function($) {
 
