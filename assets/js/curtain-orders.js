@@ -94,7 +94,7 @@ jQuery(document).ready(function($) {
     });
 });
 
-// 2024-4-19 revision
+// 2024-4-19 order revision
 jQuery(document).ready(function($) {
 
     $("#agent-submit").on("click", function() {
@@ -303,6 +303,9 @@ jQuery(document).ready(function($) {
                     ajaxData['_customer_order_status'] = customer_order_status;
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();
                     ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+                    ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
+                    ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
+                    ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
             
                     $.ajax({
                         type: 'POST',
@@ -361,7 +364,6 @@ jQuery(document).ready(function($) {
                     dataType: "json",
                     data: {
                         'action': 'set_order_item_dialog_data',
-                        //'_order_item_id': $("#order-item-id").val(),
                         '_curtain_category_id': $("#curtain-category-id").val(),
                         '_curtain_model_id': $("#curtain-model-id").val(),
                         '_curtain_specification_id': $("#curtain-specification-id").val(),
@@ -387,26 +389,6 @@ jQuery(document).ready(function($) {
             "Cancel": function() {
                 if (window.confirm("Are you sure you want to cancel this item?")) {
                     $("#new-order-item-dialog").dialog('close');
-/*
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: {
-                            'action': 'del_order_item_dialog_data',
-                            '_order_item_id': $("#order-item-id").val(),
-                        },
-                        success: function (response) {
-                            $('#order-item-container').html(response.html_contain);
-                            $("#new-order-item-dialog").dialog('close');
-                            activate_order_item_list_data($("#customer-order-id").val());            
-                        },
-                        error: function(error){
-                            console.error(error);
-                            //alert(error);
-                        }
-                    });
-*/                    
                 }
             }
         }
@@ -485,7 +467,6 @@ jQuery(document).ready(function($) {
                     $('#new-order-item-dialog').html(response.html_contain);
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     activate_order_item_list_data($("#customer-order-id").val());
-                    //activate_order_item_list_data(customer_order_id);
                 },
                 error: function(error){
                     console.error(error);
@@ -502,7 +483,6 @@ jQuery(document).ready(function($) {
                 type: 'post',
                 data: {
                     action: 'get_order_item_dialog_data',
-                    //_order_item_id: order_item_id,
                 },
                 success: function (response) {
                     $('#new-order-item-dialog').html(response.html_contain);
@@ -514,26 +494,6 @@ jQuery(document).ready(function($) {
                     alert(error);
                 }
             });    
-
-/*
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: {
-                    'action': 'set_order_item_dialog_data',
-                    '_customer_order_id':customer_order_id,
-                },
-                success: function (response) {
-                    $('#order-item-container').html(response.html_contain);
-                    activate_order_item_list_data(customer_order_id);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    //alert(error);
-                }
-            });
-*/            
         });
 
         $('[id^="edit-order-item-"]').on("click", function () {
