@@ -118,7 +118,10 @@ if (!class_exists('order_status')) {
                 'post_type'      => 'order-status',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
-                's'              => $search_query,  
+                's'              => $search_query,
+                'meta_key'       => 'status_code', // Specify the meta key to order by
+                'orderby'        => 'meta_value',  // Order by the meta value
+                'order'          => 'ASC',         // Order direction (ASC or DESC)
             );        
             $query = new WP_Query($args);
             return $query;
