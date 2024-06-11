@@ -678,12 +678,6 @@ if (!class_exists('curtain_orders')) {
                 $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
                 $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
                 $status_code = get_post_meta($customer_order_status, 'status_code', true);
-                //$customer_order_status; 
-                //2248:order01:轉採購單->訂單已發送->產生訂單號碼
-                //2249:order02:準備生產->生產中->填寫淘寶訂單號
-                //xxxx:order03:生產中->繼續生產->填寫快遞單號
-                //2250:order04:出貨->已出貨等待收款->填寫送貨單號
-                //2251:order05:收款->已收款，訂單完成
                 update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
                 update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 if ($customer_order_status>0) {
@@ -708,15 +702,15 @@ if (!class_exists('curtain_orders')) {
                             ]);
                         }
                     }
-                    if ($status_code=="order02") {
+                    if ($status_code=="order01") {
                         $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
                         update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
                     }
-                    if ($status_code=="order03") {
+                    if ($status_code=="order02") {
                         $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
                         update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
                     }
-                    if ($status_code=="order04") {
+                    if ($status_code=="order03") {
                         $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
                         update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
                     }
