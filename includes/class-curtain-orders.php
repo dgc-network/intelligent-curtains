@@ -505,7 +505,7 @@ if (!class_exists('curtain_orders')) {
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
             );
-
+/*
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
             $meta_keys = get_post_type_meta_keys('customer-order');
@@ -518,7 +518,7 @@ if (!class_exists('curtain_orders')) {
                 );
             }            
             $args['meta_query'][] = $meta_query_all_keys;
-
+*/
             $query = new WP_Query($args);
             return $query;
         }
