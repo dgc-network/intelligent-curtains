@@ -486,8 +486,9 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_03,
-                        'compare' => '=',        
+                        'compare' => 'LIKE',
                     ),
+/*                    
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_04,
@@ -498,7 +499,7 @@ if (!class_exists('curtain_orders')) {
                         'value'   => $status_id_05,
                         'compare' => '=',        
                     ),
-
+*/
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
