@@ -255,7 +255,7 @@ jQuery(document).ready(function($) {
                         const ajaxData = {
                             'action': 'proceed_customer_order_status',
                         };
-                        ajaxData['_customer_order_status'] = 0;
+                        ajaxData['_next_status'] = 0;
                         ajaxData['_customer_order_id'] = $("#customer-order-id").val();
                         ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
                     
