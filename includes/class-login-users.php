@@ -9,7 +9,6 @@ if (!class_exists('login_users')) {
         public function __construct() {
 
             add_shortcode( 'login-user-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_order_status_post_type' ) );
 
             add_action( 'wp_ajax_get_login_user_dialog_data', array( $this, 'get_login_user_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_login_user_dialog_data', array( $this, 'get_login_user_dialog_data' ) );
