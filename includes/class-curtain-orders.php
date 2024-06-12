@@ -75,35 +75,40 @@ if (!class_exists('curtain_orders')) {
                 }    
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
-                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-                if ($curtain_agent_id) {
-                    if (isset($_GET['_id'])) {
-                        echo '<div class="ui-widget" id="result-container">';
-                        echo $this->display_customer_order_dialog($_GET['_id']);
-                        echo '</div>';
-                    } else if ($_GET['_category']==2) {
-                        $this->display_customer_order_list();
+                $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
+                if ($is_warehouse_personnel) $this->display_shipping_list();
+                else {
+                    $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+                    if ($curtain_agent_id) {
+                        if (isset($_GET['_id'])) {
+                            echo '<div class="ui-widget" id="result-container">';
+                            echo $this->display_customer_order_dialog($_GET['_id']);
+                            echo '</div>';
+                        } else if ($_GET['_category']==2) {
+                            $this->display_customer_order_list();
+                        } else {
+                            $this->display_quotation_list();
+                        }    
+    
                     } else {
-                        $this->display_quotation_list();
-                    }    
-
-                } else {
-                    ?>
-                    <div style="text-align:center;">
-                        <h4><?php echo __( '經銷商登入/註冊', 'your-text-domain' );?></h4>
-                        <fieldset>
-                            <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'your-text-domain' );?></label>
-                            <input type="text" id="agent-number" />
-                            <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'your-text-domain' );?></label>
-                            <input type="password" id="agent-password" />
-                            <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
-                            <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
-                            <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
-                            <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
-                            <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
-                        </fieldset>
-                    </div>
-                    <?php
+                        ?>
+                        <div style="text-align:center;">
+                            <h4><?php echo __( '經銷商登入/註冊', 'your-text-domain' );?></h4>
+                            <fieldset>
+                                <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'your-text-domain' );?></label>
+                                <input type="text" id="agent-number" />
+                                <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'your-text-domain' );?></label>
+                                <input type="password" id="agent-password" />
+                                <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
+                                <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
+                                <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
+                                <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
+                                <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
+                            </fieldset>
+                        </div>
+                        <?php
+                    }
+    
                 }
 
             } else {
@@ -292,6 +297,105 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
+        function display_shipping_list() {
+            $curtain_agents = new curtain_agents();
+            if (!current_user_can('administrator')) $is_disabled='disabled';
+
+            $current_user_id = get_current_user_id();
+            if (isset($_GET['_curtain_agent_id'])) {
+                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
+            } else {
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+            }
+            ?>
+            <div class="ui-widget" id="result-container">
+            <div id="customer-order-title"><h2><?php echo __( 'Shipping list', 'your-text-domain' );?></h2></div>
+            <fieldset>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div id="customer-order-select">
+                        <select id="select-order-category">
+                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                        </select>
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
+                    </div>
+                </div>
+        
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '採購單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '運費', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_customer_order_data($current_page, $curtain_agent_id);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
+                            $agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
+                            $curtain_agent_number = get_post_meta($agent_id, 'curtain_agent_number', true);
+                            $curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
+                            $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                            $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
+                            $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
+                            $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
+                            $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
+                            $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
+                            $customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
+                            //$customer_order_status = get_the_title(get_post_meta(get_the_ID(), 'customer_order_status', true));
+                            if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
+                            ?>
+                            <tr id="edit-quotation-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_ship_number);?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_freight);?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <?php
+                    // Display pagination links
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    ?>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                    </div>
+                </div>        
+            </fieldset>
+            </div>
+            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
+            <?php
+        }
+
         function retrieve_customer_order_data($current_page = 1, $curtain_agent_id=false) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
@@ -389,14 +493,6 @@ if (!class_exists('curtain_orders')) {
             $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_post_id_by_next_status($next_status_code);
             ob_start();            
-            //if ($customer_order_category==2) echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
-/*
-            if ($status_code=="order01") echo '<h2 style="display:inline;">'.__( '採購單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order02") echo '<h2 style="display:inline;">'.__( '生產單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order03") echo '<h2 style="display:inline;">'.__( '備貨單', 'your-text-domain' ).'</h2>';
-            //elseif ($status_code=="order04") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
-            elseif ($status_code=="order05") echo '<h2 style="display:inline;">'.__( '出貨單', 'your-text-domain' ).'</h2>';
-*/
             if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>

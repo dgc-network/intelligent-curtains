@@ -56,6 +56,7 @@ if (!class_exists('login_users')) {
                     <?php
                     $users = get_users();
                     foreach ($users as $user) {
+                        $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                         $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
                         $is_checked = ($is_warehouse_personnel) ? 'checked' : '';
                         ?>
