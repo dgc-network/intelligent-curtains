@@ -108,7 +108,7 @@ jQuery(document).ready(function($) {
                         '_user_email': $("#user-email").val(),
                     },
                     success: function (response) {
-                        window.location.replace(window.location.href);
+                        $("#new-user-dialog").dialog('close');
                     },
                     error: function(error){
                         console.error(error);

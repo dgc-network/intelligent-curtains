@@ -56,7 +56,7 @@ if (!class_exists('login_users')) {
                     $users = get_users();
                     foreach ($users as $user) {
                         ?>
-                        <tr id="edit-login-user-<?php $user->ID();?>">
+                        <tr id="edit-login-user-<?php $user->ID;?>">
                             <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                             <td><?php echo esc_html($user->user_email);?></td>
                         </tr>
