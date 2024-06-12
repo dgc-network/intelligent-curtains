@@ -447,32 +447,7 @@ if (!class_exists('curtain_orders')) {
         function retrieve_shipping_list_data($current_page = 1, $curtain_agent_id=false) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
-/*        
-            $current_user_id = get_current_user_id();
-            if (isset($_GET['_curtain_agent_id'])) {
-                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
-            } else {
-                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-            }
 
-            $curtain_agent_filter = array(
-                'key'     => 'curtain_agent_id',
-                'value'   => $curtain_agent_id,
-                'compare' => '=',
-            );
-
-            if (isset($_GET['_category'])) {
-                $customer_order_category = sanitize_text_field($_GET['_category']);
-                if ($customer_order_category==2 && current_user_can('administrator')) $curtain_agent_id='';
-            } else {
-                $customer_order_category = 1;
-            }
-            $order_category_filter = array(
-                'key'     => 'customer_order_category',
-                'value'   => $customer_order_category,
-                'compare' => '=',
-            );
-*/        
             $status_id_03 = $this->get_status_id_by_status_code('order03');
             $status_id_04 = $this->get_status_id_by_status_code('order04');
             $status_id_05 = $this->get_status_id_by_status_code('order05');
@@ -483,25 +458,24 @@ if (!class_exists('curtain_orders')) {
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'AND',
-
                     array(
-                        'key'     => 'customer_order_status',
-                        'value'   => $status_id_04,
-                        'compare' => '=',
-                        //'type'    => 'NUMERIC',
-                    ),
-/*                    
-                    array(
-                        'key'     => 'customer_order_status',
-                        'value'   => $status_id_04,
-                        'compare' => 'LIKE',
-                    ),
-                    array(
-                        'key'     => 'customer_order_status',
-                        'value'   => $status_id_05,
-                        'compare' => 'LIKE',
-                    ),
-*/
+                        'relation' => 'OR',
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_03,
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_04,
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_05,
+                            'compare' => '=',
+                        ),        
+                    )
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
