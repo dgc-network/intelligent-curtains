@@ -394,7 +394,7 @@ if (!class_exists('curtain_orders')) {
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
                     $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = $this->retrieve_shipping_data($current_page);
+                    $query = $this->retrieve_shipping_list_data($current_page);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
         
@@ -505,7 +505,7 @@ if (!class_exists('curtain_orders')) {
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
             );
-/*        
+
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
             $meta_keys = get_post_type_meta_keys('customer-order');
@@ -518,7 +518,7 @@ if (!class_exists('curtain_orders')) {
                 );
             }            
             $args['meta_query'][] = $meta_query_all_keys;
-*/                    
+
             $query = new WP_Query($args);
             return $query;
         }
