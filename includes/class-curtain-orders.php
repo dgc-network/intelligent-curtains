@@ -75,7 +75,7 @@ if (!class_exists('curtain_orders')) {
                 }    
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
-                $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
+                $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
                 if ($is_warehouse_personnel) $this->display_shipping_list();
                 else {
                     $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
