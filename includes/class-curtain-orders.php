@@ -483,7 +483,7 @@ if (!class_exists('curtain_orders')) {
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'OR',
-/*                    
+
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_03,
@@ -493,14 +493,14 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_04,
-                        'compare' => '=',        
+                        'compare' => 'LIKE',
                     ),
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_05,
-                        'compare' => '=',        
+                        'compare' => 'LIKE',
                     ),
-*/
+
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
