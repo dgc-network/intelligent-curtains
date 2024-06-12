@@ -306,7 +306,8 @@ jQuery(document).ready(function($) {
                     ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
                     ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
                     ajaxData['_customer_order_freight'] = $("#customer-order-freight").val();
-                    alert(ajaxData['_taobao_order_number'])
+                    //alert(ajaxData['_taobao_order_number'])
+                    alert($("#taobao-ship-number").val())
             
                     $.ajax({
                         type: 'POST',
