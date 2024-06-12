@@ -412,7 +412,7 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
                             $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
                             $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
-                            $taobao_order_number = $customer_order_status;
+                            //$taobao_order_number = $customer_order_status;
                             $customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
