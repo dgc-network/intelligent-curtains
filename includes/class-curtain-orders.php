@@ -473,7 +473,7 @@ if (!class_exists('curtain_orders')) {
                 'compare' => '=',
             );
 */        
-            $status_id_03 = (int) $this->get_status_id_by_status_code('order03');
+            $status_id_03 = $this->get_status_id_by_status_code('order03');
             $status_id_04 = $this->get_status_id_by_status_code('order04');
             $status_id_05 = $this->get_status_id_by_status_code('order05');
 
@@ -486,9 +486,9 @@ if (!class_exists('curtain_orders')) {
 
                     array(
                         'key'     => 'customer_order_status',
-                        'value'   => $status_id_03,
+                        'value'   => $status_id_04,
                         'compare' => '=',
-                        'type'    => 'NUMERIC',
+                        //'type'    => 'NUMERIC',
                     ),
 /*                    
                     array(
