@@ -421,6 +421,26 @@ jQuery(document).ready(function($) {
                 });
 
                 $('[id^="proceed-customer-order-status-"]').on("click", function () {
+
+                    const statusCode = $("#status-code").val();
+                    const taobaoOrderNumber = $("#taobao-order-number").val();
+                    const taobaoShipNumber = $("#taobao-ship-number").val();
+                    const curtainShipNumber = $("#curtain-ship-number").val();
+
+                    // Validate taobao order number
+                    if (statusCode=='order01' && !taobaoOrderNumber) {
+                        alert("Taobao order number cannot be empty!");
+                        return; // Stop the process if the value is empty
+                    }
+                    if (statusCode=='order02' && !taobaoShipNumber) {
+                        alert("Taobao ship number cannot be empty!");
+                        return; // Stop the process if the value is empty
+                    }
+                    if (statusCode=='order03' && !curtainShipNumber) {
+                        alert("Curtain ship number cannot be empty!");
+                        return; // Stop the process if the value is empty
+                    }
+
                     const next_status = this.id.substring(30);
                     const ajaxData = {
                         'action': 'proceed_customer_order_status',
@@ -432,8 +452,6 @@ jQuery(document).ready(function($) {
                     ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
                     ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
                     ajaxData['_customer_order_freight'] = $("#customer-order-freight").val();
-                    //alert(ajaxData['_taobao_order_number'])
-                    //alert($("#taobao-ship-number").val())
             
                     $.ajax({
                         type: 'POST',

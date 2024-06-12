@@ -525,6 +525,7 @@ if (!class_exists('curtain_orders')) {
             ?>
             <fieldset>
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <input type="hidden" id="status-code" value="<?php echo esc_attr($status_code);?>" />
                 <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_attr($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
