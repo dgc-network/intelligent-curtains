@@ -483,11 +483,11 @@ if (!class_exists('curtain_orders')) {
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'AND',
-/*
+
                     array(
                         'key'     => 'customer_order_status',
                         'value'   => $status_id_03,
-                        'compare' => '=',
+                        'compare' => 'LIKE',
                     ),
 /*                    
                     array(
