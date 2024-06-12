@@ -357,17 +357,6 @@ if (!class_exists('curtain_orders')) {
         }
         
         function display_shipping_list() {
-/*
-            $curtain_agents = new curtain_agents();
-            if (!current_user_can('administrator')) $is_disabled='disabled';
-
-            $current_user_id = get_current_user_id();
-            if (isset($_GET['_curtain_agent_id'])) {
-                $curtain_agent_id = sanitize_text_field($_GET['_curtain_agent_id']);
-            } else {
-                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-            }
-*/
             ?>
             <div class="ui-widget" id="result-container">
             <div id="customer-order-title"><h2><?php echo __( 'Shipping list', 'your-text-domain' );?></h2></div>
@@ -402,10 +391,6 @@ if (!class_exists('curtain_orders')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            //$customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
-                            //$agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
-                            //$curtain_agent_number = get_post_meta($agent_id, 'curtain_agent_number', true);
-                            //$curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
                             $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
@@ -413,9 +398,6 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
                             $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
-                            //$customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
-                            //$taobao_order_number = $customer_order_status;
-                            //$customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
