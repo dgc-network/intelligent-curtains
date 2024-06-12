@@ -372,10 +372,6 @@ if (!class_exists('curtain_orders')) {
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
-                        <select id="select-order-category">
-                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
-                        </select>
                     </div>
                     <div style="text-align:right; display:flex;">
                         <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
@@ -442,13 +438,6 @@ if (!class_exists('curtain_orders')) {
                     if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
                     ?>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin:5px;">
-                    <div>
-                        <select id="select-curtain-agent" <?php echo $is_disabled;?>><?php echo $curtain_agents->select_curtain_agent_options($curtain_agent_id);?></select>                        
-                    </div>
-                    <div style="text-align:right; display:flex;">
-                    </div>
-                </div>        
             </fieldset>
             </div>
             <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
