@@ -482,7 +482,7 @@ if (!class_exists('curtain_orders')) {
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 'meta_query'     => array(
-                    'relation' => 'OR',
+                    'relation' => 'AND',
 
                     array(
                         'key'     => 'customer_order_status',
