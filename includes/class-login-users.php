@@ -33,8 +33,8 @@ if (!class_exists('login_users')) {
 
         function display_login_user_list() {
             // Set the number of users per page
-            $users_per_page = 10;
-            
+            $users_per_page = get_option('operation_row_counts');
+
             // Get the current page or set default
             $current_page = isset($_GET['paged']) ? intval($_GET['paged']) : 1;
             
@@ -51,7 +51,8 @@ if (!class_exists('login_users')) {
             // Arguments to get users with pagination
             $args = array(
                 'number' => $users_per_page,
-                'offset' => $offset,
+                'paged'  => $current_page,
+                //'offset' => $offset,
             );
             
             // Get the users based on pagination
