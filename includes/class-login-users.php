@@ -50,7 +50,7 @@ if (!class_exists('login_users')) {
             
             // Arguments to get users with pagination
             $args = array(
-                'number' => $users_per_page,
+                //'number' => $users_per_page,
                 'offset' => $offset,
             );
             
