@@ -411,9 +411,9 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
                             $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
+                            $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            $taobao_order_number = $customer_order_status;
                             $customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
-                            //$customer_order_status = get_the_title(get_post_meta(get_the_ID(), 'customer_order_status', true));
-                            if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
