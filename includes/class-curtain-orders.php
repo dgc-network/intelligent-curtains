@@ -357,6 +357,7 @@ if (!class_exists('curtain_orders')) {
         }
         
         function display_shipping_list() {
+/*
             $curtain_agents = new curtain_agents();
             if (!current_user_can('administrator')) $is_disabled='disabled';
 
@@ -366,6 +367,7 @@ if (!class_exists('curtain_orders')) {
             } else {
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
             }
+*/
             ?>
             <div class="ui-widget" id="result-container">
             <div id="customer-order-title"><h2><?php echo __( 'Shipping list', 'your-text-domain' );?></h2></div>
@@ -400,10 +402,10 @@ if (!class_exists('curtain_orders')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
-                            $agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
-                            $curtain_agent_number = get_post_meta($agent_id, 'curtain_agent_number', true);
-                            $curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
+                            //$customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
+                            //$agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
+                            //$curtain_agent_number = get_post_meta($agent_id, 'curtain_agent_number', true);
+                            //$curtain_agent_name = get_post_meta($agent_id, 'curtain_agent_name', true);
                             $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
@@ -411,9 +413,9 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
                             $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
-                            $customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            //$customer_order_status = get_post_meta(get_the_ID(), 'customer_order_status', true);
                             //$taobao_order_number = $customer_order_status;
-                            $customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
+                            //$customer_order_status = get_post_field('post_content', get_post_meta(get_the_ID(), 'customer_order_status', true));
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
@@ -580,19 +582,20 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <input type="button" id="proceed-customer-order-status-2248" value="<?php echo __( '轉採購單', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
+                        <?php $quotation_status_action = get_post_meta($quotation_status_id, 'status_action', true);?>
+                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_status_id);?>" value="<?php echo __( $quotation_status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
                     } else {
-                        if (current_user_can('administrator')) {
+                        $current_user_id = get_current_user_id();
+                        $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
+                        if (current_user_can('administrator')||$is_warehouse_personnel) {
                             echo '<hr>';
                             if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            //if ($customer_order_status==2248) echo '<input type="button" id="proceed-customer-order-status-2249" value="'.__( '準備生產', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            //if ($customer_order_status==2249) echo '<input type="button" id="proceed-customer-order-status-2250" value="'.__( '出貨', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            //if ($customer_order_status==2250) echo '<input type="button" id="proceed-customer-order-status-2251" value="'.__( '收款', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }
                     }
