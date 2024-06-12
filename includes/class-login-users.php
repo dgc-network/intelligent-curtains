@@ -59,7 +59,7 @@ if (!class_exists('login_users')) {
                         $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
                         $is_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
                         ?>
-                        <tr id="edit-login-user-<?php $user->ID;?>">
+                        <tr id="edit-login-user-<?php echo esc_attr($user->ID);?>">
                             <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                             <td><?php echo esc_html($user->user_email);?></td>
                             <td style="text-align:center;"><input type="checkbox" $is_checked /></td>
