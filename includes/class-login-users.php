@@ -76,7 +76,8 @@ if (!class_exists('login_users')) {
                 </div>
             </fieldset>
             </div>
-            <div id="login-user-dialog" title="User dialog"></div>            
+            <div id="new-user-dialog" title="User dialog"></div>
+            <div id="login-user-dialog" title="User dialog"></div>
             <?php
         }
 

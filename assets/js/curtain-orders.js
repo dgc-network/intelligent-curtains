@@ -1,3 +1,128 @@
+// login-users 2024-6-12 revision
+jQuery(document).ready(function($) {
+    $("#search-user").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-login-user-"]').on("click", function () {
+        const login_user_id = this.id.substring(16);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_login_user_dialog_data',
+                _login_user_id: login_user_id,                
+            },
+            success: function (response) {
+                $("#login-user-dialog").html(response.html_contain);
+                $("#login-user-dialog").dialog('open');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });            
+
+    $("#login-user-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_login_user_dialog_data',
+                        '_login_user_id': $("#login-user-id").val(),
+                        '_display_name': $("#display-name").val(),
+                        '_user_email': $("#user-email").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this user?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_login_user_dialog_data',
+                            '_login_user_id': $("#login-user-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    $("#new-login-user").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'get_login_user_dialog_data',
+            },
+            success: function (response) {
+                $("#new-user-dialog").html(response.html_contain);
+                $("#new-user-dialog").dialog('open');
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#new-user-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Add": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_login_user_dialog_data',
+                        //'_login_user_id': $("#login-user-id").val(),
+                        '_display_name': $("#display-name").val(),
+                        '_user_email': $("#user-email").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Cancel": function() {
+                window.location.replace(window.location.href);
+            }
+        }
+    });
+});
+
 // order-status 2024-6-11 revision
 jQuery(document).ready(function($) {
     $("#search-status").on( "change", function() {
