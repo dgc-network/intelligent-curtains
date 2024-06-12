@@ -689,12 +689,12 @@ if (!class_exists('curtain_orders')) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
                 $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
                 $customer_order_status = sanitize_text_field($_POST['_customer_order_status']);
-                $status_code = get_post_meta($customer_order_status, 'status_code', true);
+                $next_status_code = get_post_meta($customer_order_status, 'status_code', true);
                 update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
                 update_post_meta( $customer_order_id, 'customer_order_status', $customer_order_status);
                 if ($customer_order_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                    if ($status_code=="order01") {
+                    if ($next_status_code=="order01") {
                     //if ($customer_order_status==2248) {
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
 
@@ -714,24 +714,28 @@ if (!class_exists('curtain_orders')) {
                             ]);
                         }
                     }
-                    if ($status_code=="order01") {
-                        $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
-                        update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
-                    }
-                    if ($status_code=="order02") {
-                        $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
-                        update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
-                    }
-                    if ($status_code=="order03") {
-                        $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
-                        $customer_order_freight = sanitize_text_field($_POST['_customer_order_freight']);
-                        update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
-                        update_post_meta( $customer_order_id, 'customer_order_freight', $customer_order_freight);
-                    }
                 }
                 if ($customer_order_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
                 }
+
+                $current_status = get_post_meta($customer_order_id, 'customer_order_status', true);
+                $current_status_code = get_post_meta($current_status, 'status_code', true);
+                if ($current_status_code=="order01") {
+                    $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
+                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                }
+                if ($current_status_code=="order02") {
+                    $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
+                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
+                }
+                if ($current_status_code=="order03") {
+                    $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
+                    $customer_order_freight = sanitize_text_field($_POST['_customer_order_freight']);
+                    update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
+                    update_post_meta( $customer_order_id, 'customer_order_freight', $customer_order_freight);
+                }
+
             }
             wp_send_json($response);
         }
