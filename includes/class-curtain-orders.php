@@ -567,7 +567,8 @@ if (!class_exists('curtain_orders')) {
                     <div style="text-align:right; display:flex;">
                         <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
                         <?php $quotation_status_action = get_post_meta($quotation_status_id, 'status_action', true);?>
-                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_status_id);?>" value="<?php echo __( $quotation_status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <?php $quotation_next_status = $this->get_status_id_by_status_code('order01');?>
+                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_next_status);?>" value="<?php echo __( $quotation_status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
@@ -844,9 +845,10 @@ if (!class_exists('curtain_orders')) {
 
                         // Notice the current_user
                         $current_user_id = get_current_user_id();
+                        $user_data = get_userdata($current_user_id);
                         $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
-                        $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
                         $line_bot_api = new line_bot_api();
                         $line_bot_api->pushMessage([
                             'to' => get_user_meta($current_user_id, 'line_user_id', true),
