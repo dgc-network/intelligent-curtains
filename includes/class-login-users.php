@@ -33,6 +33,87 @@ if (!class_exists('login_users')) {
 
         function display_login_user_list() {
             // Set the number of users per page
+            $users_per_page = 10;
+            
+            // Get the current page or set default
+            $current_page = isset($_GET['paged']) ? intval($_GET['paged']) : 1;
+            
+            // Calculate the offset for the query
+            $offset = ($current_page - 1) * $users_per_page;
+            
+            // Query to get the total number of users
+            $total_users = count_users();
+            $total_users_count = $total_users['total_users'];
+            
+            // Calculate the total number of pages
+            $total_pages = ceil($total_users_count / $users_per_page);
+            
+            // Arguments to get users with pagination
+            $args = array(
+                'number' => $users_per_page,
+                'offset' => $offset,
+            );
+            
+            // Get the users based on pagination
+            $users = get_users($args);
+            ?>
+            <div class="ui-widget" id="result-container">
+                <h2 style="display:inline;"><?php echo __( '使用者列表', 'your-text-domain' );?></h2>
+                <fieldset>
+                    <div style="display:flex; justify-content:space-between; margin:5px;">
+                        <div>
+                        </div>
+                        <div style="text-align:right; display:flex;">
+                            <input type="text" id="search-user" style="display:inline" placeholder="Search..." />
+                        </div>
+                    </div>
+            
+                    <table class="ui-widget" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th><?php echo __( 'Name', 'your-text-domain' );?></th>
+                                <th><?php echo __( 'Email', 'your-text-domain' );?></th>
+                                <th><?php echo __( '倉管人員', 'your-text-domain' );?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($users as $user) {
+                            $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
+                            $is_checked = ($is_warehouse_personnel) ? 'checked' : '';
+                            ?>
+                            <tr id="edit-login-user-<?php echo esc_attr($user->ID);?>">
+                                <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
+                                <td><?php echo esc_html($user->user_email);?></td>
+                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_checked;?> /></td>
+                            </tr>
+                            <?php
+                        }            
+                        ?>
+                        </tbody>
+                    </table>
+                    <div id="new-login-user" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                    <div class="pagination">
+                        <?php
+                        // Display pagination links
+                        if ($current_page > 1) {
+                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $current_page - 1)) . '"> < </a></span>';
+                        }
+                        echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'your-text-domain'), $current_page, $total_pages) . '</span>';
+                        if ($current_page < $total_pages) {
+                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $current_page + 1)) . '"> > </a></span>';
+                        }
+                        ?>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="new-user-dialog" title="User dialog"></div>
+            <div id="login-user-dialog" title="User dialog"></div>
+            <?php
+        }
+/*        
+        function display_login_user_list() {
+            // Set the number of users per page
             $users_per_page = get_option('operation_row_counts');
             
             // Get the current page or set default
