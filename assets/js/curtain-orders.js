@@ -39,6 +39,7 @@ jQuery(document).ready(function($) {
                         '_login_user_id': $("#login-user-id").val(),
                         '_display_name': $("#display-name").val(),
                         '_user_email': $("#user-email").val(),
+                        '_is_warehouse_personnel': $('#is-warehouse-personnel').is(":checked") ? 1 : 0,
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);

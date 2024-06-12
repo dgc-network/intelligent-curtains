@@ -49,16 +49,20 @@ if (!class_exists('login_users')) {
                         <tr>
                             <th><?php echo __( 'Name', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Email', 'your-text-domain' );?></th>
+                            <th><?php echo __( '倉管人員', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php
                     $users = get_users();
                     foreach ($users as $user) {
+                        $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
+                        $is_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
                         ?>
                         <tr id="edit-login-user-<?php $user->ID;?>">
                             <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                             <td><?php echo esc_html($user->user_email);?></td>
+                            <td style="text-align:center;"><input type="checkbox" $is_checked /></td>
                         </tr>
                         <?php
                     }            
@@ -86,6 +90,8 @@ if (!class_exists('login_users')) {
             $user_data = get_userdata($login_user_id);
             $display_name = $user_data->display_name;
             $user_email = $user_data->user_email;
+            $is_warehouse_personnel = get_user_meta($login_user_id, 'is_warehouse_personnel', true);
+            $is_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
             ob_start();
             ?>
             <fieldset>
@@ -94,6 +100,8 @@ if (!class_exists('login_users')) {
                 <input type="text" id="display-name" value="<?php echo esc_attr($display_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="user-email"><?php echo __( 'Email', 'your-text-domain' );?></label>
                 <input type="text" id="user-email" value="<?php echo esc_attr($user_email);?>" class="text ui-widget-content ui-corner-all" />
+                <input type="checkbox" id="is-warehouse-personnel" <?php echo $is_checked;?> />
+                <label for="is-warehouse-personnel"><?php echo __( '倉管人員', 'your-text-domain' );?></label>
             </fieldset>
             <?php
             $html = ob_get_clean();
