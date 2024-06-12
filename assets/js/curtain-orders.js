@@ -426,6 +426,7 @@ jQuery(document).ready(function($) {
                     const taobaoOrderNumber = $("#taobao-order-number").val();
                     const taobaoShipNumber = $("#taobao-ship-number").val();
                     const curtainShipNumber = $("#curtain-ship-number").val();
+                    const customerOrderFreight = $("#customer-order-freight").val();
 
                     // Validate taobao order number
                     if (statusCode=='order01' && !taobaoOrderNumber) {
@@ -438,6 +439,10 @@ jQuery(document).ready(function($) {
                     }
                     if (statusCode=='order03' && !curtainShipNumber) {
                         alert("Curtain ship number cannot be empty!");
+                        return; // Stop the process if the value is empty
+                    }
+                    if (statusCode=='order03' && customerOrderFreight==0) {
+                        alert("Customer order freight cannot be 0!");
                         return; // Stop the process if the value is empty
                     }
 

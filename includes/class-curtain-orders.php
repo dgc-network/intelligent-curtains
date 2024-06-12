@@ -823,9 +823,9 @@ if (!class_exists('curtain_orders')) {
                 if ($next_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
                     if ($next_status_code=="order01") {
-                    //if ($next_status==2248) {
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
 
+                        // Notice the administrators
                         $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
 
@@ -841,6 +841,17 @@ if (!class_exists('curtain_orders')) {
                                 'messages' => [$flexMessage],
                             ]);
                         }
+
+                        // Notice the current_user
+                        $current_user_id = get_current_user_id();
+                        $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+                        $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                        $line_bot_api = new line_bot_api();
+                        $line_bot_api->pushMessage([
+                            'to' => get_user_meta($current_user_id, 'line_user_id', true),
+                            'messages' => [$flexMessage],
+                        ]);
                     }
                 }
                 if ($next_status==0) {
