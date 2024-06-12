@@ -295,11 +295,11 @@ jQuery(document).ready(function($) {
                 });
 
                 $('[id^="proceed-customer-order-status-"]').on("click", function () {
-                    const customer_order_status = this.id.substring(30);
+                    const next_status = this.id.substring(30);
                     const ajaxData = {
                         'action': 'proceed_customer_order_status',
                     };
-                    ajaxData['_customer_order_status'] = customer_order_status;
+                    ajaxData['_next_status'] = next_status;
                     ajaxData['_customer_order_id'] = $("#customer-order-id").val();
                     ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
                     ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
