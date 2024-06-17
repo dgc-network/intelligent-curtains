@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 
 require_once plugin_dir_path( __DIR__ ).'web-services/line-bot-api.php';
 require_once plugin_dir_path( __DIR__ ).'web-services/open-ai-api.php';
-require_once plugin_dir_path( __DIR__ ).'includes/fields-user-custom.php';
+//require_once plugin_dir_path( __DIR__ ).'includes/fields-user-custom.php';
 
 add_action('init', 'general_helps::instance');
 if (!class_exists('general_helps')) {
