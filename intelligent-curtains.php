@@ -218,6 +218,11 @@ function user_did_not_login_yet() {
         </div>
         <?php        
     } else {
+
+        ?><script>window.location.replace("https://aihome.tw/wp-login.php");</script><?php
+        //wp_redirect( $current_url );
+        //exit();                
+
         // Display a message or redirect to the login/registration page
         $one_time_password = random_int(100000, 999999);
         update_option('_one_time_password', $one_time_password);
