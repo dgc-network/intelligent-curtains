@@ -228,19 +228,7 @@ if (!class_exists('serial_number')) {
                 }
             
                 wp_reset_postdata();
-/*                
-                // Get all serial-number posts
-                $args = array(
-                    'post_type'      => 'serial-number',
-                    'posts_per_page' => -1, // Get all posts
-                );
-                $posts = get_posts($args);
-            
-                // Loop through each post and delete it
-                foreach ($posts as $post_id) {
-                    wp_delete_post($post_id, true); // Set the second parameter to true to force delete
-                }
-*/                                
+
                 // Get the current URL without any query parameters
                 $current_url = remove_query_arg( array_keys( $_GET ) );
                 // Redirect to the URL without any query parameters
@@ -264,6 +252,7 @@ if (!class_exists('serial_number')) {
                     );    
                     $post_id = wp_insert_post($new_post);
                     update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
+                    update_post_meta( $post_id, 'curtain_model_id', $result->curtain_model_id );
                 }
                                 
                 // Get the current URL without any query parameters
