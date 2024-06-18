@@ -220,9 +220,9 @@ if (!class_exists('serial_number')) {
                     $query->the_post();
                     $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                     $curtain_specification = get_post_field('post_content', get_the_ID());
-                    $curtain_specification_id = get_page_by_title($curtain_specification, OBJECT, 'curtain-spec');
+                    $curtain_specification_post = get_page_by_title($curtain_specification, OBJECT, 'curtain-spec');
                     update_post_meta( get_the_ID(), 'old_model_id', $curtain_model_id );
-                    update_post_meta( get_the_ID(), 'curtain_specification_id', $curtain_specification_id );
+                    update_post_meta( get_the_ID(), 'curtain_specification_id', $curtain_specification_post->ID );
 
                 }
             
