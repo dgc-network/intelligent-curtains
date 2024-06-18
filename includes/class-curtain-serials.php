@@ -87,6 +87,7 @@ if (!class_exists('serial_number')) {
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
                             $curtain_user_id = get_post_meta(get_the_ID(), 'curtain_user_id', true);
+                            $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                             $curtain_user_id = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             ?>
                             <tr id="edit-serial-number-<?php the_ID();?>">
@@ -207,12 +208,8 @@ if (!class_exists('serial_number')) {
 
         function do_migration() {
             // delete serial-number post 2024-6-18
-            if (isset($_GET['_delete_serial_number_post'])) {
+            if (isset($_GET['_model_specification_migration'])) {
 
-                if ( ! is_admin() ) {
-                    return;
-                }
-            
                 $query = new WP_Query( array(
                     'post_type' => 'serial-number',
                     'posts_per_page' => -1,
@@ -221,7 +218,11 @@ if (!class_exists('serial_number')) {
             
                 while ( $query->have_posts() ) {
                     $query->the_post();
-                    wp_delete_post( get_the_ID(), true );
+                    $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                    $curtain_specification_id = get_page_by_title(get_the_title(), OBJECT, 'curtain-spec');
+                    update_post_meta( get_the_ID(), 'old_model_id', $curtain_model_id );
+                    update_post_meta( get_the_ID(), 'curtain_specification_id', $curtain_specification_id );
+
                 }
             
                 wp_reset_postdata();
