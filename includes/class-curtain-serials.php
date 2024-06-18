@@ -221,6 +221,13 @@ if (!class_exists('serial_number')) {
                 foreach ($posts as $post_id) {
                     wp_delete_post($post_id, true); // Set the second parameter to true to force delete
                 }
+                                
+                // Get the current URL without any query parameters
+                $current_url = remove_query_arg( array_keys( $_GET ) );
+                // Redirect to the URL without any query parameters
+                wp_redirect( $current_url );
+                exit();                
+
             }
 
             // serial_number_table_to_post migration 2024-6-18
@@ -239,6 +246,13 @@ if (!class_exists('serial_number')) {
                     $post_id = wp_insert_post($new_post);
                     update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
                 }
+                                
+                // Get the current URL without any query parameters
+                $current_url = remove_query_arg( array_keys( $_GET ) );
+                // Redirect to the URL without any query parameters
+                wp_redirect( $current_url );
+                exit();                
+                
             }
         }
 
