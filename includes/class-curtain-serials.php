@@ -208,6 +208,21 @@ if (!class_exists('serial_number')) {
         }
 
         function do_migration() {
+            // delete serial-number post 2024-6-18
+            if (isset($_GET['_delete_serial_number_post'])) {
+                // Get all serial-number posts
+                $args = array(
+                    'post_type'      => 'serial-number',
+                    'posts_per_page' => -1, // Get all posts
+                );
+                $posts = get_posts($args);
+            
+                // Loop through each post and delete it
+                foreach ($posts as $post_id) {
+                    wp_delete_post($post_id, true); // Set the second parameter to true to force delete
+                }
+            }
+
             // serial_number_table_to_post migration 2024-6-18
             if (isset($_GET['_migrate_serial_number_table_to_post'])) {
                 global $wpdb;
