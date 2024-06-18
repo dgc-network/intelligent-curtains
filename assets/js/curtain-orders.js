@@ -644,10 +644,6 @@ jQuery(document).ready(function($) {
 
     activate_order_item_list_data();
     function activate_order_item_list_data(customer_order_id) {
-        $('#qrcode').qrcode({
-            text: $("#qrcode_content").text()
-        });
-        
         $("#new-order-item").on("click", function() {
             $.ajax({
                 url: ajax_object.ajax_url,
@@ -700,7 +696,11 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#qr-code-dialog').html(response.qr_code_dialog);
                     $("#qr-code-dialog").dialog('open');
-                    activate_curtain_category_id_data(order_item_id);                            
+                    //activate_curtain_category_id_data(order_item_id);
+
+                    $('#qrcode').qrcode({
+                        text: $("#qrcode_content").text()
+                    });                                
                 },
                 error: function(error){
                     console.error(error);
