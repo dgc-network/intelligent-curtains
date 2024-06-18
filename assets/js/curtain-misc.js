@@ -1,3 +1,97 @@
+// serial-number 2024-6-18 revision
+jQuery(document).ready(function($) {
+    $("#search-serial-number").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-serial-number-"]').on("click", function () {
+        const serial_number_id = this.id.substring(19);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_serial_number_dialog_data',
+                _serial_number_id: serial_number_id,                
+            },
+            success: function (response) {
+                $('#serial-number-dialog').html(response.html_contain);                
+                $("#serial-number-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.error(error);
+                alert(error);
+            }
+        });
+    });            
+
+    $("#new-serial-number").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_serial_number_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#serial-number-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_serial_number_dialog_data',
+                        '_serial_number_id': $("#serial-number-id").val(),
+                        '_qr_code_serial_no': $("#qr-code-serial-n0").val(),
+                        '_customer_order_number': $("#customer-order-number").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this serial-number?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_serial_number_dialog_data',
+                            '_serial_number_id': $("#serial-number-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+});
+
 // curtain-category 2024-4-25 revision
 jQuery(document).ready(function($) {
     $("#search-category").on( "change", function() {

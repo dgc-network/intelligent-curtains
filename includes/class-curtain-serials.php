@@ -30,7 +30,7 @@ if (!class_exists('serial_number')) {
                 'rewrite'       => array('slug' => 'serial-numbers'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                //'show_in_menu'  => false,
+                'show_in_menu'  => false,
             );
             register_post_type( 'serial-number', $args );
         }
@@ -84,10 +84,10 @@ if (!class_exists('serial_number')) {
                         while ($query->have_posts()) : $query->the_post();
                             $qr_code_serial_no = get_the_title();
                             $curtain_specification = get_the_content();
-                            //$curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                            $curtain_model_id = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
                             $curtain_user_id = get_post_meta(get_the_ID(), 'curtain_user_id', true);
+                            $curtain_user_id = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             ?>
                             <tr id="edit-serial-number-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($qr_code_serial_no);?></td>
@@ -140,8 +140,7 @@ if (!class_exists('serial_number')) {
             $qr_code_serial_no = get_the_title($serial_number_id);
             $curtain_specification = get_post_field('post_content', $serial_number_id);
             $curtain_model_id = get_post_meta($serial_number_id, 'curtain_model_id', true);
-            $curtain_agent_id = get_post_meta($serial_number_id, 'curtain_agent_id', true);
-            $current_user_id = get_post_meta($serial_number_id, 'curtain_user_id', true);
+            $customer_order_number = get_post_meta($serial_number_id, 'customer_order_number', true);
             ob_start();
             ?>
             <fieldset>
@@ -152,10 +151,8 @@ if (!class_exists('serial_number')) {
                 <input type="text" id="curtain-modle-id" value="<?php echo esc_html($curtain_model_id);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-specification"><?php echo __( 'Specification', 'your-text-domain' );?></label>
                 <textarea id="curtain-specification" rows="3" style="width:100%;"><?php echo $curtain_specification;?></textarea>
-                <label for="curtain-agent-id"><?php echo __( 'Agent', 'your-text-domain' );?></label>
-                <input type="text" id="curtain-agent-id" value="<?php echo esc_html($curtain_agent_id);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-user-id"><?php echo __( 'User', 'your-text-domain' );?></label>
-                <input type="text" id="curtain-user-id" value="<?php echo esc_html($curtain_user_id);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="customer-order-number"><?php echo __( 'Order', 'your-text-domain' );?></label>
+                <input type="text" id="customer-order-number" value="<?php echo esc_html($customer_order_number);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
             $html = ob_get_clean();
