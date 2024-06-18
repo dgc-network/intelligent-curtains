@@ -506,13 +506,13 @@ jQuery(document).ready(function($) {
     });
 
     function activate_customer_order_dialog_data() {
-        $("#qr-code-serial-no-dialog").dialog({
+        $("#qr-code-dialog").dialog({
             width: 390,
             modal: true,
             autoOpen: false,
             buttons: {
                 "Cancel": function() {
-                    $("#qr-code-serial-no-dialog").dialog('close');
+                    $("#qr-code-dialog").dialog('close');
                 }
             }
         });
@@ -694,8 +694,8 @@ jQuery(document).ready(function($) {
                     _order_item_id: order_item_id,
                 },
                 success: function (response) {
-                    $('#qr-code-serial-no-dialog').html(response.qr_code_serial_no);
-                    $("#qr-code-serial-no-dialog").dialog('open');
+                    $('#qr-code-dialog').html(response.qr_code_dialog);
+                    $("#qr-code-dialog").dialog('open');
                     activate_curtain_category_id_data(order_item_id);                            
                 },
                 error: function(error){
