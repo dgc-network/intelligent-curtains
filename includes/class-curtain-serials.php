@@ -30,7 +30,7 @@ if (!class_exists('serial_number')) {
                 'rewrite'       => array('slug' => 'serial-numbers'),
                 'supports'      => array('title', 'editor', 'custom-fields'),
                 'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'serial-number', $args );
         }
