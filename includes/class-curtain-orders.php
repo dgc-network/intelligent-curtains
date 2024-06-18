@@ -200,8 +200,6 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
-            <div id="new-order-item-dialog" title="Order Item dialog"></div>
             <?php
         }
 
@@ -294,7 +292,6 @@ if (!class_exists('curtain_orders')) {
                 </div>        
             </fieldset>
             </div>
-            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
             <?php
         }
 
@@ -424,7 +421,6 @@ if (!class_exists('curtain_orders')) {
                 </div>
             </fieldset>
             </div>
-            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
             <?php
         }
 
@@ -826,6 +822,36 @@ if (!class_exists('curtain_orders')) {
                     if ($next_status_code=="order01") {
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
 
+                        // Create new serial-number
+                        $query = $this->retrieve_order_item_data($customer_order_id);
+                        if ($query->have_posts()) {
+                            while ($query->have_posts()) : $query->the_post();
+                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                                $curtain_model_name = get_the_title($curtain_model_id);
+                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                                $curtain_specification_name = get_the_title($curtain_specification_id);
+                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                                $_x = 0;
+                                while ($_x<$order_item_qty) {
+                                    $qr_code_serial_no = $curtain_model_name . $curtain_specification_name. $curtain_width . time() . $_x;
+        
+                                    $new_post = array(
+                                        'post_title'    => $qr_code_serial_no,
+                                        'post_content'  => '',
+                                        'post_status'   => 'publish',
+                                        'post_author'   => get_current_user_id(),
+                                        'post_type'     => 'serial-number',
+                                    );    
+                                    $post_id = wp_insert_post($new_post);
+                                    update_post_meta( $post_id, 'order_item_id', get_the_ID() );
+    
+                                    $_x += 1;
+                                }
+                            endwhile;
+                            wp_reset_postdata();
+                        }
+        
                         // Notice the administrators
                         $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
@@ -871,8 +897,6 @@ if (!class_exists('curtain_orders')) {
                 if ($current_status_code=="order03") {
                     $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
                     update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
-                    //$curtain_ship_date = sanitize_text_field($_POST['_curtain_ship_date']);
-                    //update_post_meta( $customer_order_id, 'curtain_ship_date', $curtain_ship_date);
                     update_post_meta( $customer_order_id, 'curtain_ship_date', time());
                 }
 
@@ -957,6 +981,9 @@ if (!class_exists('curtain_orders')) {
                 <?php }?>
             </fieldset>
             </div>
+            <div id="qr-code-serial-no-dialog" title="QR code dialog"></div>
+            <div id="curtain-order-item-dialog" title="Order Item dialog"></div>
+            <div id="new-order-item-dialog" title="Order Item dialog"></div>
             <?php
             $html = ob_get_clean();
             return $html;    
@@ -1069,6 +1096,54 @@ if (!class_exists('curtain_orders')) {
             return $html;
         }
         
+        function display_qr_code_dialog($order_item_id=false) {
+            $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+            ob_start();
+            ?>
+            <div id="qrcode">
+                <div id="qrcode_content"><?php echo get_option('Service').'?serial_no='.$_id;?></div>
+            </div>
+            <div style="display:flex;">
+                <?php echo $print_me;?><span><?php echo $_id;?></span>
+            </div>
+            <?php
+/*            
+            $output .= '<div id="dialog" title="QR Code">';
+            $output .= '';
+            $output .= '';
+            $output .= 
+            $output .= '';
+            $output .= '';
+            $output .= '';
+            $output .= 
+            $output .= '<span> </span>';
+            $output .= '';
+            $output .= '</div>';
+            $output .= '</div>';
+            
+            $output .= '<br><br><br><br><br>';                
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $_id ), OBJECT );            
+            $output .= '<div class="print-me-'.$_id.'">';
+            //$output .= '<div id="qrcode1" style="display: inline-block; margin-left: 100px;">';
+            $output .= '<div id="qrcode1">';
+            $output .= '<div id="qrcode_content">';
+            $output .= get_option('Service').'?serial_no='.$_id;
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p><br><br><br>';
+            //$output .= '<div id="qrcode2" style="display: inline-block;; margin-left: 200px;">';
+            $output .= '<div id="qrcode2" style="margin-top: 100px;">';
+            $output .= '<div id="qrcode_content">';
+            $output .= get_option('Service').'?serial_no='.$_id;
+            $output .= '</div>';
+            $output .= '</div>';
+            $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
+            $output .= '</div>';                
+*/
+            $html = ob_get_clean();
+            return $html;
+        }
+
         function del_order_item_dialog_data() {
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
@@ -1085,6 +1160,7 @@ if (!class_exists('curtain_orders')) {
             $order_item_id = sanitize_text_field($_POST['_order_item_id']);
             $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
             $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
+            $response['qr_code_serial_no'] = $this->display_qr_code_dialog($order_item_id);
             wp_send_json($response);
         }
 

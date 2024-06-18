@@ -504,6 +504,17 @@ jQuery(document).ready(function($) {
         });    
     });
 
+    $("#qr-code-serial-no-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Cancel": function() {
+                $("#qr-code-serial-no-dialog").dialog('close');
+            }
+        }
+    });
+
     $("#new-order-item-dialog").dialog({
         width: 390,
         modal: true,
@@ -660,6 +671,27 @@ jQuery(document).ready(function($) {
                 success: function (response) {
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     $("#curtain-order-item-dialog").dialog('open');
+                    activate_curtain_category_id_data(order_item_id);                            
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+        $('[id^="view-qr-code-"]').on("click", function () {
+            const order_item_id = this.id.substring(13);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                },
+                success: function (response) {
+                    $('#qr-code-serial-no-dialog').html(response.qr_code_serial_no);
+                    $("#qr-code-serial-no-dialog").dialog('open');
                     activate_curtain_category_id_data(order_item_id);                            
                 },
                 error: function(error){

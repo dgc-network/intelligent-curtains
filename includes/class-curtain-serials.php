@@ -104,7 +104,7 @@ if (!class_exists('serial_number')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="new-serial-number" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <div id="disabled-new-serial-number" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <div class="pagination">
                     <?php
                     // Display pagination links
