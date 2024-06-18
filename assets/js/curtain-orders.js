@@ -182,6 +182,7 @@ jQuery(document).ready(function($) {
                         'action': 'set_order_status_dialog_data',
                         '_order_status_id': $("#order-status-id").val(),
                         '_status_action': $("#status-action").val(),
+                        '_status_color': $("#status-color").val(),
                         '_status_code': $("#status-code").val(),
                         '_next_status': $("#next-status").val(),
                         '_status_title': $("#status-title").val(),
