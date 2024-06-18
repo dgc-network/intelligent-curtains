@@ -427,7 +427,7 @@ jQuery(document).ready(function($) {
                     const taobaoOrderNumber = $("#taobao-order-number").val();
                     const taobaoShipNumber = $("#taobao-ship-number").val();
                     const curtainShipNumber = $("#curtain-ship-number").val();
-                    const customerOrderFreight = $("#customer-order-freight").val();
+                    const customerOrderFreight = $("#curtain-ship-date").val();
 
                     // Validate taobao order number
                     if (statusCode=='order01' && !taobaoOrderNumber) {
@@ -457,7 +457,7 @@ jQuery(document).ready(function($) {
                     ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
                     ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
                     ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
-                    ajaxData['_customer_order_freight'] = $("#customer-order-freight").val();
+                    //ajaxData['_curtain_ship_date'] = $("#curtain-ship-date").val();
             
                     $.ajax({
                         type: 'POST',

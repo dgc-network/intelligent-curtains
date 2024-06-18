@@ -378,7 +378,7 @@ if (!class_exists('curtain_orders')) {
                             <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
-                            <th><?php echo __( '運費', 'your-text-domain' );?></th>
+                            <th><?php echo __( '送貨日期', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -397,8 +397,7 @@ if (!class_exists('curtain_orders')) {
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
                             $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
-                            $customer_order_freight = get_post_meta(get_the_ID(), 'customer_order_freight', true);
-                            $customer_order_freight = ($customer_order_freight) ? $customer_order_freight : 0;
+                            $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
@@ -406,7 +405,7 @@ if (!class_exists('curtain_orders')) {
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_ship_number);?></td>
-                                <td style="text-align:center;"><?php echo number_format_i18n($customer_order_freight);?></td>
+                                <td style="text-align:center;"><?php echo wp_date(get_option('date_format'), $curtain_ship_date);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -514,7 +513,7 @@ if (!class_exists('curtain_orders')) {
             $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
             $taobao_ship_number = get_post_meta($customer_order_id, 'taobao_ship_number', true);
             $curtain_ship_number = get_post_meta($customer_order_id, 'curtain_ship_number', true);
-            $customer_order_freight = get_post_meta($customer_order_id, 'customer_order_freight', true);
+            $curtain_ship_date = get_post_meta($customer_order_id, 'curtain_ship_date', true);
 
             $status_action = get_post_meta($customer_order_status, 'status_action', true);
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
@@ -539,15 +538,15 @@ if (!class_exists('curtain_orders')) {
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
-                <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號及運費?>
+                <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="customer-order-freight"><?php echo __( '運費', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-freight" value="<?php echo esc_attr($customer_order_freight);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'your-text-domain' );?></label>
+                    <input type="text" id="curtain-ship-date" value="<?php echo esc_attr(wp_date(get_option('date_format'), $curtain_ship_date));?>" class="text ui-widget-content ui-corner-all" disabled />
                 <?php } else {?>
                     <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
@@ -871,9 +870,10 @@ if (!class_exists('curtain_orders')) {
                 }
                 if ($current_status_code=="order03") {
                     $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
-                    $customer_order_freight = sanitize_text_field($_POST['_customer_order_freight']);
                     update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
-                    update_post_meta( $customer_order_id, 'customer_order_freight', $customer_order_freight);
+                    //$curtain_ship_date = sanitize_text_field($_POST['_curtain_ship_date']);
+                    //update_post_meta( $customer_order_id, 'curtain_ship_date', $curtain_ship_date);
+                    update_post_meta( $customer_order_id, 'curtain_ship_date', time());
                 }
 
             }
