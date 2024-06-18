@@ -320,7 +320,6 @@ jQuery(document).ready(function($) {
             success: function (response) {
 
                 $('#result-container').html(response.html_contain);
-                activate_customer_order_dialog_data();
 
                 $(".datepicker").datepicker({
                     onSelect: function(dateText, inst) {
@@ -476,6 +475,7 @@ jQuery(document).ready(function($) {
                 });
                         
                 activate_order_item_list_data(customer_order_id);
+                activate_customer_order_dialog_data();
 
             },
             error: function (error) {
@@ -644,6 +644,10 @@ jQuery(document).ready(function($) {
 
     activate_order_item_list_data();
     function activate_order_item_list_data(customer_order_id) {
+        $('#qrcode').qrcode({
+            text: $("#qrcode_content").text()
+        });
+        
         $("#new-order-item").on("click", function() {
             $.ajax({
                 url: ajax_object.ajax_url,
