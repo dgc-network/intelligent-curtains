@@ -227,6 +227,7 @@ if (!class_exists('serial_number')) {
                 }
             
                 wp_reset_postdata();
+                ?><script>window.location.replace("https://aihome.tw/serials/");</script><?php
 
                 // Get the current URL without any query parameters
                 $current_url = remove_query_arg( array_keys( $_GET ) );
@@ -253,6 +254,7 @@ if (!class_exists('serial_number')) {
                     update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
                     update_post_meta( $post_id, 'curtain_model_id', $result->curtain_model_id );
                 }
+                ?><script>window.location.replace("https://aihome.tw/serials/");</script><?php
                                 
                 // Get the current URL without any query parameters
                 $current_url = remove_query_arg( array_keys( $_GET ) );
