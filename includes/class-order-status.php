@@ -67,6 +67,7 @@ if (!class_exists('order_status')) {
                             <th><?php echo __( 'Title', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Description', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Action', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Color', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Next', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
@@ -85,6 +86,7 @@ if (!class_exists('order_status')) {
                             $status_title = get_the_title();
                             $status_description = get_the_content();
                             $status_action = get_post_meta(get_the_ID(), 'status_action', true);
+                            $status_color = get_post_meta(get_the_ID(), 'status_color', true);
                             $next_status = get_post_meta(get_the_ID(), 'next_status', true);
                             ?>
                             <tr id="edit-order-status-<?php the_ID();?>">
@@ -92,6 +94,7 @@ if (!class_exists('order_status')) {
                                 <td style="text-align:center;"><?php echo esc_html($status_title);?></td>
                                 <td><?php echo esc_html($status_description);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($status_action);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($status_color);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($next_status);?></td>
                             </tr>
                             <?php
@@ -139,6 +142,7 @@ if (!class_exists('order_status')) {
             $status_title = get_the_title($order_status_id);
             $status_description = get_post_field('post_content', $order_status_id);
             $status_action = get_post_meta($order_status_id, 'status_action', true);
+            $status_color = get_post_meta($order_status_id, 'status_color', true);
             $next_status = get_post_meta($order_status_id, 'next_status', true);
             ob_start();
             ?>
@@ -152,6 +156,8 @@ if (!class_exists('order_status')) {
                 <textarea id="status-description" rows="3" style="width:100%;"><?php echo $status_description;?></textarea>
                 <label for="status-action"><?php echo __( '執行', 'your-text-domain' );?></label>
                 <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="status-color"><?php echo __( '顏色', 'your-text-domain' );?></label>
+                <input type="text" id="status-color" value="<?php echo esc_html($status_color);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="next-status"><?php echo __( 'Next代碼', 'your-text-domain' );?></label>
                 <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
@@ -174,6 +180,7 @@ if (!class_exists('order_status')) {
                 $order_status_id = sanitize_text_field($_POST['_order_status_id']);
                 update_post_meta( $order_status_id, 'status_code', sanitize_text_field($_POST['_status_code']));
                 update_post_meta( $order_status_id, 'status_action', sanitize_text_field($_POST['_status_action']));
+                update_post_meta( $order_status_id, 'status_color', sanitize_text_field($_POST['_status_color']));
                 update_post_meta( $order_status_id, 'next_status', sanitize_text_field($_POST['_next_status']));
                 // Update the post title
                 if (isset($_POST['_status_title'])) {
