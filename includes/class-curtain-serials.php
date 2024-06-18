@@ -210,6 +210,24 @@ if (!class_exists('serial_number')) {
         function do_migration() {
             // delete serial-number post 2024-6-18
             if (isset($_GET['_delete_serial_number_post'])) {
+
+                if ( ! is_admin() ) {
+                    return;
+                }
+            
+                $query = new WP_Query( array(
+                    'post_type' => 'serial-number',
+                    'posts_per_page' => -1,
+                    'post_status' => 'any'
+                ) );
+            
+                while ( $query->have_posts() ) {
+                    $query->the_post();
+                    wp_delete_post( get_the_ID(), true );
+                }
+            
+                wp_reset_postdata();
+/*                
                 // Get all serial-number posts
                 $args = array(
                     'post_type'      => 'serial-number',
@@ -221,7 +239,7 @@ if (!class_exists('serial_number')) {
                 foreach ($posts as $post_id) {
                     wp_delete_post($post_id, true); // Set the second parameter to true to force delete
                 }
-                                
+*/                                
                 // Get the current URL without any query parameters
                 $current_url = remove_query_arg( array_keys( $_GET ) );
                 // Redirect to the URL without any query parameters
