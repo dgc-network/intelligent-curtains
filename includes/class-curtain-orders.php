@@ -896,7 +896,7 @@ if (!class_exists('curtain_orders')) {
                             <th><?php echo __( 'Amount', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
-                    <tbody id="sortable-doc-field-list">
+                    <tbody>
                         <?php
                         $query = $this->retrieve_order_item_data($customer_order_id);
                         if ($query->have_posts()) {

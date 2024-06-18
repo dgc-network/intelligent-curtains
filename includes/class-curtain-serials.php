@@ -37,6 +37,7 @@ if (!class_exists('serial_number')) {
 
         function display_shortcode() {
             if (current_user_can('administrator')) {
+                $this->do_migration();
                 $this->display_serial_number_list();
             } else {
                 ?>
@@ -206,6 +207,25 @@ if (!class_exists('serial_number')) {
             wp_send_json($response);
         }
 
+        function do_migration() {
+            // serial_number_table_to_post migration 2024-6-18
+            if (isset($_GET['_migrate_serial_number_table_to_post'])) {
+                global $wpdb;
+                $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
+                foreach ( $results as $result ) {
+                    $current_user_id = get_current_user_id();
+                    $new_post = array(
+                        'post_title'    => $result->qr_code_serial_no,
+                        'post_content'  => $result->specification,
+                        'post_status'   => 'publish',
+                        'post_author'   => get_current_user_id(),
+                        'post_type'     => 'serial-number',
+                    );    
+                    $post_id = wp_insert_post($new_post);
+                    update_post_meta( $post_id, 'customer_order_number', $result->customer_order_number );
+                }
+            }
+        }
 
 
 
