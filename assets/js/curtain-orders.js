@@ -321,7 +321,7 @@ jQuery(document).ready(function($) {
 
                 $('#result-container').html(response.html_contain);
                 activate_customer_order_dialog_data();
-                
+
                 $(".datepicker").datepicker({
                     onSelect: function(dateText, inst) {
                         $(this).val(dateText);
@@ -642,6 +642,7 @@ jQuery(document).ready(function($) {
         });
     }
 
+    activate_order_item_list_data();
     function activate_order_item_list_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
             $.ajax({
