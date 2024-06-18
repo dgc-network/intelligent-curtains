@@ -955,7 +955,7 @@ if (!class_exists('curtain_orders')) {
                                 $customer_order_amount += $order_item_amount;
 
                                 if ($customer_order_category<=1 || $is_admin==1) echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
-                                else echo '<tr>';                                
+                                else echo '<tr id="view-qr-code-'.esc_attr(get_the_ID()).'">';
                                 echo '<td style="text-align:center;">'.esc_html($curtain_category_title).'</td>';
                                 echo '<td>'.$order_item_description.'</td>';
                                 echo '<td style="text-align:center;">'.esc_html($order_item_qty).'</td>';
