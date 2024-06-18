@@ -84,7 +84,8 @@ if (!class_exists('serial_number')) {
                         while ($query->have_posts()) : $query->the_post();
                             $qr_code_serial_no = get_the_title();
                             $curtain_specification = get_the_content();
-                            $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                            //$curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                            $curtain_model_id = get_post_meta(get_the_ID(), 'customer_order_number', true);
                             $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
                             $curtain_user_id = get_post_meta(get_the_ID(), 'curtain_user_id', true);
                             ?>
