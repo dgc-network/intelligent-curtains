@@ -1111,13 +1111,60 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
-        function display_qr_code_dialog($order_item_id=false) {
-            $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
+        function display_qr_code_dialog($order_item_id = false) {
+            if (!$order_item_id) {
+                return '<p>Order item ID is required.</p>';
+            }
+        
             ob_start();
-
-            // Display QR code
-            //$query = $this->retrieve_order_item_data($customer_order_id);
-            $query = $this->retrieve_serial_number_data($order_item_id);
+        
+            $args = array(
+                'post_type'      => 'serial-number',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array(
+                        'key'   => 'order_item_id',
+                        'value' => $order_item_id,
+                    ),
+                ),
+            );        
+            $query = new WP_Query($args);
+        
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
+                    ?>
+                    <div id="qrcode">
+                        <div id="qrcode_content"><?php echo esc_url(get_option('Service') . '?serial_no=' . $qr_code_serial_no); ?></div>
+                    </div>
+                    <div style="display:flex;">
+                        <?php echo esc_html($qr_code_serial_no); ?>
+                    </div>
+                    <?php
+                }
+                wp_reset_postdata();
+            } else {
+                echo '<p>No serial numbers found for this order item ID.</p>';
+            }
+        
+            return ob_get_clean();
+        }
+/*        
+        function display_qr_code_dialog($order_item_id=false) {
+            ob_start();
+            $args = array(
+                'post_type'      => 'serial-number',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array(
+                        'key'   => 'order_item_id',
+                        'value' => $order_item_id,
+                    ),
+                ),
+            );        
+            $query = new WP_Query($args);
+            //$query = $this->retrieve_serial_number_data($order_item_id);
             if ($query->have_posts()) {
                 while ($query->have_posts()) : $query->the_post();
                     $qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
@@ -1167,11 +1214,11 @@ if (!class_exists('curtain_orders')) {
             $output .= '</div>';
             $output .= '<p><h1 style="margin-left: 25px;">'.wp_date( get_option('date_format'), $row->create_timestamp ).'</h1></p>';
             $output .= '</div>';                
-*/
+
             $html = ob_get_clean();
             return $html;
         }
-
+*/
         function del_order_item_dialog_data() {
             $response = array();
             if( isset($_POST['_order_item_id']) ) {
@@ -1188,7 +1235,7 @@ if (!class_exists('curtain_orders')) {
             $order_item_id = sanitize_text_field($_POST['_order_item_id']);
             $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
             $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
-            //$response['qr_code_dialog'] = $this->display_qr_code_dialog($order_item_id);
+            $response['qr_code_dialog'] = $this->display_qr_code_dialog($order_item_id);
             wp_send_json($response);
         }
 
