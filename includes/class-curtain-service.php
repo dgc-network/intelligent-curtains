@@ -389,8 +389,7 @@ if (!class_exists('curtain_service')) {
                         <p>並請在聊天室中, 輸入「我要註冊」或「我要登錄」,啟動註冊/登入作業。</p>
                     </div>
                     <?php
-                    $html = ob_get_clean();
-                    return $html;
+                    return ob_get_clean();
                 }
             }
         }

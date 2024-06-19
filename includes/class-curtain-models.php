@@ -166,8 +166,7 @@ if (!class_exists('curtain_models')) {
                 <input type="text" id="curtain-model-vendor" value="<?php echo esc_html($curtain_model_vendor);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_curtain_model_dialog_data() {

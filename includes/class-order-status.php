@@ -162,8 +162,7 @@ if (!class_exists('order_status')) {
                 <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_order_status_dialog_data() {

@@ -171,8 +171,7 @@ if (!class_exists('curtain_agents')) {
                 <input type="text" id="curtain-agent-address" value="<?php echo esc_html($curtain_agent_address);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_curtain_agent_dialog_data() {

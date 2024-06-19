@@ -160,8 +160,7 @@ if (!class_exists('curtain_categories')) {
                 <input type="checkbox" id="allow-parts" style="display:inline-block; width:5%; " /> To be the parts for Sub Items.<br>
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_curtain_category_dialog_data() {

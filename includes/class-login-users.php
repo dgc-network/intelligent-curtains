@@ -131,8 +131,7 @@ if (!class_exists('login_users')) {
                 <label for="is-warehouse-personnel"><?php echo __( '倉管人員', 'your-text-domain' );?></label>
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_login_user_dialog_data() {

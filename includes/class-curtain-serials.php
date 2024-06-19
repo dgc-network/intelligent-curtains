@@ -156,8 +156,7 @@ if (!class_exists('serial_number')) {
                 <input type="text" id="customer-order-number" value="<?php echo esc_html($customer_order_number);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_serial_number_dialog_data() {

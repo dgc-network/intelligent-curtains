@@ -168,8 +168,7 @@ if (!class_exists('curtain_specifications')) {
                 <input type="text" id="curtain-specification-price" value="<?php echo esc_html($curtain_specification_price);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
-            $html = ob_get_clean();
-            return $html;        
+            return ob_get_clean();
         }
 
         function get_curtain_specification_dialog_data() {
