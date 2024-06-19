@@ -113,6 +113,7 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_shortcode() {
+            if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
             // Check if the user is logged in
             if (is_user_logged_in()) {
                 $this->data_migration();
@@ -121,7 +122,6 @@ if (!class_exists('curtain_orders')) {
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
                 }
-                if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
 
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
@@ -1169,9 +1169,7 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     <div id="qrcode" style="text-align:center;">
                     <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
-                    </div>
-                    <div style="display:flex; text-align:center;">
-                        <?php echo esc_html(get_the_title()); ?>
+                    <div><?php echo esc_html(get_the_title());?></div>
                     </div>
                     <?php
                 }
