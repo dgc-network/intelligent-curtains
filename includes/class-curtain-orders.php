@@ -1096,17 +1096,45 @@ if (!class_exists('curtain_orders')) {
             return $html;
         }
         
+        function retrieve_serial_number_data($order_item_id = false) {
+            $args = array(
+                'post_type'      => 'serial-number',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    array(
+                        'key'   => 'order_item_id',
+                        'value' => $order_item_id,
+                    ),
+                ),
+            );        
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
         function display_qr_code_dialog($order_item_id=false) {
             $print_me = do_shortcode('[print-me target=".print-me-'.$_id.'"/]');
             ob_start();
-            ?>
-            <div id="qrcode">
-                <div id="qrcode_content"><?php echo get_option('Service').'?serial_no='.$_id;?></div>
-            </div>
-            <div style="display:flex;">
-                <?php echo $print_me;?><span><?php echo $_id;?></span>
-            </div>
-            <?php
+
+            // Display QR code
+            //$query = $this->retrieve_order_item_data($customer_order_id);
+            $query = $this->retrieve_serial_number_data($order_item_id);
+            if ($query->have_posts()) {
+                while ($query->have_posts()) : $query->the_post();
+                    $qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
+                    ?>
+                    <div id="qrcode">
+                        <div id="qrcode_content"><?php echo get_option('Service').'?serial_no='.$qr_code_serial_no;?></div>
+                    </div>
+                    <div style="display:flex;">
+                        <span><?php echo $qr_code_serial_no;?></span>
+                    </div>
+                    <?php
+        
+                endwhile;
+                wp_reset_postdata();
+            }
+
+            
 /*            
             $output .= '<div id="dialog" title="QR Code">';
             $output .= '';
