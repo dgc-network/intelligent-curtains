@@ -3,8 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once plugin_dir_path( __DIR__ ).'line-bot-api.php';
-require_once plugin_dir_path( __DIR__ ).'open-ai-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'line-bot-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'open-ai-api.php';
 
 function web_service_register_settings() {
     // Register Line bot section
