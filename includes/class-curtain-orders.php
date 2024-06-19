@@ -1188,7 +1188,7 @@ if (!class_exists('curtain_orders')) {
             $order_item_id = sanitize_text_field($_POST['_order_item_id']);
             $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
             $response['html_contain'] = $this->display_order_item_dialog($order_item_id, $curtain_category_id);
-            $response['qr_code_dialog'] = $this->display_qr_code_dialog($order_item_id);
+            //$response['qr_code_dialog'] = $this->display_qr_code_dialog($order_item_id);
             wp_send_json($response);
         }
 
