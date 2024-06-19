@@ -510,11 +510,6 @@ jQuery(document).ready(function($) {
             width: 390,
             modal: true,
             autoOpen: false,
-            buttons: {
-                "Cancel": function() {
-                    $("#qr-code-dialog").dialog('close');
-                }
-            }
         });
     
         $("#new-order-item-dialog").dialog({

@@ -64,6 +64,54 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
+        function display_customer_service($qr_code_serial_no) {
+            $serial_number_post = get_page_by_title($qr_code_serial_no);
+            $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
+            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+            ?>
+            <div style="text-align:center;">
+                <h3>Hi, <?php echo $customer_name;?></h3>
+                <div>感謝您選購我們的電動窗簾</div>
+            </div>
+            <?php
+/*
+            $output = '';
+            //$qr_code_serial_no = $_GET['serial_no'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
+            /** incorrect QR-code then display the admin link 
+            if (is_null($row) || !empty($wpdb->last_error)) {                        
+                $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
+
+            /** registration for QR-code 
+            } else {                        
+                $output .= 'Hi, '.$user->display_name.'<br>';
+                $output .= '感謝您選購我們的電動窗簾<br>';
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
+                if (!(is_null($model) || !empty($wpdb->last_error))) {
+                    $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
+                }
+                $serial_number->update_serial_number(
+                    array('curtain_user_id'=>intval($user->ID)),
+                    array('qr_code_serial_no'=>$qr_code_serial_no)
+                );
+
+                $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                $output .= '<fieldset>';
+                $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
+                $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
+                $output .= '<input type="hidden" name="_chat_user_id" value="'.$user->ID.'" />';
+                $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
+                $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
+                $output .= '</fieldset>';
+                $output .= '</form>';
+
+            }
+            $output .= '</div>';
+            return $output;        
+*/
+        }
+
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
@@ -72,7 +120,9 @@ if (!class_exists('curtain_orders')) {
                 // Start point
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
-                }    
+                }
+                if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
+
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
                 $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
@@ -1115,13 +1165,13 @@ if (!class_exists('curtain_orders')) {
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
                     $query->the_post();
-                    $qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
+                    //$qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
                     ?>
-                    <div id="qrcode">
-                        <div id="qrcode_content"><?php echo esc_url(get_option('Service') . '?serial_no=' . $qr_code_serial_no); ?></div>
+                    <div id="qrcode" style="text-align:center;">
+                    <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
                     </div>
-                    <div style="display:flex;">
-                        <?php echo esc_html($qr_code_serial_no); ?>
+                    <div style="display:flex; text-align:center;">
+                        <?php echo esc_html(get_the_title()); ?>
                     </div>
                     <?php
                 }
