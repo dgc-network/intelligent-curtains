@@ -1165,7 +1165,6 @@ if (!class_exists('curtain_orders')) {
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
                     $query->the_post();
-                    //$qr_code_serial_no = get_post_meta(get_the_ID(), 'qr_code_serial_no', true);
                     ?>
                     <div id="qrcode" style="text-align:center;">
                     <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
