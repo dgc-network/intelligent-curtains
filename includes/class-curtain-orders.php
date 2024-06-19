@@ -1126,7 +1126,7 @@ if (!class_exists('curtain_orders')) {
                         <div id="qrcode_content"><?php echo get_option('Service').'?serial_no='.$qr_code_serial_no;?></div>
                     </div>
                     <div style="display:flex;">
-                        <span><?php echo $qr_code_serial_no;?></span>
+                        <?php echo $qr_code_serial_no;?>
                     </div>
                     <?php
         
