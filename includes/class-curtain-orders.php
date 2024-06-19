@@ -64,7 +64,7 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
-        function display_customer_service($qr_code_serial_no) {
+        function display_customer_service($qr_code_serial_no=false) {
             $serial_number_post = get_page_by_title($qr_code_serial_no);
             $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
             $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
@@ -113,7 +113,6 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_shortcode() {
-            if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
             // Check if the user is logged in
             if (is_user_logged_in()) {
                 $this->data_migration();
@@ -122,6 +121,7 @@ if (!class_exists('curtain_orders')) {
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
                 }
+                if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
 
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
@@ -162,7 +162,8 @@ if (!class_exists('curtain_orders')) {
                 }
 
             } else {
-                user_did_not_login_yet();
+                if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
+                else user_did_not_login_yet();
             }        
         }
 
