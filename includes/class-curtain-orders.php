@@ -842,11 +842,11 @@ if (!class_exists('curtain_orders')) {
         function get_account_receivable_detail_data() {
             $response = array();
             //$customer_order_ids = sanitize_text_field($_POST['_customer_order_ids']);
-            $response['html_contain'] = $this->print_account_receivable_dialog($_POST['_customer_order_ids']);
+            $response['html_contain'] = $this->print_account_receivable_detail_data($_POST['_customer_order_ids']);
             wp_send_json($response);
         }
 
-        function print_account_receivable_data($customer_order_ids=array()) {
+        function print_account_receivable_detail_data($customer_order_ids=array()) {
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             ob_start();
