@@ -30,9 +30,10 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
             add_action( 'wp_ajax_nopriv_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
-            add_action( 'wp_ajax_get_account_receivable_data', array( $this, 'get_account_receivable_data' ) );
-            add_action( 'wp_ajax_nopriv_get_account_receivable_data', array( $this, 'get_account_receivable_data' ) );
-    
+            add_action( 'wp_ajax_get_account_receivable_summary_data', array( $this, 'get_account_receivable_summary_data' ) );
+            add_action( 'wp_ajax_nopriv_get_account_receivable_summary_data', array( $this, 'get_account_receivable_summary_data' ) );
+            add_action( 'wp_ajax_get_account_receivable_detail_data', array( $this, 'get_account_receivable_detail_data' ) );
+            add_action( 'wp_ajax_nopriv_get_account_receivable_detail_data', array( $this, 'get_account_receivable_detail_data' ) );    
         }
 
         // Register customer-order post type
@@ -771,6 +772,7 @@ if (!class_exists('curtain_orders')) {
             <table class="ui-widget" style="width:100%;">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th><?php echo __( '訂單號碼', 'your-text-domain' );?></th>
                         <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
                         <th><?php echo __( '金額', 'your-text-domain' );?></th>
@@ -787,21 +789,18 @@ if (!class_exists('curtain_orders')) {
                     'meta_query'     => array(
                         'relation' => 'AND',
                         array(
-                            'relation' => 'AND',
-                            array(
-                                'key'     => 'curtain_agent_id',
-                                'value'   => $curtain_agent_id,
-                                'compare' => '=',
-                            ),
-                            array(
-                                'key'     => 'customer_order_status',
-                                'value'   => $status_id_04,
-                                'compare' => '=',
-                            ),
-                        )
+                            'key'     => 'curtain_agent_id',
+                            'value'   => $curtain_agent_id,
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_04,
+                            'compare' => '=',
+                        ),
                     ),
-                    'orderby'        => 'modified', // Sort by post modified time
-                    'order'          => 'DESC', // Sorting order (descending)
+                    //'orderby'        => 'modified', // Sort by post modified time
+                    //'order'          => 'DESC', // Sorting order (descending)
                 );
     
                 $query = new WP_Query($args);
@@ -815,6 +814,7 @@ if (!class_exists('curtain_orders')) {
                         $sum += $customer_order_amount;
                         ?>
                         <tr>
+                            <td style="text-align:center;"><input type="checkbox" class="customer_order_ids" id="<?php echo esc_html(get_the_ID());?>" checked /></td>
                             <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                             <td style="text-align:center;"><?php echo esc_html($customer_order_date);?></td>
                             <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
@@ -822,7 +822,7 @@ if (!class_exists('curtain_orders')) {
                         <?php
                     endwhile;                    
                     wp_reset_postdata();
-                    ?><tr><td></td><td><?php echo __( '總金額：', 'your-text-domain' );?></td><td><?php echo number_format_i18n($sum);?></td></tr><?php
+                    ?><tr><td></td><td style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?></td><td><?php echo number_format_i18n($sum);?></td></tr><?php
                 endif;
                 ?>
                 </tbody>
@@ -832,11 +832,86 @@ if (!class_exists('curtain_orders')) {
             return ob_get_clean();
         }
 
-        function get_account_receivable_data() {
+        function get_account_receivable_summary_data() {
             $response = array();
             $curtain_agent_id = sanitize_text_field($_POST['_curtain_agent_id']);
             $response['html_contain'] = $this->display_account_receivable_dialog($curtain_agent_id);
             wp_send_json($response);
+        }
+
+        function get_account_receivable_detail_data() {
+            $response = array();
+            //$customer_order_ids = sanitize_text_field($_POST['_customer_order_ids']);
+            $response['html_contain'] = $this->print_account_receivable_dialog($_POST['_customer_order_ids']);
+            wp_send_json($response);
+        }
+
+        function print_account_receivable_data($customer_order_ids=array()) {
+            $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
+            $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+            ob_start();
+            $sum = 0;
+            foreach ($customer_order_ids as $customer_order_id) {
+                $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
+                $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
+                ?>
+                <h2 style="display:inline;"><?php echo __( '訂單號碼', 'your-text-domain' ).$customer_order_number;?></h2>
+                <h2 style="display:inline;"><?php echo __( '訂單日期', 'your-text-domain' ).$customer_order_date;?></h2>
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( 'Item', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Description', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'QTY', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Amount', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    
+                    $args = array(
+                        'post_type'      => 'order-item',
+                        'posts_per_page' => -1,
+                        'meta_query'     => array(
+                            array(
+                                'key'     => 'customer_order_id',
+                                'value'   => $customer_order_id,
+                                'compare' => '=',
+                            ),
+                        ),
+                    );
+        
+                    $query = new WP_Query($args);
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                            $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                            $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                            $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+                            $sum += $customer_order_amount;
+                            ?>
+                            <tr>
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_category_id));?></td>
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_model_id));?></td>
+                                <td style="text-align:center;"><?php echo esc_html($order_item_qty);?></td>
+                                <td style="text-align:center;"><?php echo number_format_i18n($order_item_amount);?></td>
+                            </tr>
+                            <?php
+                        endwhile;                    
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+    
+                <?php
+    
+            }
+            ?><div style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></div><?php
+
+
+            return ob_get_clean();
         }
 
         function get_customer_order_dialog_data() {

@@ -426,7 +426,7 @@ jQuery(document).ready(function($) {
                         url: ajax_object.ajax_url,
                         type: 'post',
                         data: {
-                            action: 'get_account_receivable_data',
+                            action: 'get_account_receivable_summary_data',
                             _curtain_agent_id: curtain_agent_id,
                         },
                         success: function (response) {            
@@ -436,13 +436,36 @@ jQuery(document).ready(function($) {
                     });
                 });
 
-                $("#account-receivable-dialog").dialog({
-                    width: 390,
+                $("#account-receivable-dialog").dialog({                    
+                    width: 500,
                     modal: true,
                     autoOpen: false,
+                    buttons: {
+                        "列印明細": function() {
+                            var checkedIds = [];
+                            $('.customer_order_ids:checked').each(function() {
+                                checkedIds.push(this.id);
+                            });
+
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: ajax_object.ajax_url,
+                                dataType: "json",
+                                data: {
+                                    'action': 'get_account_receivable_detail_data',
+                                    '_customer_order_id': checkedIds,
+                                },
+                                success: function (response) {
+                                    $('#result-container').html(response.html_contain);
+                                },
+                                error: function(error){
+                                    console.error(error);
+                                    alert(error);
+                                }
+                            });
+                        },
+                    }
                 });
-        
-        
 
                 $('[id^="proceed-customer-order-status-"]').on("click", function () {
                     const statusCode = $("#status-code").val();
