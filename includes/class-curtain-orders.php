@@ -606,9 +606,10 @@ if (!class_exists('curtain_orders')) {
                     <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
+                <div id="account-receivable-dialog" title="Account Receivable"></div>
+
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
                 <hr>
-                <div id="account-receivable-dialog" title="Account Receivable"></div>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
