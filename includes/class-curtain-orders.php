@@ -822,7 +822,7 @@ if (!class_exists('curtain_orders')) {
                         <?php
                     endwhile;                    
                     wp_reset_postdata();
-                    ?><tr><td></td><td style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?></td><td><?php echo number_format_i18n($sum);?></td></tr><?php
+                    ?><tr><td></td><td></td><td style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?></td><td><?php echo number_format_i18n($sum);?></td></tr><?php
                 endif;
                 ?>
                 </tbody>
