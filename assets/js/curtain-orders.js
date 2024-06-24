@@ -431,7 +431,7 @@ jQuery(document).ready(function($) {
                         },
                         success: function (response) {            
                             $('#account-receivable-dialog').html(response.html_contain);
-                            $('#account-receivable-dialog').open();
+                            $('#account-receivable-dialog').dialog('open');
                         }
                     });
                 });

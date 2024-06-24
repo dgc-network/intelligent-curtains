@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
                 $('#serial-number-dialog').html(response.html_contain);                
-                $("#serial-number-dialog").dialog('open');                                                    
+                $("#serial-number-dialog").dialog('open');
             },
             error: function (error) {
                 console.error(error);
