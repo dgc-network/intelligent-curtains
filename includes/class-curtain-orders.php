@@ -860,7 +860,7 @@ if (!class_exists('curtain_orders')) {
                 <h2 style="display:inline;"><?php echo __( '訂單號碼：', 'your-text-domain' ).$customer_order_number;?></h2>
                 <h2 style="display:inline;"><?php echo __( '訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
 <?php
-/*
+
 ?>
                 <table class="ui-widget" style="width:100%;">
                     <thead>
@@ -887,7 +887,7 @@ if (!class_exists('curtain_orders')) {
                     );
         
                     $query = new WP_Query($args);
-        
+/*        
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
@@ -906,12 +906,13 @@ if (!class_exists('curtain_orders')) {
                         endwhile;                    
                         wp_reset_postdata();
                     endif;
+*/
                     ?>
                     </tbody>
                 </table>
     
                 <?php
-*/    
+
             }
 
             ?><div style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></div><?php
