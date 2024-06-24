@@ -767,13 +767,13 @@ if (!class_exists('curtain_orders')) {
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             ob_start();
             ?>
-            <h2 style="display:inline;"><?php echo __( '請款列表：', 'your-text-domain' );?></h2>
             <h2 style="display:inline;"><?php echo $curtain_agent_name.'('.$curtain_agent_number.')';?></h2>
             <table class="ui-widget" style="width:100%;">
                 <thead>
                     <tr>
                         <th><?php echo __( '訂單號碼', 'your-text-domain' );?></th>
                         <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
+                        <th><?php echo __( '金額', 'your-text-domain' );?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -807,17 +807,22 @@ if (!class_exists('curtain_orders')) {
                 $query = new WP_Query($args);
     
                 if ($query->have_posts()) :
+                    $sum = 0;
                     while ($query->have_posts()) : $query->the_post();
                         $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
                         $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
+                        $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
+                        $sum += $customer_order_amount;
                         ?>
-                        <tr id="edit-quotation-<?php the_ID();?>">
+                        <tr>
                             <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                             <td style="text-align:center;"><?php echo esc_html($customer_order_date);?></td>
+                            <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
                         </tr>
                         <?php
-                    endwhile;
+                    endwhile;                    
                     wp_reset_postdata();
+                    ?><tr><td></td><td><?php echo __( '總金額：', 'your-text-domain' );?></td><td><?php echo number_format_i18n($sum);?></td></tr><?php
                 endif;
                 ?>
                 </tbody>
