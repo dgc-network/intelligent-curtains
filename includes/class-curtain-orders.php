@@ -632,7 +632,7 @@ if (!class_exists('curtain_orders')) {
                             if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
-                            echo '<input type="button" id="account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }

@@ -420,8 +420,8 @@ jQuery(document).ready(function($) {
                     });
                 });
 
-                $('[id^="account-receivable-"]').on("click", function () {
-                    const curtain_agent_id = this.id.substring(19);
+                $('[id^="display-account-receivable-"]').on("click", function () {
+                    const curtain_agent_id = this.id.substring(27);
                     $.ajax({
                         url: ajax_object.ajax_url,
                         type: 'post',
