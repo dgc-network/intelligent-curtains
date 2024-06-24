@@ -762,9 +762,12 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_account_receivable_dialog($curtain_agent_id=false) {
+            $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
+            $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             ob_start();
             ?>
-            <h2 style="display:inline;"><?php echo __( '請款列表', 'your-text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( '請款列表：', 'your-text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo $curtain_agent_name.'('.$curtain_agent_number.')';?></h2>
             <table class="ui-widget" style="width:100%;">
                 <thead>
                     <tr>

@@ -421,7 +421,7 @@ jQuery(document).ready(function($) {
                 });
 
                 $('[id^="account-receivable-"]').on("click", function () {
-                    const curtain_agent_id = this.id.substring(18);
+                    const curtain_agent_id = this.id.substring(19);
                     $.ajax({
                         url: ajax_object.ajax_url,
                         type: 'post',
