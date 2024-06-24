@@ -851,7 +851,7 @@ if (!class_exists('curtain_orders')) {
             //$curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             ob_start();
             $sum = 0;
-/*            
+
             foreach ($customer_order_ids as $customer_order_id) {
                 $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
                 $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
@@ -909,7 +909,7 @@ if (!class_exists('curtain_orders')) {
                 <?php
     
             }
-*/                
+
             ?><div style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></div><?php
             return ob_get_clean();
         }
