@@ -862,7 +862,7 @@ if (!class_exists('curtain_orders')) {
                 $x=1;
                 ?>
                 <h3 style="display:inline;"><?php echo __( '訂單號碼：', 'your-text-domain' ).$customer_order_number;?></h2>
-                <h3 style="display:inline;"><?php echo __( '訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
+                <h3 style="display:inline;"><?php echo __( '/訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
@@ -925,7 +925,7 @@ if (!class_exists('curtain_orders')) {
                             ?>
                             <tr>
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_category_id));?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_model_description);?></td>
+                                <td style="text-align:center;"><?php echo $curtain_model_description;?></td>
                                 <td style="text-align:center;"><?php echo esc_html($order_item_qty);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($order_item_amount);?></td>
                             </tr>
