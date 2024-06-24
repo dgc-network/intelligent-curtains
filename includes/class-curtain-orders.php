@@ -857,9 +857,7 @@ if (!class_exists('curtain_orders')) {
                     $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
                     $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
                     $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
-                    ?>
-                    <h2 style="display:inline;"><?php echo $curtain_agent_name.'('.$curtain_agent_number.')';?></h2>
-                    <?php
+                    ?><h2><?php echo $curtain_agent_name.'('.$curtain_agent_number.')';?></h2><?php
                 }
                 $x=1;
                 ?>
