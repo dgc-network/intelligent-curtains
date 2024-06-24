@@ -566,7 +566,7 @@ if (!class_exists('curtain_orders')) {
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            ob_start();            
+            ob_start();
             if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
@@ -606,6 +606,7 @@ if (!class_exists('curtain_orders')) {
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
                 <hr>
+                <div id="account-receivable-dialog" title="Account Receivable"></div>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
                         <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
@@ -626,6 +627,8 @@ if (!class_exists('curtain_orders')) {
                             echo '<hr>';
                             if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                            echo '<input type="button" id="account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                         }
@@ -753,6 +756,75 @@ if (!class_exists('curtain_orders')) {
                 //$html = ob_get_clean();
                 $response['html_contain'] = ob_get_clean();
             }
+            wp_send_json($response);
+        }
+
+        function display_account_receivable_dialog($curtain_agent_id=false) {
+            ob_start();
+            ?>
+            <h2 style="display:inline;"><?php echo __( '請款列表', 'your-text-domain' );?></h2>
+            <table class="ui-widget" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th><?php echo __( '訂單號碼', 'your-text-domain' );?></th>
+                        <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                $status_id_04 = $this->get_status_id_by_status_code('order04');
+                $status_id_05 = $this->get_status_id_by_status_code('order05');
+                
+                $args = array(
+                    'post_type'      => 'customer-order',
+                    'posts_per_page' => -1,
+                    'meta_query'     => array(
+                        'relation' => 'AND',
+                        array(
+                            'relation' => 'AND',
+                            array(
+                                'key'     => 'curtain_agent_id',
+                                'value'   => $curtain_agent_id,
+                                'compare' => '=',
+                            ),
+                            array(
+                                'key'     => 'customer_order_status',
+                                'value'   => $status_id_04,
+                                'compare' => '=',
+                            ),
+                        )
+                    ),
+                    'orderby'        => 'modified', // Sort by post modified time
+                    'order'          => 'DESC', // Sorting order (descending)
+                );
+    
+                $query = new WP_Query($args);
+    
+                if ($query->have_posts()) :
+                    while ($query->have_posts()) : $query->the_post();
+                        $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                        $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
+                        ?>
+                        <tr id="edit-quotation-<?php the_ID();?>">
+                            <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                            <td style="text-align:center;"><?php echo esc_html($customer_order_date);?></td>
+                        </tr>
+                        <?php
+                    endwhile;
+                    wp_reset_postdata();
+                endif;
+                ?>
+                </tbody>
+            </table>
+
+            <?php
+            return ob_get_clean();
+        }
+
+        function get_account_receivable_data() {
+            $response = array();
+            $curtain_agent_id = sanitize_text_field($_POST['_curtain_agent_id']);
+            $response['html_contain'] = $this->display_account_receivable_dialog($curtain_agent_id);
             wp_send_json($response);
         }
 

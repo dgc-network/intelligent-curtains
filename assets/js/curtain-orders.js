@@ -418,18 +418,38 @@ jQuery(document).ready(function($) {
                             });                        
                         }
                     });
-
                 });
 
-                $('[id^="proceed-customer-order-status-"]').on("click", function () {
+                $('[id^="account-receivable-"]').on("click", function () {
+                    const curtain_agent_id = this.id.substring(18);
+                    $.ajax({
+                        url: ajax_object.ajax_url,
+                        type: 'post',
+                        data: {
+                            action: 'get_account_receivable_data',
+                            _curtain_agent_id: curtain_agent_id,
+                        },
+                        success: function (response) {            
+                            $('#account-receivable-dialog').html(response.html_contain);
+                            $('#account-receivable-dialog').open();
+                        }
+                    });
+                });
 
+                $("#account-receivable-dialog").dialog({
+                    width: 390,
+                    modal: true,
+                    autoOpen: false,
+                });
+        
+        
+
+                $('[id^="proceed-customer-order-status-"]').on("click", function () {
                     const statusCode = $("#status-code").val();
                     const taobaoOrderNumber = $("#taobao-order-number").val();
                     const taobaoShipNumber = $("#taobao-ship-number").val();
                     const curtainShipNumber = $("#curtain-ship-number").val();
-                    //const customerOrderFreight = $("#curtain-ship-date").val();
 
-                    // Validate taobao order number
                     if (statusCode=='order01' && !taobaoOrderNumber) {
                         alert("Taobao order number cannot be empty!");
                         return; // Stop the process if the value is empty
@@ -442,10 +462,6 @@ jQuery(document).ready(function($) {
                         alert("Curtain ship number cannot be empty!");
                         return; // Stop the process if the value is empty
                     }
-                    //if (statusCode=='order03' && customerOrderFreight==0) {
-                    //    alert("Customer order freight cannot be 0!");
-                    //    return; // Stop the process if the value is empty
-                    //}
 
                     const next_status = this.id.substring(30);
                     const ajaxData = {
@@ -511,7 +527,7 @@ jQuery(document).ready(function($) {
             modal: true,
             autoOpen: false,
         });
-    
+
         $("#new-order-item-dialog").dialog({
             width: 390,
             modal: true,
