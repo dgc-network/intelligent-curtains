@@ -890,11 +890,11 @@ if (!class_exists('curtain_orders')) {
 
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                            $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                            $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                            $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
-                            $sum += $order_item_amount;
+                            //$curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                            //$curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                            //$order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                            //$order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+                            //$sum += $order_item_amount;
                             ?>
                             <tr>
                                 <td style="text-align:center;"><?php //echo esc_html(get_the_title($curtain_category_id));?></td>
