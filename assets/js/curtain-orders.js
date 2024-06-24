@@ -453,7 +453,7 @@ jQuery(document).ready(function($) {
                                 dataType: "json",
                                 data: {
                                     'action': 'get_account_receivable_detail_data',
-                                    '_customer_order_ids': checkedIds,
+                                    //'_customer_order_ids': checkedIds,
                                 },
                                 success: function (response) {
                                     $('#result-container').html(response.html_contain);
