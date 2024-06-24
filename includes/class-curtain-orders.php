@@ -30,6 +30,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
             add_action( 'wp_ajax_nopriv_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
+            add_action( 'wp_ajax_get_account_receivable_data', array( $this, 'get_account_receivable_data' ) );
+            add_action( 'wp_ajax_nopriv_get_account_receivable_data', array( $this, 'get_account_receivable_data' ) );
     
         }
 
