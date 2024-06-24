@@ -855,9 +855,13 @@ if (!class_exists('curtain_orders')) {
             foreach ($customer_order_ids as $customer_order_id) {
                 $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
                 $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
+
                 ?>
                 <h2 style="display:inline;"><?php echo __( '訂單號碼：', 'your-text-domain' ).$customer_order_number;?></h2>
                 <h2 style="display:inline;"><?php echo __( '訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
+<?php
+/*
+?>
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
@@ -907,7 +911,7 @@ if (!class_exists('curtain_orders')) {
                 </table>
     
                 <?php
-    
+*/    
             }
 
             ?><div style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></div><?php
