@@ -899,8 +899,8 @@ if (!class_exists('curtain_orders')) {
                             <tr>
                                 <td style="text-align:center;"><?php //echo esc_html(get_the_title($curtain_category_id));?></td>
                                 <td style="text-align:center;"><?php //echo esc_html(get_the_title($curtain_model_id));?></td>
-                                <td style="text-align:center;"><?php echo esc_html($order_item_qty);?></td>
-                                <td style="text-align:center;"><?php echo number_format_i18n($order_item_amount);?></td>
+                                <td style="text-align:center;"><?php //echo esc_html($order_item_qty);?></td>
+                                <td style="text-align:center;"><?php //echo number_format_i18n($order_item_amount);?></td>
                             </tr>
                             <?php
                         endwhile;                    
