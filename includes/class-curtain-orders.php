@@ -887,7 +887,7 @@ if (!class_exists('curtain_orders')) {
                     );
         
                     $query = new WP_Query($args);
-/*        
+
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
@@ -897,8 +897,8 @@ if (!class_exists('curtain_orders')) {
                             $sum += $order_item_amount;
                             ?>
                             <tr>
-                                <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_category_id));?></td>
-                                <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_model_id));?></td>
+                                <td style="text-align:center;"><?php //echo esc_html(get_the_title($curtain_category_id));?></td>
+                                <td style="text-align:center;"><?php //echo esc_html(get_the_title($curtain_model_id));?></td>
                                 <td style="text-align:center;"><?php echo esc_html($order_item_qty);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($order_item_amount);?></td>
                             </tr>
@@ -906,7 +906,7 @@ if (!class_exists('curtain_orders')) {
                         endwhile;                    
                         wp_reset_postdata();
                     endif;
-*/
+
                     ?>
                     </tbody>
                 </table>
