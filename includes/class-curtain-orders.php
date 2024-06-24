@@ -847,21 +847,24 @@ if (!class_exists('curtain_orders')) {
         }
 
         function print_account_receivable_detail_data($customer_order_ids=array()) {
-            //$curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
-            //$curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             ob_start();
             $sum = 0;
-
+            $x=0;
             foreach ($customer_order_ids as $customer_order_id) {
                 $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
                 $customer_order_date = wp_date(get_option('date_format'), $customer_order_number);
-
+                if ($x==0) {
+                    $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                    $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
+                    $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+                    ?>
+                    <h2 style="display:inline;"><?php echo $curtain_agent_name.'('.$curtain_agent_number.')';?></h2>
+                    <?php
+                }
+                $x=1;
                 ?>
-                <h2 style="display:inline;"><?php echo __( '訂單號碼：', 'your-text-domain' ).$customer_order_number;?></h2>
-                <h2 style="display:inline;"><?php echo __( '訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
-<?php
-
-?>
+                <h3 style="display:inline;"><?php echo __( '訂單號碼：', 'your-text-domain' ).$customer_order_number;?></h2>
+                <h3 style="display:inline;"><?php echo __( '訂單日期：', 'your-text-domain' ).$customer_order_date;?></h2>
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
@@ -891,12 +894,6 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                            //$curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                            //$order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                            //$order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
-                            //if (!$order_item_amount) $order_item_amount = 0;
-                            //$curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
-                            //$curtain_category_title = get_the_title($curtain_category_id);
                             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
                             $is_height = get_post_meta($curtain_category_id, 'is_height', true);
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
@@ -941,7 +938,7 @@ if (!class_exists('curtain_orders')) {
 
             }
 
-            ?><div style="text-align:right;"><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></div><?php
+            ?><div style="text-align:right;"><h3><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></h3></div><?php
             return ob_get_clean();
         }
 
