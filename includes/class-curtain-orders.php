@@ -890,7 +890,7 @@ if (!class_exists('curtain_orders')) {
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
                             $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
-                            $sum += $customer_order_amount;
+                            $sum += $order_item_amount;
                             ?>
                             <tr>
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title($curtain_category_id));?></td>
