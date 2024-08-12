@@ -735,7 +735,8 @@ jQuery(document).ready(function($) {
                     $('#new-order-item-dialog').html(response.html_contain);
                     $('#curtain-order-item-dialog').html(response.html_contain);
                     //activate_order_item_list_data($("#customer-order-id").val());
-                    activate_customer_order_dialog_data(customer_order_id);
+                    //activate_customer_order_dialog_data(customer_order_id);
+                    activate_curtain_category_id_data(order_item_id);
                 },
                 error: function(error){
                     console.error(error);
