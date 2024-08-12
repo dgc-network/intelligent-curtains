@@ -126,6 +126,22 @@ jQuery(document).ready(function($) {
 
 // order-status 2024-6-11 revision
 jQuery(document).ready(function($) {
+    //* Cart Button
+    $('[id^="cart-btn"]').mouseover(function() {
+        $(this).css('cursor', 'pointer');
+        //$(this).css('color', 'cornflowerblue');
+        $(this).css('color', 'red');
+    });
+        
+    $('[id^="cart-btn"]').mouseout(function() {
+        $(this).css('cursor', 'default');
+        $(this).css('color', '');
+    });
+        
+    $('[id^="cart-btn"]').on( "click", function() {
+        window.location.assign("orders")
+    });
+
     $("#search-status").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
@@ -722,7 +738,7 @@ jQuery(document).ready(function($) {
 
     function activate_curtain_category_id_data(order_item_id=false) {
         $("#curtain-category-id").on( "change", function() {
-            customer_order_id = $("#customer-order-id").val();
+            //customer_order_id = $("#customer-order-id").val();
             $.ajax({
                 url: ajax_object.ajax_url,
                 type: 'post',
@@ -732,11 +748,15 @@ jQuery(document).ready(function($) {
                     _curtain_category_id: $(this).val(),
                 },
                 success: function (response) {
-                    $('#new-order-item-dialog').html(response.html_contain);
-                    $('#curtain-order-item-dialog').html(response.html_contain);
+                    if (order_item_id){
+                        $('#curtain-order-item-dialog').html(response.html_contain);
+                        activate_curtain_category_id_data(order_item_id);
+                    } else {
+                        $('#new-order-item-dialog').html(response.html_contain);
+                        activate_curtain_category_id_data();
+                    }
                     //activate_order_item_list_data($("#customer-order-id").val());
                     //activate_customer_order_dialog_data(customer_order_id);
-                    activate_curtain_category_id_data(order_item_id);
                 },
                 error: function(error){
                     console.error(error);
@@ -837,10 +857,10 @@ jQuery(document).ready(function($) {
 */    
 });
 
-
+/*
 jQuery(document).ready(function($) {
 
-    /* Cart Button */
+    //* Cart Button
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
         //$(this).css('color', 'cornflowerblue');
@@ -856,7 +876,7 @@ jQuery(document).ready(function($) {
         window.location.assign("orders")
     });
 
-    /* QR Code Button */
+    //* QR Code Button
     $('[id^="btn-qrcode-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
@@ -864,7 +884,7 @@ jQuery(document).ready(function($) {
         window.location.replace("?_qrcode=" + id);
     });
 
-    /* Delete Customer Order Button */
+    //* Delete Customer Order Button
     $('[id^="btn-customer-order-del-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
@@ -874,7 +894,7 @@ jQuery(document).ready(function($) {
         }        
     });
 
-    /* Print Customer Order Button */
+    //* Print Customer Order Button
     $('[id^="btn-print-customer-order-"]').on( "click", function() {
         id = this.id;
         // strip the first part of the element id to leave the numeric ID
@@ -882,9 +902,7 @@ jQuery(document).ready(function($) {
         window.location.replace("?_print_customer_order=" + id);
     });
 
-    /**
-     * Order Item Dialog and Buttons
-     */
+    // * Order Item Dialog and Buttons
     $('[id^="btn-order-item-del-"]').on( "click", function() {
         id = this.id;
         id = id.substring(19);
@@ -1139,9 +1157,7 @@ jQuery(document).ready(function($) {
         }
     });
     
-    /**
-     * Sub Items Dialog and Buttons
-     */
+    // * Sub Items Dialog and Buttons
     $('[id^="btn-del-sub-item-"]').on( "click", function() {
         id = this.id;
         id = id.substring(17);
@@ -1244,3 +1260,4 @@ jQuery(document).ready(function($) {
 
 });
 
+*/

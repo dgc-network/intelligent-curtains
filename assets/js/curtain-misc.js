@@ -492,9 +492,7 @@ jQuery(document).ready(function($) {
 
 jQuery(document).ready(function($) {
 
-    /**
-     * Category Dialog and Buttons
-     */
+    // * Category Dialog and Buttons
     $('[id^="btn-category"]').on( "click", function() {
         id = this.id;
         id = id.substring(13);
@@ -613,9 +611,7 @@ jQuery(document).ready(function($) {
 
     $("#category-dialog").dialog('close');        
 
-    /**
-     * Agent Dialog and Buttons
-     */
+    // * Agent Dialog and Buttons
     $('[id^="btn-agent"]').on( "click", function() {
         id = this.id;
         id = id.substring(10);
@@ -687,9 +683,7 @@ jQuery(document).ready(function($) {
 
     $("#agent-dialog").dialog('close');        
 
-    /**
-     * Model Dialog and Buttons
-     */
+    // * Model Dialog and Buttons
     $('[id^="btn-model"]').on( "click", function() {
         id = this.id;
         id = id.substring(10);
@@ -759,9 +753,7 @@ jQuery(document).ready(function($) {
 
     $("#model-dialog").dialog('close');        
 
-    /**
-     * Specification Dialog and Buttons
-     */
+    // * Specification Dialog and Buttons
     $('[id^="btn-specification"]').on( "click", function() {
         id = this.id;
         id = id.substring(18);
@@ -831,9 +823,7 @@ jQuery(document).ready(function($) {
 
     $("#specification-dialog").dialog('close');        
 
-    /**
-     * Remote Dialog and Buttons
-     */
+    // * Remote Dialog and Buttons
     $('[id^="btn-remote"]').on( "click", function() {
         id = this.id;
         id = id.substring(11);
