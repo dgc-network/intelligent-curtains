@@ -640,8 +640,8 @@ jQuery(document).ready(function($) {
                             '_customer_order_amount': $("#customer-order-amount").val(),
                         },
                         success: function (response) {
-                            $('#order-item-container').html(response.html_contain);
                             $("#new-order-item-dialog").dialog('close');
+                            $('#order-item-container').html(response.html_contain);
                             //activate_order_item_list_data($("#customer-order-id").val());     
                             activate_customer_order_dialog_data(customer_order_id);
                         },
@@ -682,8 +682,8 @@ jQuery(document).ready(function($) {
                             '_customer_order_amount': $("#customer-order-amount").val(),
                         },
                         success: function (response) {
-                            $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
+                            $('#order-item-container').html(response.html_contain);
                             //activate_order_item_list_data($("#customer-order-id").val());
                             activate_customer_order_dialog_data(customer_order_id);            
                         },
@@ -704,8 +704,8 @@ jQuery(document).ready(function($) {
                                 '_order_item_id': $("#order-item-id").val(),
                             },
                             success: function (response) {
-                                $('#order-item-container').html(response.html_contain);
                                 $("#curtain-order-item-dialog").dialog('close');
+                                $('#order-item-container').html(response.html_contain);
                                 //activate_order_item_list_data($("#customer-order-id").val());
                                 activate_customer_order_dialog_data(customer_order_id);
                             },
