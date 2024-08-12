@@ -68,4 +68,17 @@ tbody tr:hover {
     /* Add more styles as needed */
 }
 
+@media (max-width: 600px) {
+    .ui-dialog {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (min-width: 601px) {
+    .ui-dialog {
+        width: 80% !important;
+        max-width: 800px !important; /* Set a maximum width for desktop */
+    }
+}
 

@@ -514,8 +514,8 @@ jQuery(document).ready(function($) {
                     });    
                 });
                         
-                activate_order_item_list_data(customer_order_id);
-                activate_customer_order_dialog_data();
+                //activate_order_item_list_data(customer_order_id);
+                activate_customer_order_dialog_data(customer_order_id);
 
             },
             error: function (error) {
@@ -545,7 +545,93 @@ jQuery(document).ready(function($) {
         });    
     });
 
-    function activate_customer_order_dialog_data() {
+    function activate_customer_order_dialog_data(customer_order_id) {
+        $("#curtain-category-id").on( "change", function() {
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                    _curtain_category_id: $(this).val(),
+                },
+                success: function (response) {
+                    $('#new-order-item-dialog').html(response.html_contain);
+                    $('#curtain-order-item-dialog').html(response.html_contain);
+                    //activate_order_item_list_data($("#customer-order-id").val());
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+        $("#new-order-item").on("click", function() {
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                },
+                success: function (response) {
+                    $('#new-order-item-dialog').html(response.html_contain);
+                    $("#new-order-item-dialog").dialog('open');
+                    //activate_curtain_category_id_data();
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+        $('[id^="edit-order-item-"]').on("click", function () {
+            const order_item_id = this.id.substring(16);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                },
+                success: function (response) {
+                    $('#curtain-order-item-dialog').html(response.html_contain);
+                    $("#curtain-order-item-dialog").dialog('open');
+                    //activate_curtain_category_id_data(order_item_id);                            
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+        $('[id^="view-qr-code-"]').on("click", function () {
+            const order_item_id = this.id.substring(13);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                },
+                success: function (response) {
+                    $('#qr-code-dialog').html(response.qr_code_dialog);
+                    $("#qr-code-dialog").dialog('open');
+                    //activate_curtain_category_id_data(order_item_id);
+
+                    $('#qrcode').qrcode({
+                        text: $("#qrcode_content").text()
+                    });                                
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
         $("#qr-code-dialog").dialog({
             width: 390,
             modal: true,
@@ -577,8 +663,8 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#new-order-item-dialog").dialog('close');
-                            activate_order_item_list_data($("#customer-order-id").val());
-            
+                            //activate_order_item_list_data($("#customer-order-id").val());     
+                            activate_customer_order_dialog_data(customer_order_id);
                         },
                         error: function(error){
                             console.error(error);
@@ -619,8 +705,8 @@ jQuery(document).ready(function($) {
                         success: function (response) {
                             $('#order-item-container').html(response.html_contain);
                             $("#curtain-order-item-dialog").dialog('close');
-                            activate_order_item_list_data($("#customer-order-id").val());
-            
+                            //activate_order_item_list_data($("#customer-order-id").val());
+                            activate_customer_order_dialog_data(customer_order_id);            
                         },
                         error: function(error){
                             console.error(error);
@@ -641,7 +727,8 @@ jQuery(document).ready(function($) {
                             success: function (response) {
                                 $('#order-item-container').html(response.html_contain);
                                 $("#curtain-order-item-dialog").dialog('close');
-                                activate_order_item_list_data($("#customer-order-id").val());
+                                //activate_order_item_list_data($("#customer-order-id").val());
+                                activate_customer_order_dialog_data(customer_order_id);
                             },
                             error: function(error){
                                 console.error(error);
@@ -653,7 +740,7 @@ jQuery(document).ready(function($) {
             }
         });        
     };
-
+/*
     function activate_curtain_category_id_data(order_item_id=false) {
         $("#curtain-category-id").on( "change", function() {
             $.ajax({
@@ -677,8 +764,29 @@ jQuery(document).ready(function($) {
         });
     }
 
-    activate_order_item_list_data();
+    //activate_order_item_list_data();
     function activate_order_item_list_data(customer_order_id) {
+        $("#curtain-category-id").on( "change", function() {
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                    _curtain_category_id: $(this).val(),
+                },
+                success: function (response) {
+                    $('#new-order-item-dialog').html(response.html_contain);
+                    $('#curtain-order-item-dialog').html(response.html_contain);
+                    activate_order_item_list_data($("#customer-order-id").val());
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
         $("#new-order-item").on("click", function() {
             $.ajax({
                 url: ajax_object.ajax_url,
@@ -744,6 +852,7 @@ jQuery(document).ready(function($) {
             });    
         });
     };
+*/    
 });
 
 
