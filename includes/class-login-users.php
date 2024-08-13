@@ -89,7 +89,7 @@ if (!class_exists('login_users')) {
                                 <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                                 <td><?php echo esc_html($user->user_email);?></td>
                                 <td style="text-align:center;"><input type="checkbox" <?php echo $is_warehouse_personnel_checked;?> /></td>
-                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_fcatory_personnel_checked;?> /></td>
+                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_factory_personnel_checked;?> /></td>
                             </tr>
                             <?php
                         }            
@@ -132,10 +132,14 @@ if (!class_exists('login_users')) {
                 <input type="text" id="display-name" value="<?php echo esc_attr($display_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="user-email"><?php echo __( 'Email', 'your-text-domain' );?></label>
                 <input type="text" id="user-email" value="<?php echo esc_attr($user_email);?>" class="text ui-widget-content ui-corner-all" />
+                <div style="display:flex;">
                 <input type="checkbox" id="is-warehouse-personnel" <?php echo $is_warehouse_personnel_checked;?> />
                 <label for="is-warehouse-personnel"><?php echo __( '倉管人員', 'your-text-domain' );?></label>
+                </div>
+                <div style="display:flex;">
                 <input type="checkbox" id="is-factory-personnel" <?php echo $is_factory_personnel_checked;?> />
                 <label for="is-factory-personnel"><?php echo __( '工廠人員', 'your-text-domain' );?></label>
+                </div>
             </fieldset>
             <?php
             return ob_get_clean();
