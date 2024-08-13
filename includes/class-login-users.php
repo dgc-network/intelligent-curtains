@@ -116,8 +116,8 @@ if (!class_exists('login_users')) {
             <?php
         }
 
-        function display_login_user_dialog($login_user_id=false) {
-            
+        function display_login_user_dialog($login_user_id=false) {            
+            ob_start();
             $user_data = get_userdata($login_user_id);
             $display_name = $user_data->display_name;
             $user_email = $user_data->user_email;
@@ -125,7 +125,6 @@ if (!class_exists('login_users')) {
             $is_warehouse_personnel_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
             $is_factory_personnel = get_user_meta($login_user_id, 'is_factory_personnel', true);
             $is_factory_personnel_checked = ($is_factory_personnel==1) ? 'checked' : '';
-            ob_start();
             ?>
             <fieldset>
                 <input type="hidden" id="login-user-id" value="<?php echo esc_attr($login_user_id);?>" />
