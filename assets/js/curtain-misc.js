@@ -114,6 +114,7 @@ jQuery(document).ready(function($) {
             },
             error: function (error) {
                 console.error(error);
+                alert(error);
             }
         });
     });            
@@ -131,7 +132,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -162,7 +163,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -181,7 +182,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 }
@@ -217,6 +218,7 @@ jQuery(document).ready(function($) {
             },
             error: function (error) {
                 console.error(error);
+                alert(error);
             }
         });
     });            
@@ -234,7 +236,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -263,7 +265,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -282,7 +284,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 }
@@ -318,6 +320,7 @@ jQuery(document).ready(function($) {
             },
             error: function (error) {
                 console.error(error);
+                alert(error);
             }
         });
     });            
@@ -335,7 +338,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -364,7 +367,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -383,7 +386,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 }
@@ -414,6 +417,7 @@ jQuery(document).ready(function($) {
             },
             error: function (error) {
                 console.error(error);
+                alert(error);
             }
         });
     });            
@@ -431,7 +435,7 @@ jQuery(document).ready(function($) {
             },
             error: function(error){
                 console.error(error);                    
-                //alert(error);
+                alert(error);
             }
         });    
     });
@@ -460,7 +464,7 @@ jQuery(document).ready(function($) {
                     },
                     error: function(error){
                         console.error(error);
-                        //alert(error);
+                        alert(error);
                     }
                 });
             },
@@ -479,7 +483,7 @@ jQuery(document).ready(function($) {
                         },
                         error: function(error){
                             console.error(error);
-                            //alert(error);
+                            alert(error);
                         }
                     });
                 }
@@ -539,7 +543,8 @@ jQuery(document).ready(function($) {
                 $("#category-dialog").dialog('open');
             },
             error: function(error){
-                //alert(error);
+                console.error(error);
+                alert(error);
             }
         });
     });
@@ -599,7 +604,8 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        //alert(error);
+                        console.error(error);
+                        alert(error);
                     }
                 });
             },
@@ -634,7 +640,8 @@ jQuery(document).ready(function($) {
                 $("#agent-dialog").dialog('open');
             },
             error: function(error){
-                //alert(error);
+                console.error(error);
+                alert(error);
             }
         });
     });
@@ -671,7 +678,8 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        //alert(error);
+                        console.error(error);
+                        alert(error);
                     }
                 });
             },
@@ -706,7 +714,8 @@ jQuery(document).ready(function($) {
                 $("#model-dialog").dialog('open');
             },
             error: function(error){
-                //alert(error);
+                console.error(error);
+                alert(error);
             }
         });
     });
@@ -741,7 +750,8 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        //alert(error);
+                        console.error(error);
+                        alert(error);
                     }
                 });
             },
@@ -776,7 +786,8 @@ jQuery(document).ready(function($) {
                 $("#specification-dialog").dialog('open');
             },
             error: function(error){
-                //alert(error);
+                console.error(error);
+                alert(error);
             }
         });
     });
@@ -811,7 +822,8 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        //alert(error);
+                        console.error(error);
+                        alert(error);
                     }
                 });
             },
@@ -842,7 +854,8 @@ jQuery(document).ready(function($) {
                 $("#remote-dialog").dialog('open');
             },
             error: function(error){
-                //alert(error);
+                console.error(error);
+                alert(error);
             }
         });
     });
@@ -871,7 +884,8 @@ jQuery(document).ready(function($) {
                         window.location.replace("?_update=");
                     },
                     error: function(error){
-                        //alert(error);
+                        console.error(error);
+                        alert(error);
                     }
                 });
             },

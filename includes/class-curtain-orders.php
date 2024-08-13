@@ -74,45 +74,10 @@ if (!class_exists('curtain_orders')) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             ?>
             <div style="text-align:center;">
-                <h3>Hi, <?php echo $customer_name;?></h3>
-                <div>感謝您選購我們的電動窗簾</div>
+                <h3><?php echo __( 'Hi, ', 'your-text-domain' ).$customer_name;?></h3>
+                <div><?php echo __( '感謝您選購我們的電動窗簾', 'your-text-domain' );?></div>
             </div>
             <?php
-/*
-            $output = '';
-            //$qr_code_serial_no = $_GET['serial_no'];
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            /** incorrect QR-code then display the admin link 
-            if (is_null($row) || !empty($wpdb->last_error)) {                        
-                $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
-
-            /** registration for QR-code 
-            } else {                        
-                $output .= 'Hi, '.$user->display_name.'<br>';
-                $output .= '感謝您選購我們的電動窗簾<br>';
-                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                if (!(is_null($model) || !empty($wpdb->last_error))) {
-                    $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                }
-                $serial_number->update_serial_number(
-                    array('curtain_user_id'=>intval($user->ID)),
-                    array('qr_code_serial_no'=>$qr_code_serial_no)
-                );
-
-                $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                $output .= '<fieldset>';
-                $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
-                $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
-                $output .= '<input type="hidden" name="_chat_user_id" value="'.$user->ID.'" />';
-                $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
-                $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
-                $output .= '</fieldset>';
-                $output .= '</form>';
-
-            }
-            $output .= '</div>';
-            return $output;        
-*/
         }
 
         function display_shortcode() {
@@ -129,7 +94,9 @@ if (!class_exists('curtain_orders')) {
                 $current_user = wp_get_current_user();
                 $current_user_id = get_current_user_id();
                 $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
+                $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
                 if ($is_warehouse_personnel) $this->display_shipping_list();
+                elseif ($is_factory_personnel) $this->display_production_list();
                 else {
                     $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                     if ($curtain_agent_id) {
@@ -532,6 +499,131 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
+
+        function display_production_list() {
+            ?>
+            <div class="ui-widget" id="result-container">
+            <div id="customer-order-title"><h2><?php echo __( 'Production list', 'your-text-domain' );?></h2></div>
+            <fieldset>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div id="customer-order-select">
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="text" id="search-order" style="display:inline" placeholder="Search..." />
+                    </div>
+                </div>
+        
+                <table class="ui-widget" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><?php echo __( '採購單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '送貨日期', 'your-text-domain' );?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Define the custom pagination parameters
+                    $posts_per_page = get_option('operation_row_counts');
+                    $current_page = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_production_list_data($current_page);
+                    $total_posts = $query->found_posts;
+                    $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
+        
+                    if ($query->have_posts()) :
+                        while ($query->have_posts()) : $query->the_post();
+                            $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                            $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
+                            $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
+                            $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
+                            $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
+                            ?>
+                            <tr id="edit-quotation-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_ship_number);?></td>
+                                <td style="text-align:center;"><?php echo wp_date(get_option('date_format'), $curtain_ship_date);?></td>
+                            </tr>
+                            <?php
+                        endwhile;
+                        wp_reset_postdata();
+                    endif;
+                    ?>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <?php
+                    // Display pagination links
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    ?>
+                </div>
+            </fieldset>
+            </div>
+            <?php
+        }
+
+        function retrieve_production_list_data($current_page = 1, $curtain_agent_id=false) {
+            // Define the custom pagination parameters
+            $posts_per_page = get_option('operation_row_counts');
+
+            $status_id_03 = $this->get_status_id_by_status_code('order03');
+            $status_id_04 = $this->get_status_id_by_status_code('order04');
+            $status_id_05 = $this->get_status_id_by_status_code('order05');
+
+            $args = array(
+                'post_type'      => 'customer-order',
+                'posts_per_page' => $posts_per_page,
+                'paged'          => $current_page,
+                'meta_query'     => array(
+                    'relation' => 'AND',
+                    array(
+                        'relation' => 'OR',
+                        //array(
+                        //    'key'     => 'customer_order_status',
+                        //    'value'   => $status_id_03,
+                        //    'compare' => '=',
+                        //),
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_04,
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key'     => 'customer_order_status',
+                            'value'   => $status_id_05,
+                            'compare' => '=',
+                        ),        
+                    )
+                ),
+                'orderby'        => 'modified', // Sort by post modified time
+                'order'          => 'DESC', // Sorting order (descending)
+            );
+
+            // Add meta query for searching across all meta keys
+            $search_query = sanitize_text_field($_GET['_search']);
+            $meta_keys = get_post_type_meta_keys('customer-order');
+            $meta_query_all_keys = array('relation' => 'OR');
+            foreach ($meta_keys as $meta_key) {
+                $meta_query_all_keys[] = array(
+                    'key'     => $meta_key,
+                    'value'   => $search_query,
+                    'compare' => 'LIKE',
+                );
+            }            
+            $args['meta_query'][] = $meta_query_all_keys;
+
+            $query = new WP_Query($args);
+            return $query;
+        }
+        
         function get_status_id_by_status_code($status_code) {
             $args = array(
                 'post_type'  => 'order-status',
@@ -628,6 +720,16 @@ if (!class_exists('curtain_orders')) {
                         $current_user_id = get_current_user_id();
                         $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
                         if (current_user_can('administrator')||$is_warehouse_personnel) {
+                            echo '<hr>';
+                            if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        }
+                        $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
+                        if (current_user_can('administrator')||$is_factory_personnel) {
                             echo '<hr>';
                             if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
                             echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';

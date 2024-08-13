@@ -74,18 +74,22 @@ if (!class_exists('login_users')) {
                                 <th><?php echo __( 'Name', 'your-text-domain' );?></th>
                                 <th><?php echo __( 'Email', 'your-text-domain' );?></th>
                                 <th><?php echo __( '倉管人員', 'your-text-domain' );?></th>
+                                <th><?php echo __( '工廠人員', 'your-text-domain' );?></th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php
                         foreach ($users as $user) {
                             $is_warehouse_personnel = get_user_meta($user->ID, 'is_warehouse_personnel', true);
-                            $is_checked = ($is_warehouse_personnel) ? 'checked' : '';
+                            $is_warehouse_personnel_checked = ($is_warehouse_personnel) ? 'checked' : '';
+                            $is_factory_personnel = get_user_meta($user->ID, 'is_factory_personnel', true);
+                            $is_factory_personnel_checked = ($is_factory_personnel) ? 'checked' : '';
                             ?>
                             <tr id="edit-login-user-<?php echo esc_attr($user->ID);?>">
                                 <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                                 <td><?php echo esc_html($user->user_email);?></td>
-                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_checked;?> /></td>
+                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_warehouse_personnel_checked;?> /></td>
+                                <td style="text-align:center;"><input type="checkbox" <?php echo $is_fcatory_personnel_checked;?> /></td>
                             </tr>
                             <?php
                         }            
@@ -118,7 +122,9 @@ if (!class_exists('login_users')) {
             $display_name = $user_data->display_name;
             $user_email = $user_data->user_email;
             $is_warehouse_personnel = get_user_meta($login_user_id, 'is_warehouse_personnel', true);
-            $is_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
+            $is_warehouse_personnel_checked = ($is_warehouse_personnel==1) ? 'checked' : '';
+            $is_factory_personnel = get_user_meta($login_user_id, 'is_factory_personnel', true);
+            $is_factory_personnel_checked = ($is_factory_personnel==1) ? 'checked' : '';
             ob_start();
             ?>
             <fieldset>
@@ -127,8 +133,10 @@ if (!class_exists('login_users')) {
                 <input type="text" id="display-name" value="<?php echo esc_attr($display_name);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="user-email"><?php echo __( 'Email', 'your-text-domain' );?></label>
                 <input type="text" id="user-email" value="<?php echo esc_attr($user_email);?>" class="text ui-widget-content ui-corner-all" />
-                <input type="checkbox" id="is-warehouse-personnel" <?php echo $is_checked;?> />
+                <input type="checkbox" id="is-warehouse-personnel" <?php echo $is_warehouse_personnel_checked;?> />
                 <label for="is-warehouse-personnel"><?php echo __( '倉管人員', 'your-text-domain' );?></label>
+                <input type="checkbox" id="is-factory-personnel" <?php echo $is_factory_personnel_checked;?> />
+                <label for="is-factory-personnel"><?php echo __( '工廠人員', 'your-text-domain' );?></label>
             </fieldset>
             <?php
             return ob_get_clean();
@@ -149,12 +157,17 @@ if (!class_exists('login_users')) {
             if (isset($_POST['_login_user_id'])) {
                 // Sanitize and assign the user ID
                 $login_user_id = intval($_POST['_login_user_id']);
-        
+
                 // Update user meta data
                 if (isset($_POST['_is_warehouse_personnel'])) {
                     update_user_meta($login_user_id, 'is_warehouse_personnel', sanitize_text_field($_POST['_is_warehouse_personnel']));
                 }
-        
+
+                // Update user meta data
+                if (isset($_POST['_is_factory_personnel'])) {
+                    update_user_meta($login_user_id, 'is_factory_personnel', sanitize_text_field($_POST['_is_factory_personnel']));
+                }
+
                 // Update the user data
                 if (isset($_POST['_user_email']) || isset($_POST['_display_name'])) {
                     $updated_user = array('ID' => $login_user_id);
