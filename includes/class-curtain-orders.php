@@ -1148,6 +1148,8 @@ if (!class_exists('curtain_orders')) {
                 if ($next_status>0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
                     if ($next_status_code=="order01") {
+                        // Transfer the order-item data by vendor, huge efforts
+                        
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
 
                         // Create new serial-number
@@ -1227,7 +1229,6 @@ if (!class_exists('curtain_orders')) {
                     update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
                     update_post_meta( $customer_order_id, 'curtain_ship_date', time());
                 }
-
             }
             wp_send_json($response);
         }
