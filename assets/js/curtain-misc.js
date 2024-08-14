@@ -66,6 +66,8 @@ jQuery(document).ready(function($) {
                         '_curtain_category_id': $("#curtain-category-id").val(),
                         '_product_item_price': $("#product-item-price").val(),
                         '_product_item_vendor': $("#product-item-vendor").val(),
+                        '_is_curtain_model': $('#is-curtain-model').is(":checked") ? 1 : 0,
+                        '_is_specification': $('#is-specification').is(":checked") ? 1 : 0,
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);

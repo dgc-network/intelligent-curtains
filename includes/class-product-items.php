@@ -90,7 +90,7 @@ if (!class_exists('product_items')) {
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
                                 <td><?php echo esc_html($product_item_content);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($product_item_price);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($product_item_vendor);?></td>
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title($product_item_vendor));?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -150,6 +150,10 @@ if (!class_exists('product_items')) {
             $product_item_price = get_post_meta($product_item_id, 'product_item_price', true);
             $product_item_vendor = get_post_meta($product_item_id, 'product_item_vendor', true);
             $curtain_category_id = get_post_meta($product_item_id, 'curtain_category_id', true);
+            $is_curtain_model = get_post_meta($product_item_id, 'is_curtain_model', true);
+            $is_curtain_model_checked = ($is_curtain_model == 1) ? 'checked' : '';
+            $is_specification = get_post_meta($product_item_id, 'is_specification', true);
+            $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
             ob_start();
             ?>
             <fieldset>
@@ -164,6 +168,8 @@ if (!class_exists('product_items')) {
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="product-item-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
                 <select id="product-item-vendor" class="select ui-widget-content ui-corner-all"><?php echo $curtain_agents->select_curtain_agent_options($product_item_vendor);?></select>
+                <input type="checkbox" id="is-curtain-model" style="display:inline-block; width:5%; " <?php echo $is_curtain_model_checked;?> /> Is curtain model.<br>
+                <input type="checkbox" id="is-specification" style="display:inline-block; width:5%; " <?php echo $is_specification_checked;?> /> Is specification.<br>
             </fieldset>
             <?php
             return ob_get_clean();
@@ -188,6 +194,8 @@ if (!class_exists('product_items')) {
                 update_post_meta( $product_item_id, 'curtain_category_id', sanitize_text_field($_POST['_curtain_category_id']));
                 update_post_meta( $product_item_id, 'product_item_price', sanitize_text_field($_POST['_product_item_price']));
                 update_post_meta( $product_item_id, 'product_item_vendor', sanitize_text_field($_POST['_product_item_vendor']));
+                update_post_meta( $product_item_id, 'is_curtain_model', sanitize_text_field($_POST['_is_curtain_model']));
+                update_post_meta( $product_item_id, 'is_specification', sanitize_text_field($_POST['_is_specification']));
                 // Update the post title
                 $updated_post = array(
                     'ID'         => $product_item_id,
