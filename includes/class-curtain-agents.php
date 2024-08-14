@@ -150,11 +150,13 @@ if (!class_exists('curtain_agents')) {
         }
 
         function display_curtain_agent_dialog($curtain_agent_id=false) {            
+            $order_status = new order_status();
             $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
             $curtain_agent_contact = get_post_meta($curtain_agent_id, 'curtain_agent_contact', true);
             $curtain_agent_phone = get_post_meta($curtain_agent_id, 'curtain_agent_phone', true);
             $curtain_agent_address = get_post_meta($curtain_agent_id, 'curtain_agent_address', true);
+            $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
             ob_start();
             ?>
             <fieldset>
@@ -169,6 +171,8 @@ if (!class_exists('curtain_agents')) {
                 <input type="text" id="curtain-agent-phone" value="<?php echo esc_html($curtain_agent_phone);?>" class="text ui-widget-content ui-corner-all" />
                 <label for="curtain-agent-address"><?php echo __( 'Address', 'your-text-domain' );?></label>
                 <input type="text" id="curtain-agent-address" value="<?php echo esc_html($curtain_agent_address);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="curtain-agent-status"><?php echo __( 'Status', 'your-text-domain' );?></label>
+                <select id="curtain-agent-status" class="select ui-widget-content ui-corner-all"><?php echo $order_status->select_order_status_options($curtain_agent_status);?></select>
             </fieldset>
             <?php
             return ob_get_clean();
@@ -195,6 +199,7 @@ if (!class_exists('curtain_agents')) {
                 update_post_meta( $curtain_agent_id, 'curtain_agent_contact', sanitize_text_field($_POST['_curtain_agent_contact']));
                 update_post_meta( $curtain_agent_id, 'curtain_agent_phone', sanitize_text_field($_POST['_curtain_agent_phone']));
                 update_post_meta( $curtain_agent_id, 'curtain_agent_address', sanitize_text_field($_POST['_curtain_agent_address']));
+                update_post_meta( $curtain_agent_id, 'curtain_agent_status', sanitize_text_field($_POST['_curtain_agent_status']));
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(

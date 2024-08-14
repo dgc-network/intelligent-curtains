@@ -458,6 +458,7 @@ jQuery(document).ready(function($) {
                         '_curtain_agent_contact': $("#curtain-agent-contact").val(),
                         '_curtain_agent_phone': $("#curtain-agent-phone").val(),
                         '_curtain_agent_address': $("#curtain-agent-address").val(),
+                        '_curtain_agent_status': $("#curtain-agent-status").val(),
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);

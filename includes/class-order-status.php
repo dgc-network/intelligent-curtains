@@ -212,6 +212,30 @@ if (!class_exists('order_status')) {
             wp_send_json($response);
         }
 
+        function select_order_status_options($selected_option=0) {
+            $args = array(
+                'post_type'      => 'order-status',
+                'posts_per_page' => -1,
+                'meta_key'       => 'status_code', // Meta key for sorting
+                'orderby'        => 'meta_value', // Sort by meta value
+                'order'          => 'ASC', // Sorting order (ascending)
+            );
+            $query = new WP_Query($args);
+
+            $options = '<option value="">Select status</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $status_code = get_post_meta(get_the_ID(), 'status_code', true);
+                $status_title = get_the_title();
+                $status_content = get_the_content();
+                $status_title = $status_content.'('.$status_code.')';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($status_title) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
+        
+
    }
     $order_status = new order_status();
 }
