@@ -75,9 +75,8 @@ if (!class_exists('curtain_orders')) {
                 if ($curtain_agent_id) {
                     $status_id = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                     $status_code = get_post_meta($status_id, 'status_code', true);
-                    if ($status_code=='order04') $this->display_production_list(); 
+                    if ($status_code=='order02') $this->display_production_list(); 
                     elseif ($status_code=='order03') $this->display_shipping_list(); 
-                    //elseif ($status_code=='order02') $this->display_customer_order_list(); 
                     else {
                         if (isset($_GET['_id'])) {
                             echo '<div class="ui-widget" id="result-container">';
@@ -399,8 +398,7 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '採購單號', 'your-text-domain' );?></th>
-                            <th><?php echo __( '日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
                             <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
@@ -426,7 +424,6 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
-                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
@@ -462,11 +459,13 @@ if (!class_exists('curtain_orders')) {
             $status_id_05 = $this->get_status_id_by_status_code('order05');
 
             $args = array(
-                'post_type'      => 'customer-order',
+                //'post_type'      => 'customer-order',
+                'post_type'      => 'production-order',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'AND',
+/*                    
                     array(
                         'relation' => 'OR',
                         array(
@@ -485,6 +484,7 @@ if (!class_exists('curtain_orders')) {
                             'compare' => '=',
                         ),        
                     )
+*/                        
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
@@ -492,7 +492,7 @@ if (!class_exists('curtain_orders')) {
 
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
-            $meta_keys = get_post_type_meta_keys('customer-order');
+            $meta_keys = get_post_type_meta_keys('production-order');
             $meta_query_all_keys = array('relation' => 'OR');
             foreach ($meta_keys as $meta_key) {
                 $meta_query_all_keys[] = array(
@@ -505,8 +505,7 @@ if (!class_exists('curtain_orders')) {
 
             $query = new WP_Query($args);
             return $query;
-        }
-        
+        }        
 
         function display_production_list() {
             ?>
