@@ -26,7 +26,7 @@ if (!class_exists('product_items')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'product-item', $args );
         }
