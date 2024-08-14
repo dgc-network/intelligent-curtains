@@ -1,3 +1,105 @@
+// product-item 2024-8-14 revision
+jQuery(document).ready(function($) {
+    $("#select-category-in-product").on( "change", function() {
+        window.location.replace("?_category="+$(this).val());
+        $(this).val('');
+    });
+
+    $("#search-product").on( "change", function() {
+        window.location.replace("?_search="+$(this).val());
+        $(this).val('');
+    });
+
+    $('[id^="edit-product-item-"]').on("click", function () {
+        const product_item_id = this.id.substring(18);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_product_item_dialog_data',
+                _product_item_id: product_item_id,                
+            },
+            success: function (response) {
+                $('#product-item-dialog').html(response.html_contain);         
+                $("#product-item-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.error(error);
+                alert(error);
+            }
+        });
+    });            
+
+    $("#new-product_item").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_product_item_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#product-item-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_product_item_dialog_data',
+                        '_product_item_id': $("#product-item-id").val(),
+                        '_product_item_title': $("#product-item-title").val(),
+                        '_product_item_content': $("#product-item-content").val(),
+                        '_curtain_category_id': $("#curtain-category-id").val(),
+                        '_product_item_price': $("#product-item-price").val(),
+                        '_product_item_vendor': $("#product-item-vendor").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_product_item_dialog_data',
+                            '_product_item_id': $("#product-item-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+});
+
 // serial-number 2024-6-18 revision
 jQuery(document).ready(function($) {
     $("#search-serial-number").on( "change", function() {
@@ -494,7 +596,7 @@ jQuery(document).ready(function($) {
 });
 
 
-
+/*
 jQuery(document).ready(function($) {
 
     // * Category Dialog and Buttons
@@ -899,3 +1001,4 @@ jQuery(document).ready(function($) {
     $("#remote-dialog").dialog('close');        
 
 });
+*/
