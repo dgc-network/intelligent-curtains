@@ -83,14 +83,15 @@ if (!class_exists('product_items')) {
                             $product_item_title = get_the_title();
                             $product_item_content = get_post_field('post_content', get_the_ID());
                             $product_item_price = get_post_meta(get_the_ID(), 'product_item_price', true);
-                            $product_item_vendor = get_post_meta(get_the_ID(), 'product_item_vendor', true);
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                            $product_item_vendor = get_post_meta(get_the_ID(), 'product_item_vendor', true);
+                            $curtain_agent_name = get_post_meta($product_item_vendor, 'curtain_agent_name', true);
                             ?>
                             <tr id="edit-product-item-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
                                 <td><?php echo esc_html($product_item_content);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($product_item_price);?></td>
-                                <td style="text-align:center;"><?php echo esc_html(get_the_title($product_item_vendor));?></td>
+                                <td style="text-align:center;"><?php echo esc_html($curtain_agent_name);?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -168,8 +169,8 @@ if (!class_exists('product_items')) {
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="product-item-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
                 <select id="product-item-vendor" class="select ui-widget-content ui-corner-all"><?php echo $curtain_agents->select_curtain_agent_options($product_item_vendor);?></select>
-                <input type="checkbox" id="is-curtain-model" style="display:inline-block; width:5%; " <?php echo $is_curtain_model_checked;?> /> Is curtain model.<br>
-                <input type="checkbox" id="is-specification" style="display:inline-block; width:5%; " <?php echo $is_specification_checked;?> /> Is specification.<br>
+                <input type="checkbox" id="is-curtain-model" class="checkbox ui-widget-content ui-corner-all" style="display:inline-block; width:5%;" <?php echo $is_curtain_model_checked;?> /> Is curtain model.<br>
+                <input type="checkbox" id="is-specification" class="checkbox ui-widget-content ui-corner-all" style="display:inline-block; width:5%;" <?php echo $is_specification_checked;?> /> Is specification.<br>
             </fieldset>
             <?php
             return ob_get_clean();
@@ -252,6 +253,60 @@ if (!class_exists('product_items')) {
         function copy_curtain_model_to_product_item() {
             $args = array(
                 'post_type'      => 'curtain-model',
+                'posts_per_page' => -1,
+            );
+        
+            $query = new WP_Query($args);
+        
+            // Create an array to map old parent_category values to new iso-category IDs
+            $category_mapping = array();
+        
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+        
+                    // Get the current post ID and data
+                    $current_post_id = get_the_ID();
+                    $current_post    = get_post($current_post_id);
+        
+                    // Prepare the new post data
+                    $new_post = array(
+                        'post_title'    => $current_post->post_title,
+                        'post_content'  => $current_post->post_content,
+                        'post_status'   => 'publish', // or $current_post->post_status if you want to keep the same status
+                        'post_author'   => $current_post->post_author,
+                        'post_type'     => 'product-item',
+                        'post_date'     => $current_post->post_date,
+                        'post_date_gmt' => $current_post->post_date_gmt,
+                    );
+        
+                    // Insert the new post and get the new post ID
+                    $new_post_id = wp_insert_post($new_post);
+        
+                    if ($new_post_id) {
+                        // Get all meta data for the current post
+                        $post_meta = get_post_meta($current_post_id);
+        
+                        // Copy each meta field to the new post
+                        foreach ($post_meta as $meta_key => $meta_values) {
+                            foreach ($meta_values as $meta_value) {
+                                add_post_meta($new_post_id, $meta_key, $meta_value);
+                            }
+                        }
+        
+                        // Map the old parent_category value to the new iso-category post ID
+                        $category_mapping[$current_post_id] = $new_post_id;
+                    }
+                }
+        
+                // Reset post data
+                wp_reset_postdata();
+            }
+        }
+
+        function copy_curtain_spec_to_product_item() {
+            $args = array(
+                'post_type'      => 'curtain-spec',
                 'posts_per_page' => -1,
             );
         
