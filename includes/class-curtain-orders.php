@@ -59,19 +59,6 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
-        function display_customer_service($qr_code_serial_no=false) {
-            $serial_number_post = get_page_by_title($qr_code_serial_no);
-            $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
-            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
-            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
-            ?>
-            <div style="text-align:center;">
-                <h3><?php echo __( 'Hi, ', 'your-text-domain' ).$customer_name;?></h3>
-                <div><?php echo __( '感謝您選購我們的電動窗簾', 'your-text-domain' );?></div>
-            </div>
-            <?php
-        }
-
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
@@ -90,15 +77,27 @@ if (!class_exists('curtain_orders')) {
                     $status_code = get_post_meta($status_id, 'status_code', true);
                     if ($status_code=='order04') $this->display_production_list(); 
                     elseif ($status_code=='order03') $this->display_shipping_list(); 
-                    elseif ($status_code=='order02') $this->display_customer_order_list(); 
-                    else $this->display_quotation_list(); 
+                    //elseif ($status_code=='order02') $this->display_customer_order_list(); 
+                    else {
+                        if (isset($_GET['_id'])) {
+                            echo '<div class="ui-widget" id="result-container">';
+                            echo $this->display_customer_order_dialog($_GET['_id']);
+                            echo '</div>';
+                        } else if ($_GET['_category']==2) {
+                            $this->display_customer_order_list();
+                        } else {
+                            $this->display_quotation_list();
+                        }    
+                    }
+                } else {
+                    $this->user_login_agent();
                 }
 
 
 
 
 
-
+/*
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
 
                 $current_user = wp_get_current_user();
@@ -139,6 +138,7 @@ if (!class_exists('curtain_orders')) {
                         <?php
                     }
                 }
+*/
             } else {
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
                 else user_did_not_login_yet();
@@ -1092,6 +1092,39 @@ if (!class_exists('curtain_orders')) {
                 wp_delete_post($customer_order_id, true);
             }
             wp_send_json($response);
+        }
+
+        function display_customer_service($qr_code_serial_no=false) {
+            $serial_number_post = get_page_by_title($qr_code_serial_no);
+            $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
+            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+            ?>
+            <div style="text-align:center;">
+                <h3><?php echo __( 'Hi, ', 'your-text-domain' ).$customer_name;?></h3>
+                <div><?php echo __( '感謝您選購我們的電動窗簾', 'your-text-domain' );?></div>
+            </div>
+            <?php
+        }
+
+        function user_login_agent() {
+            ?>
+            <div style="text-align:center;">
+                <h4><?php echo __( '系統登入/註冊', 'your-text-domain' );?></h4>
+                <fieldset>
+                    <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'your-text-domain' );?></label>
+                    <input type="text" id="agent-number" />
+                    <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'your-text-domain' );?></label>
+                    <input type="password" id="agent-password" />
+                    <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
+                    <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
+                    <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
+                    <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
+                    <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
+                </fieldset>
+            </div>
+            <?php
+
         }
 
         function set_curtain_agent_id() {
