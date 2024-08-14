@@ -105,9 +105,9 @@ if (!class_exists('product_items')) {
                 <div class="pagination">
                     <?php
                     // Display pagination links
-                    if ($current_page > 1) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
+                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
                     echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
                     ?>
                 </div>
             </fieldset>
@@ -295,6 +295,9 @@ if (!class_exists('product_items')) {
                             }
                         }
         
+                        $curtain_model_price = get_post_meta($new_post_id, 'curtain_model_price', true);
+                        update_post_meta($new_post_id, 'product_item_price', $curtain_model_price);
+
                         // Map the old parent_category value to the new iso-category post ID
                         $category_mapping[$current_post_id] = $new_post_id;
                     }
@@ -349,6 +352,9 @@ if (!class_exists('product_items')) {
                             }
                         }
         
+                        $curtain_specification_price = get_post_meta($new_post_id, 'curtain_specification_price', true);
+                        update_post_meta($new_post_id, 'product_item_price', $curtain_specification_price);
+
                         // Map the old parent_category value to the new iso-category post ID
                         $category_mapping[$current_post_id] = $new_post_id;
                     }
