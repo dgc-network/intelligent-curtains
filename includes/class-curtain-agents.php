@@ -210,6 +210,7 @@ if (!class_exists('curtain_agents')) {
                     'post_type'     => 'curtain-agent',
                 );    
                 $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'curtain_agent_number', '-');
             }
             wp_send_json($response);
         }
