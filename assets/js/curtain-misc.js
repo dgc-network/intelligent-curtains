@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
         });
     });            
 
-    $("#new-product_item").on("click", function() {
+    $("#new-product-item").on("click", function() {
         $.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
