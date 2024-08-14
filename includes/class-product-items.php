@@ -34,6 +34,7 @@ if (!class_exists('product_items')) {
         function display_shortcode() {
             if (current_user_can('administrator')) {
                 if (isset($_GET['_copy_curtain_model_to_product_item'])) $this->copy_curtain_model_to_product_item();
+                if (isset($_GET['_copy_curtain_spec_to_product_item'])) $this->copy_curtain_spec_to_product_item();
 
                 $this->display_product_item_list();
             } else {
