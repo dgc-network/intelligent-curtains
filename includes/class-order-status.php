@@ -136,15 +136,14 @@ if (!class_exists('order_status')) {
             return $query;
         }
         
-        function display_order_status_dialog($order_status_id=false) {
-            
+        function display_order_status_dialog($order_status_id=false) {            
+            ob_start();
             $status_code = get_post_meta($order_status_id, 'status_code', true);
             $status_title = get_the_title($order_status_id);
             $status_description = get_post_field('post_content', $order_status_id);
             $status_action = get_post_meta($order_status_id, 'status_action', true);
             $status_color = get_post_meta($order_status_id, 'status_color', true);
             $next_status = get_post_meta($order_status_id, 'next_status', true);
-            ob_start();
             ?>
             <fieldset>
                 <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />

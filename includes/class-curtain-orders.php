@@ -5,9 +5,7 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('curtain_orders')) {
     class curtain_orders {
-
         public function __construct() {
-
             add_shortcode( 'shopping-item-list', array( $this, 'display_shortcode' ) );
             add_action( 'init', array( $this, 'register_customer_order_post_type' ) );
             add_action( 'init', array( $this, 'register_order_item_post_type' ) );
@@ -44,9 +42,6 @@ if (!class_exists('curtain_orders')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'customer-orders'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
                 'show_in_menu'  => false,
             );
             register_post_type( 'customer-order', $args );
@@ -59,9 +54,6 @@ if (!class_exists('curtain_orders')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'order-items'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
                 'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
@@ -83,12 +75,30 @@ if (!class_exists('curtain_orders')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-                $this->data_migration();
+
+                //$this->data_migration();
 
                 // Start point
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
                 }
+
+                $current_user_id = get_current_user_id();
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+                if ($curtain_agent_id) {
+                    $status_id = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
+                    $status_code = get_post_meta($status_id, 'status_code', true);
+                    if ($status_code=='order04') $this->display_production_list(); 
+                    elseif ($status_code=='order03') $this->display_shipping_list(); 
+                    elseif ($status_code=='order02') $this->display_customer_order_list(); 
+                    else $this->display_quotation_list(); 
+                }
+
+
+
+
+
+
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
 
                 $current_user = wp_get_current_user();
@@ -107,7 +117,7 @@ if (!class_exists('curtain_orders')) {
                         } else if ($_GET['_category']==2) {
                             $this->display_customer_order_list();
                         } else {
-                            $this->display_quotation_list();
+                            //$this->display_quotation_list();
                         }    
     
                     } else {
