@@ -976,12 +976,18 @@ if (!class_exists('curtain_orders')) {
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php }?>
 
-                <?php //if ($customer_order_category>1) {?>
-                    <label for="order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                    <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
-                <?php //}?>
+                <label for="order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
+                <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
+
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
 
+                <hr>
+                <div>
+                <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="exit-customer-order-dialog" value="<?php echo __( 'Exit', 'your-text-domain' )?>" style="margin:3px; display:inline;" />
+                </div>
+
+<?php /*
                 <div id="account-receivable-dialog" title="Account Receivable"></div>
 
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
@@ -1014,6 +1020,7 @@ if (!class_exists('curtain_orders')) {
                         }
                     }
                 ?>
+*/?>                
             </fieldset>
             <?php
             return ob_get_clean();
