@@ -201,8 +201,8 @@ if (!class_exists('curtain_orders')) {
                     update_post_meta($new_production_item_id, 'order_item_note', $item['order_item_note']);
                     //update_post_meta($new_production_item_id, 'product_item_vendor', $vendor);
                     
-                    // Update the production_order_id meta for the production-item
-                    update_post_meta($new_production_item_id, 'production_order_id', $new_production_order_id);
+                    // Update the customer_order_id meta for the production-item
+                    update_post_meta($new_production_item_id, 'customer_order_id', $new_production_order_id);
                 }
                 update_post_meta($new_production_order_id, 'order_status', $next_status);
                 update_post_meta($new_production_order_id, 'production_order_number', time());
@@ -839,7 +839,8 @@ if (!class_exists('curtain_orders')) {
                         while ($query->have_posts()) : $query->the_post();
                             $production_order_number = get_post_meta(get_the_ID(), 'production_order_number', true);
                             //$production_order_time = wp_date(get_option('date_format'), $production_order_number);
-                            $vendor_name = get_post_meta(get_the_ID(), 'production_order_vendor', true);
+                            $vendor_id = get_post_meta(get_the_ID(), 'production_order_vendor', true);
+                            $vendor_name = get_post_meta($vendor_id, 'curtain_agent_name', true);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
                             $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
