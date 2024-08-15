@@ -528,6 +528,7 @@ if (!class_exists('curtain_orders')) {
         }
         
         function display_customer_order_dialog($customer_order_id=false, $is_admin=false) {
+            ob_start();
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
@@ -541,7 +542,6 @@ if (!class_exists('curtain_orders')) {
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            ob_start();
             if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
@@ -926,12 +926,12 @@ if (!class_exists('curtain_orders')) {
             $curtain_ship_date = get_post_meta($production_order_id, 'curtain_ship_date', true);
 
             $order_status = get_post_meta($production_order_id, 'order_status', true);
-            $status_action = get_post_meta($customer_order_status, 'status_action', true);
-            $status_code = get_post_meta($customer_order_status, 'status_code', true);
-            $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
+            $status_action = get_post_meta($order_status, 'status_action', true);
+            $status_code = get_post_meta($order_status, 'status_code', true);
+            $next_status_code = get_post_meta($order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
-            else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
+            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($order_status), 'your-text-domain' ).'</h2>';
+            //else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
                 <input type="hidden" id="production-order-id" value="<?php echo esc_attr($production_order_id);?>" />
@@ -964,7 +964,7 @@ if (!class_exists('curtain_orders')) {
 
                 <?php if ($customer_order_category>1) {?>
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
                 <div id="account-receivable-dialog" title="Account Receivable"></div>
@@ -986,8 +986,8 @@ if (!class_exists('curtain_orders')) {
                 <?php 
                     } else {
                         $current_user_id = get_current_user_id();
-                        $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
-                        $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
+                        //$is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
+                        //$is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
                         if (current_user_can('administrator')||$is_warehouse_personnel||$is_factory_personnel) {
                             echo '<hr>';
                             if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
