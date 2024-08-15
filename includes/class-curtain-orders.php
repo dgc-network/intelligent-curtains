@@ -115,10 +115,10 @@ if (!class_exists('curtain_orders')) {
 
                 $next_status = sanitize_text_field($_POST['_next_status']);
                 $next_status_code = get_post_meta($next_status, 'status_code', true);
-                update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
 
                 if ($next_status>0) {
 
+                    update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
                     update_post_meta( $customer_order_id, 'customer_order_category', 2);
 
                     if ($next_status_code=="order01") {            
@@ -259,6 +259,7 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
                             $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
                             update_post_meta($new_production_order_id, 'production_order_number', time());
+                            update_post_meta($new_production_order_id, 'order_status', $next_status);
                             update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
                             update_post_meta($new_production_order_id, 'customer_order_number', $customer_order_number);
                             update_post_meta($new_production_order_id, 'taobao_order_number', $taobao_order_number);
@@ -913,20 +914,22 @@ if (!class_exists('curtain_orders')) {
         }
         
         function display_production_order_dialog($production_order_id=false, $is_admin=false) {
-            $vendor_name = get_post_meta($production_order_id, 'customer_name', true);
+            ob_start();
+            $vendor_id = get_post_meta($production_order_id, 'production_order_vendor', true);
+            $vendor_name = get_post_meta($vendor_id, 'agent_name', true);
+
             $customer_order_remark = get_post_meta($production_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($production_order_id, 'customer_order_category', true);
-            $customer_order_status = get_post_meta($production_order_id, 'customer_order_status', true);
             $taobao_order_number = get_post_meta($production_order_id, 'taobao_order_number', true);
             $taobao_ship_number = get_post_meta($production_order_id, 'taobao_ship_number', true);
             $curtain_ship_number = get_post_meta($production_order_id, 'curtain_ship_number', true);
             $curtain_ship_date = get_post_meta($production_order_id, 'curtain_ship_date', true);
 
+            $order_status = get_post_meta($production_order_id, 'order_status', true);
             $status_action = get_post_meta($customer_order_status, 'status_action', true);
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            ob_start();
             if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
