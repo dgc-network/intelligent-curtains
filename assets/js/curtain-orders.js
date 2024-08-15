@@ -334,6 +334,7 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
                 $('#result-container').html(response.html_contain);
+                activate_customer_order_dialog_data(production_order_id);
             },
             error: function (error) {
                 console.error(error);
@@ -354,200 +355,7 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
 
-                $('#result-container').html(response.html_contain);
-
-                $(".datepicker").datepicker({
-                    onSelect: function(dateText, inst) {
-                        $(this).val(dateText);
-                    }
-                });            
-
-                $("#save-quotation").on("click", function() {
-                    const ajaxData = {
-                        'action': 'set_quotation_dialog_data',
-                    };
-                    ajaxData['_customer_order_id'] = customer_order_id;
-                    ajaxData['_customer_name'] = $("#customer-name").val();
-                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
-                    ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
-                            
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: ajaxData,
-                        success: function (response) {
-                            window.location.replace(window.location.href);
-                        },
-                        error: function(error){
-                            console.error(error);
-                            alert(error);
-                        }
-                    });
-                });
-
-                $("#del-quotation").on("click", function() {
-                    if (window.confirm("Are you sure you want to delete this quotation?")) {
-                        $.ajax({
-                            type: 'POST',
-                            url: ajax_object.ajax_url,
-                            dataType: "json",
-                            data: {
-                                'action': 'del_quotation_dialog_data',
-                                '_customer_order_id': customer_order_id,
-                            },
-                            success: function (response) {
-                                window.location.replace(window.location.href);
-                            },
-                            error: function(error){
-                                console.error(error);
-                                alert(error);
-                            }
-                        });
-                    }
-                });
-
-                $("#exit-customer-order-dialog").on("click", function () {
-                    window.location.replace(window.location.href);
-                });
-
-                $('[id^="cancel-customer-order-"]').on("click", function () {
-                    if (window.confirm("Are you sure you want to cancel this order?")) {
-                        const customer_order_id = this.id.substring(22);
-                        const ajaxData = {
-                            'action': 'proceed_customer_order_status',
-                        };
-                        ajaxData['_next_status'] = 0;
-                        ajaxData['_customer_order_id'] = $("#customer-order-id").val();
-                        ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
-                    
-                        $.ajax({
-                            type: 'POST',
-                            url: ajax_object.ajax_url,
-                            dataType: "json",
-                            data: ajaxData,
-                            success: function (response) {
-                                window.location.replace(window.location.href);
-                            },
-                            error: function(error){
-                                console.error(error);                    
-                                alert(error);
-                            }
-                        });
-                    }
-                });
-
-                $('[id^="print-customer-order-"]').on("click", function () {
-                    const customer_order_id = this.id.substring(21);
-                    $.ajax({
-                        url: ajax_object.ajax_url,
-                        type: 'post',
-                        data: {
-                            action: 'print_customer_order_data',
-                            _customer_order_id: customer_order_id,
-                        },
-                        success: function (response) {            
-                            $('#result-container').html(response.html_contain);
-                            $("#exit-customer-order-printing").on("click", function () {
-                                window.location.replace(window.location.href);
-                            });                        
-                        }
-                    });
-                });
-
-                $('[id^="display-account-receivable-"]').on("click", function () {
-                    const curtain_agent_id = this.id.substring(27);
-                    $.ajax({
-                        url: ajax_object.ajax_url,
-                        type: 'post',
-                        data: {
-                            action: 'get_account_receivable_summary_data',
-                            _curtain_agent_id: curtain_agent_id,
-                        },
-                        success: function (response) {            
-                            $('#account-receivable-dialog').html(response.html_contain);
-                            $('#account-receivable-dialog').dialog('open');
-                        }
-                    });
-                });
-
-                $("#account-receivable-dialog").dialog({                    
-                    width: 500,
-                    modal: true,
-                    autoOpen: false,
-                    buttons: {
-                        "列印明細": function() {
-                            var checkedIds = [];
-                            $('.customer_order_ids:checked').each(function() {
-                                checkedIds.push(this.id);
-                            });
-
-                            jQuery.ajax({
-                                type: 'POST',
-                                url: ajax_object.ajax_url,
-                                dataType: "json",
-                                data: {
-                                    'action': 'get_account_receivable_detail_data',
-                                    '_customer_order_ids': checkedIds,
-                                },
-                                success: function (response) {
-                                    $('#result-container').html(response.html_contain);
-                                    $('#account-receivable-dialog').dialog('close');
-                                },
-                                error: function(error){
-                                    console.error(error);
-                                    alert(error);
-                                }
-                            });
-                        },
-                    }
-                });
-
-                $('[id^="proceed-customer-order-status-"]').on("click", function () {
-                    const next_status = this.id.substring(30);
-                    const statusCode = $("#status-code").val();
-                    const taobaoOrderNumber = $("#taobao-order-number").val();
-                    const taobaoShipNumber = $("#taobao-ship-number").val();
-                    const curtainShipNumber = $("#curtain-ship-number").val();
-
-                    if (statusCode=='order01' && !taobaoOrderNumber) {
-                        alert("Taobao order number cannot be empty!");
-                        return; // Stop the process if the value is empty
-                    }
-                    if (statusCode=='order02' && !taobaoShipNumber) {
-                        alert("Taobao ship number cannot be empty!");
-                        return; // Stop the process if the value is empty
-                    }
-                    if (statusCode=='order03' && !curtainShipNumber) {
-                        alert("Curtain ship number cannot be empty!");
-                        return; // Stop the process if the value is empty
-                    }
-
-                    const ajaxData = {
-                        'action': 'proceed_customer_order_status',
-                    };
-                    ajaxData['_next_status'] = next_status;
-                    ajaxData['_customer_order_id'] = $("#customer-order-id").val();
-                    ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
-                    ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
-                    ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
-                    ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
-            
-                    $.ajax({
-                        type: 'POST',
-                        url: ajax_object.ajax_url,
-                        dataType: "json",
-                        data: ajaxData,
-                        success: function (response) {
-                            window.location.replace(window.location.href);
-                        },
-                        error: function(error){
-                            console.error(error);                    
-                            alert(error);
-                        }
-                    });    
-                });
-                        
+                $('#result-container').html(response.html_contain);                        
                 activate_customer_order_dialog_data(customer_order_id);
 
             },
@@ -748,6 +556,199 @@ jQuery(document).ready(function($) {
                 }
             }
         });        
+
+        $(".datepicker").datepicker({
+            onSelect: function(dateText, inst) {
+                $(this).val(dateText);
+            }
+        });            
+
+        $("#save-quotation").on("click", function() {
+            const ajaxData = {
+                'action': 'set_quotation_dialog_data',
+            };
+            ajaxData['_customer_order_id'] = customer_order_id;
+            ajaxData['_customer_name'] = $("#customer-name").val();
+            ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+            ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
+                    
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: ajaxData,
+                success: function (response) {
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });
+        });
+
+        $("#del-quotation").on("click", function() {
+            if (window.confirm("Are you sure you want to delete this quotation?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'del_quotation_dialog_data',
+                        '_customer_order_id': customer_order_id,
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            }
+        });
+
+        $("#exit-customer-order-dialog").on("click", function () {
+            window.location.replace(window.location.href);
+        });
+
+        $('[id^="cancel-customer-order-"]').on("click", function () {
+            if (window.confirm("Are you sure you want to cancel this order?")) {
+                const customer_order_id = this.id.substring(22);
+                const ajaxData = {
+                    'action': 'proceed_customer_order_status',
+                };
+                ajaxData['_next_status'] = 0;
+                ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+                ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+            
+                $.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: ajaxData,
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);                    
+                        alert(error);
+                    }
+                });
+            }
+        });
+
+        $('[id^="print-customer-order-"]').on("click", function () {
+            const customer_order_id = this.id.substring(21);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'print_customer_order_data',
+                    _customer_order_id: customer_order_id,
+                },
+                success: function (response) {            
+                    $('#result-container').html(response.html_contain);
+                    $("#exit-customer-order-printing").on("click", function () {
+                        window.location.replace(window.location.href);
+                    });                        
+                }
+            });
+        });
+
+        $('[id^="display-account-receivable-"]').on("click", function () {
+            const curtain_agent_id = this.id.substring(27);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_account_receivable_summary_data',
+                    _curtain_agent_id: curtain_agent_id,
+                },
+                success: function (response) {            
+                    $('#account-receivable-dialog').html(response.html_contain);
+                    $('#account-receivable-dialog').dialog('open');
+                }
+            });
+        });
+
+        $("#account-receivable-dialog").dialog({                    
+            width: 500,
+            modal: true,
+            autoOpen: false,
+            buttons: {
+                "列印明細": function() {
+                    var checkedIds = [];
+                    $('.customer_order_ids:checked').each(function() {
+                        checkedIds.push(this.id);
+                    });
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'get_account_receivable_detail_data',
+                            '_customer_order_ids': checkedIds,
+                        },
+                        success: function (response) {
+                            $('#result-container').html(response.html_contain);
+                            $('#account-receivable-dialog').dialog('close');
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                },
+            }
+        });
+
+        $('[id^="proceed-customer-order-status-"]').on("click", function () {
+            const next_status = this.id.substring(30);
+            const statusCode = $("#status-code").val();
+            const taobaoOrderNumber = $("#taobao-order-number").val();
+            const taobaoShipNumber = $("#taobao-ship-number").val();
+            const curtainShipNumber = $("#curtain-ship-number").val();
+
+            if (statusCode=='order01' && !taobaoOrderNumber) {
+                alert("Taobao order number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order02' && !taobaoShipNumber) {
+                alert("Taobao ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order03' && !curtainShipNumber) {
+                alert("Curtain ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+
+            const ajaxData = {
+                'action': 'proceed_customer_order_status',
+            };
+            ajaxData['_next_status'] = next_status;
+            ajaxData['_customer_order_id'] = $("#customer-order-id").val();
+            ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+            ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
+            ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
+            ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
+    
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: ajaxData,
+                success: function (response) {
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+        });
+
     };
 
     function activate_curtain_category_id_data(order_item_id=false) {
