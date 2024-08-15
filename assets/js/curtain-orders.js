@@ -374,7 +374,7 @@ jQuery(document).ready(function($) {
 
     $("#new-quotation").on("click", function() {
         const ajaxData = {
-            'action': 'set_quotation_dialog_data',
+            'action': 'set_customer_order_dialog_data',
         };
         ajaxData['_curtain_agent_id'] = $("#select-curtain-agent").val();
 
@@ -483,6 +483,7 @@ jQuery(document).ready(function($) {
                             '_curtain_width': $("#curtain-width").val(),
                             '_curtain_height': $("#curtain-height").val(),
                             '_order_item_qty': $("#order-item-qty").val(),
+                            '_order_item_amount': $("#order-item-amount").val(),
                             '_order_item_note': $("#order-item-note").val(),
                             '_customer_order_id': $("#customer-order-id").val(),
                             '_customer_order_amount': $("#customer-order-amount").val(),
@@ -525,6 +526,7 @@ jQuery(document).ready(function($) {
                             '_curtain_width': $("#curtain-width").val(),
                             '_curtain_height': $("#curtain-height").val(),
                             '_order_item_qty': $("#order-item-qty").val(),
+                            '_order_item_amount': $("#order-item-amount").val(),
                             '_order_item_note': $("#order-item-note").val(),
                             '_customer_order_amount': $("#customer-order-amount").val(),
                         },
@@ -572,7 +574,7 @@ jQuery(document).ready(function($) {
 
         $("#save-quotation").on("click", function() {
             const ajaxData = {
-                'action': 'set_quotation_dialog_data',
+                'action': 'set_customer_order_dialog_data',
             };
             ajaxData['_customer_order_id'] = customer_order_id;
             ajaxData['_customer_name'] = $("#customer-name").val();
@@ -601,7 +603,7 @@ jQuery(document).ready(function($) {
                     url: ajax_object.ajax_url,
                     dataType: "json",
                     data: {
-                        'action': 'del_quotation_dialog_data',
+                        'action': 'del_customer_order_dialog_data',
                         '_customer_order_id': customer_order_id,
                     },
                     success: function (response) {

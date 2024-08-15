@@ -20,10 +20,10 @@ if (!class_exists('curtain_orders')) {
 
             add_action( 'wp_ajax_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
-            add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
-            add_action( 'wp_ajax_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_del_quotation_dialog_data', array( $this, 'del_quotation_dialog_data' ) );
+            add_action( 'wp_ajax_set_customer_order_dialog_data', array( $this, 'set_customer_order_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_customer_order_dialog_data', array( $this, 'set_customer_order_dialog_data' ) );
+            add_action( 'wp_ajax_del_customer_order_dialog_data', array( $this, 'del_customer_order_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_del_customer_order_dialog_data', array( $this, 'del_customer_order_dialog_data' ) );
 
             add_action( 'wp_ajax_get_order_item_dialog_data', array( $this, 'get_order_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_order_item_dialog_data', array( $this, 'get_order_item_dialog_data' ) );
@@ -678,7 +678,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function set_quotation_dialog_data() {
+        function set_customer_order_dialog_data() {
             $response = array();
             if( isset($_POST['_customer_order_id']) ) {
                 // Update the quotation data
@@ -703,7 +703,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function del_quotation_dialog_data() {
+        function del_customer_order_dialog_data() {
             $response = array();
             if( isset($_POST['_customer_order_id']) ) {
                 $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
@@ -1430,9 +1430,9 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_order_item_list($customer_order_id=false, $is_admin=false) {
+            ob_start();
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_amount = 0;
-            ob_start();
             ?>
             <div id="order-item-container">
             <fieldset>
@@ -1471,17 +1471,19 @@ if (!class_exists('curtain_orders')) {
                                 $curtain_height = ($curtain_height) ? $curtain_height : 1;
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
                                 $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
-
-                                $curtain_specification_description .= ' W:'.$curtain_width;
-                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
-                                $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
-                                if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
-                                else $curtain_specification_description .= ' H:'.$curtain_height;
-                                if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
-                                else $order_item_description .= '<br>'.$curtain_specification_description;
+                                $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+                                if (!$order_item_amount) {
+                                    $curtain_specification_description .= ' W:'.$curtain_width;
+                                    $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
+                                    $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
+                                    if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    else $curtain_specification_description .= ' H:'.$curtain_height;
+                                    if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
+                                    else $order_item_description .= '<br>'.$curtain_specification_description;    
+                                }
                                 $customer_order_amount += $order_item_amount;
 
-                                if ($product_item_id) {
+                                if ($product_item_id) { // For production-order
                                     $order_item_description = get_post_field('post_content', $product_item_id);
                                     $order_item_description .= '('.get_the_title($product_item_id).')';
                                     $is_specification = get_post_meta($product_item_id, 'is_specification', true);
@@ -1550,11 +1552,8 @@ if (!class_exists('curtain_orders')) {
 
             $curtain_models = new curtain_models();
             $curtain_specifications = new curtain_specifications();
-            //$customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
-            //$customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
 
             if (!$curtain_category_id) $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
-            //$product_item_id = get_post_meta($order_item_id, 'product_item_id', true);
 
             $curtain_model_id = get_post_meta($order_item_id, 'curtain_model_id', true);
             $curtain_specification_id = get_post_meta($order_item_id, 'curtain_specification_id', true);
@@ -1564,20 +1563,13 @@ if (!class_exists('curtain_orders')) {
             $order_item_amount = get_post_meta($order_item_id, 'order_item_amount', true);
             $order_item_note = get_post_meta($order_item_id, 'order_item_note', true);
             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
-            //$is_specification = get_post_meta($product_item_id, 'is_specification', true);
             $is_specification_hided = ($is_specification == 1) ? 'display:none;' : '';
             $is_height = get_post_meta($curtain_category_id, 'is_height', true);
-            //$is_height = get_post_meta($product_item_id, 'is_height', true);
             $is_height_hided = ($is_height == 1) ? 'display:none;' : '';
             $curtain_min_width = get_post_meta($curtain_category_id, 'curtain_min_width', true);
             $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
             $curtain_min_height = get_post_meta($curtain_category_id, 'curtain_min_height', true);
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
-            //$curtain_min_width = get_post_meta($product_item_id, 'curtain_min_width', true);
-            //$curtain_max_width = get_post_meta($product_item_id, 'curtain_max_width', true);
-            //$curtain_min_height = get_post_meta($product_item_id, 'curtain_min_height', true);
-            //$curtain_max_height = get_post_meta($product_item_id, 'curtain_max_height', true);
-
             ?>
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
@@ -1597,8 +1589,11 @@ if (!class_exists('curtain_orders')) {
                 </div>
                 <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
                 <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" class="text ui-widget-content ui-corner-all" />
+                
+                <?php if (current_user_can('administrator')) {?>
                 <label for="order-item-amount"><?php echo __( '金額', 'your-text-domain' );?></label>
                 <input type="text" id="order-item-amount" value="<?php echo $order_item_amount;?>" class="text ui-widget-content ui-corner-all" />
+                <?php }?>
 <?php /*                
                 <label for="order-item-note"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="order-item-note" rows="2" class="text ui-widget-content ui-corner-all"><?php echo $order_item_note;?></textarea>
@@ -1628,10 +1623,10 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'curtain_width', sanitize_text_field($_POST['_curtain_width']));
                 update_post_meta( $order_item_id, 'curtain_height', sanitize_text_field($_POST['_curtain_height']));
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
+                update_post_meta( $order_item_id, 'order_item_amount', sanitize_text_field($_POST['_order_item_amount']));
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                //$response['html_contain'] = $this->display_order_item_list($customer_order_id);
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
@@ -1650,9 +1645,9 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta( $order_item_id, 'curtain_width', sanitize_text_field($_POST['_curtain_width']));
                 update_post_meta( $order_item_id, 'curtain_height', sanitize_text_field($_POST['_curtain_height']));
                 update_post_meta( $order_item_id, 'order_item_qty', sanitize_text_field($_POST['_order_item_qty']));
+                update_post_meta( $order_item_id, 'order_item_amount', sanitize_text_field($_POST['_order_item_amount']));
                 update_post_meta( $order_item_id, 'order_item_note', sanitize_text_field($_POST['_order_item_note']));
                 update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                //update_post_meta( $post_id, 'order_item_qty', 1);
             }
             $response['html_contain'] = $this->display_order_item_list($customer_order_id);
             wp_send_json($response);
