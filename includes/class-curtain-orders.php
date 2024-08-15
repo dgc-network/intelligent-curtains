@@ -83,19 +83,14 @@ if (!class_exists('curtain_orders')) {
                 if ($curtain_agent_id) {
                     $status_id = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                     $status_code = get_post_meta($status_id, 'status_code', true);
-                    if ($status_code=='order01'||$status_code=='order02') $this->display_production_list(); 
-                    elseif ($status_code=='order03') $this->display_shipping_list(); 
-                    else {
-                        if (isset($_GET['_id'])) {
-                            echo '<div class="ui-widget" id="result-container">';
-                            echo $this->display_customer_order_dialog($_GET['_id']);
-                            echo '</div>';
-                        } else if ($_GET['_category']==2) {
-                            $this->display_customer_order_list();
-                        } else {
-                            $this->display_quotation_list();
-                        }    
-                    }
+                    if ($status_code=='order01'||$status_code=='order02'||$_GET['_category']==3) $this->display_production_list(); 
+                    elseif ($status_code=='order03'||$_GET['_category']==4) $this->display_shipping_list(); 
+                    elseif ($_GET['_category']==2) $this->display_customer_order_list();
+                    elseif (isset($_GET['_id'])) {
+                        echo '<div class="ui-widget" id="result-container">';
+                        echo $this->display_customer_order_dialog($_GET['_id']);
+                        echo '</div>';                            
+                    } else $this->display_quotation_list();
                 } else {
                     $this->user_login_agent();
                 }
@@ -352,8 +347,13 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
-                            <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '報價單列表', 'your-text-domain' );?></option>
                             <option value="2"><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
+                            <?php if (current_user_can('administrator')) {?>
+                                <option value="3"><?php echo __( '生產單列表', 'your-text-domain' );?></option>
+                                <option value="4"><?php echo __( '出貨單列表', 'your-text-domain' );?></option>                             
+                            <?php }?>
+                            
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -439,7 +439,7 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
-                            <option value="1"><?php echo __( '報價單', 'your-text-domain' );?></option>
+                            <option value="1"><?php echo __( '報價單列表', 'your-text-domain' );?></option>
                             <option value="2" selected><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
                         </select>
                     </div>
