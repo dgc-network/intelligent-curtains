@@ -376,7 +376,7 @@ if (!class_exists('product_items')) {
                         $curtain_specification_price = get_post_meta($new_post_id, 'curtain_specification_price', true);
                         update_post_meta($new_post_id, 'product_item_price', $curtain_specification_price);
                         update_post_meta($new_post_id, 'is_specification', 1);
-                        update_post_meta($new_post_id, 'product_item_vendor', 3280);
+                        update_post_meta($new_post_id, 'product_item_vendor', 3342);
 
                         // Map the old parent_category value to the new iso-category post ID
                         $category_mapping[$current_post_id] = $new_post_id;
