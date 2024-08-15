@@ -13,6 +13,11 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
 
+            add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
+            add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
+            add_action( 'wp_ajax_proceed_production_order_status', array( $this, 'proceed_production_order_status' ) );
+            add_action( 'wp_ajax_nopriv_proceed_production_order_status', array( $this, 'proceed_production_order_status' ) );
+
             add_action( 'wp_ajax_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
             add_action( 'wp_ajax_set_quotation_dialog_data', array( $this, 'set_quotation_dialog_data' ) );
@@ -29,8 +34,6 @@ if (!class_exists('curtain_orders')) {
 
             add_action( 'wp_ajax_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
             add_action( 'wp_ajax_nopriv_set_curtain_agent_id', array( $this, 'set_curtain_agent_id' ) );
-            add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
-            add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
             add_action( 'wp_ajax_nopriv_print_customer_order_data', array( $this, 'print_customer_order_data' ) );
             add_action( 'wp_ajax_get_account_receivable_summary_data', array( $this, 'get_account_receivable_summary_data' ) );
@@ -282,6 +285,94 @@ if (!class_exists('curtain_orders')) {
                 //if ($next_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
                     update_post_meta( $customer_order_id, 'customer_order_status', 0);
+                }
+
+                if ($current_status_code=="order01") {
+                    $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
+                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                }
+                if ($current_status_code=="order02") {
+                    $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
+                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
+                }
+                if ($current_status_code=="order03") {
+                    $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
+                    update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
+                    update_post_meta( $customer_order_id, 'curtain_ship_date', time());
+                }
+            }
+            wp_send_json($response);
+        }
+
+        function proceed_production_order_status() {
+            $response = array();
+            if( isset($_POST['_production_order_id'])  && isset($_POST['_next_status']) ) {
+                // Update the quotation data
+                $production_order_id = sanitize_text_field($_POST['_production_order_id']);
+                $customer_order_id = get_post_meta($production_order_id, 'customer_order_id', true);
+                //$customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
+                //update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
+
+                $current_status = get_post_meta($production_order_id, 'order_status', true);
+                $current_status_code = get_post_meta($current_status, 'status_code', true);
+
+                $next_status = sanitize_text_field($_POST['_next_status']);
+                $next_status_code = get_post_meta($next_status, 'status_code', true);
+
+                if ($next_status>0) {
+
+                    update_post_meta( $production_order_id, 'order_status', $next_status);
+                    update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
+                    //update_post_meta( $customer_order_id, 'customer_order_category', 2);
+/*
+                    if ($next_status_code=="order01") {            
+                        // update meta "customer_order_number"
+                        update_post_meta( $customer_order_id, 'customer_order_number', time());
+        
+                        $this->create_new_serial_number($customer_order_id);
+                        $this->transfer_one_to_many($customer_order_id, $next_status);
+
+                        // Notice the administrators
+                        $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+
+                        $args = array(
+                            'role' => 'administrator',
+                        );                        
+                        $users = get_users($args);                        
+                        foreach ($users as $user) {
+                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+
+                        // Notice the current_user
+                        $current_user_id = get_current_user_id();
+                        $user_data = get_userdata($current_user_id);
+                        $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
+                        $line_bot_api = new line_bot_api();
+                        $line_bot_api->pushMessage([
+                            'to' => get_user_meta($current_user_id, 'line_user_id', true),
+                            'messages' => [$flexMessage],
+                        ]);
+                    }
+
+                    if ($next_status_code=="order02") {
+                        // update meta "taobao_order_number"
+                        $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
+                        update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                    }
+
+                } else {
+                //if ($next_status==0) {
+                    update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                    update_post_meta( $customer_order_id, 'customer_order_status', 0);
+*/                    
                 }
 
                 if ($current_status_code=="order01") {
@@ -986,41 +1077,6 @@ if (!class_exists('curtain_orders')) {
                 <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                 <input type="button" id="exit-customer-order-dialog" value="<?php echo __( 'Exit', 'your-text-domain' )?>" style="margin:3px; display:inline;" />
                 </div>
-
-<?php /*
-                <div id="account-receivable-dialog" title="Account Receivable"></div>
-
-                <?php if ($customer_order_category<=1 || $is_admin==1) {?>
-                <hr>
-                <div style="display:flex; justify-content:space-between; margin:5px;">
-                    <div>
-                        <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                        <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                    </div>
-                    <div style="text-align:right; display:flex;">
-                        <?php $status_id = $this->get_status_id_by_status_code('order00');?>
-                        <?php $status_action = get_post_meta($status_id, 'status_action', true);?>
-                        <?php $next_status = $this->get_status_id_by_status_code('order01');?>
-                        <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                    </div>
-                </div>
-                <?php 
-                    } else {
-                        $current_user_id = get_current_user_id();
-                        //$is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
-                        //$is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
-                        if (current_user_can('administrator')||$is_warehouse_personnel||$is_factory_personnel) {
-                            echo '<hr>';
-                            if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
-                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
-                        }
-                    }
-                ?>
-*/?>                
             </fieldset>
             <?php
             return ob_get_clean();

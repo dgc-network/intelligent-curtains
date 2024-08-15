@@ -749,6 +749,51 @@ jQuery(document).ready(function($) {
             });    
         });
 
+        $('[id^="proceed-production-order-status-"]').on("click", function () {
+            const next_status = this.id.substring(32);
+            const statusCode = $("#status-code").val();
+            const taobaoOrderNumber = $("#taobao-order-number").val();
+            const taobaoShipNumber = $("#taobao-ship-number").val();
+            const curtainShipNumber = $("#curtain-ship-number").val();
+
+            if (statusCode=='order01' && !taobaoOrderNumber) {
+                alert("Taobao order number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order02' && !taobaoShipNumber) {
+                alert("Taobao ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order03' && !curtainShipNumber) {
+                alert("Curtain ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+
+            const ajaxData = {
+                'action': 'proceed_production_order_status',
+            };
+            ajaxData['_next_status'] = next_status;
+            ajaxData['_production_order_id'] = $("#production-order-id").val();
+            //ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
+            ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
+            ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
+            ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
+    
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: ajaxData,
+                success: function (response) {
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+        });
+
     };
 
     function activate_curtain_category_id_data(order_item_id=false) {
