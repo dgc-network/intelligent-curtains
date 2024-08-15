@@ -87,6 +87,7 @@ if (!class_exists('product_items')) {
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                             $product_item_vendor = get_post_meta(get_the_ID(), 'product_item_vendor', true);
                             $curtain_agent_name = get_post_meta($product_item_vendor, 'curtain_agent_name', true);
+                            $curtain_agent_name .= '('.$product_item_vendor.')';
                             ?>
                             <tr id="edit-product-item-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
