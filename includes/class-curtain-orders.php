@@ -280,6 +280,7 @@ if (!class_exists('curtain_orders')) {
                 } else {
                 //if ($next_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                    update_post_meta( $customer_order_id, 'customer_order_status', 0);
                 }
 
                 if ($current_status_code=="order01") {
