@@ -322,6 +322,26 @@ jQuery(document).ready(function($) {
         $(this).val('');
     });
 
+    $('[id^="edit-production-"]').on("click", function () {
+        const production_order_id = this.id.substring(16);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_production_order_dialog_data',
+                _production_order_id: production_order_id,
+                _is_admin: $("#is-admin").val()
+            },
+            success: function (response) {
+                $('#result-container').html(response.html_contain);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+
+    });
+
     $('[id^="edit-quotation-"]').on("click", function () {
         const customer_order_id = this.id.substring(15);
         $.ajax({
@@ -484,6 +504,7 @@ jQuery(document).ready(function($) {
                 });
 
                 $('[id^="proceed-customer-order-status-"]').on("click", function () {
+                    const next_status = this.id.substring(30);
                     const statusCode = $("#status-code").val();
                     const taobaoOrderNumber = $("#taobao-order-number").val();
                     const taobaoShipNumber = $("#taobao-ship-number").val();
@@ -502,7 +523,6 @@ jQuery(document).ready(function($) {
                         return; // Stop the process if the value is empty
                     }
 
-                    const next_status = this.id.substring(30);
                     const ajaxData = {
                         'action': 'proceed_customer_order_status',
                     };

@@ -91,57 +91,195 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     $this->user_login_agent();
                 }
-
-
-
-
-
-/*
-                if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
-
-                $current_user = wp_get_current_user();
-                $current_user_id = get_current_user_id();
-                $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
-                $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
-                if ($is_warehouse_personnel==1) $this->display_shipping_list();
-                elseif ($is_factory_personnel==1) $this->display_production_list();
-                else {
-                    $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
-                    if ($curtain_agent_id) {
-                        if (isset($_GET['_id'])) {
-                            echo '<div class="ui-widget" id="result-container">';
-                            echo $this->display_customer_order_dialog($_GET['_id']);
-                            echo '</div>';
-                        } else if ($_GET['_category']==2) {
-                            $this->display_customer_order_list();
-                        } else {
-                            //$this->display_quotation_list();
-                        }    
-    
-                    } else {
-                        ?>
-                        <div style="text-align:center;">
-                            <h4><?php echo __( '經銷商登入/註冊', 'your-text-domain' );?></h4>
-                            <fieldset>
-                                <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'your-text-domain' );?></label>
-                                <input type="text" id="agent-number" />
-                                <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'your-text-domain' );?></label>
-                                <input type="password" id="agent-password" />
-                                <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
-                                <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
-                                <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
-                                <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
-                                <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
-                            </fieldset>
-                        </div>
-                        <?php
-                    }
-                }
-*/
             } else {
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
                 else user_did_not_login_yet();
             }        
+        }
+
+        function proceed_customer_order_status() {
+            $response = array();
+            if( isset($_POST['_customer_order_id'])  && isset($_POST['_next_status']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
+                update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
+
+                $current_status = get_post_meta($customer_order_id, 'customer_order_status', true);
+                $current_status_code = get_post_meta($current_status, 'status_code', true);
+
+                $next_status = sanitize_text_field($_POST['_next_status']);
+                $next_status_code = get_post_meta($next_status, 'status_code', true);
+                update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
+
+                if ($next_status>0) {
+
+                    update_post_meta( $customer_order_id, 'customer_order_category', 2);
+
+                    if ($next_status_code=="order01") {            
+                        // update meta "customer_order_number"
+                        update_post_meta( $customer_order_id, 'customer_order_number', time());
+                        // Create new serial-number
+                        $query = $this->retrieve_order_item_data($customer_order_id);
+                        if ($query->have_posts()) {
+                            while ($query->have_posts()) : $query->the_post();
+                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                                $curtain_model_name = get_the_title($curtain_model_id);
+                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                                $curtain_specification_name = get_the_title($curtain_specification_id);
+                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                                $_x = 0;
+                                while ($_x<$order_item_qty) {
+                                    $qr_code_serial_no = $curtain_model_name . $curtain_specification_name. $curtain_width . time() . $_x;
+        
+                                    $new_post = array(
+                                        'post_title'    => $qr_code_serial_no,
+                                        'post_content'  => '',
+                                        'post_status'   => 'publish',
+                                        'post_author'   => get_current_user_id(),
+                                        'post_type'     => 'serial-number',
+                                    );    
+                                    $post_id = wp_insert_post($new_post);
+                                    update_post_meta( $post_id, 'order_item_id', get_the_ID() );
+    
+                                    $_x += 1;
+                                }
+                            endwhile;
+                            wp_reset_postdata();
+                        }
+        
+                        // Notice the administrators
+                        $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+
+                        $args = array(
+                            'role' => 'administrator',
+                        );                        
+                        $users = get_users($args);                        
+                        foreach ($users as $user) {
+                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                            $line_bot_api = new line_bot_api();
+                            $line_bot_api->pushMessage([
+                                'to' => get_user_meta($user->ID, 'line_user_id', true),
+                                'messages' => [$flexMessage],
+                            ]);
+                        }
+
+                        // Notice the current_user
+                        $current_user_id = get_current_user_id();
+                        $user_data = get_userdata($current_user_id);
+                        $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
+                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
+                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
+                        $line_bot_api = new line_bot_api();
+                        $line_bot_api->pushMessage([
+                            'to' => get_user_meta($current_user_id, 'line_user_id', true),
+                            'messages' => [$flexMessage],
+                        ]);
+                    }
+
+                    if ($next_status_code=="order02") {
+                        // update meta "taobao_order_number"
+                        $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
+                        update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                        // Transfer the order-item data by vendor, huge efforts
+                        $query = $this->retrieve_order_item_data($customer_order_id);
+                        $production_items_by_vendor = [];
+
+                        if ($query->have_posts()) {
+                            // Group production items by vendor
+                            while ($query->have_posts()) : $query->the_post();
+                                // Retrieve relevant data
+                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
+                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
+                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
+                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
+                                $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
+                                $order_item_note = get_post_meta(get_the_ID(), 'order_item_note', true);
+                                
+                                // Group by product_item_vendor for both curtain_model and curtain_specification
+                                $product_item_vendor_model = get_post_meta($curtain_model_id, 'product_item_vendor', true);
+                                $product_item_vendor_spec = get_post_meta($curtain_specification_id, 'product_item_vendor', true);
+                                
+                                // Add items to the respective vendor group
+                                $production_items_by_vendor[$product_item_vendor_model][] = [
+                                    'curtain_model_id' => $curtain_model_id,
+                                    'order_item_qty'   => $order_item_qty,
+                                    'order_item_note'  => $order_item_note,
+                                    'curtain_width'    => null,
+                                    'curtain_height'   => null,
+                                ];
+                                
+                                $production_items_by_vendor[$product_item_vendor_spec][] = [
+                                    'curtain_model_id' => $curtain_specification_id,
+                                    'order_item_qty'   => $order_item_qty,
+                                    'order_item_note'  => $order_item_note,
+                                    'curtain_width'    => $curtain_width,
+                                    'curtain_height'   => $curtain_height,
+                                ];
+                        
+                            endwhile;
+                            wp_reset_postdata();
+                        }
+                        
+                        // Create production-order and assign production_order_id to each production-item
+                        foreach ($production_items_by_vendor as $vendor => $items) {
+                            // Create a new production-order post for the vendor
+                            $new_production_order_id = wp_insert_post(array(
+                                'post_type'   => 'production-order',
+                                'post_title'  => 'Production Order for Vendor: ' . $vendor,
+                                'post_status' => 'publish',
+                            ));
+                        
+                            // Create production-item posts and update the production_order_id meta
+                            foreach ($items as $item) {
+                                $new_production_item_id = wp_insert_post(array(
+                                    'post_type'   => 'production-item',
+                                    'post_title'  => 'Production Item for Curtain ID: ' . $item['curtain_model_id'],
+                                    'post_status' => 'publish',
+                                ));
+                        
+                                // Update production-item meta with details
+                                update_post_meta($new_production_item_id, 'product_item_id', $item['curtain_model_id']);
+                                update_post_meta($new_production_item_id, 'order_item_qty', $item['order_item_qty']);
+                                update_post_meta($new_production_item_id, 'curtain_width', $item['curtain_width']);
+                                update_post_meta($new_production_item_id, 'curtain_height', $item['curtain_height']);
+                                update_post_meta($new_production_item_id, 'order_item_note', $item['order_item_note']);
+                                //update_post_meta($new_production_item_id, 'product_item_vendor', $vendor);
+                                
+                                // Update the production_order_id meta for the production-item
+                                update_post_meta($new_production_item_id, 'production_order_id', $new_production_order_id);
+                            }
+                            $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
+                            $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
+                            update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
+                            update_post_meta($new_production_order_id, 'customer_order_number', $customer_order_number);
+                            update_post_meta($new_production_order_id, 'taobao_order_number', $taobao_order_number);
+                            //update_post_meta($new_production_order_id, 'taobao_ship_number', $taobao_ship_number);
+                        }
+                    }
+
+                }
+                if ($next_status==0) {
+                    update_post_meta( $customer_order_id, 'customer_order_category', 1);
+                }
+
+                if ($current_status_code=="order01") {
+                    $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
+                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                }
+                if ($current_status_code=="order02") {
+                    $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
+                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
+                }
+                if ($current_status_code=="order03") {
+                    $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
+                    update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
+                    update_post_meta( $customer_order_id, 'curtain_ship_date', time());
+                }
+            }
+            wp_send_json($response);
         }
 
         function display_quotation_list() {
@@ -382,6 +520,146 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
+        function display_customer_order_dialog($customer_order_id=false, $is_admin=false) {
+            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
+            $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
+            $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
+            $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
+            $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
+            $taobao_ship_number = get_post_meta($customer_order_id, 'taobao_ship_number', true);
+            $curtain_ship_number = get_post_meta($customer_order_id, 'curtain_ship_number', true);
+            $curtain_ship_date = get_post_meta($customer_order_id, 'curtain_ship_date', true);
+
+            $status_action = get_post_meta($customer_order_status, 'status_action', true);
+            $status_code = get_post_meta($customer_order_status, 'status_code', true);
+            $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
+            $next_status_id = $this->get_status_id_by_status_code($next_status_code);
+            ob_start();
+            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'your-text-domain' ).'</h2>';
+            else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
+            ?>
+            <fieldset>
+                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <input type="hidden" id="status-code" value="<?php echo esc_attr($status_code);?>" />
+                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
+                <input type="text" id="customer-name" value="<?php echo esc_attr($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                <?php } else {?>
+                <?php if ($status_code=="order02") { //填寫快遞單號?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                <?php } else {?>
+                <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
+                    <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'your-text-domain' );?></label>
+                    <input type="text" id="curtain-ship-date" value="<?php echo esc_attr(wp_date(get_option('date_format'), $curtain_ship_date));?>" class="text ui-widget-content ui-corner-all" disabled />
+                <?php } else {?>
+                    <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
+                    <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
+                <?php }}}?>
+
+                <?php if ($customer_order_category>1) {?>
+                    <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
+                    <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
+                <?php }?>
+                <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
+                <div id="account-receivable-dialog" title="Account Receivable"></div>
+
+                <?php if ($customer_order_category<=1 || $is_admin==1) {?>
+                <hr>
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
+                        <?php $quotation_status_action = get_post_meta($quotation_status_id, 'status_action', true);?>
+                        <?php $quotation_next_status = $this->get_status_id_by_status_code('order01');?>
+                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_next_status);?>" value="<?php echo __( $quotation_status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                    </div>
+                </div>
+                <?php 
+                    } else {
+                        $current_user_id = get_current_user_id();
+                        $is_warehouse_personnel = get_user_meta($current_user_id, 'is_warehouse_personnel', true);
+                        $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
+                        if (current_user_can('administrator')||$is_warehouse_personnel||$is_factory_personnel) {
+                            echo '<hr>';
+                            if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'your-text-domain' ).'" style="margin:3px; display:inline;" />';
+                        }
+                    }
+                ?>
+            </fieldset>
+            <?php
+            return ob_get_clean();
+        }
+        
+        function get_customer_order_dialog_data() {
+            $response = array();
+            if (isset($_POST['_customer_order_id'])) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id);
+
+                if (isset($_POST['_is_admin'])) {
+                    $is_admin = sanitize_text_field($_POST['_is_admin']);
+                    if (current_user_can('administrator') && $is_admin=="1") {
+                        $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id, $is_admin);
+                    }
+                }        
+            }
+            wp_send_json($response);
+        }
+
+        function set_quotation_dialog_data() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                // Update the quotation data
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
+                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
+                update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
+            } else {
+                $current_user_id = get_current_user_id();
+                $new_post = array(
+                    'post_title'    => 'No title',
+                    'post_content'  => 'Your post content goes here.',
+                    'post_status'   => 'publish',
+                    'post_author'   => $current_user_id,
+                    'post_type'     => 'customer-order',
+                );    
+                $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
+                update_post_meta( $post_id, 'customer_name', 'New customer');
+                update_post_meta( $post_id, 'customer_order_category', 1);
+            }
+            wp_send_json($response);
+        }
+
+        function del_quotation_dialog_data() {
+            $response = array();
+            if( isset($_POST['_customer_order_id']) ) {
+                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
+                wp_delete_post($customer_order_id, true);
+            }
+            wp_send_json($response);
+        }
+
+        // production-order
         function display_shipping_list() {
             ?>
             <div class="ui-widget" id="result-container">
@@ -548,7 +826,7 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
-                            <tr id="edit-quotation-<?php the_ID();?>">
+                            <tr id="edit-production-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
@@ -632,38 +910,15 @@ if (!class_exists('curtain_orders')) {
             return $query;
         }
         
-        function get_status_id_by_status_code($status_code) {
-            $args = array(
-                'post_type'  => 'order-status',
-                'meta_query' => array(
-                    array(
-                        'key'   => 'status_code',
-                        'value' => $status_code,
-                        'compare' => '='
-                    )
-                ),
-                'fields' => 'ids',
-                'posts_per_page' => 1
-            );
-        
-            $posts = get_posts($args);
-        
-            if (!empty($posts)) {
-                return $posts[0];
-            } else {
-                return false;
-            }
-        }
-        
-        function display_customer_order_dialog($customer_order_id=false, $is_admin=false) {
-            $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
-            $customer_order_remark = get_post_meta($customer_order_id, 'customer_order_remark', true);
-            $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
-            $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
-            $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
-            $taobao_ship_number = get_post_meta($customer_order_id, 'taobao_ship_number', true);
-            $curtain_ship_number = get_post_meta($customer_order_id, 'curtain_ship_number', true);
-            $curtain_ship_date = get_post_meta($customer_order_id, 'curtain_ship_date', true);
+        function display_production_order_dialog($production_order_id=false, $is_admin=false) {
+            $vendor_name = get_post_meta($production_order_id, 'customer_name', true);
+            $customer_order_remark = get_post_meta($production_order_id, 'customer_order_remark', true);
+            $customer_order_category = get_post_meta($production_order_id, 'customer_order_category', true);
+            $customer_order_status = get_post_meta($production_order_id, 'customer_order_status', true);
+            $taobao_order_number = get_post_meta($production_order_id, 'taobao_order_number', true);
+            $taobao_ship_number = get_post_meta($production_order_id, 'taobao_ship_number', true);
+            $curtain_ship_number = get_post_meta($production_order_id, 'curtain_ship_number', true);
+            $curtain_ship_date = get_post_meta($production_order_id, 'curtain_ship_date', true);
 
             $status_action = get_post_meta($customer_order_status, 'status_action', true);
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
@@ -674,10 +929,10 @@ if (!class_exists('curtain_orders')) {
             else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
-                <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
+                <input type="hidden" id="production-order-id" value="<?php echo esc_attr($production_order_id);?>" />
                 <input type="hidden" id="status-code" value="<?php echo esc_attr($status_code);?>" />
-                <label for="customer-name"><?php echo __( '客戶名稱', 'your-text-domain' );?></label>
-                <input type="text" id="customer-name" value="<?php echo esc_attr($customer_name);?>" class="text ui-widget-content ui-corner-all" />
+                <label for="vendor-name"><?php echo __( '廠商名稱', 'your-text-domain' );?></label>
+                <input type="text" id="vendor-name" value="<?php echo esc_attr($vendor_name);?>" class="text ui-widget-content ui-corner-all" />
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
@@ -706,7 +961,7 @@ if (!class_exists('curtain_orders')) {
                     <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
-                <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
+                <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
                 <div id="account-receivable-dialog" title="Account Receivable"></div>
 
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
@@ -717,10 +972,10 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
-                        <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
-                        <?php $quotation_status_action = get_post_meta($quotation_status_id, 'status_action', true);?>
-                        <?php $quotation_next_status = $this->get_status_id_by_status_code('order01');?>
-                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_next_status);?>" value="<?php echo __( $quotation_status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <?php $status_id = $this->get_status_id_by_status_code('order00');?>
+                        <?php $status_action = get_post_meta($status_id, 'status_action', true);?>
+                        <?php $next_status = $this->get_status_id_by_status_code('order01');?>
+                        <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
@@ -742,6 +997,45 @@ if (!class_exists('curtain_orders')) {
             </fieldset>
             <?php
             return ob_get_clean();
+        }
+        
+        function get_production_order_dialog_data() {
+            $response = array();
+            if (isset($_POST['_production_order_id'])) {
+                $production_order_id = sanitize_text_field($_POST['_production_order_id']);
+                $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
+
+                if (isset($_POST['_is_admin'])) {
+                    $is_admin = sanitize_text_field($_POST['_is_admin']);
+                    if (current_user_can('administrator') && $is_admin=="1") {
+                        $response['html_contain'] = $this->display_production_order_dialog($production_order_id, $is_admin);
+                    }
+                }        
+            }
+            wp_send_json($response);
+        }
+
+        function get_status_id_by_status_code($status_code) {
+            $args = array(
+                'post_type'  => 'order-status',
+                'meta_query' => array(
+                    array(
+                        'key'   => 'status_code',
+                        'value' => $status_code,
+                        'compare' => '='
+                    )
+                ),
+                'fields' => 'ids',
+                'posts_per_page' => 1
+            );
+        
+            $posts = get_posts($args);
+        
+            if (!empty($posts)) {
+                return $posts[0];
+            } else {
+                return false;
+            }
         }
         
         function print_customer_order_data() {
@@ -1044,56 +1338,6 @@ if (!class_exists('curtain_orders')) {
             return ob_get_clean();
         }
 
-        function get_customer_order_dialog_data() {
-            $response = array();
-            if (isset($_POST['_customer_order_id'])) {
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id);
-
-                if (isset($_POST['_is_admin'])) {
-                    $is_admin = sanitize_text_field($_POST['_is_admin']);
-                    if (current_user_can('administrator') && $is_admin=="1") {
-                        $response['html_contain'] = $this->display_customer_order_dialog($customer_order_id, $is_admin);
-                    }
-                }        
-            }
-            wp_send_json($response);
-        }
-
-        function set_quotation_dialog_data() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                update_post_meta( $customer_order_id, 'customer_name', sanitize_text_field($_POST['_customer_name']));
-                update_post_meta( $customer_order_id, 'customer_order_amount', sanitize_text_field($_POST['_customer_order_amount']));
-                update_post_meta( $customer_order_id, 'customer_order_remark', sanitize_text_field($_POST['_customer_order_remark']));
-            } else {
-                $current_user_id = get_current_user_id();
-                $new_post = array(
-                    'post_title'    => 'No title',
-                    'post_content'  => 'Your post content goes here.',
-                    'post_status'   => 'publish',
-                    'post_author'   => $current_user_id,
-                    'post_type'     => 'customer-order',
-                );    
-                $post_id = wp_insert_post($new_post);
-                update_post_meta( $post_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
-                update_post_meta( $post_id, 'customer_name', 'New customer');
-                update_post_meta( $post_id, 'customer_order_category', 1);
-            }
-            wp_send_json($response);
-        }
-
-        function del_quotation_dialog_data() {
-            $response = array();
-            if( isset($_POST['_customer_order_id']) ) {
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                wp_delete_post($customer_order_id, true);
-            }
-            wp_send_json($response);
-        }
-
         function display_customer_service($qr_code_serial_no=false) {
             $serial_number_post = get_page_by_title($qr_code_serial_no);
             $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
@@ -1170,184 +1414,6 @@ if (!class_exists('curtain_orders')) {
 
                     }
                     wp_reset_postdata(); // Restore global post data
-                }
-            }
-            wp_send_json($response);
-        }
-
-        function proceed_customer_order_status() {
-            $response = array();
-            if( isset($_POST['_customer_order_id'])  && isset($_POST['_next_status']) ) {
-                // Update the quotation data
-                $customer_order_id = sanitize_text_field($_POST['_customer_order_id']);
-                $customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
-                update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
-                $current_status = get_post_meta($customer_order_id, 'customer_order_status', true);
-                $current_status_code = get_post_meta($current_status, 'status_code', true);
-
-                $next_status = sanitize_text_field($_POST['_next_status']);
-                $next_status_code = get_post_meta($next_status, 'status_code', true);
-                update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
-                if ($next_status>0) {
-                    update_post_meta( $customer_order_id, 'customer_order_category', 2);
-                    if ($next_status_code=="order02") {
-                        // Transfer the order-item data by vendor, huge efforts
-                        $query = $this->retrieve_order_item_data($customer_order_id);
-                        $production_items_by_vendor = [];
-
-                        if ($query->have_posts()) {
-                            // Group production items by vendor
-                            while ($query->have_posts()) : $query->the_post();
-                                // Retrieve relevant data
-                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
-                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
-                                $curtain_height = get_post_meta(get_the_ID(), 'curtain_height', true);
-                                $order_item_note = get_post_meta(get_the_ID(), 'order_item_note', true);
-                                
-                                // Group by product_item_vendor for both curtain_model and curtain_specification
-                                $product_item_vendor_model = get_post_meta($curtain_model_id, 'product_item_vendor', true);
-                                $product_item_vendor_spec = get_post_meta($curtain_specification_id, 'product_item_vendor', true);
-                                
-                                // Add items to the respective vendor group
-                                $production_items_by_vendor[$product_item_vendor_model][] = [
-                                    'curtain_model_id' => $curtain_model_id,
-                                    'order_item_qty'   => $order_item_qty,
-                                    'order_item_note'  => $order_item_note,
-                                    'curtain_width'    => null,
-                                    'curtain_height'   => null,
-                                ];
-                                
-                                $production_items_by_vendor[$product_item_vendor_spec][] = [
-                                    'curtain_model_id' => $curtain_specification_id,
-                                    'order_item_qty'   => $order_item_qty,
-                                    'order_item_note'  => $order_item_note,
-                                    'curtain_width'    => $curtain_width,
-                                    'curtain_height'   => $curtain_height,
-                                ];
-                        
-                            endwhile;
-                            wp_reset_postdata();
-                        }
-                        
-                        // Create production-order and assign production_order_id to each production-item
-                        foreach ($production_items_by_vendor as $vendor => $items) {
-                            // Create a new production-order post for the vendor
-                            $new_production_order_id = wp_insert_post(array(
-                                'post_type'   => 'production-order',
-                                'post_title'  => 'Production Order for Vendor: ' . $vendor,
-                                'post_status' => 'publish',
-                            ));
-                        
-                            // Create production-item posts and update the production_order_id meta
-                            foreach ($items as $item) {
-                                $new_production_item_id = wp_insert_post(array(
-                                    'post_type'   => 'production-item',
-                                    'post_title'  => 'Production Item for Curtain ID: ' . $item['curtain_model_id'],
-                                    'post_status' => 'publish',
-                                ));
-                        
-                                // Update production-item meta with details
-                                update_post_meta($new_production_item_id, 'product_item_id', $item['curtain_model_id']);
-                                update_post_meta($new_production_item_id, 'order_item_qty', $item['order_item_qty']);
-                                update_post_meta($new_production_item_id, 'curtain_width', $item['curtain_width']);
-                                update_post_meta($new_production_item_id, 'curtain_height', $item['curtain_height']);
-                                update_post_meta($new_production_item_id, 'order_item_note', $item['order_item_note']);
-                                //update_post_meta($new_production_item_id, 'product_item_vendor', $vendor);
-                                
-                                // Update the production_order_id meta for the production-item
-                                update_post_meta($new_production_item_id, 'production_order_id', $new_production_order_id);
-                            }
-                            $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
-                            $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
-                            update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
-                            update_post_meta($new_production_order_id, 'customer_order_number', $customer_order_number);
-                            update_post_meta($new_production_order_id, 'taobao_order_number', $taobao_order_number);
-                            //update_post_meta($new_production_order_id, 'taobao_ship_number', $taobao_ship_number);
-                        }
-                    }
-
-                    if ($next_status_code=="order01") {
-                        
-                        update_post_meta( $customer_order_id, 'customer_order_number', time());
-
-                        // Create new serial-number
-                        $query = $this->retrieve_order_item_data($customer_order_id);
-                        if ($query->have_posts()) {
-                            while ($query->have_posts()) : $query->the_post();
-                                $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                                $curtain_model_name = get_the_title($curtain_model_id);
-                                $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
-                                $curtain_specification_name = get_the_title($curtain_specification_id);
-                                $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
-                                $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
-                                $_x = 0;
-                                while ($_x<$order_item_qty) {
-                                    $qr_code_serial_no = $curtain_model_name . $curtain_specification_name. $curtain_width . time() . $_x;
-        
-                                    $new_post = array(
-                                        'post_title'    => $qr_code_serial_no,
-                                        'post_content'  => '',
-                                        'post_status'   => 'publish',
-                                        'post_author'   => get_current_user_id(),
-                                        'post_type'     => 'serial-number',
-                                    );    
-                                    $post_id = wp_insert_post($new_post);
-                                    update_post_meta( $post_id, 'order_item_id', get_the_ID() );
-    
-                                    $_x += 1;
-                                }
-                            endwhile;
-                            wp_reset_postdata();
-                        }
-        
-                        // Notice the administrators
-                        $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
-                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
-
-                        $args = array(
-                            'role' => 'administrator',
-                        );                        
-                        $users = get_users($args);                        
-                        foreach ($users as $user) {
-                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
-                            $line_bot_api = new line_bot_api();
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                'messages' => [$flexMessage],
-                            ]);
-                        }
-
-                        // Notice the current_user
-                        $current_user_id = get_current_user_id();
-                        $user_data = get_userdata($current_user_id);
-                        $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
-                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
-                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
-                        $line_bot_api = new line_bot_api();
-                        $line_bot_api->pushMessage([
-                            'to' => get_user_meta($current_user_id, 'line_user_id', true),
-                            'messages' => [$flexMessage],
-                        ]);
-                    }
-                }
-                if ($next_status==0) {
-                    update_post_meta( $customer_order_id, 'customer_order_category', 1);
-                }
-
-                if ($current_status_code=="order01") {
-                    $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
-                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
-                }
-                if ($current_status_code=="order02") {
-                    $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
-                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
-                }
-                if ($current_status_code=="order03") {
-                    $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
-                    update_post_meta( $customer_order_id, 'curtain_ship_number', $curtain_ship_number);
-                    update_post_meta( $customer_order_id, 'curtain_ship_date', time());
                 }
             }
             wp_send_json($response);
