@@ -377,11 +377,13 @@ if (!class_exists('curtain_orders')) {
 
                 if ($current_status_code=="order01") {
                     $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
-                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                    update_post_meta( $production_order_id, 'taobao_order_number', $taobao_order_number);
+                    //update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
                 }
                 if ($current_status_code=="order02") {
                     $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
-                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
+                    update_post_meta( $production_order_id, 'taobao_ship_number', $taobao_ship_number);
+                    //update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
                 }
                 if ($current_status_code=="order03") {
                     $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
