@@ -1498,7 +1498,17 @@ if (!class_exists('curtain_orders')) {
                                 else $order_item_description .= '<br>'.$curtain_specification_description;
                                 $customer_order_amount += $order_item_amount;
 
-                                if ($product_item_id) $order_item_description = get_the_title($product_item_id);
+                                if ($product_item_id) {
+                                    $order_item_description = get_post_field('post_content', $product_item_id);
+                                    $order_item_description .= '('.get_the_title($product_item_id).')';
+                                    $is_specification = get_post_meta($product_item_id, 'is_specification', true);
+                                    if ($is_specification) {
+                                        $order_item_description .= '<br> W:'.$curtain_width;
+                                        if ($is_height) {
+                                            $order_item_description .= ' H:'.$curtain_height;
+                                        }
+                                    }
+                                }
 
                                 if ($customer_order_category<=1 || $is_admin==1) echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
                                 else echo '<tr id="view-qr-code-'.esc_attr(get_the_ID()).'">';
