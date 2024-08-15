@@ -169,8 +169,7 @@ if (!class_exists('product_items')) {
                 <label for="curtain-category-id"><?php echo __( 'Category', 'your-text-domain' );?></label>
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="product-item-vendor"><?php echo __( 'Vendor', 'your-text-domain' );?></label>
-                <select id="product-item-vendor" class="select ui-widget-content ui-corner-all"><?php echo $curtain_agents->select_curtain_agent_options($product_item_vendor);?></select>
-                <input type="checkbox" id="is-curtain-model" class="checkbox ui-widget-content ui-corner-all" style="display:inline-block; width:5%;" <?php echo $is_curtain_model_checked;?> /> Is curtain model.<br>
+                <select id="product-item-vendor" class="select ui-widget-content ui-corner-all"><?php echo $curtain_agents->select_curtain_agent_options($product_item_vendor);?></select><br>
                 <input type="checkbox" id="is-specification" class="checkbox ui-widget-content ui-corner-all" style="display:inline-block; width:5%;" <?php echo $is_specification_checked;?> /> Is specification.<br>
             </fieldset>
             <?php

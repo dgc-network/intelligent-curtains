@@ -1467,7 +1467,9 @@ if (!class_exists('curtain_orders')) {
                         $query = $this->retrieve_order_item_data($customer_order_id);
                         if ($query->have_posts()) {
                             while ($query->have_posts()) : $query->the_post();
-                                $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
+                                $product_item_id = get_post_meta(get_the_ID(), 'product_item_id', true);
+                                if ($product_item_id) $curtain_category_id = get_post_meta($product_item_id, 'curtain_category_id', true);
+                                else $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                                 $curtain_category_title = get_the_title($curtain_category_id);
                                 $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
                                 $is_height = get_post_meta($curtain_category_id, 'is_height', true);
@@ -1495,6 +1497,8 @@ if (!class_exists('curtain_orders')) {
                                 if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
                                 else $order_item_description .= '<br>'.$curtain_specification_description;
                                 $customer_order_amount += $order_item_amount;
+
+                                if ($product_item_id) $order_item_description = get_the_title($product_item_id);
 
                                 if ($customer_order_category<=1 || $is_admin==1) echo '<tr id="edit-order-item-'.esc_attr(get_the_ID()).'">';
                                 else echo '<tr id="view-qr-code-'.esc_attr(get_the_ID()).'">';
