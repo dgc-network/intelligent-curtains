@@ -333,8 +333,13 @@ jQuery(document).ready(function($) {
                 _is_admin: $("#is-admin").val()
             },
             success: function (response) {
-                $('#result-container').html(response.html_contain);
-                activate_customer_order_dialog_data(production_order_id);
+                if (response.html_contain) { // Check if response.html_contain exists and is not empty
+                    $('#result-container').html(response.html_contain);
+                    activate_customer_order_dialog_data(production_order_id);
+                }
+                
+                //$('#result-container').html(response.html_contain);
+                //activate_customer_order_dialog_data(production_order_id);
             },
             error: function (error) {
                 console.error(error);

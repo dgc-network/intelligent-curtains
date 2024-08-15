@@ -307,11 +307,9 @@ if (!class_exists('curtain_orders')) {
         function proceed_production_order_status() {
             $response = array();
             if( isset($_POST['_production_order_id'])  && isset($_POST['_next_status']) ) {
-                // Update the quotation data
+
                 $production_order_id = sanitize_text_field($_POST['_production_order_id']);
                 $customer_order_id = get_post_meta($production_order_id, 'customer_order_id', true);
-                //$customer_order_amount = sanitize_text_field($_POST['_customer_order_amount']);
-                //update_post_meta( $customer_order_id, 'customer_order_amount', $customer_order_amount);
 
                 $current_status = get_post_meta($production_order_id, 'order_status', true);
                 $current_status_code = get_post_meta($current_status, 'status_code', true);
@@ -320,59 +318,8 @@ if (!class_exists('curtain_orders')) {
                 $next_status_code = get_post_meta($next_status, 'status_code', true);
 
                 if ($next_status>0) {
-
                     update_post_meta( $production_order_id, 'order_status', $next_status);
                     update_post_meta( $customer_order_id, 'customer_order_status', $next_status);
-                    //update_post_meta( $customer_order_id, 'customer_order_category', 2);
-/*
-                    if ($next_status_code=="order01") {            
-                        // update meta "customer_order_number"
-                        update_post_meta( $customer_order_id, 'customer_order_number', time());
-        
-                        $this->create_new_serial_number($customer_order_id);
-                        $this->transfer_one_to_many($customer_order_id, $next_status);
-
-                        // Notice the administrators
-                        $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
-                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
-
-                        $args = array(
-                            'role' => 'administrator',
-                        );                        
-                        $users = get_users($args);                        
-                        foreach ($users as $user) {
-                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
-                            $line_bot_api = new line_bot_api();
-                            $line_bot_api->pushMessage([
-                                'to' => get_user_meta($user->ID, 'line_user_id', true),
-                                'messages' => [$flexMessage],
-                            ]);
-                        }
-
-                        // Notice the current_user
-                        $current_user_id = get_current_user_id();
-                        $user_data = get_userdata($current_user_id);
-                        $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
-                        $link_uri = home_url().'/order/?_id='.$customer_order_id;
-                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
-                        $line_bot_api = new line_bot_api();
-                        $line_bot_api->pushMessage([
-                            'to' => get_user_meta($current_user_id, 'line_user_id', true),
-                            'messages' => [$flexMessage],
-                        ]);
-                    }
-
-                    if ($next_status_code=="order02") {
-                        // update meta "taobao_order_number"
-                        $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
-                        update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
-                    }
-
-                } else {
-                //if ($next_status==0) {
-                    update_post_meta( $customer_order_id, 'customer_order_category', 1);
-                    update_post_meta( $customer_order_id, 'customer_order_status', 0);
-*/                    
                 }
 
                 if ($current_status_code=="order01") {
@@ -917,6 +864,7 @@ if (!class_exists('curtain_orders')) {
                             <th><?php echo __( '廠商', 'your-text-domain' );?></th>
                             <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '狀態', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -931,7 +879,7 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $production_order_number = get_post_meta(get_the_ID(), 'production_order_number', true);
-                            //$production_order_time = wp_date(get_option('date_format'), $production_order_number);
+                            $order_status = get_post_meta(get_the_ID(), 'order_status', true);
                             $vendor_id = get_post_meta(get_the_ID(), 'production_order_vendor', true);
                             $vendor_name = get_post_meta($vendor_id, 'curtain_agent_name', true);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
@@ -944,6 +892,7 @@ if (!class_exists('curtain_orders')) {
                                 <td style="text-align:center;"><?php echo esc_html($vendor_name);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
+                                <td><?php echo esc_html(get_post_field('post_content', $order_status));?></td>
                             </tr>
                             <?php
                         endwhile;
@@ -974,32 +923,11 @@ if (!class_exists('curtain_orders')) {
             $status_id_05 = $this->get_status_id_by_status_code('order05');
 
             $args = array(
-                //'post_type'      => 'customer-order',
                 'post_type'      => 'production-order',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'AND',
-/*                    
-                    array(
-                        'relation' => 'OR',
-                        //array(
-                        //    'key'     => 'customer_order_status',
-                        //    'value'   => $status_id_03,
-                        //    'compare' => '=',
-                        //),
-                        array(
-                            'key'     => 'customer_order_status',
-                            'value'   => $status_id_04,
-                            'compare' => '=',
-                        ),
-                        array(
-                            'key'     => 'customer_order_status',
-                            'value'   => $status_id_05,
-                            'compare' => '=',
-                        ),        
-                    )
-*/                
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
@@ -1088,6 +1016,11 @@ if (!class_exists('curtain_orders')) {
             $response = array();
             if (isset($_POST['_production_order_id'])) {
                 $production_order_id = sanitize_text_field($_POST['_production_order_id']);
+                $order_status = get_post_meta($production_order_id, 'order_status', true);
+                $current_user_id = get_current_user_id();
+                $curtain_agent_id = get_post_meta($current_user_id, 'curtain_agent_id', true);
+                $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
+                if ($order_status == $curtain_agent_status)
                 $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
 
                 if (isset($_POST['_is_admin'])) {
