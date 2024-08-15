@@ -239,12 +239,27 @@ if (!class_exists('product_items')) {
                     ),
                 ),
             );
-            if ($is_specification) $args['meta_query'][]=array(
-                array(
-                    'key'   => 'is_specification',
-                    'value' => 1,
-                ),
-            );
+            if ($is_specification) {
+                $args['meta_query'][]=array(
+                    array(
+                        'key'   => 'is_specification',
+                        'value' => 1,
+                    ),
+                );    
+            } else {
+                $args['meta_query'][] = array(
+                    'relation' => 'OR',
+                    array(
+                        'key'     => 'is_specification',
+                        'compare' => 'NOT EXISTS',
+                    ),
+                    array(
+                        'key'     => 'is_specification',
+                        'value'   => 1,
+                        'compare' => '!=',
+                    ),
+                );
+            }
             $query = new WP_Query($args);
         
             $options = '<option value="">Select model</option>';
