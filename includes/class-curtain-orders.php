@@ -187,7 +187,8 @@ if (!class_exists('curtain_orders')) {
                 // Create production-item posts and update the production_order_id meta
                 foreach ($items as $item) {
                     $new_production_item_id = wp_insert_post(array(
-                        'post_type'   => 'production-item',
+                        //'post_type'   => 'production-item',
+                        'post_type'   => 'order-item',
                         'post_title'  => 'Production Item for Curtain ID: ' . $item['curtain_model_id'],
                         'post_status' => 'publish',
                     ));
@@ -819,8 +820,9 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
+                            <th><?php echo __( '廠商', 'your-text-domain' );?></th>
+                            <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
@@ -836,15 +838,17 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $production_order_number = get_post_meta(get_the_ID(), 'production_order_number', true);
-                            $production_order_time = wp_date(get_option('date_format'), $production_order_number);
+                            //$production_order_time = wp_date(get_option('date_format'), $production_order_number);
+                            $vendor_name = get_post_meta(get_the_ID(), 'production_order_vendor', true);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
                             $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
                             <tr id="edit-production-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo wp_date(get_option('date_format'), $production_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($vendor_name);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($production_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
                             </tr>
                             <?php
@@ -927,7 +931,7 @@ if (!class_exists('curtain_orders')) {
         function display_production_order_dialog($production_order_id=false, $is_admin=false) {
             ob_start();
             $vendor_id = get_post_meta($production_order_id, 'production_order_vendor', true);
-            $vendor_name = get_post_meta($vendor_id, 'agent_name', true);
+            $vendor_name = get_post_meta($vendor_id, 'curtain_agent_name', true);
 
             $customer_order_remark = get_post_meta($production_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($production_order_id, 'customer_order_category', true);
@@ -952,14 +956,12 @@ if (!class_exists('curtain_orders')) {
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
-                <?php } else {?>
-                <?php if ($status_code=="order02") { //填寫快遞單號?>
+                <?php } elseif ($status_code=="order02") { //填寫快遞單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
-                <?php } else {?>
-                <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
+                <?php } elseif ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
@@ -971,13 +973,14 @@ if (!class_exists('curtain_orders')) {
                 <?php } else {?>
                     <label for="customer-order-remark"><?php echo __( '備註', 'your-text-domain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
-                <?php }}}?>
-
-                <?php if ($customer_order_category>1) {?>
-                    <label for="customer-order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                    <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
+
+                <?php //if ($customer_order_category>1) {?>
+                    <label for="order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
+                    <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
+                <?php //}?>
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
+
                 <div id="account-receivable-dialog" title="Account Receivable"></div>
 
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
