@@ -1020,7 +1020,7 @@ if (!class_exists('curtain_orders')) {
                 $current_user_id = get_current_user_id();
                 $curtain_agent_id = get_post_meta($current_user_id, 'curtain_agent_id', true);
                 $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
-                if ($order_status == $curtain_agent_status)
+                if ($order_status == $curtain_agent_status || current_user_can('administrator'))
                 $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
 
                 if (isset($_POST['_is_admin'])) {

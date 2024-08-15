@@ -336,6 +336,8 @@ jQuery(document).ready(function($) {
                 if (response.html_contain) { // Check if response.html_contain exists and is not empty
                     $('#result-container').html(response.html_contain);
                     activate_customer_order_dialog_data(production_order_id);
+                } else {
+                    alert('你沒有讀取本筆資料的權限!');
                 }
                 
                 //$('#result-container').html(response.html_contain);
