@@ -202,7 +202,6 @@ if (!class_exists('curtain_orders')) {
                     update_post_meta($new_production_item_id, 'curtain_width', $item['curtain_width']);
                     update_post_meta($new_production_item_id, 'curtain_height', $item['curtain_height']);
                     update_post_meta($new_production_item_id, 'order_item_note', $item['order_item_note']);
-                    //update_post_meta($new_production_item_id, 'product_item_vendor', $vendor);
                     
                     // Update the customer_order_id meta for the production-item
                     update_post_meta($new_production_item_id, 'customer_order_id', $new_production_order_id);
@@ -210,13 +209,9 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta($new_production_order_id, 'order_status', $next_status);
                 update_post_meta($new_production_order_id, 'production_order_number', time());
                 update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
-                $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
-                //$taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
-                update_post_meta($new_production_order_id, 'customer_order_number', $customer_order_number);
-                //update_post_meta($new_production_order_id, 'taobao_order_number', $taobao_order_number);
-                //update_post_meta($new_production_order_id, 'taobao_ship_number', $taobao_ship_number);
+                // Update the customer_order_id meta for the production-order
+                update_post_meta($new_production_order_id, 'customer_order_id', $customer_order_id);
             }
-
         }
 
         function proceed_customer_order_status() {
@@ -282,7 +277,6 @@ if (!class_exists('curtain_orders')) {
                     }
 
                 } else {
-                //if ($next_status==0) {
                     update_post_meta( $customer_order_id, 'customer_order_category', 1);
                     update_post_meta( $customer_order_id, 'customer_order_status', 0);
                 }
@@ -796,13 +790,12 @@ if (!class_exists('curtain_orders')) {
             $status_id_05 = $this->get_status_id_by_status_code('order05');
 
             $args = array(
-                //'post_type'      => 'customer-order',
-                'post_type'      => 'production-order',
+                'post_type'      => 'customer-order',
+                //'post_type'      => 'production-order',
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 'meta_query'     => array(
                     'relation' => 'AND',
-/*                    
                     array(
                         'relation' => 'OR',
                         array(
@@ -821,7 +814,6 @@ if (!class_exists('curtain_orders')) {
                             'compare' => '=',
                         ),        
                     )
-*/                        
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
                 'order'          => 'DESC', // Sorting order (descending)
@@ -829,7 +821,7 @@ if (!class_exists('curtain_orders')) {
 
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
-            $meta_keys = get_post_type_meta_keys('production-order');
+            $meta_keys = get_post_type_meta_keys('customer-order');
             $meta_query_all_keys = array('relation' => 'OR');
             foreach ($meta_keys as $meta_key) {
                 $meta_query_all_keys[] = array(
