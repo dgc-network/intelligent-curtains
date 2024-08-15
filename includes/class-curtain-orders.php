@@ -253,6 +253,7 @@ if (!class_exists('curtain_orders')) {
                             }
                             $customer_order_number = get_post_meta($customer_order_id, 'customer_order_number', true);
                             $taobao_order_number = get_post_meta($customer_order_id, 'taobao_order_number', true);
+                            update_post_meta($new_production_order_id, 'production_order_number', time());
                             update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
                             update_post_meta($new_production_order_id, 'customer_order_number', $customer_order_number);
                             update_post_meta($new_production_order_id, 'taobao_order_number', $taobao_order_number);
@@ -801,11 +802,9 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
                             <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
+                            <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
-                            <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
-                            <th><?php echo __( '送貨日期', 'your-text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -819,19 +818,17 @@ if (!class_exists('curtain_orders')) {
         
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
-                            $customer_order_number = get_post_meta(get_the_ID(), 'customer_order_number', true);
-                            $customer_order_time = wp_date(get_option('date_format'), $customer_order_number);
+                            $production_order_number = get_post_meta(get_the_ID(), 'production_order_number', true);
+                            $production_order_time = wp_date(get_option('date_format'), $production_order_number);
                             $taobao_order_number = get_post_meta(get_the_ID(), 'taobao_order_number', true);
                             $taobao_ship_number = get_post_meta(get_the_ID(), 'taobao_ship_number', true);
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
                             <tr id="edit-production-<?php the_ID();?>">
-                                <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($production_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_ship_number);?></td>
-                                <td style="text-align:center;"><?php echo wp_date(get_option('date_format'), $curtain_ship_date);?></td>
                             </tr>
                             <?php
                         endwhile;

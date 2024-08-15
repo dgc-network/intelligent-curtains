@@ -228,7 +228,7 @@ if (!class_exists('product_items')) {
             wp_send_json($response);
         }
 
-        function select_product_item_options($selected_option=0, $curtain_category_id=0) {
+        function select_product_item_options($selected_option=false, $curtain_category_id=false, $is_specification=false) {
             $args = array(
                 'post_type'      => 'product-item',
                 'posts_per_page' => -1,
@@ -237,6 +237,12 @@ if (!class_exists('product_items')) {
                         'key'   => 'curtain_category_id',
                         'value' => $curtain_category_id,
                     ),
+                ),
+            );
+            if ($is_specification) $args['meta_query'][]=array(
+                array(
+                    'key'   => 'is_specification',
+                    'value' => 1,
                 ),
             );
             $query = new WP_Query($args);
