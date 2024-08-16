@@ -1472,14 +1472,16 @@ if (!class_exists('curtain_orders')) {
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
                                 $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
                                 $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+
+                                $curtain_specification_description .= ' W:'.$curtain_width;
+                                $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
+                                if (!$is_height) $curtain_specification_description .= ' H:'.$curtain_height;
+                                if (!$is_specification) $order_item_description .= '<br>'.$curtain_specification_description;
+
                                 if (empty($order_item_amount)) {
-                                    $curtain_specification_description .= ' W:'.$curtain_width;
-                                    $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
                                     $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
                                     if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
-                                    else $curtain_specification_description .= ' H:'.$curtain_height;
                                     if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
-                                    else $order_item_description .= '<br>'.$curtain_specification_description;    
                                 }
                                 $customer_order_amount += $order_item_amount;
 
@@ -1489,7 +1491,7 @@ if (!class_exists('curtain_orders')) {
                                     $is_specification = get_post_meta($product_item_id, 'is_specification', true);
                                     if ($is_specification) {
                                         $order_item_description .= '<br> W:'.$curtain_width;
-                                        if ($is_height) {
+                                        if (!$is_height) {
                                             $order_item_description .= ' H:'.$curtain_height;
                                         }
                                     }
