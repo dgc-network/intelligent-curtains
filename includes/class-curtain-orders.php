@@ -1550,8 +1550,8 @@ if (!class_exists('curtain_orders')) {
             $curtain_categories = new curtain_categories();
             $product_items = new product_items();
 
-            $curtain_models = new curtain_models();
-            $curtain_specifications = new curtain_specifications();
+            //$curtain_models = new curtain_models();
+            //$curtain_specifications = new curtain_specifications();
 
             if (!$curtain_category_id) $curtain_category_id = get_post_meta($order_item_id, 'curtain_category_id', true);
 
@@ -1590,14 +1590,14 @@ if (!class_exists('curtain_orders')) {
                 <label for="order-item-qty"><?php echo __( '數量', 'your-text-domain' );?></label>
                 <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" class="text ui-widget-content ui-corner-all" />
                 
-                <?php //if (current_user_can('administrator')) {?>
+                <?php if (current_user_can('administrator')) {?>
                 <label for="order-item-amount"><?php echo __( '金額', 'your-text-domain' );?></label>
                 <input type="text" id="order-item-amount" value="<?php echo $order_item_amount;?>" class="text ui-widget-content ui-corner-all" />
-                <?php //}?>
-<?php /*                
+                <?php }?>
+
                 <label for="order-item-note"><?php echo __( '備註', 'your-text-domain' );?></label>
                 <textarea id="order-item-note" rows="2" class="text ui-widget-content ui-corner-all"><?php echo $order_item_note;?></textarea>
-*/?>                
+
             </fieldset>
             <?php
             return ob_get_clean();
