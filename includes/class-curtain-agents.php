@@ -9,7 +9,7 @@ if (!class_exists('curtain_agents')) {
         public function __construct() {
 
             add_shortcode( 'curtain-agent-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
             add_action( 'wp_ajax_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_agent_dialog_data', array( $this, 'set_curtain_agent_dialog_data' ) );
@@ -26,17 +26,14 @@ if (!class_exists('curtain_agents')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-agents'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'curtain-agent', $args );
         }
 
         function display_shortcode() {
             if (current_user_can('administrator')) {
-                $this->do_migration();
+                //$this->do_migration();
                 // curtain-agents start point 2024-4-27
                 $this->display_curtain_agent_list();
 
@@ -245,7 +242,7 @@ if (!class_exists('curtain_agents')) {
             wp_reset_postdata();
             return $options;
         }
-        
+/*        
         function do_migration() {
             // delete curtain-agent post 2024-4-27
             if (isset($_GET['_delete_curtain_agents_post'])) {
@@ -286,6 +283,7 @@ if (!class_exists('curtain_agents')) {
                 }
             }
         }
+*/            
     }
     $agents_class = new curtain_agents();
 }

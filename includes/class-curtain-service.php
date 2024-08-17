@@ -318,13 +318,7 @@ if (!class_exists('curtain_service')) {
                     $output .= '</div>';
                     return $output;    
                 }
-                    /*
-                    ?><script>window.location.replace("https://aihome.tw/support/after_service/");</script><?php
-                    */
-
                 ?><script>window.location.replace("https://aihome.tw/after_service/");</script><?php
-
-                //return wp_redirect(home_url());
 
             } else {
 

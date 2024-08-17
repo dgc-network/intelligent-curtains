@@ -9,7 +9,7 @@ if (!class_exists('product_items')) {
         public function __construct() {
 
             add_shortcode( 'product-item-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_product_item_post_type' ) );
+            //add_action( 'init', array( $this, 'register_product_item_post_type' ) );
             add_action( 'wp_ajax_get_product_item_dialog_data', array( $this, 'get_product_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_product_item_dialog_data', array( $this, 'get_product_item_dialog_data' ) );
             add_action( 'wp_ajax_set_product_item_dialog_data', array( $this, 'set_product_item_dialog_data' ) );
@@ -87,7 +87,6 @@ if (!class_exists('product_items')) {
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                             $product_item_vendor = get_post_meta(get_the_ID(), 'product_item_vendor', true);
                             $curtain_agent_name = get_post_meta($product_item_vendor, 'curtain_agent_name', true);
-                            //$curtain_agent_name .= '('.$product_item_vendor.')';
                             ?>
                             <tr id="edit-product-item-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
@@ -146,6 +145,7 @@ if (!class_exists('product_items')) {
         }
 
         function display_product_item_dialog($product_item_id=false) {            
+            ob_start();
             $curtain_categories = new curtain_categories();
             $curtain_agents = new curtain_agents();
             $product_item_title = get_the_title($product_item_id);
@@ -157,7 +157,6 @@ if (!class_exists('product_items')) {
             $is_curtain_model_checked = ($is_curtain_model == 1) ? 'checked' : '';
             $is_specification = get_post_meta($product_item_id, 'is_specification', true);
             $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
-            ob_start();
             ?>
             <fieldset>
                 <input type="hidden" id="product-item-id" value="<?php echo esc_attr($product_item_id);?>" />

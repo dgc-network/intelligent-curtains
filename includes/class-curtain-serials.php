@@ -9,7 +9,7 @@ if (!class_exists('serial_number')) {
         public function __construct() {
 
             add_shortcode( 'serial-number-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_serial_number_post_type' ) );
+            //add_action( 'init', array( $this, 'register_serial_number_post_type' ) );
 
             add_action( 'wp_ajax_get_serial_number_dialog_data', array( $this, 'get_serial_number_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_serial_number_dialog_data', array( $this, 'get_serial_number_dialog_data' ) );
@@ -27,17 +27,14 @@ if (!class_exists('serial_number')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'serial-numbers'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'serial-number', $args );
         }
 
         function display_shortcode() {
             if (current_user_can('administrator')) {
-                $this->do_migration();
+                //$this->do_migration();
                 $this->display_serial_number_list();
             } else {
                 ?>
@@ -128,21 +125,17 @@ if (!class_exists('serial_number')) {
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $current_page,
                 's'              => $search_query,                
-                //'meta_key'       => 'status_code', // Specify the meta key to order by
-                //'orderby'        => 'meta_value',  // Order by the meta value
-                //'order'          => 'ASC',         // Order direction (ASC or DESC)
             );        
             $query = new WP_Query($args);
             return $query;
         }
         
         function display_serial_number_dialog($serial_number_id=false) {
-            
+            ob_start();            
             $qr_code_serial_no = get_the_title($serial_number_id);
             $curtain_specification = get_post_field('post_content', $serial_number_id);
             $curtain_model_id = get_post_meta($serial_number_id, 'curtain_model_id', true);
             $customer_order_number = get_post_meta($serial_number_id, 'customer_order_number', true);
-            ob_start();
             ?>
             <fieldset>
                 <input type="hidden" id="serial-number-id" value="<?php echo esc_attr($serial_number_id);?>" />

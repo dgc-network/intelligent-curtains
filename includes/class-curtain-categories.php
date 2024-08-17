@@ -9,7 +9,7 @@ if (!class_exists('curtain_categories')) {
         public function __construct() {
 
             add_shortcode( 'curtain-category-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+            //add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
             add_action( 'wp_ajax_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_category_dialog_data', array( $this, 'set_curtain_category_dialog_data' ) );
@@ -26,10 +26,7 @@ if (!class_exists('curtain_categories')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'curtain-categories'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'curtain-category', $args );
         }

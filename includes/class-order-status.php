@@ -9,7 +9,7 @@ if (!class_exists('order_status')) {
         public function __construct() {
 
             add_shortcode( 'order-status-list', array( $this, 'display_shortcode' ) );
-            add_action( 'init', array( $this, 'register_order_status_post_type' ) );
+            //add_action( 'init', array( $this, 'register_order_status_post_type' ) );
 
             add_action( 'wp_ajax_get_order_status_dialog_data', array( $this, 'get_order_status_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_order_status_dialog_data', array( $this, 'get_order_status_dialog_data' ) );
@@ -27,10 +27,7 @@ if (!class_exists('order_status')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                'rewrite'       => array('slug' => 'order-statuses'),
-                'supports'      => array('title', 'editor', 'custom-fields'),
-                'has_archive'   => true,
-                'show_in_menu'  => false,
+                //'show_in_menu'  => false,
             );
             register_post_type( 'order-status', $args );
         }
@@ -232,9 +229,7 @@ if (!class_exists('order_status')) {
             endwhile;
             wp_reset_postdata();
             return $options;
-        }
-        
-
-   }
+        }        
+    }
     $order_status = new order_status();
 }

@@ -73,8 +73,10 @@ if (!class_exists('login_users')) {
                             <tr>
                                 <th><?php echo __( 'Name', 'your-text-domain' );?></th>
                                 <th><?php echo __( 'Email', 'your-text-domain' );?></th>
+<?php /*                                
                                 <th><?php echo __( '倉管人員', 'your-text-domain' );?></th>
                                 <th><?php echo __( '工廠人員', 'your-text-domain' );?></th>
+*/?>                                
                             </tr>
                         </thead>
                         <tbody>
