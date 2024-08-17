@@ -122,7 +122,7 @@ if (!class_exists('curtain_categories')) {
         }
         
         function display_curtain_category_dialog($curtain_category_id=false) {
-            
+            ob_start();            
             $curtain_category_title = get_the_title($curtain_category_id);
             $curtain_min_width = get_post_meta($curtain_category_id, 'curtain_min_width', true);
             $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
@@ -132,7 +132,6 @@ if (!class_exists('curtain_categories')) {
             $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
             $is_height = get_post_meta($curtain_category_id, 'is_height', true);
             $is_height_checked = ($is_height == 1) ? 'checked' : '';
-            ob_start();
             ?>
             <fieldset>
                 <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
