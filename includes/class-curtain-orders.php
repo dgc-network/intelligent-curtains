@@ -1349,11 +1349,13 @@ if (!class_exists('curtain_orders')) {
                                 $is_height = get_post_meta($curtain_category_id, 'is_height', true);
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
-                                $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                                //$curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                                $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
                                 $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
                                 $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                                 $curtain_specification_description = get_post_field('post_content', $curtain_specification_id);
-                                $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                                //$curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                                $curtain_specification_price = get_post_meta($curtain_specification_id, 'product_item_price', true);
                                 $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
 
                                 $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
@@ -1469,10 +1471,10 @@ if (!class_exists('curtain_orders')) {
                 <label for="curtain-category-id"><?php echo __( '類別', 'your-text-domain' );?></label>
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
                 <label for="curtain-model-id"><?php echo __( '型號', 'your-text-domain' );?></label>
-                <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_model_id, $curtain_category_id);?><?php //echo $curtain_models->select_curtain_model_options($curtain_model_id, $curtain_category_id);?></select>
+                <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_model_id, $curtain_category_id);?></select>
                 <div id="spec-div" style="<?php echo $is_specification_hided;?>">
                     <label for="curtain-specification-id"><?php echo __( '規格', 'your-text-domain' );?></label>
-                    <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_specification_id, $curtain_category_id, true);?><?php //echo $curtain_specifications->select_curtain_specification_options($curtain_specification_id, $curtain_category_id);?></select>
+                    <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_specification_id, $curtain_category_id, true);?></select>
                     <label for="curtain-width"><?php echo __( '寬', 'your-text-domain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
                     <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" class="text ui-widget-content ui-corner-all" />
                     <div id="height-div" style="<?php echo $is_height_hided;?>">
