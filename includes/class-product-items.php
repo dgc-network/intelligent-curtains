@@ -207,7 +207,7 @@ if (!class_exists('product_items')) {
             } else {
                 $current_user_id = get_current_user_id();
                 $new_post = array(
-                    'post_title'    => 'New product',
+                    'post_title'    => '-',
                     'post_content'  => 'Your post content goes here.',
                     'post_status'   => 'publish',
                     'post_author'   => $current_user_id,
