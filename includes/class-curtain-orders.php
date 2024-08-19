@@ -910,7 +910,9 @@ if (!class_exists('curtain_orders')) {
                         <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
+                        <?php if (current_user_can('administrator')) {?>
                         <input type="button" id="del-production-order-<?php echo $production_order_id;?>" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <?php }?>
                         <input type="button" id="exit-production-order-dialog" value="<?php echo __( 'Exit', 'your-text-domain' )?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
