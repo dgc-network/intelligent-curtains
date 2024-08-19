@@ -279,7 +279,7 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
                             $customer_order_remark = get_post_meta(get_the_ID(), 'customer_order_remark', true);
                             ?>
-                            <tr id="edit-quotation-<?php the_ID();?>">
+                            <tr id="edit-customer-order-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($modified_time);?></td>
                                 <td><?php echo esc_html($customer_name);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
@@ -371,10 +371,11 @@ if (!class_exists('curtain_orders')) {
                             $status_code = get_post_meta($order_status_id, 'status_code', true);
                             $status_color = get_post_meta($order_status_id, 'status_color', true);
                             $customer_order_status = get_post_field('post_content', $order_status_id);
+                            $customer_order_status .= ', code:'.$status_code;
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
                             <?php if ($status_code=='order01'||$status_code=='order02') echo '<tr>'; else ?>
-                            <tr id="edit-quotation-<?php the_ID();?>">
+                            <tr id="edit-customer-order-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
@@ -647,7 +648,7 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_number = get_post_meta(get_the_ID(), 'curtain_ship_number', true);
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
-                            <tr id="edit-quotation-<?php the_ID();?>">
+                            <tr id="edit-customer-order-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>

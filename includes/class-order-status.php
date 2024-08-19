@@ -60,7 +60,7 @@ if (!class_exists('order_status')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'ID', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Code', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Title', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Description', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Action', 'your-text-domain' );?></th>

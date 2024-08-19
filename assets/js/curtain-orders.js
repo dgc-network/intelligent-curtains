@@ -339,9 +339,6 @@ jQuery(document).ready(function($) {
                 } else {
                     alert('你沒有讀取本筆資料的權限!');
                 }
-                
-                //$('#result-container').html(response.html_contain);
-                //activate_customer_order_dialog_data(production_order_id);
             },
             error: function (error) {
                 console.error(error);
@@ -350,8 +347,8 @@ jQuery(document).ready(function($) {
 
     });
 
-    $('[id^="edit-quotation-"]').on("click", function () {
-        const customer_order_id = this.id.substring(15);
+    $('[id^="edit-customer-order-"]').on("click", function () {
+        const customer_order_id = this.id.substring(20);
         $.ajax({
             url: ajax_object.ajax_url,
             type: 'post',
