@@ -1620,6 +1620,7 @@ if (!class_exists('curtain_orders')) {
                     $product_item_vendor_spec = get_post_meta($curtain_specification_id, 'product_item_vendor', true);
                     
                     // Add items to the respective vendor group
+                    if ($curtain_model_id)
                     $production_items_by_vendor[$product_item_vendor_model][] = [
                         'curtain_model_id' => $curtain_model_id,
                         'order_item_qty'   => $order_item_qty,
@@ -1628,6 +1629,7 @@ if (!class_exists('curtain_orders')) {
                         'curtain_height'   => null,
                     ];
                     
+                    if ($curtain_specification_id)
                     $production_items_by_vendor[$product_item_vendor_spec][] = [
                         'curtain_model_id' => $curtain_specification_id,
                         'order_item_qty'   => $order_item_qty,
