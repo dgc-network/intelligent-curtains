@@ -374,7 +374,7 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_status .= ', code:'.$status_code;
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             if ($status_code=='order01'||$status_code=='order02') echo '<tr>';
-                            else echo '<tr id="edit-customer-order-'.get_the_ID().'">'
+                            else echo '<tr id="edit-customer-order-'.get_the_ID().'">';
 /*                            
                             ?>
                             <?php if ($status_code=='order01'||$status_code=='order02') {?><tr><?php }?>
