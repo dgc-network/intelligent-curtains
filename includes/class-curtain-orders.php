@@ -50,7 +50,6 @@ if (!class_exists('curtain_orders')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'customer-order', $args );
         }
@@ -62,7 +61,6 @@ if (!class_exists('curtain_orders')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'order-item', $args );
         }
@@ -70,9 +68,6 @@ if (!class_exists('curtain_orders')) {
         function display_shortcode() {
             // Check if the user is logged in
             if (is_user_logged_in()) {
-
-                //$this->data_migration();
-
                 // Start point
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
@@ -205,12 +200,18 @@ if (!class_exists('curtain_orders')) {
                 if ($current_status_code=="order01") {
                     $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
                     update_post_meta( $production_order_id, 'taobao_order_number', $taobao_order_number);
-                    //update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number);
+                    $taobao_order_number_in_customer_order = get_post_meta($customer_order_id, 'taobao_order_number', true);
+                    if ($taobao_order_number_in_customer_order) $taobao_order_number_in_customer_order.=', '.$taobao_order_number;
+                    else $taobao_order_number_in_customer_order=$taobao_order_number;
+                    update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number_in_customer_order);
                 }
                 if ($current_status_code=="order02") {
                     $taobao_ship_number = sanitize_text_field($_POST['_taobao_ship_number']);
                     update_post_meta( $production_order_id, 'taobao_ship_number', $taobao_ship_number);
-                    //update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number);
+                    $taobao_ship_number_in_customer_order = get_post_meta($customer_order_id, 'taobao_ship_number', true);
+                    if ($taobao_ship_number_in_customer_order) $taobao_ship_number_in_customer_order.=', '.$taobao_ship_number;
+                    else $taobao_ship_number_in_customer_order=$taobao_ship_number;
+                    update_post_meta( $customer_order_id, 'taobao_ship_number', $taobao_ship_number_in_customer_order);
                 }
                 if ($current_status_code=="order03") {
                     $curtain_ship_number = sanitize_text_field($_POST['_curtain_ship_number']);
@@ -504,8 +505,10 @@ if (!class_exists('curtain_orders')) {
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
+<?php /*                    
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+*/?>                    
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
@@ -626,8 +629,8 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
+                            <th><?php echo __( '訂單號碼', 'your-text-domain' );?></th>
                             <th><?php echo __( '訂單日期', 'your-text-domain' );?></th>
-                            <th><?php echo __( '淘寶訂單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '快遞單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '送貨單號', 'your-text-domain' );?></th>
                             <th><?php echo __( '送貨日期', 'your-text-domain' );?></th>
@@ -652,8 +655,8 @@ if (!class_exists('curtain_orders')) {
                             $curtain_ship_date = get_post_meta(get_the_ID(), 'curtain_ship_date', true);
                             ?>
                             <tr id="edit-customer-order-<?php the_ID();?>">
+                                <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($taobao_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($taobao_ship_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_ship_number);?></td>
                                 <td style="text-align:center;"><?php echo wp_date(get_option('date_format'), $curtain_ship_date);?></td>
