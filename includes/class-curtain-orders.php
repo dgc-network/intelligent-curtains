@@ -12,6 +12,8 @@ if (!class_exists('curtain_orders')) {
 
             add_action( 'wp_ajax_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
+            add_action( 'wp_ajax_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
 
             add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
@@ -531,8 +533,8 @@ if (!class_exists('curtain_orders')) {
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <input type="button" id="save-quotation" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                        <input type="button" id="del-quotation" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="save-customer-order" value="<?php echo __( 'Save', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="del-customer-order" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
                         <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
@@ -613,6 +615,15 @@ if (!class_exists('curtain_orders')) {
         }
 
         // production-order
+        function del_production_order_dialog_data() {
+            $response = array();
+            if( isset($_POST['_production_order_id']) ) {
+                $production_order_id = sanitize_text_field($_POST['_production_order_id']);
+                wp_delete_post($production_order_id, true);
+            }
+            wp_send_json($response);
+        }
+
         function display_shipping_list() {
             ?>
             <div class="ui-widget" id="result-container">
@@ -894,9 +905,14 @@ if (!class_exists('curtain_orders')) {
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
 
                 <hr>
-                <div>
-                <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
-                <input type="button" id="exit-customer-order-dialog" value="<?php echo __( 'Exit', 'your-text-domain' )?>" style="margin:3px; display:inline;" />
+                <div style="display:flex; justify-content:space-between; margin:5px;">
+                    <div>
+                        <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                    </div>
+                    <div style="text-align:right; display:flex;">
+                        <input type="button" id="del-production-order-<?php echo $production_order_id;?>" value="<?php echo __( 'Delete', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="exit-production-order-dialog" value="<?php echo __( 'Exit', 'your-text-domain' )?>" style="margin:3px; display:inline;" />
+                    </div>
                 </div>
             </fieldset>
             <?php

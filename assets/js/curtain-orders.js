@@ -335,7 +335,7 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 if (response.html_contain) { // Check if response.html_contain exists and is not empty
                     $('#result-container').html(response.html_contain);
-                    activate_customer_order_dialog_data(production_order_id);
+                    activate_production_order_dialog_data(production_order_id);
                 } else {
                     alert('你沒有讀取本筆資料的權限!');
                 }
@@ -389,6 +389,81 @@ jQuery(document).ready(function($) {
             }
         });    
     });
+
+    function activate_production_order_dialog_data(production_order_id) {
+        $('[id^="proceed-production-order-status-"]').on("click", function () {
+            const next_status = this.id.substring(32);
+            const statusCode = $("#status-code").val();
+            const taobaoOrderNumber = $("#taobao-order-number").val();
+            const taobaoShipNumber = $("#taobao-ship-number").val();
+            const curtainShipNumber = $("#curtain-ship-number").val();
+
+            if (statusCode=='order01' && !taobaoOrderNumber) {
+                alert("Taobao order number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order02' && !taobaoShipNumber) {
+                alert("Taobao ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+            if (statusCode=='order03' && !curtainShipNumber) {
+                alert("Curtain ship number cannot be empty!");
+                return; // Stop the process if the value is empty
+            }
+
+            const ajaxData = {
+                'action': 'proceed_production_order_status',
+            };
+            ajaxData['_next_status'] = next_status;
+            //ajaxData['_production_order_id'] = $("#production-order-id").val();
+            ajaxData['_production_order_id'] = production_order_id;
+            ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
+            ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
+            ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
+    
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: "json",
+                data: ajaxData,
+                success: function (response) {
+                    window.location.replace(window.location.href);
+                },
+                error: function(error){
+                    console.error(error);                    
+                    alert(error);
+                }
+            });    
+        });
+
+        $('[id^="del-production-order-"]').on("click", function () {
+            if (window.confirm("Are you sure you want to delete this production order?")) {
+                //const production_order_id = this.id.substring(21);
+                $.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'del_production_order_dialog_data',
+                        '_production_order_id': production_order_id,
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            }
+        });
+
+        $("#exit-production-order-dialog").on("click", function () {
+            window.location.replace(window.location.href);
+        });
+
+
+    }
 
     function activate_customer_order_dialog_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
@@ -569,7 +644,7 @@ jQuery(document).ready(function($) {
             }
         });            
 
-        $("#save-quotation").on("click", function() {
+        $("#save-customer-order").on("click", function() {
             const ajaxData = {
                 'action': 'set_customer_order_dialog_data',
             };
@@ -593,7 +668,7 @@ jQuery(document).ready(function($) {
             });
         });
 
-        $("#del-quotation").on("click", function() {
+        $("#del-customer-order").on("click", function() {
             if (window.confirm("Are you sure you want to delete this quotation?")) {
                 $.ajax({
                     type: 'POST',
@@ -755,49 +830,6 @@ jQuery(document).ready(function($) {
             });    
         });
 
-        $('[id^="proceed-production-order-status-"]').on("click", function () {
-            const next_status = this.id.substring(32);
-            const statusCode = $("#status-code").val();
-            const taobaoOrderNumber = $("#taobao-order-number").val();
-            const taobaoShipNumber = $("#taobao-ship-number").val();
-            const curtainShipNumber = $("#curtain-ship-number").val();
-
-            if (statusCode=='order01' && !taobaoOrderNumber) {
-                alert("Taobao order number cannot be empty!");
-                return; // Stop the process if the value is empty
-            }
-            if (statusCode=='order02' && !taobaoShipNumber) {
-                alert("Taobao ship number cannot be empty!");
-                return; // Stop the process if the value is empty
-            }
-            if (statusCode=='order03' && !curtainShipNumber) {
-                alert("Curtain ship number cannot be empty!");
-                return; // Stop the process if the value is empty
-            }
-
-            const ajaxData = {
-                'action': 'proceed_production_order_status',
-            };
-            ajaxData['_next_status'] = next_status;
-            ajaxData['_production_order_id'] = $("#production-order-id").val();
-            ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
-            ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
-            ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
-    
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: ajaxData,
-                success: function (response) {
-                    window.location.replace(window.location.href);
-                },
-                error: function(error){
-                    console.error(error);                    
-                    alert(error);
-                }
-            });    
-        });
 
     };
 
