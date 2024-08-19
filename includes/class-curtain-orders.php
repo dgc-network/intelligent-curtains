@@ -368,10 +368,12 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
                             $order_status_id = get_post_meta(get_the_ID(), 'customer_order_status', true);
+                            $status_code = get_post_meta($order_status_id, 'status_code', true);
                             $status_color = get_post_meta($order_status_id, 'status_color', true);
                             $customer_order_status = get_post_field('post_content', $order_status_id);
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
                             ?>
+                            <?php if ($status_code=='order01'||$status_code=='order02') echo '<tr>'; else ?>
                             <tr id="edit-quotation-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
@@ -851,7 +853,6 @@ if (!class_exists('curtain_orders')) {
             $next_status_code = get_post_meta($order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
             if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($order_status), 'your-text-domain' ).'</h2>';
-            //else echo '<h2 style="display:inline;">'.__( '報價單', 'your-text-domain' ).'</h2>';
             ?>
             <fieldset>
                 <input type="hidden" id="production-order-id" value="<?php echo esc_attr($production_order_id);?>" />
