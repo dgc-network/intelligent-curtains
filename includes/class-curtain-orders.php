@@ -1318,7 +1318,8 @@ if (!class_exists('curtain_orders')) {
                             'compare' => '=',
                         ),
                         array(
-                            'key'     => 'curtain_agent_password',
+                            //'key'     => 'curtain_agent_password',
+                            'key'     => 'curtain_agent_phone',
                             'value'   => $agent_password,
                             'compare' => '=',
                         ),
@@ -1333,12 +1334,13 @@ if (!class_exists('curtain_orders')) {
                         // Output or manipulate post data here
                         $current_user = wp_get_current_user();
                         update_user_meta($current_user->ID, 'curtain_agent_id', get_the_ID());
+/*                        
                         wp_update_user([
                             'ID' => $current_user->ID,
                             'display_name' => $display_name,
                             'user_email' => $user_email,
                         ]);
-
+*/
                     }
                     wp_reset_postdata(); // Restore global post data
                 }
