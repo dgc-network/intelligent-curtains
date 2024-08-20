@@ -245,8 +245,8 @@ jQuery(document).ready(function($) {
         };
         ajaxData['_agent_number'] = $("#agent-number").val();
         ajaxData['_agent_password'] = $("#agent-password").val();
-        ajaxData['_display_name'] = $("#display-name").val();
-        ajaxData['_user_email'] = $("#user-email").val();
+        //ajaxData['_display_name'] = $("#display-name").val();
+        //ajaxData['_user_email'] = $("#user-email").val();
 
         $.ajax({
             type: 'POST',

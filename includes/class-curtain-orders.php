@@ -1284,13 +1284,15 @@ if (!class_exists('curtain_orders')) {
                 <h4><?php echo __( '系統登入/註冊', 'your-text-domain' );?></h4>
                 <fieldset>
                     <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'your-text-domain' );?></label>
-                    <input type="text" id="agent-number" />
+                    <input type="text" id="agent-number" class="text ui-widget-content ui-corner-all" />
                     <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'your-text-domain' );?></label>
-                    <input type="password" id="agent-password" />
+                    <input type="password" id="agent-password" class="text ui-widget-content ui-corner-all" />
+<?php /*                    
                     <label style="text-align:left;" for="display-name"><?php echo __( 'Name:', 'your-text-domain' );?></label>
                     <input type="text" id="display-name" value="<?php echo $current_user->display_name;?>" />
                     <label style="text-align:left;" for="user-email"><?php echo __( 'Email:', 'your-text-domain' );?></label>
                     <input type="text" id="user-email" value="<?php echo $current_user->user_email;?>" />
+*/?>                    
                     <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
                 </fieldset>
             </div>
