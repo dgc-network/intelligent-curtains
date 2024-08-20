@@ -35,6 +35,18 @@ function remove_admin_bar() {
     }
 }
 add_action('after_setup_theme', 'remove_admin_bar');
+
+function redirect_subscribers_after_login($redirect_to, $request, $user) {
+    // Check if the user has the subscriber role
+    if (isset($user->roles) && is_array($user->roles) && in_array('subscriber', $user->roles)) {
+        // Redirect to the root URL
+        return home_url('/');
+    }
+
+    // Return the original redirect URL for other roles
+    return $redirect_to;
+}
+add_filter('login_redirect', 'redirect_subscribers_after_login', 10, 3);
 /*
 function remove_admin_bar() {
     if (!current_user_can('administrator') && !is_admin()) {
