@@ -89,7 +89,7 @@ if (!class_exists('curtain_orders')) {
                         echo '</div>';                            
                     } else $this->display_quotation_list();
                 } else {
-                    $this->user_login_agent();
+                    $this->user_login_agent_dialog();
                 }
             } else {
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
@@ -1278,7 +1278,7 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
-        function user_login_agent() {
+        function user_login_agent_dialog() {
             ?>
             <div style="text-align:center;">
                 <h4><?php echo __( '系統登入/註冊', 'your-text-domain' );?></h4>
