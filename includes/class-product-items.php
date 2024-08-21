@@ -201,7 +201,7 @@ if (!class_exists('product_items')) {
                 $updated_post = array(
                     'ID'         => $product_item_id,
                     'post_title' => sanitize_text_field($_POST['_product_item_title']),
-                    'post_content' => sanitize_text_field($_POST['_product_item_content']),
+                    'post_content' => $_POST['_product_item_content'],
                 );
                 wp_update_post($updated_post);
             } else {

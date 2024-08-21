@@ -171,7 +171,7 @@ if (!class_exists('serial_number')) {
                 $updated_post = array(
                     'ID'         => $serial_number_id,
                     'post_title' => sanitize_text_field($_POST['_qr_code_serial_no']),
-                    'post_content' => sanitize_text_field($_POST['_curtain_specification']),
+                    'post_content' => $_POST['_curtain_specification'],
                 );
                 wp_update_post($updated_post);
             } else {

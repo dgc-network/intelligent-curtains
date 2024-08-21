@@ -194,7 +194,7 @@ if (!class_exists('curtain_specifications')) {
                 $updated_post = array(
                     'ID'         => $curtain_specification_id,
                     'post_title' => sanitize_text_field($_POST['_curtain_specification_title']),
-                    'post_content' => sanitize_text_field($_POST['_curtain_specification_description']),
+                    'post_content' => $_POST['_curtain_specification_description'],
                 );
                 wp_update_post($updated_post);
             } else {

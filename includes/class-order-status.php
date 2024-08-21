@@ -182,7 +182,7 @@ if (!class_exists('order_status')) {
                     $updated_post = array(
                         'ID'         => $order_status_id,
                         'post_title' => sanitize_text_field($_POST['_status_title']),
-                        'post_content' => sanitize_text_field($_POST['_status_description']),
+                        'post_content' => $_POST['_status_description'],
                     );
                     wp_update_post($updated_post);
                 }
