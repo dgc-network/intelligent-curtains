@@ -376,12 +376,14 @@ if (!class_exists('curtain_orders')) {
                             $customer_order_status = get_post_field('post_content', $order_status_id);
                             $customer_order_status .= ', code:'.$status_code;
                             if (current_user_can('administrator')) $customer_order_status = $curtain_agent_name.'('.$curtain_agent_number.'):'.$customer_order_status;
-                            if ($status_code=='order01'||$status_code=='order02') echo '<tr>';
-                            else echo '<tr id="edit-customer-order-'.get_the_ID().'">';
+                            //if ($status_code=='order01'||$status_code=='order02') echo '<tr>';
+                            //else echo '<tr id="edit-customer-order-'.get_the_ID().'">';
 /*                            
                             ?>
                             <?php if ($status_code=='order01'||$status_code=='order02') {?><tr><?php }?>
-                            <?php else {?><tr id="edit-customer-order-<?php the_ID();?>"><?php }*/?>
+                            <?php else {?><tr id="edit-customer-order-<?php the_ID();?>"><?php }*/
+                            ?>
+                            <tr id="edit-customer-order-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_number);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($customer_order_time);?></td>
                                 <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
@@ -1217,12 +1219,14 @@ if (!class_exists('curtain_orders')) {
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                             $curtain_model_description = $curtain_model_description . '(' . get_the_title($curtain_model_id) . ')';
-                            $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                            //$curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                            $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
                             $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
 
                             $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                             $curtain_specification_description = get_post_field('post_content', $curtain_specification_id);
-                            $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                            //$curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                            $curtain_specification_price = get_post_meta($curtain_specification_id, 'product_item_price', true);
                             $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
 
                             $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
