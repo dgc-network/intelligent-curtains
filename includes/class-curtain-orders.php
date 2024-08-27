@@ -1240,8 +1240,8 @@ if (!class_exists('curtain_orders')) {
                             if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
                             if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
 
-                            $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
-                            $order_item_amount = ($order_item_amount) ? $order_item_amount : 0;
+                            //$order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+                            //$order_item_amount = ($order_item_amount) ? $order_item_amount : 0;
                             $sum += $order_item_amount;
                             ?>
                             <tr>
@@ -1265,7 +1265,7 @@ if (!class_exists('curtain_orders')) {
             ?>
             <div style="display:flex; justify-content:space-between; margin:5px;">
             <div>
-                <input type="button" id="exit-customer-order-printing" value="<?php echo __( 'Exit', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="exit-account-receivable-printing" value="<?php echo __( 'Exit', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
             </div>
             <div style="text-align:right;">
                 <h3><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></h3>

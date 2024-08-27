@@ -774,6 +774,10 @@ jQuery(document).ready(function($) {
                         },
                         success: function (response) {
                             $('#result-container').html(response.html_contain);
+                            $("#exit-account-receivable-printing").on("click", function () {
+                                window.location.replace(window.location.href);
+                            });                        
+
                             $('#account-receivable-dialog').dialog('close');
                         },
                         error: function(error){
