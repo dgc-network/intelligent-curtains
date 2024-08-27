@@ -509,10 +509,6 @@ if (!class_exists('curtain_orders')) {
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
-<?php /*                    
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
-*/?>                    
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
@@ -1264,8 +1260,15 @@ if (!class_exists('curtain_orders')) {
                 <?php
 
             }
-
-            ?><div style="text-align:right;"><h3><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></h3></div><?php
+            ?>
+            <div style="display:flex; justify-content:space-between; margin:5px;">
+            <div>
+                <input type="button" id="exit-customer-order-printing" value="<?php echo __( 'Exit', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+            </div>
+            <div style="text-align:right;">
+                <h3><?php echo __( '總金額：', 'your-text-domain' );?><?php echo number_format_i18n($sum);?></h3>
+            </div>
+            <?php
             return ob_get_clean();
         }
 
