@@ -1,5 +1,5 @@
 // login-users 2024-6-12 revision
-jQuery(document).ready(function($) {
+jQuery(document).ready(function($) {    
     $("#search-user").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');
@@ -126,6 +126,35 @@ jQuery(document).ready(function($) {
 
 // order-status 2024-6-11 revision
 jQuery(document).ready(function($) {
+    $("#wp-login-submit").on( "click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'wp_login_submit',
+                '_display_name': $('#display-name').val(),
+                '_user_email': $('#user-email').val(),
+                //'_site_id': $('#site-id').val(),
+                '_log': $('#log').val(),
+                '_pwd': $('#pwd').val(),
+                '_rememberme': $('#rememberme').val(),
+            },
+            success: function (response) {
+                if (response.success) {
+                    window.location.replace("/");
+                    //alert("Success!");
+                } else {
+                    alert("Error: " + response.error);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+                alert(error);
+            }
+        });            
+    });
+
     $("#search-status").on( "change", function() {
         window.location.replace("?_search="+$(this).val());
         $(this).val('');

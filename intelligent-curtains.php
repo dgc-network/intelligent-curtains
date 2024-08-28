@@ -311,6 +311,54 @@ function is_user_not_an_agent($user_id=false) {
     return false;
 }
 
+function wp_login_submit() {
+    $response = array('success' => false, 'error' => 'Invalid data format');
+
+    if (isset($_POST['_display_name']) && isset($_POST['_user_email']) && isset($_POST['_log']) && isset($_POST['_pwd'])) {
+        $user_login = sanitize_text_field($_POST['_log']);
+        $user_password = sanitize_text_field($_POST['_pwd']);
+        $display_name = sanitize_text_field($_POST['_display_name']);
+        $user_email = sanitize_text_field($_POST['_user_email']);
+
+        $credentials = array(
+            'user_login'    => $user_login,
+            'user_password' => $user_password,
+            'remember'      => true,
+        );
+
+        $user = wp_signon($credentials, false);
+
+        if (!is_wp_error($user)) {
+            wp_set_current_user($user->ID);
+            wp_set_auth_cookie($user->ID);
+            do_action('wp_login', $user->user_login);
+
+            wp_update_user(array(
+                'ID' => $user->ID,
+                'display_name' => $display_name,
+                'user_email' => $user_email,
+            ));
+/*
+            // is curtain_agent_id()?
+            $curtain_agent_id = get_user_meta($user->ID, 'curtain_agent_id', true);
+            if (!$curtain_agent_id) {
+                if (isset($_POST['_curtain_agent_id'])) $curtain_agent_id = sanitize_text_field($_POST['_curtain_agent_id']);
+                $user_ids = get_users_by_site_id($site_id);
+                if (!empty($user_ids)) $response = array('error' => 'site_id is wrong!');
+            }
+
+            update_user_meta( $user->ID, 'site_id', $site_id);
+*/
+            $response = array('success' => true);
+        } else {
+            $response = array('error' => $user->get_error_message());
+        }
+    }
+    wp_send_json($response);
+}
+add_action('wp_ajax_wp_login_submit', 'wp_login_submit');
+add_action('wp_ajax_nopriv_wp_login_submit', 'wp_login_submit');
+
 function get_post_type_meta_keys($post_type) {
     global $wpdb;
     $query = $wpdb->prepare("
