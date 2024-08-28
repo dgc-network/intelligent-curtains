@@ -239,8 +239,9 @@ function user_did_not_login_yet() {
         </div>
         <?php        
     } else {
-
+/*
         ?><script>window.location.replace("https://aihome.tw/wp-login.php");</script><?php
+*/        
         //wp_redirect( $current_url );
         //exit();                
 
@@ -266,6 +267,20 @@ function user_did_not_login_yet() {
 
         <div class="mobile-content ui-widget" style="text-align:center; display:none;">
             <!-- Content for mobile users -->
+            <p><?php echo __( '感謝您使用我們的系統', 'your-text-domain' );?></p>
+            <p><?php echo __( '利用手機按或掃描下方QR code', 'your-text-domain' );?></p>
+            <p><?php echo __( '加入我們的Line官方帳號,', 'your-text-domain' );?></p>
+            <a href="<?php echo get_option('line_official_account');?>">
+                <img src="<?php echo get_option('line_official_qr_code');?>">
+            </a>
+            <p><?php echo __( '並請在聊天室中, 輸入', 'your-text-domain' );?></p>
+            <p><?php echo __( '「我要註冊」或「我要登錄」,', 'your-text-domain' );?></p>
+            <p><?php echo __( '啟動註冊/登入作業。', 'your-text-domain' );?></p>
+        </div>
+
+<?php /*
+        <div class="mobile-content ui-widget" style="text-align:center; display:none;">
+            <!-- Content for mobile users -->
             <p>感謝您使用我們的系統</p>
             <p>請加入我們的Line官方帳號,</p>
             <p>利用手機按或掃描下方QR code</p>
@@ -276,6 +291,7 @@ function user_did_not_login_yet() {
             <h3><?php echo get_option('_one_time_password');?></h3>
             <p>完成註冊/登入作業</p>
         </div>
+*/?>        
         <?php
     }    
 }
