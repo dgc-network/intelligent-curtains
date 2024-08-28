@@ -69,7 +69,9 @@ if (!class_exists('curtain_orders')) {
 
         function display_shortcode() {
             // Check if the user is logged in
-            if (is_user_logged_in()) {
+            if (!is_user_logged_in()) user_did_not_login_yet();
+            elseif (is_user_not_an_agent()) $this->user_login_agent_dialog();
+            else {
                 // Start point
                 if (isset($_GET['_is_admin'])) {
                     echo '<input type="hidden" id="is-admin" value="1" />';
@@ -88,13 +90,36 @@ if (!class_exists('curtain_orders')) {
                         echo $this->display_customer_order_dialog($_GET['_id']);
                         echo '</div>';                            
                     } else $this->display_quotation_list();
+                }
+            }
+/*
+            if (is_user_logged_in()) {
+                // Start point
+                if (isset($_GET['_is_admin'])) {
+                    echo '<input type="hidden" id="is-admin" value="1" />';
+                }
+
+                $current_user_id = get_current_user_id();
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
+                if ($curtain_agent_id) {
+                    $status_id = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
+                    $status_code = get_post_meta($status_id, 'status_code', true);
+                    if ($status_code=='order01'||$status_code=='order02'||$_GET['_category']==3) $this->display_production_list(); 
+                    elseif ($status_code=='order03'||$_GET['_category']==4) $this->display_shipping_list(); 
+                    elseif ($_GET['_category']==2) $this->display_customer_order_list();
+                    } elseif (isset($_GET['_id'])) {
+                        echo '<div class="ui-widget" id="result-container">';
+                        echo $this->display_customer_order_dialog($_GET['_id']);
+                        echo '</div>';                            
+                    } else $this->display_quotation_list();
                 } else {
                     $this->user_login_agent_dialog();
                 }
             } else {
                 if (isset($_GET['_serial_no'])) $this->display_customer_service($_GET['_serial_no']);
                 else user_did_not_login_yet();
-            }        
+            }
+*/                        
         }
 
         function proceed_customer_order_status() {

@@ -159,7 +159,8 @@ function init_webhook_events() {
                             $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
                             $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
                             // Encode the Chinese characters for inclusion in the URL
-                            $link_uri = home_url().'/service/?_id='.$line_user_id.'&_name='.urlencode($display_name);
+                            //$link_uri = home_url().'/service/?_id='.$line_user_id.'&_name='.urlencode($display_name);
+                            $link_uri = home_url().'/orders/?_line_user_id='.$line_user_id.'&_name='.urlencode($display_name);
                             $flexMessage = set_flex_message($display_name, $link_uri, $text_message);
                             $line_bot_api->replyMessage([
                                 'replyToken' => $event['replyToken'],
@@ -204,6 +205,7 @@ function get_keyword_matched($keyword) {
         
     return false;
 }
+
 function user_did_not_login_yet() {    
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
@@ -294,6 +296,19 @@ function user_did_not_login_yet() {
 */?>        
         <?php
     }    
+}
+
+function is_user_not_an_agent($user_id=false) {
+    if (empty($user_id)) $user_id=get_current_user_id();
+    $user = get_userdata($user_id);
+    // Get the curtain_agent_id meta for the user
+    $curtain_agent_id = get_user_meta($user_id, 'curtain_agent_id', true);
+    
+    // Check if curtain_agent_id does not exist or is empty
+    if (empty($curtain_agent_id)) {
+        return true;
+    }
+    return false;
 }
 
 function get_post_type_meta_keys($post_type) {
