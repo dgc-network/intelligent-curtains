@@ -31,6 +31,22 @@ function user_custom_fields(WP_User $user) {
                     >
                 </td>
             </tr>
+            <tr>
+                <th><label for="curtain_agent_id">Agent</label></th>
+                <td>
+                    <?php
+                    $curtain_agent_id = get_user_meta($user->ID, 'curtain_agent_id', true);
+                    $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+                    ?>
+                    <input
+                        type="text"
+                        value="<?php echo esc_attr($curtain_agent_name); ?>"
+                        name="curtain_agent_id"
+                        id="curtain_agent_id"
+                        class="regular-text"
+                    >
+                </td>
+            </tr>
         </table>
     <?php
 }
