@@ -922,7 +922,7 @@ if (!class_exists('curtain_orders')) {
                 $production_order_id = sanitize_text_field($_POST['_production_order_id']);
                 $order_status = get_post_meta($production_order_id, 'order_status', true);
                 $current_user_id = get_current_user_id();
-                $curtain_agent_id = get_post_meta($current_user_id, 'curtain_agent_id', true);
+                $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                 //if ((int)$order_status == (int)$curtain_agent_status || current_user_can('administrator'))
                 if ((int)$order_status == (int)$curtain_agent_status) {
