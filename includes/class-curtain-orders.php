@@ -931,7 +931,11 @@ if (!class_exists('curtain_orders')) {
                 } else {
                     ob_start();
                     echo '<br>$order_status='.$order_status;
+                    $order_vendor_name = get_post_meta($production_order_vendor, 'curtain_agent_name', true);
+                    echo '<br>訂單供應商: '.$order_vendor_name;
                     echo '<br>$curtain_agent_status='.$curtain_agent_status;
+                    $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+                    echo '<br>我是供應商: '.$curtain_agent_name;
                     $response['html_contain'] = ob_get_clean();
                 }
 /*
