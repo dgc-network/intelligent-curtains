@@ -41,8 +41,10 @@ function user_custom_fields(WP_User $user) {
                     <input
                         type="text"
                         value="<?php echo esc_attr($curtain_agent_name); ?>"
+<?php /*                        
                         name="curtain_agent_id"
                         id="curtain_agent_id"
+*/?>                        
                         class="regular-text"
                     >
                 </td>
