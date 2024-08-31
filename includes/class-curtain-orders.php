@@ -925,8 +925,14 @@ if (!class_exists('curtain_orders')) {
                 $curtain_agent_id = get_post_meta($current_user_id, 'curtain_agent_id', true);
                 $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                 //if ((int)$order_status == (int)$curtain_agent_status || current_user_can('administrator'))
-                if ((int)$order_status == (int)$curtain_agent_status)
-                $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
+                if ((int)$order_status == (int)$curtain_agent_status) {
+                    $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
+                } else {
+                    ob_start();
+                    echo '<br>$order_status='.$order_status;
+                    echo '<br>$curtain_agent_status='.$curtain_agent_status;
+                    $response['html_contain'] = ob_get_clean();
+                }
 /*
                 if (isset($_POST['_is_admin'])) {
                     $is_admin = sanitize_text_field($_POST['_is_admin']);
