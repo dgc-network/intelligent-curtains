@@ -118,7 +118,7 @@ if (!class_exists('curtain_orders')) {
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
         
                         $this->create_new_serial_number($customer_order_id);
-                        $this->transfer_one_to_many($customer_order_id, $next_status);
+                        $this->transfer_customer_order_from_one_to_many_production_order($customer_order_id, $next_status);
 
                         // Notice the administrators
                         $text_message = '訂單號碼「'.time().'」狀態已經從「報價單」被改成「採購單」了，你可以點擊下方按鍵，查看訂單明細。';
@@ -921,11 +921,12 @@ if (!class_exists('curtain_orders')) {
             if (isset($_POST['_production_order_id'])) {
                 $production_order_id = sanitize_text_field($_POST['_production_order_id']);
                 $order_status = get_post_meta($production_order_id, 'order_status', true);
+                $production_order_vendor = get_post_meta($production_order_id, 'production_order_vendor', true);
                 $current_user_id = get_current_user_id();
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                 //if ((int)$order_status == (int)$curtain_agent_status || current_user_can('administrator'))
-                if ((int)$order_status == (int)$curtain_agent_status) {
+                if ($order_status==$curtain_agent_status && $production_order_vendor==$curtain_agent_id) {
                     $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
                 } else {
                     ob_start();
@@ -1637,7 +1638,7 @@ if (!class_exists('curtain_orders')) {
             }
         }
 
-        function transfer_one_to_many($customer_order_id=false, $next_status=false) {
+        function transfer_customer_order_from_one_to_many_production_order($customer_order_id=false, $next_status=false) {
             // Transfer the order-item data by vendor
             $query = $this->retrieve_order_item_data($customer_order_id);
             $production_items_by_vendor = [];
@@ -1711,7 +1712,7 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta($new_production_order_id, 'order_status', $next_status);
                 update_post_meta($new_production_order_id, 'production_order_number', time());
                 update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
-                // Update the customer_order_id meta for the production-order
+                //update_post_meta($new_production_order_id, 'curtain_agent_id', $curtain_agent_id);
                 update_post_meta($new_production_order_id, 'customer_order_id', $customer_order_id);
             }
         }
