@@ -926,9 +926,10 @@ if (!class_exists('curtain_orders')) {
                 $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
                 $curtain_agent_status = get_post_meta($curtain_agent_id, 'curtain_agent_status', true);
                 //if ((int)$order_status == (int)$curtain_agent_status || current_user_can('administrator'))
-                if ($order_status==$curtain_agent_status && $production_order_vendor==$curtain_agent_id) {
+                if (($order_status==$curtain_agent_status && $production_order_vendor==$curtain_agent_id) || current_user_can('administrator')) {
                     $response['html_contain'] = $this->display_production_order_dialog($production_order_id);
                 } else {
+/*                    
                     ob_start();
                     echo '<br>$order_status='.$order_status;
                     $order_vendor_name = get_post_meta($production_order_vendor, 'curtain_agent_name', true);
@@ -937,6 +938,7 @@ if (!class_exists('curtain_orders')) {
                     $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
                     echo '<br>我是供應商: '.$curtain_agent_name;
                     $response['html_contain'] = ob_get_clean();
+*/                    
                 }
 /*
                 if (isset($_POST['_is_admin'])) {
