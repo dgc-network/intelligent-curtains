@@ -388,7 +388,7 @@ jQuery(document).ready(function($) {
             },
             success: function (response) {
 
-                $('#result-container').html(response.html_contain);                        
+                $('#result-container').html(response.html_contain);
                 activate_customer_order_dialog_data(customer_order_id);
 
             },
@@ -410,7 +410,9 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: ajaxData,
             success: function (response) {
-                window.location.replace(window.location.href);
+                //window.location.replace(window.location.href);
+                $('#result-container').html(response.html_contain);
+                activate_customer_order_dialog_data($("#customer-order-id").val());
             },
             error: function(error){
                 console.error(error);                    
