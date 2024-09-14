@@ -1,7 +1,7 @@
 // login-users 2024-6-12 revision
 jQuery(document).ready(function($) {    
     $("#search-user").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -135,7 +135,6 @@ jQuery(document).ready(function($) {
                 'action': 'wp_login_submit',
                 '_display_name': $('#display-name').val(),
                 '_user_email': $('#user-email').val(),
-                //'_site_id': $('#site-id').val(),
                 '_log': $('#log').val(),
                 '_pwd': $('#pwd').val(),
                 '_rememberme': $('#rememberme').val(),
@@ -143,7 +142,6 @@ jQuery(document).ready(function($) {
             success: function (response) {
                 if (response.success) {
                     window.location.replace("/");
-                    //alert("Success!");
                 } else {
                     alert("Error: " + response.error);
                 }
@@ -156,7 +154,7 @@ jQuery(document).ready(function($) {
     });
 
     $("#search-status").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -255,7 +253,6 @@ jQuery(document).ready(function($) {
     //* Cart Button
     $('[id^="cart-btn"]').mouseover(function() {
         $(this).css('cursor', 'pointer');
-        //$(this).css('color', 'cornflowerblue');
         $(this).css('color', 'red');
     });
         
@@ -274,9 +271,6 @@ jQuery(document).ready(function($) {
         };
         ajaxData['_agent_number'] = $("#agent-number").val();
         ajaxData['_agent_password'] = $("#agent-password").val();
-        //ajaxData['_display_name'] = $("#display-name").val();
-        //ajaxData['_user_email'] = $("#user-email").val();
-
         $.ajax({
             type: 'POST',
             url: ajax_object.ajax_url,
@@ -295,27 +289,22 @@ jQuery(document).ready(function($) {
     $("#select-order-category").on("change", function() {
         // Initialize an empty array to store query parameters
         var queryParams = [];
-    
         // Check the selected value for each select element and add it to the queryParams array
         var categoryValue = $("#select-order-category").val();
         if (categoryValue) {
             queryParams.push("_category=" + categoryValue);
         }
-    
+
         var agentIdValue = $("#select-curtain-agent").val();
         if (agentIdValue) {
             queryParams.push("_curtain_agent_id=" + agentIdValue);
         }
-    
         // Combine all query parameters into a single string
         var queryString = queryParams.join("&");
-    
         // Redirect to the new URL with all combined query parameters
         window.location.href = "?" + queryString;
-    
         // Clear the values of all select elements after redirection
         $("#select-order-category, #select-curtain-agent").val('');
-    
         // Toggle visibility of elements if needed
         $("#quotation-title, #quotation-select, #customer-order-title, #customer-order-select").toggle();
     });
@@ -323,31 +312,26 @@ jQuery(document).ready(function($) {
     $("#select-curtain-agent").on("change", function() {
         // Initialize an empty array to store query parameters
         var queryParams = [];
-    
         // Check the selected value for each select element and add it to the queryParams array
         var categoryValue = $("#select-order-category").val();
         if (categoryValue) {
             queryParams.push("_category=" + categoryValue);
         }
-    
+
         var agentIdValue = $("#select-curtain-agent").val();
         if (agentIdValue) {
             queryParams.push("_curtain_agent_id=" + agentIdValue);
         }
-    
         // Combine all query parameters into a single string
         var queryString = queryParams.join("&");
-    
         // Redirect to the new URL with all combined query parameters
         window.location.href = "?" + queryString;
-    
         // Clear the values of all select elements after redirection
         $("#select-order-category, #select-curtain-agent").val('');
-    
     });
 
     $("#search-order").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -373,7 +357,6 @@ jQuery(document).ready(function($) {
                 console.error(error);
             }
         });
-
     });
 
     $('[id^="edit-customer-order-"]').on("click", function () {
@@ -446,12 +429,11 @@ jQuery(document).ready(function($) {
                 'action': 'proceed_production_order_status',
             };
             ajaxData['_next_status'] = next_status;
-            //ajaxData['_production_order_id'] = $("#production-order-id").val();
             ajaxData['_production_order_id'] = production_order_id;
             ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
             ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
             ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
-    
+
             $.ajax({
                 type: 'POST',
                 url: ajax_object.ajax_url,
@@ -492,8 +474,6 @@ jQuery(document).ready(function($) {
         $("#exit-production-order-dialog").on("click", function () {
             window.location.replace(window.location.href);
         });
-
-
     }
 
     function activate_customer_order_dialog_data(customer_order_id) {
@@ -683,7 +663,7 @@ jQuery(document).ready(function($) {
             ajaxData['_customer_name'] = $("#customer-name").val();
             ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
             ajaxData['_customer_order_remark'] = $("#customer-order-remark").val();
-                    
+
             $.ajax({
                 type: 'POST',
                 url: ajax_object.ajax_url,
@@ -733,7 +713,7 @@ jQuery(document).ready(function($) {
                 ajaxData['_next_status'] = 0;
                 ajaxData['_customer_order_id'] = $("#customer-order-id").val();
                 ajaxData['_customer_order_amount'] = $("#customer-order-amount").val();
-            
+
                 $.ajax({
                     type: 'POST',
                     url: ajax_object.ajax_url,
@@ -849,7 +829,7 @@ jQuery(document).ready(function($) {
             ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
             ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
             ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
-    
+
             $.ajax({
                 type: 'POST',
                 url: ajax_object.ajax_url,
@@ -864,8 +844,6 @@ jQuery(document).ready(function($) {
                 }
             });    
         });
-
-
     };
 
     function activate_curtain_category_id_data(order_item_id=false) {

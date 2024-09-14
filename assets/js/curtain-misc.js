@@ -1,12 +1,12 @@
 // product-item 2024-8-14 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-product").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
+        window.location.replace("?_category="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
     $("#search-product").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
 // serial-number 2024-6-18 revision
 jQuery(document).ready(function($) {
     $("#search-serial-number").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -199,7 +199,7 @@ jQuery(document).ready(function($) {
 // curtain-category 2024-4-25 revision
 jQuery(document).ready(function($) {
     $("#search-category").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -298,12 +298,12 @@ jQuery(document).ready(function($) {
 // curtain-model 2024-4-26 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-model").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
+        window.location.replace("?_category="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
     $("#search-model").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -400,12 +400,12 @@ jQuery(document).ready(function($) {
 // curtain-specification 2024-4-26 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-spec").on( "change", function() {
-        window.location.replace("?_category="+$(this).val());
+        window.location.replace("?_category="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
     $("#search-specification").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
@@ -502,7 +502,7 @@ jQuery(document).ready(function($) {
 // curtain-agent 2024-4-27 revision
 jQuery(document).ready(function($) {
     $("#search-agent").on( "change", function() {
-        window.location.replace("?_search="+$(this).val());
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
     });
 
