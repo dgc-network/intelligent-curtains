@@ -655,6 +655,10 @@ jQuery(document).ready(function($) {
             }
         });            
 
+        $("#display-toolbox").on("click", function() {
+            window.location.replace('/toolbox/');
+        });
+
         $("#save-customer-order").on("click", function() {
             const ajaxData = {
                 'action': 'set_customer_order_dialog_data',

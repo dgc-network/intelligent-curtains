@@ -233,16 +233,22 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2></div>
+            <div style="display:flex; justify-content:space-between; margin:5px;">
+                <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'your-text-domain' );?></h2></div>
+                <div style="text-align:right; display:flex;">
+                    <input type="button" id="display-toolbox" value="<?php echo __( '工具箱', 'your-text-domain' );?>" style="margin:3px; display:inline;" />
+                </div>
+            </div>
+
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
-                            <option value="1" selected><?php echo __( '報價單列表', 'your-text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '報價單', 'your-text-domain' );?></option>
                             <option value="2"><?php echo __( '訂單總覽', 'your-text-domain' );?></option>
                             <?php if (current_user_can('administrator')) {?>
-                                <option value="3"><?php echo __( '生產單列表', 'your-text-domain' );?></option>
-                                <option value="4"><?php echo __( '出貨單列表', 'your-text-domain' );?></option>                             
+                                <option value="3"><?php echo __( '生產單', 'your-text-domain' );?></option>
+                                <option value="4"><?php echo __( '出貨單', 'your-text-domain' );?></option>                             
                             <?php }?>
                             
                         </select>
