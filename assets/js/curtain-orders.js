@@ -330,6 +330,10 @@ jQuery(document).ready(function($) {
         $("#select-order-category, #select-curtain-agent").val('');
     });
 
+    $("#display-toolbox").on("click", function() {
+        window.location.replace('/toolbox/');
+    });
+
     $("#search-order").on( "change", function() {
         window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
@@ -654,10 +658,6 @@ jQuery(document).ready(function($) {
                 $(this).val(dateText);
             }
         });            
-
-        $("#display-toolbox").on("click", function() {
-            window.location.replace('/toolbox/');
-        });
 
         $("#save-customer-order").on("click", function() {
             const ajaxData = {
