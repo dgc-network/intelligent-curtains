@@ -326,7 +326,6 @@ function wp_login_submit() {
             'user_password' => $user_password,
             'remember'      => true,
         );
-
         $user = wp_signon($credentials, false);
 
         if (!is_wp_error($user)) {
@@ -339,17 +338,6 @@ function wp_login_submit() {
                 'display_name' => $display_name,
                 'user_email' => $user_email,
             ));
-/*
-            // is curtain_agent_id()?
-            $curtain_agent_id = get_user_meta($user->ID, 'curtain_agent_id', true);
-            if (!$curtain_agent_id) {
-                if (isset($_POST['_curtain_agent_id'])) $curtain_agent_id = sanitize_text_field($_POST['_curtain_agent_id']);
-                $user_ids = get_users_by_site_id($site_id);
-                if (!empty($user_ids)) $response = array('error' => 'site_id is wrong!');
-            }
-
-            update_user_meta( $user->ID, 'site_id', $site_id);
-*/
             $response = array('success' => true);
         } else {
             $response = array('error' => $user->get_error_message());
