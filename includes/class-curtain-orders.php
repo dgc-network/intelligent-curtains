@@ -69,7 +69,7 @@ if (!class_exists('curtain_orders')) {
 
         function display_shortcode() {
             // Check if the user is logged in
-            if (!is_user_logged_in()) user_did_not_login_yet();
+            if (!is_user_logged_in()) user_is_not_logged_in();
             elseif (is_user_not_an_agent()) $this->user_login_agent_dialog();
             else {
                 // Start point

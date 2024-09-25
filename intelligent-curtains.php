@@ -75,7 +75,7 @@ function enqueue_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
-require_once plugin_dir_path( __FILE__ ) . 'services/default-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
@@ -207,7 +207,25 @@ function get_keyword_matched($keyword) {
     return false;
 }
 
-function user_did_not_login_yet() {    
+function user_is_not_logged_in() {
+    $state = bin2hex(random_bytes(16)); // Generate a random string
+    set_transient('line_login_state', $state, 3600); // Save it for 1 hour
+    $line_auth_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=" . urlencode(get_option('line_login_client_id')) .
+         "&redirect_uri=" . urlencode(get_option('line_login_redirect_uri')) .
+         "&state=" . urlencode($state) .
+         "&scope=profile";
+    ?>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+        <a href="<?php echo $line_auth_url;?>">    
+            <img src="https://s3.ap-southeast-1.amazonaws.com/app-assets.easystore.co/apps/154/icon.png" alt="LINE Login">
+        </a><br>
+        <p style="text-align: center;">
+            <?php echo __( 'You are not logged in. Please click the above button to log in.', 'your-text-domain' );?><br>
+        </p>
+    </div>
+    <?php            
+
+/*
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -242,12 +260,6 @@ function user_did_not_login_yet() {
         </div>
         <?php        
     } else {
-/*
-        ?><script>window.location.replace("https://aihome.tw/wp-login.php");</script><?php
-*/        
-        //wp_redirect( $current_url );
-        //exit();                
-
         // Display a message or redirect to the login/registration page
         $one_time_password = random_int(100000, 999999);
         update_option('_one_time_password', $one_time_password);
@@ -280,23 +292,9 @@ function user_did_not_login_yet() {
             <p><?php echo __( '「我要註冊」或「我要登錄」,', 'your-text-domain' );?></p>
             <p><?php echo __( '啟動註冊/登入作業。', 'your-text-domain' );?></p>
         </div>
-
-<?php /*
-        <div class="mobile-content ui-widget" style="text-align:center; display:none;">
-            <!-- Content for mobile users -->
-            <p>感謝您使用我們的系統</p>
-            <p>請加入我們的Line官方帳號,</p>
-            <p>利用手機按或掃描下方QR code</p>
-            <a href="<?php echo get_option('line_official_account');?>">
-            <img src="<?php echo get_option('line_official_qr_code');?>">
-            </a>
-            <p>並請在聊天室中, 輸入六位數字:</p>
-            <h3><?php echo get_option('_one_time_password');?></h3>
-            <p>完成註冊/登入作業</p>
-        </div>
-*/?>        
         <?php
-    }    
+    }
+*/
 }
 
 function is_user_not_an_agent($user_id=false) {

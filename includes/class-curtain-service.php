@@ -323,7 +323,7 @@ if (!class_exists('curtain_service')) {
             } else {
 
                 /** Did not login system yet */
-                //user_did_not_login_yet();
+                //user_is_not_logged_in();
 
                 if( isset($_GET['_id']) ) {
                     // Using Line User ID to register and login into the system
