@@ -1382,6 +1382,7 @@ if (!class_exists('curtain_orders')) {
                                 $order_item_qty = get_post_meta(get_the_ID(), 'order_item_qty', true);
                                 $order_item_qty = ($order_item_qty) ? $order_item_qty : 1;
                                 $order_item_amount = get_post_meta(get_the_ID(), 'order_item_amount', true);
+                                $order_item_note = get_post_meta(get_the_ID(), 'order_item_note', true);
 
                                 $curtain_specification_description .= ' W:'.$curtain_width;
                                 $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
@@ -1404,6 +1405,9 @@ if (!class_exists('curtain_orders')) {
                                         if (!$is_height) {
                                             $order_item_description .= ' H:'.$curtain_height;
                                         }
+                                    }
+                                    if ($order_item_note) {
+                                        $order_item_description .= '<br> Note:'.$order_item_note;
                                     }
                                 }
 
