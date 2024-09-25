@@ -47,14 +47,7 @@ function redirect_subscribers_after_login($redirect_to, $request, $user) {
     return $redirect_to;
 }
 add_filter('login_redirect', 'redirect_subscribers_after_login', 10, 3);
-/*
-function remove_admin_bar() {
-    if (!current_user_can('administrator') && !is_admin()) {
-      show_admin_bar(false);
-    }
-}
-add_action('after_setup_theme', 'remove_admin_bar');  
-*/  
+
 function enqueue_scripts() {		
     wp_enqueue_script( 'qrcode-js', plugins_url( 'assets/js/jquery.qrcode.min.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'jquery-ui-js', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js' );
