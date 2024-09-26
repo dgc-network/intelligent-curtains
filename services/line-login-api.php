@@ -169,8 +169,8 @@ if (!class_exists('line_login_api')) {
                         if (headers_sent()) {
                             wp_die('Headers already sent. Cannot set cookie.');
                         } else {
-                            clean_user_cache($user_id);
-                            wp_clear_auth_cookie();
+                            //clean_user_cache($user_id);
+                            //wp_clear_auth_cookie();
                             wp_set_current_user($user_id);
                             wp_set_auth_cookie($user_id, true);
                             // Log the user login action for consistency with WP behavior
