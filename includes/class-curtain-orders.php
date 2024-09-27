@@ -1683,6 +1683,7 @@ if (!class_exists('curtain_orders')) {
                 update_post_meta($new_production_order_id, 'production_order_number', time());
                 update_post_meta($new_production_order_id, 'production_order_vendor', $vendor);
                 update_post_meta($new_production_order_id, 'customer_order_id', $customer_order_id);
+                update_post_meta($new_production_order_id, 'customer_order_category', 999);
             }
         }
 
@@ -1690,9 +1691,9 @@ if (!class_exists('curtain_orders')) {
             if (!$order_item_id) {
                 return '<p>Order item ID is required.</p>';
             }
-        
+
             ob_start();
-        
+
             $args = array(
                 'post_type'      => 'serial-number',
                 'posts_per_page' => -1,
@@ -1704,7 +1705,7 @@ if (!class_exists('curtain_orders')) {
                 ),
             );        
             $query = new WP_Query($args);
-        
+
             if ($query->have_posts()) {
                 while ($query->have_posts()) {
                     $query->the_post();
@@ -1719,7 +1720,7 @@ if (!class_exists('curtain_orders')) {
             } else {
                 echo '<p>No serial numbers found for this order item ID.</p>';
             }
-        
+
             return ob_get_clean();
         }
    }

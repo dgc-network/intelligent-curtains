@@ -289,19 +289,6 @@ function user_is_not_logged_in() {
 */
 }
 
-add_shortcode( 'line-login', 'display_message' );
-function display_message() {
-    echo '<pre>';
-    echo 'Auth Cookie: ' . print_r($_COOKIE, true) . "\n\n";
-    $user = wp_get_current_user();
-    echo 'User object: ' . print_r($user, true);
-    echo '</pre>';
-    if (is_user_logged_in()) {
-    } else {
-        user_is_not_logged_in();
-    }
-}
-
 function is_user_not_an_agent($user_id=false) {
     if (empty($user_id)) $user_id=get_current_user_id();
     $user = get_userdata($user_id);
