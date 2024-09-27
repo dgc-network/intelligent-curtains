@@ -16,18 +16,34 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+if ( headers_sent( $file, $line ) ) {
+    error_log( "Headers already sent in $file on line $line" );
+}
+
+function is_rest_request() {
+    return defined( 'REST_REQUEST' ) && REST_REQUEST;
+}
+
+function register_session() {
+    if ( ! session_id() && ! is_rest_request() ) {
+        session_start();
+    }
+}
+add_action( 'init', 'register_session', 1 );
 /*
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 */
+/*
 function register_session() {
     if ( ! session_id() ) {
         session_start();
     }
 }
 add_action( 'init', 'register_session' );
-
+*/
 function remove_admin_bar() {
     // Check if the current user is an administrator or editor
     if (!current_user_can('administrator') && !current_user_can('editor') && !is_admin()) {
