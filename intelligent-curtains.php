@@ -34,7 +34,7 @@ function remove_admin_bar() {
         show_admin_bar(false);
     }
 }
-add_action('after_setup_theme', 'remove_admin_bar');
+//add_action('after_setup_theme', 'remove_admin_bar');
 
 function redirect_subscribers_after_login($redirect_to, $request, $user) {
     // Check if the user has the subscriber role
