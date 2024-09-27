@@ -71,9 +71,9 @@ function enqueue_scripts() {
     wp_enqueue_script( 'jquery-ui-dialog' );
 
     wp_enqueue_style( 'custom-options-view', plugins_url( 'assets/css/custom-options-view.css' , __FILE__ ), '', time() );
-    wp_enqueue_style( 'chat-css', plugins_url( 'assets/css/chat.css' , __FILE__ ), '', time() );
+    //wp_enqueue_style( 'chat-css', plugins_url( 'assets/css/chat.css' , __FILE__ ), '', time() );
     wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
-    wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
+    //wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 
     wp_enqueue_script( 'custom-script', plugins_url( 'assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-orders', plugins_url( 'assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
@@ -362,8 +362,8 @@ function get_post_type_meta_keys($post_type) {
 
     return $wpdb->get_col($query);
 }
+
 require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
-/*
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
@@ -380,4 +380,3 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-models.php';
 //require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specifications.php';
-*/
