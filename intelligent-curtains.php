@@ -201,7 +201,7 @@ function get_keyword_matched($keyword) {
 }
 
 function user_is_not_logged_in() {
-/*    
+
     $state = bin2hex(random_bytes(16)); // Generate a random string
     set_transient('line_login_state', $state, 3600); // Save it for 1 hour
     $line_auth_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=" . urlencode(get_option('line_login_client_id')) .
@@ -218,8 +218,8 @@ function user_is_not_logged_in() {
         </p>
     </div>
     <?php            
-*/
 
+/*
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -288,7 +288,20 @@ function user_is_not_logged_in() {
         </div>
         <?php
     }
+*/
+}
 
+add_shortcode( 'line-login', 'display_message' );
+function display_message() {
+    echo '<pre>';
+    echo 'Auth Cookie: ' . print_r($_COOKIE, true) . "\n\n";
+    $user = wp_get_current_user();
+    echo 'User object: ' . print_r($user, true);
+    echo '</pre>';
+    if (is_user_logged_in()) {
+    } else {
+        user_is_not_logged_in();
+    }
 }
 
 function is_user_not_an_agent($user_id=false) {
