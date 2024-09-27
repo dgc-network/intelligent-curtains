@@ -362,8 +362,8 @@ function get_post_type_meta_keys($post_type) {
 
     return $wpdb->get_col($query);
 }
-/*
 require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
+/*
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
