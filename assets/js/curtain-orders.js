@@ -478,6 +478,37 @@ jQuery(document).ready(function($) {
         $("#exit-production-order-dialog").on("click", function () {
             window.location.replace(window.location.href);
         });
+
+        $('[id^="view-qr-code-"]').on("click", function () {
+            const order_item_id = this.id.substring(13);
+            $.ajax({
+                url: ajax_object.ajax_url,
+                type: 'post',
+                data: {
+                    action: 'get_order_item_dialog_data',
+                    _order_item_id: order_item_id,
+                },
+                success: function (response) {
+                    $('#qr-code-dialog').html(response.qr_code_dialog);
+                    $("#qr-code-dialog").dialog('open');
+                    activate_curtain_category_id_data(order_item_id);
+
+                    $('#qrcode').qrcode({
+                        text: $("#qrcode_content").text()
+                    });                                
+                },
+                error: function(error){
+                    console.error(error);
+                    alert(error);
+                }
+            });    
+        });
+
+        $("#qr-code-dialog").dialog({
+            width: 390,
+            modal: true,
+            autoOpen: false,
+        });
     }
 
     function activate_customer_order_dialog_data(customer_order_id) {
