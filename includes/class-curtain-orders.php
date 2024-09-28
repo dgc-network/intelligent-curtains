@@ -44,29 +44,6 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_nopriv_get_account_receivable_detail_data', array( $this, 'get_account_receivable_detail_data' ) );    
         }
 
-        // Register customer-order post type
-        function register_customer_order_post_type() {
-            $labels = array(
-                'menu_name'     => _x('customer-order', 'admin menu', 'textdomain'),
-            );
-            $args = array(
-                'labels'        => $labels,
-                'public'        => true,
-            );
-            register_post_type( 'customer-order', $args );
-        }
-
-        function register_order_item_post_type() {
-            $labels = array(
-                'menu_name'     => _x('order-item', 'admin menu', 'textdomain'),
-            );
-            $args = array(
-                'labels'        => $labels,
-                'public'        => true,
-            );
-            register_post_type( 'order-item', $args );
-        }
-
         function display_shortcode() {
             // Check if the user is logged in
             if (!is_user_logged_in()) user_is_not_logged_in();
@@ -223,7 +200,7 @@ if (!class_exists('curtain_orders')) {
 
         function display_quotation_list() {
             $curtain_agents = new curtain_agents();
-            if (!current_user_can('administrator')) $is_disabled='disabled';
+            $is_disabled = (!current_user_can('administrator')) ? 'disabled' : '';
 
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
@@ -279,7 +256,6 @@ if (!class_exists('curtain_orders')) {
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $customer_name = get_post_meta(get_the_ID(), 'customer_name', true);
-                            //$modified_time = get_post_modified_time('F j, Y g:i a', false, get_the_ID());
                             $modified_time = get_post_modified_time(get_option('date_format'), false, get_the_ID());
                             $customer_order_amount = get_post_meta(get_the_ID(), 'customer_order_amount', true);
                             $customer_order_amount = ($customer_order_amount) ? $customer_order_amount : 0;
@@ -319,9 +295,21 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
+        // customer-order
+        function register_customer_order_post_type() {
+            $labels = array(
+                'menu_name'     => _x('customer-order', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+            );
+            register_post_type( 'customer-order', $args );
+        }
+
         function display_customer_order_list() {
             $curtain_agents = new curtain_agents();
-            if (!current_user_can('administrator')) $is_disabled='disabled';
+            $is_disabled = (!current_user_can('administrator')) ? 'disabled' : '';
 
             $current_user_id = get_current_user_id();
             if (isset($_GET['_curtain_agent_id'])) {
@@ -1339,6 +1327,18 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
+        // order-item
+        function register_order_item_post_type() {
+            $labels = array(
+                'menu_name'     => _x('order-item', 'admin menu', 'textdomain'),
+            );
+            $args = array(
+                'labels'        => $labels,
+                'public'        => true,
+            );
+            register_post_type( 'order-item', $args );
+        }
+
         function display_order_item_list($customer_order_id=false, $is_admin=false) {
             ob_start();
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
@@ -1711,9 +1711,9 @@ if (!class_exists('curtain_orders')) {
                     $query->the_post();
                     ?>
                     <div id="qrcode" style="text-align:center;">
-                    <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
-                    <div><?php echo esc_html(get_the_title());?></div>
+                        <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
                     </div>
+                    <div><?php echo esc_html(get_the_title());?></div>
                     <?php
                 }
                 wp_reset_postdata();
