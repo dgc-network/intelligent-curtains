@@ -193,7 +193,7 @@ if (!class_exists('line_login_api')) {
             }
         }
         
-        function display_login_button() {
+        function display_line_login_button() {
             $state = bin2hex(random_bytes(16)); // Generate a random string
             set_transient('line_login_state', $state, 3600); // Save it for 1 hour
             $line_auth_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=" . urlencode(get_option('line_login_client_id')) .
@@ -218,7 +218,8 @@ if (!class_exists('line_login_api')) {
             echo '</pre>';
             if (is_user_logged_in()) {
             } else {
-                user_is_not_logged_in();
+                //user_is_not_logged_in();
+                $this->display_line_login_button();
             }
         }
     }

@@ -199,7 +199,9 @@ function get_keyword_matched($keyword) {
 }
 
 function user_is_not_logged_in() {
-
+    $line_login_api = new line_login_api();
+    $line_login_api->display_line_login_button();
+/*
     $state = bin2hex(random_bytes(16)); // Generate a random string
     set_transient('line_login_state', $state, 3600); // Save it for 1 hour
     $line_auth_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=" . urlencode(get_option('line_login_client_id')) .
