@@ -39,22 +39,25 @@ if (!class_exists('serial_number')) {
 
         function proceed_qr_code($_serial_no=false) {
             // Assign the User for the specified serial number(QR Code) and ask the question as well
-            $user = wp_get_current_user();
-            $serial_number_post = get_page_by_title($_serial_no);
-            $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
-            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
-            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
-            ?>
-            <div class="ui-widget" id="result-container">
-                <h4><?php echo __( 'Hi, ', 'your-text-domain' );?><?php echo $user->display_name;?></h4>
-                <h4><?php echo __( '感謝您選購我們的電動窗簾.', 'your-text-domain' );?></h4>
-                <label style="text-align:left;" for="chat-message">Question:</label>
-                <textarea id="chat-message" rows="10" cols="50"></textarea>
-                <input type="hidden" id="curtain-user-id" value="<?php echo $user->ID;?>" />
-                <input type="hidden" id="curtain-agent-id" value="<?php echo $curtain_agent_id;?>" />
-                <input type="submit" id="chat-submit" style="margin:3px;" value="Submit" />
-            </div>
-            <?php
+            if (!is_user_logged_in()) user_is_not_logged_in();
+            else {
+                $user = wp_get_current_user();
+                $serial_number_post = get_page_by_title($_serial_no);
+                $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
+                $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+                $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                ?>
+                <div class="ui-widget" id="result-container">
+                    <h4><?php echo __( 'Hi, ', 'your-text-domain' );?><?php echo $user->display_name;?></h4>
+                    <h4><?php echo __( '感謝您選購我們的電動窗簾.', 'your-text-domain' );?></h4>
+                    <label style="text-align:left;" for="chat-message">Question:</label>
+                    <textarea id="chat-message" rows="10" cols="50"></textarea>
+                    <input type="hidden" id="curtain-user-id" value="<?php echo $user->ID;?>" />
+                    <input type="hidden" id="curtain-agent-id" value="<?php echo $curtain_agent_id;?>" />
+                    <input type="submit" id="chat-submit" style="margin:3px;" value="Submit" />
+                </div>
+                <?php
+            }
             if( isset($_POST['_chat_submit']) ) {
                 $output = '<div style="text-align:center;">';
                 $output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
@@ -101,15 +104,15 @@ if (!class_exists('serial_number')) {
                 $output .= '</div>';
                 return $output;    
             }
-                
+/*                
             $output = '<div style="text-align:center;">';
             $qr_code_serial_no = $_GET['serial_no'];
             $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            /** incorrect QR-code then display the admin link */
+            //** incorrect QR-code then display the admin link
             if (is_null($row) || !empty($wpdb->last_error)) {                        
                 $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
 
-            /** registration for QR-code */
+            //** registration for QR-code
             } else {                        
                 $output .= 'Hi, '.$user->display_name.'<br>';
                 $output .= '感謝您選購我們的電動窗簾<br>';
@@ -135,7 +138,7 @@ if (!class_exists('serial_number')) {
             }
             $output .= '</div>';
             //return $output;        
-
+*/
         }
 
         function register_serial_number_post_type() {
