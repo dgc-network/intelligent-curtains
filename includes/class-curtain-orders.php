@@ -94,7 +94,7 @@ if (!class_exists('curtain_orders')) {
                         // update meta "customer_order_number"
                         update_post_meta( $customer_order_id, 'customer_order_number', time());
         
-                        $this->create_new_serial_number($customer_order_id);
+                        //$this->create_serial_number($customer_order_id);
                         $this->transfer_customer_order_from_one_to_many_production_order($customer_order_id, $next_status);
 
                         // Notice the administrators
@@ -1577,7 +1577,7 @@ if (!class_exists('curtain_orders')) {
             wp_send_json($response);
         }
 
-        function create_new_serial_number($customer_order_id=false) {
+        function create_serial_number($customer_order_id=false) {
             // Create new serial-number
             $query = $this->retrieve_order_item_data($customer_order_id);
             if ($query->have_posts()) {
@@ -1606,6 +1606,27 @@ if (!class_exists('curtain_orders')) {
                     }
                 endwhile;
                 wp_reset_postdata();
+            }
+        }
+
+        function create_production_serial_number($order_item_id=false) {
+            // Create new serial-number
+            $order_item_qty = get_post_meta($order_item_id, 'order_item_qty', true);
+            $_x = 0;
+            while ($_x<$order_item_qty) {
+                //$qr_code_serial_no = $curtain_model_name . $curtain_specification_name. $curtain_width . time() . $_x;
+                $qr_code_serial_no = $order_item_id . $order_item_qty . time() . $_x;
+
+                $new_post = array(
+                    'post_title'    => $qr_code_serial_no,
+                    'post_status'   => 'publish',
+                    'post_author'   => get_current_user_id(),
+                    'post_type'     => 'serial-number',
+                );    
+                $post_id = wp_insert_post($new_post);
+                update_post_meta( $post_id, 'order_item_id', $order_item_id );
+
+                $_x += 1;
             }
         }
 
@@ -1676,8 +1697,9 @@ if (!class_exists('curtain_orders')) {
                     update_post_meta($new_production_item_id, 'curtain_height', $item['curtain_height']);
                     update_post_meta($new_production_item_id, 'order_item_note', $item['order_item_note']);
                     
-                    // Update the customer_order_id meta for the production-item
+                    // Update the customer_order_id field for the production-item for the display order-item-list purpose
                     update_post_meta($new_production_item_id, 'customer_order_id', $new_production_order_id);
+                    $this->create_production_serial_number($new_production_item_id);
                 }
                 update_post_meta($new_production_order_id, 'order_status', $next_status);
                 update_post_meta($new_production_order_id, 'production_order_number', time());
@@ -1711,7 +1733,7 @@ if (!class_exists('curtain_orders')) {
                     $query->the_post();
                     ?>
                     <div id="qrcode" style="text-align:center;">
-                        <div id="qrcode_content"><?php echo esc_url(home_url() . '/orders/?serial_no=' . get_the_title()); ?></div>
+                        <div id="qrcode_content"><?php echo esc_url(home_url() . '/serials/?serial_no=' . get_the_title()); ?></div>
                     </div>
                     <div><?php echo esc_html(get_the_title());?></div>
                     <?php
@@ -1723,6 +1745,7 @@ if (!class_exists('curtain_orders')) {
 
             return ob_get_clean();
         }
+
    }
     $orders_class = new curtain_orders();
 }

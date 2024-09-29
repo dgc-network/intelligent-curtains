@@ -20,6 +20,124 @@ if (!class_exists('serial_number')) {
 
         }
 
+        function display_shortcode() {
+            if( isset($_GET['serial_no']) ) {
+                $this->proceed_qr_code($_GET['serial_no']);
+            } else {
+                if (current_user_can('administrator')) {
+                    //$this->do_migration();
+                    $this->display_serial_number_list();
+                } else {
+                    ?>
+                    <div style="text-align:center;">
+                        <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'your-text-domain' );?></h4>
+                    </div>
+                    <?php
+                }    
+            }
+        }
+
+        function proceed_qr_code($_serial_no=false) {
+            // Assign the User for the specified serial number(QR Code) and ask the question as well
+            $user = wp_get_current_user();
+            $serial_number_post = get_page_by_title($_serial_no);
+            $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
+            $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+            ?>
+            <div class="ui-widget" id="result-container">
+                <h4><?php echo __( 'Hi, ', 'your-text-domain' );?><?php echo $user->display_name;?></h4>
+                <h4><?php echo __( '感謝您選購我們的電動窗簾.', 'your-text-domain' );?></h4>
+                <label style="text-align:left;" for="chat-message">Question:</label>
+                <textarea id="chat-message" rows="10" cols="50"></textarea>
+                <input type="hidden" id="curtain-user-id" value="<?php echo $user->ID;?>" />
+                <input type="hidden" id="curtain-agent-id" value="<?php echo $curtain_agent_id;?>" />
+                <input type="submit" id="chat-submit" style="margin:3px;" value="Submit" />
+            </div>
+            <?php
+            if( isset($_POST['_chat_submit']) ) {
+                $output = '<div style="text-align:center;">';
+                $output .= $curtain_agents->get_name($_POST['_curtain_agent_id']);
+                $results = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}agent_operators WHERE curtain_agent_id = %d", $_POST['_curtain_agent_id'] ), OBJECT );
+                foreach ( $results as $result ) {
+                    $message_id = $this->insert_chat_message(
+                        array(
+                            'chat_from' => get_user_meta($_POST['_chat_user_id'], 'line_user_id', TRUE),
+                            'chat_to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
+                            'chat_message'=> $_POST['_chat_message']
+                        )
+                    );                            
+                    $link_uri = 'http://aihome.tw/service/?_chat_message='.$message_id;
+
+                    $see_more["header"]["type"] = 'box';
+                    $see_more["header"]["layout"] = 'vertical';
+                    $see_more["header"]["backgroundColor"] = "#e3dee3";
+                    $see_more["header"]["contents"][0]["type"] = 'text';
+                    $see_more["header"]["contents"][0]["text"] = $user->display_name;
+                    $see_more["body"]["contents"][0]["type"] = 'text';
+                    $see_more["body"]["contents"][0]["text"] = $_POST['_chat_message'];
+                    $see_more["body"]["contents"][0]["wrap"] = true;
+                    $see_more["footer"]["type"] = 'box';
+                    $see_more["footer"]["layout"] = 'vertical';
+                    $see_more["footer"]["backgroundColor"] = "#e3dee3";
+                    $see_more["footer"]["contents"][0]["type"] = 'button';
+                    $see_more["footer"]["contents"][0]["action"]["type"] = 'uri';
+                    $see_more["footer"]["contents"][0]["action"]["label"] = 'Reply message';
+                    $see_more["footer"]["contents"][0]["action"]["uri"] = $link_uri;
+
+                    $line_bot_api->pushMessage([
+                        'to' => get_user_meta($result->curtain_user_id, 'line_user_id', TRUE),
+                        'messages' => [
+                            [
+                                "type" => "flex",
+                                "altText" => 'Chat message',
+                                'contents' => $see_more
+                            ]
+                        ]
+                    ]);
+                }
+
+                $output .= '<h3>Will reply the question to your Line chat box soon.</h3>';
+                $output .= '</div>';
+                return $output;    
+            }
+                
+            $output = '<div style="text-align:center;">';
+            $qr_code_serial_no = $_GET['serial_no'];
+            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
+            /** incorrect QR-code then display the admin link */
+            if (is_null($row) || !empty($wpdb->last_error)) {                        
+                $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
+
+            /** registration for QR-code */
+            } else {                        
+                $output .= 'Hi, '.$user->display_name.'<br>';
+                $output .= '感謝您選購我們的電動窗簾<br>';
+                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
+                if (!(is_null($model) || !empty($wpdb->last_error))) {
+                    $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
+                }
+                $serial_number->update_serial_number(
+                    array('curtain_user_id'=>intval($user->ID)),
+                    array('qr_code_serial_no'=>$qr_code_serial_no)
+                );
+
+                $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
+                $output .= '<fieldset>';
+                $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
+                $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
+                $output .= '<input type="hidden" name="_chat_user_id" value="'.$user->ID.'" />';
+                $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
+                $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
+                $output .= '</fieldset>';
+                $output .= '</form>';
+
+            }
+            $output .= '</div>';
+            //return $output;        
+
+        }
+
         function register_serial_number_post_type() {
             $labels = array(
                 'menu_name'     => _x('serial-number', 'admin menu', 'textdomain'),
@@ -27,22 +145,8 @@ if (!class_exists('serial_number')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'serial-number', $args );
-        }
-
-        function display_shortcode() {
-            if (current_user_can('administrator')) {
-                //$this->do_migration();
-                $this->display_serial_number_list();
-            } else {
-                ?>
-                <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'your-text-domain' );?></h4>
-                </div>
-                <?php
-            }
         }
 
         function display_serial_number_list() {
@@ -197,7 +301,7 @@ if (!class_exists('serial_number')) {
             wp_delete_post($serial_number_id, true);
             wp_send_json($response);
         }
-
+/*
         function do_migration() {
             // delete serial-number post 2024-6-18
             if (isset($_GET['_model_specification_migration'])) {
@@ -261,9 +365,6 @@ if (!class_exists('serial_number')) {
 
         private $_wp_page_title;
         private $_wp_page_postid;
-        /**
-         * Class constructor
-         */
         public function __construct_backup() {
             $this->_wp_page_title = 'Serials';
             $this->_wp_page_postid = general_helps::create_page($this->_wp_page_title, 'serial-number-list');
@@ -275,12 +376,12 @@ if (!class_exists('serial_number')) {
             global $wpdb;
             $curtain_models = new curtain_models();
             $curtain_agents = new curtain_agents();
-            /** Check the permission */
+            //** Check the permission
             if ( !is_user_logged_in() ) return '<div style="text-align:center;"><h3>You did not login the system. Please login first.</h3></div>';
             $user = wp_get_current_user();
             //if ( !$user->has_cap('manage_options') ) return '<div style="text-align:center;"><h3>You did not have the cpability to access this system.<br>Please contact the administrator.</h3></div>';
 
-            /** Post the result */
+            //** Post the result
             if( isset($_POST['_create']) ) {
                 $this->insert_serial_number(
                     array(
@@ -314,7 +415,7 @@ if (!class_exists('serial_number')) {
                 );
             }
 
-            /** List */
+            //** List
             $output  = '<h2>Serial Number</h2>';
             $output .= '<div style="display: flex; justify-content: space-between; margin: 5px;">';
             $output .= '<div>';
@@ -362,7 +463,6 @@ if (!class_exists('serial_number')) {
             } else {
                 $results = general_helps::get_search_results($wpdb->prefix.'serial_number', $_POST['_where']);
             }
-*/            
             foreach ( $results as $index=>$result ) {
                 $output .= '<tr>';
                 $output .= '<td style="text-align: center;">';
@@ -422,7 +522,7 @@ if (!class_exists('serial_number')) {
                 $output .= '<select name="_curtain_model_id" id="curtain_model_id">'.$curtain_models->select_options($row->curtain_model_id).'</select>';
                 $output .= '<label for="curtain_agent_id">Agent</label>';
                 $output .= '<select name="_curtain_agent_id" id="curtain_agent_id">'.$curtain_agents->select_options($row->curtain_agent_id).'</select>';
-*/
+
                 $output .= '</fieldset>';
                 $output .= '<input class="wp-block-button__link" type="submit" value="Update" name="_update">';
                 $output .= '</form>';
@@ -517,6 +617,7 @@ if (!class_exists('serial_number')) {
             ) $charset_collate;";
             dbDelta($sql);
         }
+*/            
     }
     $my_class = new serial_number();
 }
