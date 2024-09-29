@@ -37,12 +37,20 @@ if (!class_exists('serial_number')) {
             }
         }
 
-        function proceed_qr_code($_serial_no=false) {
+        function proceed_qr_code($qr_code_serial_no=false) {
             // Assign the User for the specified serial number(QR Code) and ask the question as well
             if (!is_user_logged_in()) user_is_not_logged_in();
             else {
                 $user = wp_get_current_user();
-                $serial_number_post = get_page_by_title($_serial_no);
+                //$serial_number_post = get_page_by_title($_serial_no);
+                $args = array(
+                    'post_type'   => 'serial-number',
+                    'post_status' => 'publish', // Only look for published pages
+                    'title'       => $qr_code_serial_no,
+                    'numberposts' => 1,         // Limit the number of results to one
+                );            
+                $serial_number_post = get_posts($args);
+    
                 $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);

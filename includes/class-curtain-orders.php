@@ -1256,7 +1256,15 @@ if (!class_exists('curtain_orders')) {
         }
 
         function display_customer_service($qr_code_serial_no=false) {
-            $serial_number_post = get_page_by_title($qr_code_serial_no);
+            //$serial_number_post = get_page_by_title($qr_code_serial_no);
+            $args = array(
+                'post_type'   => 'serial-number',
+                'post_status' => 'publish', // Only look for published pages
+                'title'       => $qr_code_serial_no,
+                'numberposts' => 1,         // Limit the number of results to one
+            );            
+            $serial_number_post = get_posts($args);
+
             $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
             $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
@@ -1734,8 +1742,8 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     <div id="qrcode" style="text-align:center;">
                         <div id="qrcode_content"><?php echo esc_url(home_url() . '/serials/?serial_no=' . get_the_title()); ?></div>
+                        <div><?php echo esc_html(get_the_title());?></div>
                     </div>
-                    <div><?php echo esc_html(get_the_title());?></div>
                     <?php
                 }
                 wp_reset_postdata();
