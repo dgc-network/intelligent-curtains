@@ -37,6 +37,43 @@ if (!class_exists('serial_number')) {
             }
         }
 
+        function send_message_to_agent() {
+            $response = array();
+            if( isset($_POST['_curtain_agent_id']) && isset($_POST['_curtain_user_id']) ) {
+                $curtain_user_id = sanitize_text_field($_POST['_curtain_user_id']);
+                $line_user_id = get_user_meta($curtain_user_id, 'line_user_id', true);
+
+                $curtain_agent_id = sanitize_text_field($_POST['_curtain_agent_id']);
+                $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
+
+                $text_message = $_POST['_chat_message'];
+                $link_uri = 'line://nv/chat?userId=' . $line_user_id;
+                $flexMessage = set_flex_message($curtain_agent_name, $link_uri, $text_message);
+
+                $args = array(
+                    'meta_key'   => 'curtain_agent_id',  // The meta key to search by
+                    'meta_value' => $curtain_agent_id,   // The meta value you're looking for
+                );
+                $user_query = new WP_User_Query($args);
+                
+                // Get the results
+                $users = $user_query->get_results();
+                // Check if any users were found
+                if (!empty($users)) {
+                    foreach ($users as $user) {
+                        $line_bot_api = new line_bot_api();
+                        $line_bot_api->pushMessage([
+                            'to' => get_user_meta($user->ID, 'line_user_id', true),
+                            'messages' => [$flexMessage],
+                        ]);
+                    }
+                } else {
+                    echo 'No users found with curtain_agent_id: ' . $curtain_agent_id;
+                }
+            }
+            wp_send_json($response);
+        }
+
         function proceed_qr_code($qr_code_serial_no=false) {
             // Assign the User for the specified serial number(QR Code) and ask the question as well
             if (!is_user_logged_in()) user_is_not_logged_in();
@@ -112,41 +149,6 @@ if (!class_exists('serial_number')) {
                 $output .= '</div>';
                 return $output;    
             }
-/*                
-            $output = '<div style="text-align:center;">';
-            $qr_code_serial_no = $_GET['serial_no'];
-            $row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}serial_number WHERE qr_code_serial_no = %s", $qr_code_serial_no ), OBJECT );            
-            //** incorrect QR-code then display the admin link
-            if (is_null($row) || !empty($wpdb->last_error)) {                        
-                $output .= '<div style="font-weight:700; font-size:xx-large;">Wrong Code</div>';
-
-            //** registration for QR-code
-            } else {                        
-                $output .= 'Hi, '.$user->display_name.'<br>';
-                $output .= '感謝您選購我們的電動窗簾<br>';
-                $model = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}curtain_models WHERE curtain_model_id = {$row->curtain_model_id}", OBJECT );
-                if (!(is_null($model) || !empty($wpdb->last_error))) {
-                    $output .= '型號:'.$model->curtain_model_name.' 規格: '.$row->specification.'<br>';
-                }
-                $serial_number->update_serial_number(
-                    array('curtain_user_id'=>intval($user->ID)),
-                    array('qr_code_serial_no'=>$qr_code_serial_no)
-                );
-
-                $output .= '<form method="post" style="display:inline-block; text-align:-webkit-center;">';
-                $output .= '<fieldset>';
-                $output .= '<label style="text-align:left;" for="_chat_message">Question:</label>';
-                $output .= '<textarea name="_chat_message" rows="10" cols="50"></textarea>';
-                $output .= '<input type="hidden" name="_chat_user_id" value="'.$user->ID.'" />';
-                $output .= '<input type="hidden" name="_curtain_agent_id" value="'.$row->curtain_agent_id.'" />';
-                $output .= '<input type="submit" name="_chat_submit" style="margin:3px;" value="Submit" />';
-                $output .= '</fieldset>';
-                $output .= '</form>';
-
-            }
-            $output .= '</div>';
-            //return $output;        
-*/
         }
 
         function register_serial_number_post_type() {

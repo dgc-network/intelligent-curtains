@@ -109,6 +109,27 @@ jQuery(document).ready(function($) {
         $(this).val('');
     });
 
+    $("#chat-submit").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'send_message_to_agent',
+                '_curtain_agent_id': $("#curtain-agent-id").val(),
+                '_curtain_user_id': $("#curtain-user-id").val(),
+                '_chat_message': $("#chat-message").val(),
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
     $('[id^="edit-serial-number-"]').on("click", function () {
         const serial_number_id = this.id.substring(19);
         $.ajax({
