@@ -51,7 +51,7 @@ if (!class_exists('login_users')) {
             // Arguments to get users with pagination
             $args = array(
                 //'number' => $users_per_page,
-                'offset' => $offset,
+                //'offset' => $offset,
             );
             
             // Get the users based on pagination
@@ -90,8 +90,10 @@ if (!class_exists('login_users')) {
                             <tr id="edit-login-user-<?php echo esc_attr($user->ID);?>">
                                 <td style="text-align:center;"><?php echo esc_html($user->display_name);?></td>
                                 <td><?php echo esc_html($user->user_email);?></td>
+<?php /*                                
                                 <td style="text-align:center;"><input type="checkbox" <?php echo $is_warehouse_personnel_checked;?> /></td>
                                 <td style="text-align:center;"><input type="checkbox" <?php echo $is_factory_personnel_checked;?> /></td>
+*/?>                                
                             </tr>
                             <?php
                         }            

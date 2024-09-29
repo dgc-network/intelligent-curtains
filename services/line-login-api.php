@@ -201,12 +201,15 @@ if (!class_exists('line_login_api')) {
                  "&state=" . urlencode($state) .
                  "&scope=profile";
             ?>
-            <p style="text-align:center;">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
                 <a href="<?php echo $line_auth_url;?>">    
                     <img src="https://s3.ap-southeast-1.amazonaws.com/app-assets.easystore.co/apps/154/icon.png" alt="LINE Login">
                 </a><br>
-                <?php echo __( 'You are not logged in. Please click the above button to log in.', 'your-text-domain' );?><br>
-            </p>
+                <p style="text-align: center;">
+                    <?php echo __( 'You are not logged in.', 'your-text-domain' );?><br>
+                    <?php echo __( 'Please click the above button to log in.', 'your-text-domain' );?><br>
+                </p>
+            </div>
             <?php            
         }
 
