@@ -42,7 +42,6 @@ if (!class_exists('serial_number')) {
             if (!is_user_logged_in()) user_is_not_logged_in();
             else {
                 $user = wp_get_current_user();
-                //$serial_number_post = get_page_by_title($_serial_no);
                 $args = array(
                     'post_type'   => 'serial-number',
                     'post_status' => 'publish', // Only look for published pages
@@ -54,6 +53,7 @@ if (!class_exists('serial_number')) {
                 $order_item_id = get_post_meta($serial_number_post->ID, 'order_item_id', true);
                 $customer_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                 $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                update_post_meta( $serial_number_post->ID, 'curtain_user_id', get_current_user_id());
                 ?>
                 <div class="ui-widget" id="result-container">
                     <h4><?php echo __( 'Hi, ', 'your-text-domain' );?><?php echo $user->display_name;?></h4>
@@ -209,7 +209,10 @@ if (!class_exists('serial_number')) {
                             $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
                             $curtain_user_id = get_post_meta($customer_order_id, 'curtain_user_id', true);
                             ?>
+<?php /*                            
                             <tr id="edit-serial-number-<?php the_ID();?>">
+*/?>
+                            <tr>                            
                                 <td style="text-align:center;"><?php echo esc_html($qr_code_serial_no);?></td>
                                 <td><?php echo esc_html(get_the_title($product_item_id).'-'.$product_item_content);?></td>
                                 <td><?php echo esc_html($production_vendor_name);?></td>
@@ -223,7 +226,9 @@ if (!class_exists('serial_number')) {
                     ?>
                     </tbody>
                 </table>
+<?php /*                
                 <div id="new-serial-number" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+*/?>                
                 <div class="pagination">
                     <?php
                     // Display pagination links
