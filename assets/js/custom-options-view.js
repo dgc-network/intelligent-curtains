@@ -1,5 +1,4 @@
 jQuery(document).ready(function($) {
-/*
     // JavaScript to detect mobile browser
     if (/Mobi/.test(navigator.userAgent)) {
         // User is on a mobile device
@@ -8,7 +7,7 @@ jQuery(document).ready(function($) {
         // User is not on a mobile device, send one-time password via Line
         $('.desktop-content').show();
     }
-*/
+
     $('.chatboxtextarea').on('keypress',function(e) {
         chatboxtitle = $('.chatboxtitle').val();
         if(e.keyCode == 13 && e.shiftKey == 0)  {

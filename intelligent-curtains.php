@@ -242,7 +242,7 @@ function user_is_not_logged_in() {
         $one_time_password = random_int(100000, 999999);
         update_option('_one_time_password', $one_time_password);
         // Store OTP in session for verification
-        session_start();
+        //session_start();
         $_SESSION['one_time_password'] = $one_time_password;
 
         ?>
