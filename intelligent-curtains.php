@@ -199,27 +199,11 @@ function get_keyword_matched($keyword) {
 }
 
 function user_is_not_logged_in() {
+/*    
     $line_login_api = new line_login_api();
     $line_login_api->display_line_login_button();
-/*
-    $state = bin2hex(random_bytes(16)); // Generate a random string
-    set_transient('line_login_state', $state, 3600); // Save it for 1 hour
-    $line_auth_url = "https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=" . urlencode(get_option('line_login_client_id')) .
-         "&redirect_uri=" . urlencode(get_option('line_login_redirect_uri')) .
-         "&state=" . urlencode($state) .
-         "&scope=profile";
-    ?>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
-        <a href="<?php echo $line_auth_url;?>">    
-            <img src="https://s3.ap-southeast-1.amazonaws.com/app-assets.easystore.co/apps/154/icon.png" alt="LINE Login">
-        </a><br>
-        <p style="text-align: center;">
-            <?php echo __( 'You are not logged in. Please click the above button to log in.', 'your-text-domain' );?><br>
-        </p>
-    </div>
-    <?php            
+*/
 
-/*
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -288,7 +272,6 @@ function user_is_not_logged_in() {
         </div>
         <?php
     }
-*/
 }
 
 function is_user_not_an_agent($user_id=false) {
