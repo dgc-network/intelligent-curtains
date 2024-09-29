@@ -26,17 +26,13 @@ if (!class_exists('curtain_agents')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'curtain-agent', $args );
         }
 
         function display_shortcode() {
             if (current_user_can('administrator')) {
-                //$this->do_migration();
-                // curtain-agents start point 2024-4-27
                 $this->display_curtain_agent_list();
-
             } else {
                 ?>
                 <div style="text-align:center;">

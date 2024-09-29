@@ -200,15 +200,19 @@ if (!class_exists('serial_number')) {
                             $product_item_id = get_post_meta($order_item_id, 'product_item_id', true);
                             $production_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
                             $production_order_vendor = get_post_meta($production_order_id, 'production_order_vendor', true);
+                            $production_vendor_number = get_post_meta($production_order_vendor, 'curtain_agent_number', true);
+                            $production_vendor_name = get_post_meta($production_order_vendor, 'curtain_agent_name', true);
                             $customer_order_id = get_post_meta($production_order_id, 'customer_order_id', true);
                             $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                            $curtain_agent_number = get_post_meta($curtain_agent_id, 'curtain_agent_number', true);
+                            $curtain_agent_name = get_post_meta($curtain_agent_id, 'curtain_agent_name', true);
                             $curtain_user_id = get_post_meta($customer_order_id, 'curtain_user_id', true);
                             ?>
                             <tr id="edit-serial-number-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($qr_code_serial_no);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($product_item_id);?></td>
-                                <td><?php echo esc_html($production_order_vendor);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_agent_id);?></td>
+                                <td style="text-align:center;"><?php echo esc_html(get_the_title($product_item_id));?></td>
+                                <td><?php echo esc_html($production_vendor_name.'('.$production_vendor_number.')');?></td>
+                                <td><?php echo esc_html($curtain_agent_name.'('.$curtain_agent_number.')');?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_user_id);?></td>
                             </tr>
                             <?php

@@ -26,16 +26,12 @@ if (!class_exists('product_items')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'product-item', $args );
         }
 
         function display_shortcode() {
             if (current_user_can('administrator')) {
-                if (isset($_GET['_copy_curtain_model_to_product_item'])) $this->copy_curtain_model_to_product_item();
-                if (isset($_GET['_copy_curtain_spec_to_product_item'])) $this->copy_curtain_spec_to_product_item();
-
                 $this->display_product_item_list();
             } else {
                 ?>
@@ -270,7 +266,7 @@ if (!class_exists('product_items')) {
             wp_reset_postdata();
             return $options;
         }
-
+/*
         function copy_curtain_model_to_product_item() {
             $args = array(
                 'post_type'      => 'curtain-model',
@@ -386,7 +382,7 @@ if (!class_exists('product_items')) {
                 wp_reset_postdata();
             }
         }
-
+*/
     }
     $models_class = new product_items();
 }
