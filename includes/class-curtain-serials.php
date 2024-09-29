@@ -177,8 +177,8 @@ if (!class_exists('serial_number')) {
                     <thead>
                         <tr>
                             <th><?php echo __( 'serial_no', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'model', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'specification', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'product', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'vendor', 'your-text-domain' );?></th>
                             <th><?php echo __( 'agent', 'your-text-domain' );?></th>
                             <th><?php echo __( 'user', 'your-text-domain' );?></th>
                         </tr>
@@ -196,16 +196,18 @@ if (!class_exists('serial_number')) {
                         while ($query->have_posts()) : $query->the_post();
                             $qr_code_serial_no = get_the_title();
                             $curtain_specification = get_the_content();
-                            $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
-                            $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_agent_id', true);
-                            $curtain_user_id = get_post_meta(get_the_ID(), 'curtain_user_id', true);
-                            $curtain_agent_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
-                            $curtain_user_id = get_post_meta(get_the_ID(), 'customer_order_number', true);
+                            $order_item_id = get_post_meta(get_the_ID(), 'order_item_id', true);
+                            $product_item_id = get_post_meta($order_item_id, 'product_item_id', true);
+                            $production_order_id = get_post_meta($order_item_id, 'customer_order_id', true);
+                            $production_order_vendor = get_post_meta($production_order_id, 'production_order_vendor', true);
+                            $customer_order_id = get_post_meta($production_order_id, 'customer_order_id', true);
+                            $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
+                            $curtain_user_id = get_post_meta($customer_order_id, 'curtain_user_id', true);
                             ?>
                             <tr id="edit-serial-number-<?php the_ID();?>">
                                 <td style="text-align:center;"><?php echo esc_html($qr_code_serial_no);?></td>
-                                <td style="text-align:center;"><?php echo esc_html($curtain_model_id);?></td>
-                                <td><?php echo esc_html($curtain_specification);?></td>
+                                <td style="text-align:center;"><?php echo esc_html($product_item_id);?></td>
+                                <td><?php echo esc_html($production_order_vendor);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_agent_id);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_user_id);?></td>
                             </tr>
@@ -216,7 +218,7 @@ if (!class_exists('serial_number')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="disabled-new-serial-number" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
+                <div id="new-serial-number" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <div class="pagination">
                     <?php
                     // Display pagination links
@@ -277,31 +279,25 @@ if (!class_exists('serial_number')) {
         function set_serial_number_dialog_data() {
             $response = array();
             if( isset($_POST['_serial_number_id']) ) {
-                // Update the meta data
-                $serial_number_id = sanitize_text_field($_POST['_serial_number_id']);
-                update_post_meta( $serial_number_id, 'curtain_model_id', sanitize_text_field($_POST['_curtain_model_id']));
-                update_post_meta( $serial_number_id, 'curtain_agent_id', sanitize_text_field($_POST['_curtain_agent_id']));
-                update_post_meta( $serial_number_id, 'curtain_user_id', sanitize_text_field($_POST['_curtain_user_id']));
                 // Update the post title
                 $updated_post = array(
                     'ID'         => $serial_number_id,
                     'post_title' => sanitize_text_field($_POST['_qr_code_serial_no']),
-                    'post_content' => $_POST['_curtain_specification'],
                 );
                 wp_update_post($updated_post);
+                // Update the meta data
+                $serial_number_id = sanitize_text_field($_POST['_serial_number_id']);
+                update_post_meta( $serial_number_id, 'customer_order_number', sanitize_text_field($_POST['_customer_order_number']));
             } else {
-                $current_user_id = get_current_user_id();
-                $qr_code_serial_no = $model->curtain_model_name . $data['specification'] . time() . $_x;
-
+                $qr_code_serial_no = sanitize_text_field($_POST['_qr_code_serial_no']);
                 $new_post = array(
                     'post_title'    => $qr_code_serial_no,
-                    'post_content'  => sanitize_text_field($_POST['_curtain_specification']),
                     'post_status'   => 'publish',
                     'post_author'   => get_current_user_id(),
                     'post_type'     => 'serial-number',
                 );    
                 $post_id = wp_insert_post($new_post);
-                //update_post_meta( $post_id, 'status_code', 'order0');
+                update_post_meta( $serial_number_id, 'customer_order_number', sanitize_text_field($_POST['_customer_order_number']));
             }
             wp_send_json($response);
         }

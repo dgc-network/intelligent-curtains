@@ -136,6 +136,8 @@ jQuery(document).ready(function($) {
             dataType: "json",
             data: {
                 'action': 'set_serial_number_dialog_data',
+                '_qr_code_serial_no': $("#qr-code-serial-no").val(),
+                '_customer_order_number': $("#customer-order-number").val(),
             },
             success: function (response) {
                 window.location.replace(window.location.href);
@@ -160,7 +162,7 @@ jQuery(document).ready(function($) {
                     data: {
                         'action': 'set_serial_number_dialog_data',
                         '_serial_number_id': $("#serial-number-id").val(),
-                        '_qr_code_serial_no': $("#qr-code-serial-n0").val(),
+                        '_qr_code_serial_no': $("#qr-code-serial-no").val(),
                         '_customer_order_number': $("#customer-order-number").val(),
                     },
                     success: function (response) {
