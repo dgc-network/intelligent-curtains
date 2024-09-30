@@ -198,11 +198,10 @@ function get_keyword_matched($keyword) {
 }
 
 function user_is_not_logged_in() {
-/*    
+
     $line_login_api = new line_login_api();
     $line_login_api->display_line_login_button();
-*/
-
+/*
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -271,6 +270,7 @@ function user_is_not_logged_in() {
         </div>
         <?php
     }
+*/        
 }
 
 function is_user_not_an_agent($user_id=false) {
