@@ -36,21 +36,13 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 */
-/*
-function register_session() {
-    if ( ! session_id() ) {
-        session_start();
-    }
-}
-add_action( 'init', 'register_session' );
-*/
 function remove_admin_bar() {
     // Check if the current user is an administrator or editor
     if (!current_user_can('administrator') && !current_user_can('editor') && !is_admin()) {
         show_admin_bar(false);
     }
 }
-//add_action('after_setup_theme', 'remove_admin_bar');
+add_action('after_setup_theme', 'remove_admin_bar');
 
 function redirect_subscribers_after_login($redirect_to, $request, $user) {
     // Check if the user has the subscriber role
@@ -343,11 +335,3 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-users.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
-
-//require_once plugin_dir_path( __FILE__ ) . 'includes/general-helps.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-service-links.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-service.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-remotes.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-system-status.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-models.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-specifications.php';
