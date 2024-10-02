@@ -58,7 +58,7 @@ jQuery(document).ready(function($) {
                         '_faq_code': $("#faq-code").val(),
                         '_faq_question': $("#faq-question").val(),
                         '_faq_answer': $("#faq-answer").val(),
-                        '_toolbox_uri': $("#toolbox-url").val(),
+                        '_toolbox_uri': $("#toolbox-uri").val(),
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);
