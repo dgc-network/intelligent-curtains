@@ -1,3 +1,98 @@
+// curtain-faq on 2024-10-3
+jQuery(document).ready(function($) {
+    $("#search-faq").on( "change", function() {
+        window.location.replace("?_search="+$(this).val()+"&paged=1");
+        $(this).val('');
+    });
+
+    $('[id^="edit-curtain-faq-"]').on("click", function () {
+        const curtain_faq_id = this.id.substring(17);
+        $.ajax({
+            url: ajax_object.ajax_url,
+            type: 'post',
+            data: {
+                action: 'get_curtain_faq_dialog_data',
+                _curtain_faq_id: curtain_faq_id,                
+            },
+            success: function (response) {
+                $("#curtain-faq-dialog").html(response.html_contain);                
+                $("#curtain-faq-dialog").dialog('open');                                                    
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });            
+
+    $("#new-curtain-faq").on("click", function() {
+        $.ajax({
+            type: 'POST',
+            url: ajax_object.ajax_url,
+            dataType: "json",
+            data: {
+                'action': 'set_curtain_faq_dialog_data',
+            },
+            success: function (response) {
+                window.location.replace(window.location.href);
+            },
+            error: function(error){
+                console.error(error);                    
+                alert(error);
+            }
+        });    
+    });
+
+    $("#curtain-faq-dialog").dialog({
+        width: 390,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            "Save": function() {
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    dataType: "json",
+                    data: {
+                        'action': 'set_curtain_faq_dialog_data',
+                        '_curtain_faq_id': $("#curtain-faq-id").val(),
+                        '_faq_code': $("#faq-code").val(),
+                        '_toolbox_uri': $("#toolbox-url").val(),
+                        '_faq_answer': $("#faq_answer").val(),
+                        '_faq_question': $("#faq_question").val(),
+                    },
+                    success: function (response) {
+                        window.location.replace(window.location.href);
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });
+            },
+            "Delete": function() {
+                if (window.confirm("Are you sure you want to delete this FAQ?")) {
+                    $.ajax({
+                        type: 'POST',
+                        url: ajax_object.ajax_url,
+                        dataType: "json",
+                        data: {
+                            'action': 'del_curtain_faq_dialog_data',
+                            '_curtain_faq_id': $("#curtain-faq-id").val(),
+                        },
+                        success: function (response) {
+                            window.location.replace(window.location.href);
+                        },
+                        error: function(error){
+                            console.error(error);
+                            alert(error);
+                        }
+                    });
+                }
+            }
+        }
+    });
+});
+
 // product-item 2024-8-14 revision
 jQuery(document).ready(function($) {
     $("#select-category-in-product").on( "change", function() {

@@ -208,6 +208,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-faq.php';
 
 function set_flex_message($display_name, $link_uri, $text_message) {
     // Flex Message JSON structure with a button

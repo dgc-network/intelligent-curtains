@@ -122,10 +122,8 @@ jQuery(document).ready(function($) {
             }
         }
     });
-});
 
-// order-status 2024-6-11 revision
-jQuery(document).ready(function($) {
+/*    
     $("#wp-login-submit").on( "click", function() {
         $.ajax({
             type: 'POST',
@@ -152,7 +150,12 @@ jQuery(document).ready(function($) {
             }
         });            
     });
+*/
 
+});
+
+// order-status on 2024-6-11
+jQuery(document).ready(function($) {
     $("#search-status").on( "change", function() {
         window.location.replace("?_search="+$(this).val()+"&paged=1");
         $(this).val('');
