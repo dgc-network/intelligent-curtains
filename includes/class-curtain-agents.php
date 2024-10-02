@@ -7,7 +7,6 @@ if (!class_exists('curtain_agents')) {
     class curtain_agents {
 
         public function __construct() {
-
             add_shortcode( 'curtain-agent-list', array( $this, 'display_shortcode' ) );
             //add_action( 'init', array( $this, 'register_curtain_agent_post_type' ) );
             add_action( 'wp_ajax_get_curtain_agent_dialog_data', array( $this, 'get_curtain_agent_dialog_data' ) );
@@ -16,7 +15,6 @@ if (!class_exists('curtain_agents')) {
             add_action( 'wp_ajax_nopriv_set_curtain_agent_dialog_data', array( $this, 'set_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_del_curtain_agent_dialog_data', array( $this, 'del_curtain_agent_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_curtain_agent_dialog_data', array( $this, 'del_curtain_agent_dialog_data' ) );
-
         }
 
         function register_curtain_agent_post_type() {
@@ -122,7 +120,7 @@ if (!class_exists('curtain_agents')) {
                 'orderby'        => 'meta_value', // Sort by meta value
                 'order'          => 'ASC', // Sorting order (ascending)
             );        
-            
+
             // Add meta query for searching across all meta keys
             $search_query = sanitize_text_field($_GET['_search']);
             $meta_keys = get_post_type_meta_keys('curtain-agent');
@@ -135,10 +133,9 @@ if (!class_exists('curtain_agents')) {
                 );
             }            
             $args['meta_query'] = $meta_query_all_keys;
-        
+
             // Execute the query
             $query = new WP_Query($args);
-            
             return $query;
         }
 
@@ -238,48 +235,6 @@ if (!class_exists('curtain_agents')) {
             wp_reset_postdata();
             return $options;
         }
-/*        
-        function do_migration() {
-            // delete curtain-agent post 2024-4-27
-            if (isset($_GET['_delete_curtain_agents_post'])) {
-                // Get all curtain-agent posts
-                $args = array(
-                    'post_type'      => 'curtain-agent',
-                    'posts_per_page' => -1, // Get all posts
-                    'fields'         => 'ids', // Retrieve only post IDs
-                );
-                $posts = get_posts($args);
-            
-                // Loop through each post and delete it
-                foreach ($posts as $post_id) {
-                    wp_delete_post($post_id, true); // Set the second parameter to true to force delete
-                }
-            }
-
-            // curtain_agents_table_to_post migration 2024-4-27
-            if (isset($_GET['_migrate_curtain_agents_table_to_post'])) {
-                global $wpdb;
-                $results = general_helps::get_search_results($wpdb->prefix.'curtain_agents', $_POST['_where']);
-                foreach ( $results as $result ) {
-                    $current_user_id = get_current_user_id();
-                    $new_post = array(
-                        'post_title'    => 'New agent',
-                        'post_content'  => 'Your post content goes here.',
-                        'post_status'   => 'publish',
-                        'post_author'   => $current_user_id,
-                        'post_type'     => 'curtain-agent',
-                    );    
-                    $curtain_agent_id = wp_insert_post($new_post);
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_number', $result->agent_number );
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_name', $result->agent_name );
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_contact', $result->contact1 );
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_phone', $result->phone1 );
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_address', $result->agent_address );
-                    update_post_meta( $curtain_agent_id, 'curtain_agent_password', $result->agent_password );                
-                }
-            }
-        }
-*/            
     }
     $agents_class = new curtain_agents();
 }
