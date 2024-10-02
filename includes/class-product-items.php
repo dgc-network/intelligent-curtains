@@ -7,7 +7,6 @@ if (!class_exists('product_items')) {
     class product_items {
 
         public function __construct() {
-
             add_shortcode( 'product-item-list', array( $this, 'display_shortcode' ) );
             //add_action( 'init', array( $this, 'register_product_item_post_type' ) );
             add_action( 'wp_ajax_get_product_item_dialog_data', array( $this, 'get_product_item_dialog_data' ) );
@@ -16,7 +15,6 @@ if (!class_exists('product_items')) {
             add_action( 'wp_ajax_nopriv_set_product_item_dialog_data', array( $this, 'set_product_item_dialog_data' ) );
             add_action( 'wp_ajax_del_product_item_dialog_data', array( $this, 'del_product_item_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_product_item_dialog_data', array( $this, 'del_product_item_dialog_data' ) );
-
         }
 
         function register_product_item_post_type() {
@@ -56,7 +54,7 @@ if (!class_exists('product_items')) {
                         <input type="text" id="search-product" style="display:inline" placeholder="Search..." />
                     </div>
                 </div>
-        
+
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
@@ -70,11 +68,11 @@ if (!class_exists('product_items')) {
                     <?php
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
-                    $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = $this->retrieve_product_item_data($current_page);
+                    $paged = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_product_item_data($paged);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
-        
+
                     if ($query->have_posts()) :
                         while ($query->have_posts()) : $query->the_post();
                             $product_item_title = get_the_title();
@@ -101,9 +99,9 @@ if (!class_exists('product_items')) {
                 <div class="pagination">
                     <?php
                     // Display pagination links
-                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
-                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    if ($paged > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $paged, $total_pages) . '</span>';
+                    if ($paged < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged + 1)) . '"> > </a></span>';
                     ?>
                 </div>
             </fieldset>
@@ -112,10 +110,9 @@ if (!class_exists('product_items')) {
             <?php
         }
 
-        function retrieve_product_item_data($current_page = 1) {
+        function retrieve_product_item_data($paged = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
-        
             $search_query = sanitize_text_field($_GET['_search']);
             $select_category = sanitize_text_field($_GET['_category']);
             $category_filter = array(
@@ -123,11 +120,11 @@ if (!class_exists('product_items')) {
                 'value'   => $select_category,
                 'compare' => '=',
             );
-        
+
             $args = array(
                 'post_type'      => 'product-item',
                 'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
+                'paged'          => $paged,
                 's'              => $search_query,  
                 'meta_query'     => array(
                     ($select_category) ? $category_filter : '',
@@ -135,7 +132,6 @@ if (!class_exists('product_items')) {
                 'orderby'        => 'title', // Sort by title
                 'order'          => 'ASC',
             );        
-        
             $query = new WP_Query($args);
             return $query;
         }
@@ -266,123 +262,6 @@ if (!class_exists('product_items')) {
             wp_reset_postdata();
             return $options;
         }
-/*
-        function copy_curtain_model_to_product_item() {
-            $args = array(
-                'post_type'      => 'curtain-model',
-                'posts_per_page' => -1,
-            );
-        
-            $query = new WP_Query($args);
-        
-            // Create an array to map old parent_category values to new iso-category IDs
-            $category_mapping = array();
-        
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-        
-                    // Get the current post ID and data
-                    $current_post_id = get_the_ID();
-                    $current_post    = get_post($current_post_id);
-        
-                    // Prepare the new post data
-                    $new_post = array(
-                        'post_title'    => $current_post->post_title,
-                        'post_content'  => $current_post->post_content,
-                        'post_status'   => 'publish', // or $current_post->post_status if you want to keep the same status
-                        'post_author'   => $current_post->post_author,
-                        'post_type'     => 'product-item',
-                        'post_date'     => $current_post->post_date,
-                        'post_date_gmt' => $current_post->post_date_gmt,
-                    );
-        
-                    // Insert the new post and get the new post ID
-                    $new_post_id = wp_insert_post($new_post);
-        
-                    if ($new_post_id) {
-                        // Get all meta data for the current post
-                        $post_meta = get_post_meta($current_post_id);
-        
-                        // Copy each meta field to the new post
-                        foreach ($post_meta as $meta_key => $meta_values) {
-                            foreach ($meta_values as $meta_value) {
-                                add_post_meta($new_post_id, $meta_key, $meta_value);
-                            }
-                        }
-        
-                        $curtain_model_price = get_post_meta($new_post_id, 'curtain_model_price', true);
-                        update_post_meta($new_post_id, 'product_item_price', $curtain_model_price);
-
-                        // Map the old parent_category value to the new iso-category post ID
-                        $category_mapping[$current_post_id] = $new_post_id;
-                    }
-                }
-        
-                // Reset post data
-                wp_reset_postdata();
-            }
-        }
-
-        function copy_curtain_spec_to_product_item() {
-            $args = array(
-                'post_type'      => 'curtain-spec',
-                'posts_per_page' => -1,
-            );
-        
-            $query = new WP_Query($args);
-        
-            // Create an array to map old parent_category values to new iso-category IDs
-            $category_mapping = array();
-        
-            if ($query->have_posts()) {
-                while ($query->have_posts()) {
-                    $query->the_post();
-        
-                    // Get the current post ID and data
-                    $current_post_id = get_the_ID();
-                    $current_post    = get_post($current_post_id);
-        
-                    // Prepare the new post data
-                    $new_post = array(
-                        'post_title'    => $current_post->post_title,
-                        'post_content'  => $current_post->post_content,
-                        'post_status'   => 'publish', // or $current_post->post_status if you want to keep the same status
-                        'post_author'   => $current_post->post_author,
-                        'post_type'     => 'product-item',
-                        'post_date'     => $current_post->post_date,
-                        'post_date_gmt' => $current_post->post_date_gmt,
-                    );
-        
-                    // Insert the new post and get the new post ID
-                    $new_post_id = wp_insert_post($new_post);
-        
-                    if ($new_post_id) {
-                        // Get all meta data for the current post
-                        $post_meta = get_post_meta($current_post_id);
-        
-                        // Copy each meta field to the new post
-                        foreach ($post_meta as $meta_key => $meta_values) {
-                            foreach ($meta_values as $meta_value) {
-                                add_post_meta($new_post_id, $meta_key, $meta_value);
-                            }
-                        }
-        
-                        $curtain_specification_price = get_post_meta($new_post_id, 'curtain_specification_price', true);
-                        update_post_meta($new_post_id, 'product_item_price', $curtain_specification_price);
-                        update_post_meta($new_post_id, 'is_specification', 1);
-                        update_post_meta($new_post_id, 'product_item_vendor', 3342);
-
-                        // Map the old parent_category value to the new iso-category post ID
-                        $category_mapping[$current_post_id] = $new_post_id;
-                    }
-                }
-        
-                // Reset post data
-                wp_reset_postdata();
-            }
-        }
-*/
     }
     $models_class = new product_items();
 }

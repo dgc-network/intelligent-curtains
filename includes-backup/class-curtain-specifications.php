@@ -75,8 +75,8 @@ if (!class_exists('curtain_specifications')) {
                     <?php
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
-                    $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = $this->retrieve_curtain_specification_data($current_page);
+                    $paged = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_curtain_specification_data($paged);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
         
@@ -106,9 +106,9 @@ if (!class_exists('curtain_specifications')) {
                 <div class="pagination">
                     <?php
                     // Display pagination links
-                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
-                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    if ($paged > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $paged, $total_pages) . '</span>';
+                    if ($paged < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged + 1)) . '"> > </a></span>';
                     ?>
                 </div>
             </fieldset>
@@ -117,7 +117,7 @@ if (!class_exists('curtain_specifications')) {
             <?php
         }
 
-        function retrieve_curtain_specification_data($current_page = 1) {
+        function retrieve_curtain_specification_data($paged = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
         
@@ -132,7 +132,7 @@ if (!class_exists('curtain_specifications')) {
             $args = array(
                 'post_type'      => 'curtain-spec',
                 'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
+                'paged'          => $paged,
                 's'              => $search_query,  
                 'meta_query'     => array(
                     ($select_category) ? $category_filter : '',

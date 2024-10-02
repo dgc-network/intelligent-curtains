@@ -200,12 +200,12 @@ function get_post_type_meta_keys($post_type) {
 }
 
 require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-users.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
+//require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-users.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
 

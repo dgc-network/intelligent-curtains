@@ -7,7 +7,6 @@ if (!class_exists('order_status')) {
     class order_status {
 
         public function __construct() {
-
             add_shortcode( 'order-status-list', array( $this, 'display_shortcode' ) );
             //add_action( 'init', array( $this, 'register_order_status_post_type' ) );
 
@@ -17,7 +16,6 @@ if (!class_exists('order_status')) {
             add_action( 'wp_ajax_nopriv_set_order_status_dialog_data', array( $this, 'set_order_status_dialog_data' ) );
             add_action( 'wp_ajax_del_order_status_dialog_data', array( $this, 'del_order_status_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_order_status_dialog_data', array( $this, 'del_order_status_dialog_data' ) );
-
         }
 
         function register_order_status_post_type() {
@@ -27,7 +25,6 @@ if (!class_exists('order_status')) {
             $args = array(
                 'labels'        => $labels,
                 'public'        => true,
-                //'show_in_menu'  => false,
             );
             register_post_type( 'order-status', $args );
         }
@@ -72,8 +69,8 @@ if (!class_exists('order_status')) {
                     <?php
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
-                    $current_page = max(1, get_query_var('paged')); // Get the current page number
-                    $query = $this->retrieve_order_status_data($current_page);
+                    $paged = max(1, get_query_var('paged')); // Get the current page number
+                    $query = $this->retrieve_order_status_data($paged);
                     $total_posts = $query->found_posts;
                     $total_pages = ceil($total_posts / $posts_per_page); // Calculate the total number of pages
         
@@ -105,9 +102,9 @@ if (!class_exists('order_status')) {
                 <div class="pagination">
                     <?php
                     // Display pagination links
-                    if ($current_page > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page - 1)) . '"> < </a></span>';
-                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $current_page, $total_pages) . '</span>';
-                    if ($current_page < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($current_page + 1)) . '"> > </a></span>';
+                    if ($paged > 1) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged - 1)) . '"> < </a></span>';
+                    echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'textdomain'), $paged, $total_pages) . '</span>';
+                    if ($paged < $total_pages) echo '<span class="custom-button"><a href="' . esc_url(get_pagenum_link($paged + 1)) . '"> > </a></span>';
                     ?>
                 </div>
             </fieldset>
@@ -116,14 +113,14 @@ if (!class_exists('order_status')) {
             <?php
         }
 
-        function retrieve_order_status_data($current_page = 1) {
+        function retrieve_order_status_data($paged = 1) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
             $search_query = sanitize_text_field($_GET['_search']);
             $args = array(
                 'post_type'      => 'order-status',
                 'posts_per_page' => $posts_per_page,
-                'paged'          => $current_page,
+                'paged'          => $paged,
                 's'              => $search_query,                
                 'meta_key'       => 'status_code', // Specify the meta key to order by
                 'orderby'        => 'meta_value',  // Order by the meta value

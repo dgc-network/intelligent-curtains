@@ -7,7 +7,6 @@ if (!class_exists('login_users')) {
     class login_users {
 
         public function __construct() {
-
             add_shortcode( 'login-user-list', array( $this, 'display_shortcode' ) );
 
             add_action( 'wp_ajax_get_login_user_dialog_data', array( $this, 'get_login_user_dialog_data' ) );
@@ -16,7 +15,6 @@ if (!class_exists('login_users')) {
             add_action( 'wp_ajax_nopriv_set_login_user_dialog_data', array( $this, 'set_login_user_dialog_data' ) );
             add_action( 'wp_ajax_del_login_user_dialog_data', array( $this, 'del_login_user_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_login_user_dialog_data', array( $this, 'del_login_user_dialog_data' ) );
-
         }
 
         function display_shortcode() {
@@ -36,10 +34,10 @@ if (!class_exists('login_users')) {
             $users_per_page = get_option('operation_row_counts');
 
             // Get the current page or set default
-            $current_page = isset($_GET['paged']) ? intval($_GET['paged']) : 1;
+            $paged = isset($_GET['paged']) ? intval($_GET['paged']) : 1;
             
             // Calculate the offset for the query
-            $offset = ($current_page - 1) * $users_per_page;
+            $offset = ($paged - 1) * $users_per_page;
             
             // Query to get the total number of users
             $total_users = count_users();
@@ -104,12 +102,12 @@ if (!class_exists('login_users')) {
                     <div class="pagination">
                         <?php
                         // Display pagination links
-                        if ($current_page > 1) {
-                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $current_page - 1)) . '"> < </a></span>';
+                        if ($paged > 1) {
+                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $paged - 1)) . '"> < </a></span>';
                         }
-                        echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'your-text-domain'), $current_page, $total_pages) . '</span>';
-                        if ($current_page < $total_pages) {
-                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $current_page + 1)) . '"> > </a></span>';
+                        echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'your-text-domain'), $paged, $total_pages) . '</span>';
+                        if ($paged < $total_pages) {
+                            echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $paged + 1)) . '"> > </a></span>';
                         }
                         ?>
                     </div>
