@@ -56,9 +56,9 @@ jQuery(document).ready(function($) {
                         'action': 'set_curtain_faq_dialog_data',
                         '_curtain_faq_id': $("#curtain-faq-id").val(),
                         '_faq_code': $("#faq-code").val(),
+                        '_faq_question': $("#faq-question").val(),
+                        '_faq_answer': $("#faq-answer").val(),
                         '_toolbox_uri': $("#toolbox-url").val(),
-                        '_faq_answer': $("#faq_answer").val(),
-                        '_faq_question': $("#faq_question").val(),
                     },
                     success: function (response) {
                         window.location.replace(window.location.href);
