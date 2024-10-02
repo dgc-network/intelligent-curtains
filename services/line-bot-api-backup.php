@@ -21,123 +21,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if (!class_exists('line_bot_api')) {
     class line_bot_api {
-        private $channel_id;
         private $channel_access_token;
 
         public function __construct() {
-            $this->channel_id = get_option('line_bot_channel_id');
             $this->channel_access_token = get_option('line_bot_token_option');
-            add_action( 'admin_init', array( $this, 'line_bot_register_settings' ) );
         }
 
-        function line_bot_register_settings() {
-            // Register Line bot section
-            add_settings_section(
-                'line-bot-section-settings',
-                'Line bot Settings',
-                array( $this, 'line_bot_section_settings_callback' ),
-                'web-service-settings'
-            );
-
-            // Register fields for Line bot section
-            add_settings_field(
-                'line_bot_token_option',
-                'Line bot Token',
-                array( $this, 'line_bot_token_option_callback' ),
-                'web-service-settings',
-                'line-bot-section-settings'
-            );
-            register_setting('web-service-settings', 'line_bot_token_option');
-
-            add_settings_field(
-                'line_official_account',
-                'Line official account',
-                array( $this, 'line_official_account_callback' ),
-                'web-service-settings',
-                'line-bot-section-settings'
-            );
-            register_setting('web-service-settings', 'line_official_account');
-
-            add_settings_field(
-                'line_official_qr_code',
-                'Line official qr-code',
-                array( $this, 'line_official_qr_code_callback' ),
-                'web-service-settings',
-                'line-bot-section-settings'
-            );
-            register_setting('web-service-settings', 'line_official_qr_code');
-        }
-
-        function line_bot_section_settings_callback() {
-            echo '<p>Settings for Line bot.</p>';
-        }
-
-        function line_bot_token_option_callback() {
-            $value = get_option('line_bot_token_option');
-            echo '<input type="text" name="line_bot_token_option" style="width:100%;" value="' . esc_attr($value) . '" />';
-        }
-
-        function line_official_account_callback() {
-            $value = get_option('line_official_account');
-            echo '<input type="text" name="line_official_account" style="width:100%;" value="' . esc_attr($value) . '" />';
-        }
-
-        function line_official_qr_code_callback() {
-            $value = get_option('line_official_qr_code');
-            echo '<input type="text" name="line_official_qr_code" style="width:100%;" value="' . esc_attr($value) . '" />';
-        }
-
-        // Flex message
-        function set_bubble_message($params) {
-            // Initial bubble message structure
-            $bubble_message = array(
-                'type' => 'flex',
-                //'altText' => $text_message,
-                'altText' => '$text_message',
-                'contents' => array(
-                    'type' => 'bubble',
-                ),
-            );
-
-            // Add header contents if not empty
-            $header_contents = isset($params['header_contents']) ? $params['header_contents'] : array();
-            if (is_array($header_contents) && !empty($header_contents)) {
-                $bubble_message['contents']['header'] = array(
-                    'type' => 'box',
-                    'layout' => 'vertical',
-                    'contents' => $header_contents,
-                );
-            }
-
-            // Add body contents if not empty
-            $body_contents = isset($params['body_contents']) ? $params['body_contents'] : array();
-            if (is_array($body_contents) && !empty($body_contents)) {
-                $bubble_message['contents']['body'] = array(
-                    'type' => 'box',
-                    'layout' => 'vertical',
-                    'contents' => $body_contents,
-                );
-            }
-
-            // Add footer contents if not empty
-            $footer_contents = isset($params['footer_contents']) ? $params['footer_contents'] : array();
-            if (is_array($footer_contents) && !empty($footer_contents)) {
-                $bubble_message['contents']['footer'] = array(
-                    'type' => 'box',
-                    'layout' => 'vertical',
-                    'contents' => $footer_contents,
-                );
-            }
-
-            return $bubble_message;
-        }
-
-        // line-bot-api
+        /**
+         * @param array<string, mixed> $message
+         * @return void
+         */
         public function broadcastMessage($message) {
+    
             $header = array(
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $this->channel_access_token,
             );
+    
             $context = stream_context_create([
                 'http' => [
                     'ignore_errors' => true,
@@ -146,36 +46,51 @@ if (!class_exists('line_bot_api')) {
                     'content' => json_encode($message),
                 ],
             ]);
+    
             $response = file_get_contents('https://api.line.me/v2/bot/message/broadcast', false, $context);
             if (strpos($http_response_header[0], '200') === false) {
                 error_log('Request failed: ' . $response);
             }
         }
-
+    
+        /**
+         * @param array<string, mixed> $message
+         * @return void
+         */
         public function replyMessage($message) {
+    
             $header = array(
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $this->channel_access_token,
             );
+    
             $context = stream_context_create([
                 'http' => [
                     'ignore_errors' => true,
                     'method' => 'POST',
                     'header' => implode("\r\n", $header),
+                    //'content' => json_encode($message, JSON_UNESCAPED_UNICODE),
                     'content' => json_encode($message),
                 ],
             ]);
+    
             $response = file_get_contents('https://api.line.me/v2/bot/message/reply', false, $context);
             if (strpos($http_response_header[0], '200') === false) {
                 error_log('Request failed: ' . $response);
             }
         }
-
+    
+        /**
+         * @param array<string, mixed> $message
+         * @return void
+         */
         public function pushMessage($message) {
+    
             $header = array(
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $this->channel_access_token,
             );
+    
             $context = stream_context_create([
                 'http' => [
                     'ignore_errors' => true,
@@ -184,91 +99,11 @@ if (!class_exists('line_bot_api')) {
                     'content' => json_encode($message),
                 ],
             ]);
+    
             $response = file_get_contents('https://api.line.me/v2/bot/message/push', false, $context);
             if (strpos($http_response_header[0], '200') === false) {
                 error_log('Request failed: ' . $response);
             }
-        }
-
-        public function getProfile($userId) {
-            $header = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channel_access_token,
-            );
-            $context = stream_context_create([
-                'http' => [
-                    'ignore_errors' => true,
-                    'method' => 'GET',
-                    'header' => implode("\r\n", $header),
-                ],
-            ]);
-            $response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
-            if (strpos($http_response_header[0], '200') === false) {
-                error_log('Request failed: ' . $response);
-            }
-            $response = stripslashes($response);
-            $response = json_decode($response, true);
-            return $response;
-        }
-
-        /**
-         * @param string $groupId
-         * @return object
-         */
-        public function getGroupSummary($groupId) {
-    
-            $header = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channel_access_token,
-            );
-    
-            $context = stream_context_create([
-                'http' => [
-                    'ignore_errors' => true,
-                    'method' => 'GET',
-                    'header' => implode("\r\n", $header),
-                ],
-            ]);
-    
-            $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/summary', false, $context);
-            if (strpos($http_response_header[0], '200') === false) {
-                error_log('Request failed: ' . $response);
-            }
-    
-            $response = stripslashes($response);
-            $response = json_decode($response, true);
-            
-            return $response;
-        }
-    
-        /**
-         * @param string $groupId, $userId
-         * @return object
-         */
-        public function getGroupMemberProfile($groupId, $userId) {
-    
-            $header = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->channel_access_token,
-            );
-    
-            $context = stream_context_create([
-                'http' => [
-                    'ignore_errors' => true,
-                    'method' => 'GET',
-                    'header' => implode("\r\n", $header),
-                ],
-            ]);
-    
-            $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/member'.'/'.$userId, false, $context);
-            if (strpos($http_response_header[0], '200') === false) {
-                error_log('Request failed: ' . $response);
-            }
-    
-            $response = stripslashes($response);
-            $response = json_decode($response, true);
-            
-            return $response;
         }
     
         /**
@@ -358,6 +193,97 @@ if (!class_exists('line_bot_api')) {
         }
     
         /**
+         * @param string $userId
+         * @return object
+         */
+        public function getProfile($userId) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'GET',
+                    'header' => implode("\r\n", $header),
+                    //'content' => json_encode($userId),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/profile/'.$userId, false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            $response = stripslashes($response);
+            $response = json_decode($response, true);
+            
+            return $response;
+        }
+    
+        /**
+         * @param string $groupId
+         * @return object
+         */
+        public function getGroupSummary($groupId) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'GET',
+                    'header' => implode("\r\n", $header),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/summary', false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            $response = stripslashes($response);
+            $response = json_decode($response, true);
+            
+            return $response;
+        }
+    
+        /**
+         * @param string $groupId, $userId
+         * @return object
+         */
+        public function getGroupMemberProfile($groupId, $userId) {
+    
+            $header = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->channel_access_token,
+            );
+    
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'method' => 'GET',
+                    'header' => implode("\r\n", $header),
+                ],
+            ]);
+    
+            $response = file_get_contents('https://api.line.me/v2/bot/group/'.$groupId.'/member'.'/'.$userId, false, $context);
+            if (strpos($http_response_header[0], '200') === false) {
+                error_log('Request failed: ' . $response);
+            }
+    
+            $response = stripslashes($response);
+            $response = json_decode($response, true);
+            
+            return $response;
+        }
+    
+        /**
          * @param string $messageId
          * @return object
          */
@@ -444,5 +370,4 @@ if (!class_exists('line_bot_api')) {
             return $signature;
         }
     }
-    $line_bot_api = new line_bot_api();
 }

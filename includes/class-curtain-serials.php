@@ -48,7 +48,7 @@ if (!class_exists('serial_number')) {
 
                 $text_message = $_POST['_chat_message'];
                 $link_uri = 'line://nv/chat?userId=' . $line_user_id;
-                $flexMessage = set_flex_message($curtain_agent_name, $link_uri, $text_message);
+                //$flexMessage = set_flex_message($curtain_agent_name, $link_uri, $text_message);
 
                 $args = array(
                     'meta_key'   => 'curtain_agent_id',  // The meta key to search by
@@ -62,6 +62,43 @@ if (!class_exists('serial_number')) {
                 if (!empty($users)) {
                     foreach ($users as $user) {
                         $line_bot_api = new line_bot_api();
+                        $header_contents = array(
+                            array(
+                                'type' => 'text',
+                                'text' => 'Hello, ' . $curtain_agent_name,
+                                'size' => 'lg',
+                                'weight' => 'bold',
+                            ),
+                        );
+        
+                        $body_contents = array(
+                            array(
+                                'type' => 'text',
+                                'text' => $text_message,
+                                'wrap' => true,
+                            ),
+                        );
+        
+                        $footer_contents = array(
+                            array(
+                                'type' => 'button',
+                                'action' => array(
+                                    'type' => 'uri',
+                                    'label' => 'Click me!',
+                                    'uri' => $link_uri, // Use the desired URI
+                                ),
+                                'style' => 'primary',
+                                'margin' => 'sm',
+                            ),
+                        );
+        
+                        // Generate the Flex Message
+                        $flexMessage = $line_bot_api->set_bubble_message([
+                            'header_contents' => $header_contents,
+                            'body_contents' => $body_contents,
+                            'footer_contents' => $footer_contents,
+                        ]);
+                        // Send the Flex Message via LINE API
                         $line_bot_api->pushMessage([
                             'to' => get_user_meta($user->ID, 'line_user_id', true),
                             'messages' => [$flexMessage],

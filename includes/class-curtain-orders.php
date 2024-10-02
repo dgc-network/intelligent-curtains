@@ -106,8 +106,45 @@ if (!class_exists('curtain_orders')) {
                         );                        
                         $users = get_users($args);                        
                         foreach ($users as $user) {
-                            $flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
+                            //$flexMessage = set_flex_message($user->display_name, $link_uri, $text_message);
                             $line_bot_api = new line_bot_api();
+                            $header_contents = array(
+                                array(
+                                    'type' => 'text',
+                                    'text' => 'Hello, ' . $user->display_name,
+                                    'size' => 'lg',
+                                    'weight' => 'bold',
+                                ),
+                            );
+            
+                            $body_contents = array(
+                                array(
+                                    'type' => 'text',
+                                    'text' => $text_message,
+                                    'wrap' => true,
+                                ),
+                            );
+            
+                            $footer_contents = array(
+                                array(
+                                    'type' => 'button',
+                                    'action' => array(
+                                        'type' => 'uri',
+                                        'label' => 'Click me!',
+                                        'uri' => $link_uri, // Use the desired URI
+                                    ),
+                                    'style' => 'primary',
+                                    'margin' => 'sm',
+                                ),
+                            );
+            
+                            // Generate the Flex Message
+                            $flexMessage = $line_bot_api->set_bubble_message([
+                                'header_contents' => $header_contents,
+                                'body_contents' => $body_contents,
+                                'footer_contents' => $footer_contents,
+                            ]);
+                            // Send the Flex Message via LINE API
                             $line_bot_api->pushMessage([
                                 'to' => get_user_meta($user->ID, 'line_user_id', true),
                                 'messages' => [$flexMessage],
@@ -119,8 +156,45 @@ if (!class_exists('curtain_orders')) {
                         $user_data = get_userdata($current_user_id);
                         $text_message = '我們已經收到你的「採購單」了，訂單號碼「'.time().'」，你可以點擊下方按鍵，查看訂單明細。';
                         $link_uri = home_url().'/order/?_id='.$customer_order_id;
-                        $flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
+                        //$flexMessage = set_flex_message($user_data->display_name, $link_uri, $text_message);
                         $line_bot_api = new line_bot_api();
+                        $header_contents = array(
+                            array(
+                                'type' => 'text',
+                                'text' => 'Hello, ' . $user_data->display_name,
+                                'size' => 'lg',
+                                'weight' => 'bold',
+                            ),
+                        );
+        
+                        $body_contents = array(
+                            array(
+                                'type' => 'text',
+                                'text' => $text_message,
+                                'wrap' => true,
+                            ),
+                        );
+        
+                        $footer_contents = array(
+                            array(
+                                'type' => 'button',
+                                'action' => array(
+                                    'type' => 'uri',
+                                    'label' => 'Click me!',
+                                    'uri' => $link_uri, // Use the desired URI
+                                ),
+                                'style' => 'primary',
+                                'margin' => 'sm',
+                            ),
+                        );
+        
+                        // Generate the Flex Message
+                        $flexMessage = $line_bot_api->set_bubble_message([
+                            'header_contents' => $header_contents,
+                            'body_contents' => $body_contents,
+                            'footer_contents' => $footer_contents,
+                        ]);
+                        // Send the Flex Message via LINE API
                         $line_bot_api->pushMessage([
                             'to' => get_user_meta($current_user_id, 'line_user_id', true),
                             'messages' => [$flexMessage],

@@ -63,9 +63,7 @@ function enqueue_scripts() {
     wp_enqueue_script( 'jquery-ui-dialog' );
 
     wp_enqueue_style( 'custom-options-view', plugins_url( 'assets/css/custom-options-view.css' , __FILE__ ), '', time() );
-    //wp_enqueue_style( 'chat-css', plugins_url( 'assets/css/chat.css' , __FILE__ ), '', time() );
     wp_enqueue_style( 'jquery-ui-css', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css' );
-    //wp_enqueue_style( 'demos-style-css', 'https://jqueryui.com/resources/demos/style.css' );
 
     wp_enqueue_script( 'custom-script', plugins_url( 'assets/js/custom-options-view.js' , __FILE__ ), array( 'jquery' ), time() );
     wp_enqueue_script( 'curtain-orders', plugins_url( 'assets/js/curtain-orders.js' , __FILE__ ), array( 'jquery' ), time() );
@@ -75,6 +73,141 @@ function enqueue_scripts() {
     wp_localize_script( 'curtain-misc', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
+
+function init_webhook_events() {
+    $line_bot_api = new line_bot_api();
+    $open_ai_api = new open_ai_api();
+
+    $entityBody = file_get_contents('php://input');
+    $data = json_decode($entityBody, true);
+    $events = $data['events'] ?? [];
+
+    foreach ((array)$events as $event) {
+        $line_user_id = $event['source']['userId'];
+        $profile = $line_bot_api->getProfile($line_user_id);
+        $display_name = str_replace(' ', '', $profile['displayName']);
+
+        // Regular webhook response
+        switch ($event['type']) {
+            case 'message':
+                $message = $event['message'];
+                switch ($message['type']) {
+                    case 'text':
+                        $result = get_keyword_matched($message['text']);
+                        if ($result) {
+                            $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
+                            $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
+                            // Encode the Chinese characters for inclusion in the URL
+                            $link_uri = home_url().'/orders/?_id='.$line_user_id.'&_name='.urlencode($display_name);
+                            //$flexMessage = set_flex_message($display_name, $link_uri, $text_message);
+                            $header_contents = array(
+                                array(
+                                    'type' => 'text',
+                                    'text' => 'Hello, ' . $display_name,
+                                    'size' => 'lg',
+                                    'weight' => 'bold',
+                                ),
+                            );
+            
+                            $body_contents = array(
+                                array(
+                                    'type' => 'text',
+                                    'text' => $text_message,
+                                    'wrap' => true,
+                                ),
+                            );
+            
+                            $footer_contents = array(
+                                array(
+                                    'type' => 'button',
+                                    'action' => array(
+                                        'type' => 'uri',
+                                        'label' => 'Click me!',
+                                        'uri' => $link_uri, // Use the desired URI
+                                    ),
+                                    'style' => 'primary',
+                                    'margin' => 'sm',
+                                ),
+                            );
+            
+                            // Generate the Flex Message
+                            $flexMessage = $line_bot_api->set_bubble_message([
+                                'header_contents' => $header_contents,
+                                'body_contents' => $body_contents,
+                                'footer_contents' => $footer_contents,
+                            ]);
+                            // Send the Flex Message via LINE API
+                            $line_bot_api->replyMessage([
+                                'replyToken' => $event['replyToken'],
+                                'messages' => [$flexMessage],
+                            ]);
+
+                        } else {
+                            // Open-AI auto reply
+                            $response = $open_ai_api->createChatCompletion($message['text']);
+                            $line_bot_api->replyMessage([
+                                'replyToken' => $event['replyToken'],
+                                'messages' => [
+                                    [
+                                        'type' => 'text',
+                                        'text' => $response
+                                    ]                                                                    
+                                ]
+                            ]);
+                        }
+                        break;
+                    default:
+                        error_log('Unsupported message type: ' . $message['type']);
+                        break;
+                }
+                break;
+            default:
+                error_log('Unsupported event type: ' . $event['type']);
+                break;
+        }
+    }
+}
+add_action( 'parse_request', 'init_webhook_events' );
+
+function is_user_not_an_agent($user_id=false) {
+    if (empty($user_id)) $user_id=get_current_user_id();
+    $user = get_userdata($user_id);
+    // Get the curtain_agent_id meta for the user
+    $curtain_agent_id = get_user_meta($user_id, 'curtain_agent_id', true);
+    
+    // Check if curtain_agent_id does not exist or is empty
+    if (empty($curtain_agent_id)) {
+        return true;
+    }
+    return false;
+}
+
+function user_is_not_logged_in() {
+    $line_login_api = new line_login_api();
+    $line_login_api->display_line_login_button();
+}
+
+function get_post_type_meta_keys($post_type) {
+    global $wpdb;
+    $query = $wpdb->prepare("
+        SELECT DISTINCT(meta_key)
+        FROM $wpdb->postmeta
+        INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->postmeta.post_id
+        WHERE $wpdb->posts.post_type = %s
+    ", $post_type);
+
+    return $wpdb->get_col($query);
+}
+
+require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-users.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
 
 function set_flex_message($display_name, $link_uri, $text_message) {
     // Flex Message JSON structure with a button
@@ -118,66 +251,6 @@ function set_flex_message($display_name, $link_uri, $text_message) {
     ];
 }
 
-function init_webhook_events() {
-
-    $line_bot_api = new line_bot_api();
-    $open_ai_api = new open_ai_api();
-
-    $entityBody = file_get_contents('php://input');
-    $data = json_decode($entityBody, true);
-    $events = $data['events'] ?? [];
-
-    foreach ((array)$events as $event) {
-        $line_user_id = $event['source']['userId'];
-        $profile = $line_bot_api->getProfile($line_user_id);
-        $display_name = str_replace(' ', '', $profile['displayName']);
-
-        // Regular webhook response
-        switch ($event['type']) {
-            case 'message':
-                $message = $event['message'];
-                switch ($message['type']) {
-                    case 'text':
-                        $result = get_keyword_matched($message['text']);
-                        if ($result) {
-                            $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
-                            $text_message = '您尚未登入系統！請點擊下方按鍵登入或註冊本系統。';
-                            // Encode the Chinese characters for inclusion in the URL
-                            $link_uri = home_url().'/orders/?_id='.$line_user_id.'&_name='.urlencode($display_name);
-                            $flexMessage = set_flex_message($display_name, $link_uri, $text_message);
-                            $line_bot_api->replyMessage([
-                                'replyToken' => $event['replyToken'],
-                                'messages' => [$flexMessage],
-                            ]);
-
-                        } else {
-                            // Open-AI auto reply
-                            $response = $open_ai_api->createChatCompletion($message['text']);
-                            //$response = $open_ai_api->generate_openai_proposal($message['text']);
-                            $line_bot_api->replyMessage([
-                                'replyToken' => $event['replyToken'],
-                                'messages' => [
-                                    [
-                                        'type' => 'text',
-                                        'text' => $response
-                                    ]                                                                    
-                                ]
-                            ]);
-                        }
-                        break;
-                    default:
-                        error_log('Unsupported message type: ' . $message['type']);
-                        break;
-                }
-                break;
-            default:
-                error_log('Unsupported event type: ' . $event['type']);
-                break;
-        }
-    }
-}
-add_action( 'parse_request', 'init_webhook_events' );
-
 function get_keyword_matched($keyword) {
     // Check if $keyword is contained within '我要註冊登入登錄'
     if (strpos($keyword, '註冊') !== false) return true;
@@ -188,12 +261,8 @@ function get_keyword_matched($keyword) {
         
     return false;
 }
-
-function user_is_not_logged_in() {
-
-    $line_login_api = new line_login_api();
-    $line_login_api->display_line_login_button();
 /*
+function user_is_not_logged_in() {
     if( isset($_GET['_id']) && isset($_GET['_name']) ) {
         // Using Line User ID to register and login into the system
         $array = get_users( array( 'meta_value' => $_GET['_id'] ));
@@ -262,21 +331,8 @@ function user_is_not_logged_in() {
         </div>
         <?php
     }
+}
 */        
-}
-
-function is_user_not_an_agent($user_id=false) {
-    if (empty($user_id)) $user_id=get_current_user_id();
-    $user = get_userdata($user_id);
-    // Get the curtain_agent_id meta for the user
-    $curtain_agent_id = get_user_meta($user_id, 'curtain_agent_id', true);
-    
-    // Check if curtain_agent_id does not exist or is empty
-    if (empty($curtain_agent_id)) {
-        return true;
-    }
-    return false;
-}
 
 function wp_login_submit() {
     $response = array('success' => false, 'error' => 'Invalid data format');
@@ -314,24 +370,3 @@ function wp_login_submit() {
 add_action('wp_ajax_wp_login_submit', 'wp_login_submit');
 add_action('wp_ajax_nopriv_wp_login_submit', 'wp_login_submit');
 
-function get_post_type_meta_keys($post_type) {
-    global $wpdb;
-    $query = $wpdb->prepare("
-        SELECT DISTINCT(meta_key)
-        FROM $wpdb->postmeta
-        INNER JOIN $wpdb->posts ON $wpdb->posts.ID = $wpdb->postmeta.post_id
-        WHERE $wpdb->posts.post_type = %s
-    ", $post_type);
-
-    return $wpdb->get_col($query);
-}
-
-require_once plugin_dir_path( __FILE__ ) . 'services/services.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-categories.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-agents.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-login-users.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
