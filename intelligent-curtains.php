@@ -93,6 +93,60 @@ function init_webhook_events() {
                 $message = $event['message'];
                 switch ($message['type']) {
                     case 'text':
+                        $curtain_faq = new curtain_faq();
+                        $query = $curtain_faq->retrieve_curtain_faq_data(0, $message['text']);
+                        if ( $query->have_posts() ) {
+                            $body_contents = array();
+                            $text_message = __( '您可以點擊下方列示，直接查詢『', 'your-text-domain' ) . $message['text'] . __( '』相關問答。', 'your-text-domain' );
+                            $body_content = array(
+                                'type' => 'text',
+                                'text' => $text_message,
+                                'wrap' => true,
+                            );
+                            $body_contents[] = $body_content;
+
+                            while ( $query->have_posts() ) {
+                                $query->the_post(); // Setup post data
+                                $toolbox_uri = get_post_meta(get_the_ID(), 'toolbox_uri', true);
+                                // Create a body content array for each post
+                                $body_content = array(
+                                    'type' => 'text',
+                                    'text' => 'Q: '.get_the_title(),  // Get the current post's title
+                                    'wrap' => true,
+                                );
+                                $body_contents[] = $body_content;
+                                $body_content = array(
+                                    'type' => 'text',
+                                    'text' => 'A: '.get_the_content(),  // Get the current post's title
+                                    'wrap' => true,
+                                );
+                                $body_contents[] = $body_content;
+                                $body_content = array(
+                                    'type' => 'button',
+                                    'action' => array(
+                                        'type' => 'uri',
+                                        'label' => '工具箱',
+                                        'uri' => $toolbox_uri,
+                                    ),
+                                    'style' => 'primary',
+                                    'margin' => 'sm',
+                                );
+                                $body_contents[] = $body_content;
+                            } 
+                            // Reset post data after custom loop
+                            wp_reset_postdata();
+
+                            // Generate the Flex Message
+                            $flexMessage = $line_bot_api->set_bubble_message([
+                                'body_contents' => $body_contents,
+                            ]);
+                            // Send the Flex Message via LINE API
+                            $line_bot_api->replyMessage(array(
+                                'replyToken' => $event['replyToken'],
+                                'messages' => array($flexMessage),
+                            ));
+/*                            
+                        }
                         $result = get_keyword_matched($message['text']);
                         if ($result) {
                             $text_message = 'You have not logged in yet. Please click the button below to go to the Login/Registration system.';
@@ -141,7 +195,7 @@ function init_webhook_events() {
                                 'replyToken' => $event['replyToken'],
                                 'messages' => [$flexMessage],
                             ]);
-
+*/
                         } else {
                             // Open-AI auto reply
                             $response = $open_ai_api->createChatCompletion($message['text']);

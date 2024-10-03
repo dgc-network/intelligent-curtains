@@ -105,10 +105,10 @@ if (!class_exists('curtain_faq')) {
             <?php
         }
 
-        function retrieve_curtain_faq_data($paged = 1) {
+        function retrieve_curtain_faq_data($paged=1, $search_query=false) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
-            $search_query = sanitize_text_field($_GET['_search']);
+            if (!$search_query) $search_query = sanitize_text_field($_GET['_search']);
             $args = array(
                 'post_type'      => 'curtain-faq',
                 'posts_per_page' => $posts_per_page,
@@ -118,6 +118,7 @@ if (!class_exists('curtain_faq')) {
                 'orderby'        => 'meta_value',  // Order by the meta value
                 'order'          => 'ASC',         // Order direction (ASC or DESC)
             );        
+            if ($paged==0) $args['posts_per_page'] = -1;
             $query = new WP_Query($args);
             return $query;
         }
