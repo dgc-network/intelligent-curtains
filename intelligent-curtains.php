@@ -97,14 +97,6 @@ function init_webhook_events() {
                         $query = $curtain_faq->retrieve_curtain_faq_data(0, $message['text']);
                         if ( $query->have_posts() ) {
                             $body_contents = array();
-                            $text_message = __( '您可以點擊下方列示，直接查詢『', 'your-text-domain' ) . $message['text'] . __( '』相關問答。', 'your-text-domain' );
-                            $body_content = array(
-                                'type' => 'text',
-                                'text' => $text_message,
-                                'wrap' => true,
-                            );
-                            $body_contents[] = $body_content;
-
                             while ( $query->have_posts() ) {
                                 $query->the_post(); // Setup post data
                                 $toolbox_uri = get_post_meta(get_the_ID(), 'toolbox_uri', true);
@@ -112,6 +104,7 @@ function init_webhook_events() {
                                 $body_content = array(
                                     'type' => 'text',
                                     'text' => 'Q: '.get_the_title(),  // Get the current post's title
+                                    'weight' => 'bold',
                                     'wrap' => true,
                                 );
                                 $body_contents[] = $body_content;
