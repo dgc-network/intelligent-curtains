@@ -114,17 +114,19 @@ function init_webhook_events() {
                                     'wrap' => true,
                                 );
                                 $body_contents[] = $body_content;
-                                $body_content = array(
-                                    'type' => 'button',
-                                    'action' => array(
-                                        'type' => 'uri',
-                                        'label' => '工具箱',
-                                        'uri' => $toolbox_uri,
-                                    ),
-                                    'style' => 'primary',
-                                    'margin' => 'sm',
-                                );
-                                $body_contents[] = $body_content;
+                                if ($toolbox_uri) {
+                                    $body_content = array(
+                                        'type' => 'button',
+                                        'action' => array(
+                                            'type' => 'uri',
+                                            'label' => '工具箱',
+                                            'uri' => $toolbox_uri,
+                                        ),
+                                        'style' => 'primary',
+                                        'margin' => 'sm',
+                                    );
+                                    $body_contents[] = $body_content;    
+                                }
                             } 
                             // Reset post data after custom loop
                             wp_reset_postdata();
