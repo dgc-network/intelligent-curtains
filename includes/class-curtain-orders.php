@@ -960,7 +960,7 @@ if (!class_exists('curtain_orders')) {
                 <label for="order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
                 <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
 
-                <?php echo $this->display_order_item_list($production_order_id, $is_admin);?>
+                <?php echo $this->display_order_item_list($production_order_id, $is_admin, true);?>
 
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
@@ -1421,7 +1421,7 @@ if (!class_exists('curtain_orders')) {
             register_post_type( 'order-item', $args );
         }
 
-        function display_order_item_list($customer_order_id=false, $is_admin=false) {
+        function display_order_item_list($customer_order_id=false, $is_admin=false, $is_production=false) {
             ob_start();
             $customer_order_category = get_post_meta($customer_order_id, 'customer_order_category', true);
             $customer_order_amount = 0;
@@ -1434,7 +1434,11 @@ if (!class_exists('curtain_orders')) {
                             <th><?php echo __( 'Item', 'your-text-domain' );?></th>
                             <th><?php echo __( 'Description', 'your-text-domain' );?></th>
                             <th><?php echo __( 'QTY', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Amount', 'your-text-domain' );?></th>
+                            <?php /*if ($is_production) {?>
+                                <th><?php echo __( 'Note', 'your-text-domain' );?></th>
+                            <?php } else {*/?>
+                                <th><?php echo __( 'Amount', 'your-text-domain' );?></th>
+                            <?php //}?>
                         </tr>
                     </thead>
                     <tbody>
