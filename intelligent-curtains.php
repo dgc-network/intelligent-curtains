@@ -17,6 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+@ini_set( 'upload_max_size' , '1024M' );
+@ini_set( 'post_max_size', '1024M');
+@ini_set( 'memory_limit', '1024M' );
+
 if ( headers_sent( $file, $line ) ) {
     error_log( "Headers already sent in $file on line $line" );
 }
