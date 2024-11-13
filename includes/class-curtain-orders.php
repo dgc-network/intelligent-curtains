@@ -348,7 +348,7 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="modal-overlay">
+                <div id="modal-overlay" style="display:none;">
                     <div id="modal-content">
                         <h2>選購注意事項</h2>
                         <ol>
