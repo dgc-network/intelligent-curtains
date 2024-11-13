@@ -348,19 +348,6 @@ if (!class_exists('curtain_orders')) {
                     ?>
                     </tbody>
                 </table>
-                <div id="modal-overlay" style="display:none;">
-                    <div id="modal-content">
-                        <h2>選購注意事項</h2>
-                        <ol>
-                            <li>所有插電的產品都已經內建WiFi智能。無需外購網關。</li>
-                            <li>充電式產品如果要智能控制，需要加購Zigbee網關。</li>
-                            <li>記得要挑選適當的遙控器(選項在『其他配件』內)。</li>
-                            <li>選購『matter』的智能產品，一定要確認客人家中有智能音箱(HomePod…..)。因為matter產品一定要有控制中樞。</li>
-                            <li>軌道窗簾固定架內定是『天架』，如需『壁架』請備註。</li>
-                        </ol>
-                        <button id="close-modal">Close</button>
-                    </div>
-                </div>
                 <div id="new-quotation" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <div class="pagination">
                     <?php
@@ -1533,6 +1520,19 @@ if (!class_exists('curtain_orders')) {
                     </tfoot>
                 </table>
                 <?php if ($customer_order_category<=1 || $is_admin==1) {?>
+                <div id="modal-overlay" style="display:none;">
+                    <div id="modal-content">
+                        <h2>選購注意事項</h2>
+                        <ol>
+                            <li>所有插電的產品都已經內建WiFi智能。無需外購網關。</li>
+                            <li>充電式產品如果要智能控制，需要加購Zigbee網關。</li>
+                            <li>記得要挑選適當的遙控器(選項在『其他配件』內)。</li>
+                            <li>選購『matter』的智能產品，一定要確認客人家中有智能音箱(HomePod…..)。因為matter產品一定要有控制中樞。</li>
+                            <li>軌道窗簾固定架內定是『天架』，如需『壁架』請備註。</li>
+                        </ol>
+                        <button id="close-modal">Close</button>
+                    </div>
+                </div>
                 <div id="new-order-item" class="custom-button" style="border:solid; margin:3px; text-align:center; border-radius:5px; font-size:small;">+</div>
                 <?php }?>
             </fieldset>

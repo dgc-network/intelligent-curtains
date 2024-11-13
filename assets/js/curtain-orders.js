@@ -389,6 +389,7 @@ jQuery(document).ready(function($) {
     });            
 
     $("#new-quotation").on("click", function() {
+/*        
         // Show the modal first
         $("#modal-overlay").css("display", "flex");
 
@@ -416,7 +417,7 @@ jQuery(document).ready(function($) {
                 }
             });
         });
-/*    
+*/    
         const ajaxData = {
             'action': 'set_customer_order_dialog_data',
         };
@@ -437,7 +438,7 @@ jQuery(document).ready(function($) {
                 alert(error);
             }
         });   
-*/         
+
     });
 
     function activate_production_order_dialog_data(production_order_id) {
@@ -545,22 +546,31 @@ jQuery(document).ready(function($) {
 
     function activate_customer_order_dialog_data(customer_order_id) {
         $("#new-order-item").on("click", function() {
-            $.ajax({
-                url: ajax_object.ajax_url,
-                type: 'post',
-                data: {
-                    action: 'get_order_item_dialog_data',
-                },
-                success: function (response) {
-                    $('#new-order-item-dialog').html(response.html_contain);
-                    $("#new-order-item-dialog").dialog('open');
-                    activate_curtain_category_id_data();
-                },
-                error: function(error){
-                    console.error(error);
-                    alert(error);
-                }
-            });    
+            // Show the modal first
+            $("#modal-overlay").css("display", "flex");
+
+            // When "Close" is clicked, proceed with the AJAX request
+            $("#close-modal").on("click", function() {
+                $("#modal-overlay").hide(); // Hide modal
+    
+                $.ajax({
+                    url: ajax_object.ajax_url,
+                    type: 'post',
+                    data: {
+                        action: 'get_order_item_dialog_data',
+                    },
+                    success: function (response) {
+                        $('#new-order-item-dialog').html(response.html_contain);
+                        $("#new-order-item-dialog").dialog('open');
+                        activate_curtain_category_id_data();
+                    },
+                    error: function(error){
+                        console.error(error);
+                        alert(error);
+                    }
+                });    
+            });
+    
         });
 
         $('[id^="edit-order-item-"]').on("click", function () {
