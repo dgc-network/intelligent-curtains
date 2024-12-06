@@ -134,8 +134,8 @@ if (!class_exists('curtain_categories')) {
             ?>
             <fieldset>
                 <div>
-                    <input type="checkbox" id="category-disabled" style="display:inline-block; width:5%; " <?php echo $is_disabled;?> />
-                    <label for="category-disabled"><?php echo __( 'Category disabled.', 'your-text-domain' );?></label>
+                    <input type="checkbox" id="category-disabled" style="display:inline-block; width:5%;" <?php echo $is_disabled;?> />
+                    <label for="category-disabled" style="display:inline-block;"><?php echo __( 'Category disabled.', 'your-text-domain' );?></label>
                 </div>
                 <input type="hidden" id="curtain-category-id" value="<?php echo esc_attr($curtain_category_id);?>" />
                 <label for="curtain-category-title"><?php echo __( '窗簾類別', 'your-text-domain' );?></label>
@@ -144,6 +144,7 @@ if (!class_exists('curtain_categories')) {
                 <input type="checkbox" id="is-specification" style="display:inline-block; width:5%; " <?php echo $is_specification_checked;?> /> Hide the Specification.
                 <div>
                     <div id="show-width">
+                        <label for="curtain-width" style="display:inline-block;"><?php echo __( 'Width: ', 'your-text-domain' );?></label>
                         <input type="text" id="curtain-min-width" value="<?php echo esc_html($curtain_min_width);?>" style="display:inline-block; width:25%;" /> cm ~ 
                         <input type="text" id="curtain-max-width" value="<?php echo esc_html($curtain_max_width);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
@@ -151,6 +152,7 @@ if (!class_exists('curtain_categories')) {
                 <div>
                     <input type="checkbox" id="is-height" style="display:inline-block; width:5%; " <?php echo $is_height_checked;?> /> Hide the Height.
                     <div id="show-height">
+                        <label for="curtain-height" style="display:inline-block;"><?php echo __( 'Height: ', 'your-text-domain' );?></label>
                         <input type="text" id="curtain-min-height" value="<?php echo esc_html($curtain_min_height);?>" style="display:inline-block; width:25%;" /> cm ~ 
                         <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
@@ -225,10 +227,15 @@ if (!class_exists('curtain_categories')) {
                 'post_type'      => 'curtain-category',
                 'posts_per_page' => -1,
                 'meta_query' => array(
+                    'relation' => 'OR',
                     array(
                         'key'   => 'category_disabled',
-                        'value' => 1,
-                        'compare' => '!=',
+                        'compare' => 'NOT EXISTS',
+                    )
+                    array(
+                        'key'   => 'category_disabled',
+                        'value' => 0,
+                        'compare' => '=',
                         'type'    => 'NUMERIC',
                     )
                 ),
