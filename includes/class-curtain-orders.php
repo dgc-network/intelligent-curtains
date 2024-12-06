@@ -972,7 +972,7 @@ if (!class_exists('curtain_orders')) {
                 <?php }?>
 
                 <label for="order-status"><?php echo __( '狀態', 'your-text-domain' );?></label>
-                <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" disabled />
 
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin, true);?>
 
