@@ -389,35 +389,6 @@ jQuery(document).ready(function($) {
     });            
 
     $("#new-quotation").on("click", function() {
-/*        
-        // Show the modal first
-        $("#modal-overlay").css("display", "flex");
-
-        // When "Close" is clicked, proceed with the AJAX request
-        $("#close-modal").on("click", function() {
-            $("#modal-overlay").hide(); // Hide modal
-
-            const ajaxData = {
-                'action': 'set_customer_order_dialog_data',
-                '_curtain_agent_id': $("#select-curtain-agent").val()
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: ajax_object.ajax_url,
-                dataType: "json",
-                data: ajaxData,
-                success: function(response) {
-                    $('#result-container').html(response.html_contain);
-                    activate_customer_order_dialog_data($("#customer-order-id").val());
-                },
-                error: function(error) {
-                    console.error(error);
-                    alert(error);
-                }
-            });
-        });
-*/    
         const ajaxData = {
             'action': 'set_customer_order_dialog_data',
         };
@@ -899,7 +870,7 @@ jQuery(document).ready(function($) {
             }
 
             const ajaxData = {
-                'action': 'set_customer_order_dialog_data',
+                'action': 'proceed_customer_order_status',
             };
             ajaxData['_next_status'] = next_status;
             ajaxData['_customer_order_id'] = $("#customer-order-id").val();

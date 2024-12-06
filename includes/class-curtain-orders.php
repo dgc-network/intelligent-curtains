@@ -15,8 +15,8 @@ if (!class_exists('curtain_orders')) {
             add_action( 'wp_ajax_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
 
-            add_action( 'wp_ajax_set_customer_order_dialog_data', array( $this, 'set_customer_order_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_set_customer_order_dialog_data', array( $this, 'set_customer_order_dialog_data' ) );
+            add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
+            add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
 
@@ -71,7 +71,7 @@ if (!class_exists('curtain_orders')) {
             }
         }
 
-        function set_customer_order_dialog_data() {
+        function proceed_customer_order_status() {
             $response = array();
             if( isset($_POST['_customer_order_id'])  && isset($_POST['_next_status']) ) {
                 // Update the quotation data
