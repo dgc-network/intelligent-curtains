@@ -260,7 +260,8 @@ if (!class_exists('curtain_agents')) {
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $curtain_agent_number = get_post_meta(get_the_ID(), 'curtain_agent_number', true);
                 $curtain_agent_name = get_post_meta(get_the_ID(), 'curtain_agent_name', true);
-                $curtain_agent_title = $curtain_agent_name.'('.$curtain_agent_number.')';
+                $curtain_agent_address = get_post_meta(get_the_ID(), 'curtain_agent_address', true);
+                $curtain_agent_title = $curtain_agent_name.'('.$curtain_agent_number.')-'.$curtain_agent_address;
                 $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($curtain_agent_title) . '</option>';
             endwhile;
             wp_reset_postdata();
