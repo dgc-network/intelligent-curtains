@@ -35,11 +35,11 @@ function register_session() {
     }
 }
 add_action( 'init', 'register_session', 1 );
-/*
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
+
 function remove_admin_bar() {
     // Check if the current user is an administrator or editor
     if (!current_user_can('administrator') && !current_user_can('editor') && !is_admin()) {
