@@ -463,7 +463,7 @@ jQuery(document).ready(function($) {
             }
 
             const ajaxData = {
-                'action': 'proceed_production_order_status',
+                'action': 'set_production_order_dialog_data',
             };
             ajaxData['_next_status'] = next_status;
             ajaxData['_production_order_id'] = production_order_id;
@@ -786,7 +786,7 @@ jQuery(document).ready(function($) {
             if (window.confirm("Are you sure you want to cancel this order?")) {
                 const customer_order_id = this.id.substring(22);
                 const ajaxData = {
-                    'action': 'proceed_customer_order_status',
+                    'action': 'set_customer_order_dialog_data',
                 };
                 ajaxData['_next_status'] = 0;
                 ajaxData['_customer_order_id'] = $("#customer-order-id").val();
@@ -899,7 +899,7 @@ jQuery(document).ready(function($) {
             }
 
             const ajaxData = {
-                'action': 'proceed_customer_order_status',
+                'action': 'set_customer_order_dialog_data',
             };
             ajaxData['_next_status'] = next_status;
             ajaxData['_customer_order_id'] = $("#customer-order-id").val();
