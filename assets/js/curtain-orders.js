@@ -468,6 +468,7 @@ jQuery(document).ready(function($) {
             ajaxData['_next_status'] = next_status;
             ajaxData['_production_order_id'] = production_order_id;
             ajaxData['_taobao_order_number'] = $("#taobao-order-number").val();
+            ajaxData['_shipping_agent'] = $("#shipping-agent").val();
             ajaxData['_taobao_ship_number'] = $("#taobao-ship-number").val();
             ajaxData['_curtain_ship_number'] = $("#curtain-ship-number").val();
 

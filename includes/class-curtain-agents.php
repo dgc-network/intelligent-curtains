@@ -235,6 +235,37 @@ if (!class_exists('curtain_agents')) {
             wp_reset_postdata();
             return $options;
         }
+
+        function select_shipping_agent_options($selected_option=0) {
+            $order_status = new order_status();
+            $order_status_id = $order_status->get_order_status_id_by_code('order03');
+            $args = array(
+                'post_type'      => 'curtain-agent',
+                'posts_per_page' => -1,
+                'meta_query' => array(
+                    array(
+                        'key'   => 'curtain_agent_status',
+                        'value' => $order_status_id,
+                        'compare' => '=',
+                    ),
+                ),
+                'meta_key'       => 'curtain_agent_number', // Meta key for sorting
+                'orderby'        => 'meta_value', // Sort by meta value
+                'order'          => 'ASC', // Sorting order (ascending)
+            );
+            $query = new WP_Query($args);
+
+            $options = '<option value="">Select delivery</option>';
+            while ($query->have_posts()) : $query->the_post();
+                $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
+                $curtain_agent_number = get_post_meta(get_the_ID(), 'curtain_agent_number', true);
+                $curtain_agent_name = get_post_meta(get_the_ID(), 'curtain_agent_name', true);
+                $curtain_agent_title = $curtain_agent_name.'('.$curtain_agent_number.')';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($curtain_agent_title) . '</option>';
+            endwhile;
+            wp_reset_postdata();
+            return $options;
+        }
     }
     $agents_class = new curtain_agents();
 }

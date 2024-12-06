@@ -221,12 +221,46 @@ if (!class_exists('order_status')) {
                 $status_code = get_post_meta(get_the_ID(), 'status_code', true);
                 $status_title = get_the_title();
                 $status_content = get_the_content();
-                $status_title = $status_content.'('.$status_code.')';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($status_title) . '</option>';
+                $status_content = $status_content.'('.$status_code.')';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($status_content) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;
-        }        
+        }
+
+        function get_order_status_id_by_code($status_code) {
+            // Sanitize input to ensure safety
+            $status_code = sanitize_text_field($status_code);
+        
+            // Set up the query arguments
+            $args = array(
+                'post_type'      => 'order-status',
+                'posts_per_page' => 1, // Limit to 1 result
+                'fields'         => 'ids', // Only return the post IDs
+                'meta_query'     => array(
+                    array(
+                        'key'     => 'status_code',
+                        'value'   => $status_code,
+                        'compare' => '=', // Exact match
+                    ),
+                ),
+            );
+        
+            // Perform the query
+            $query = new WP_Query($args);
+        
+            // Return the first post ID if found, otherwise null
+            return !empty($query->posts) ? $query->posts[0] : null;
+        }
+/*        
+        // Usage
+        $order_status_id = get_order_status_id_by_code('order03');
+        if ($order_status_id) {
+            echo "The ID of the order status is: " . $order_status_id;
+        } else {
+            echo "No matching order status found.";
+        }
+*/        
     }
     $order_status = new order_status();
 }

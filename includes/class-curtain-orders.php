@@ -250,6 +250,8 @@ if (!class_exists('curtain_orders')) {
                 if ($current_status_code=="order01") {
                     $taobao_order_number = sanitize_text_field($_POST['_taobao_order_number']);
                     update_post_meta( $production_order_id, 'taobao_order_number', $taobao_order_number);
+                    $shipping_agent = sanitize_text_field($_POST['_shipping_agent']);
+                    update_post_meta( $production_order_id, 'shipping_agent', $shipping_agent);
                     $taobao_order_number_in_customer_order = get_post_meta($customer_order_id, 'taobao_order_number', true);
                     if ($taobao_order_number_in_customer_order) $taobao_order_number_in_customer_order.=', '.$taobao_order_number;
                     else $taobao_order_number_in_customer_order=$taobao_order_number;
@@ -913,12 +915,14 @@ if (!class_exists('curtain_orders')) {
         
         function display_production_order_dialog($production_order_id=false, $is_admin=false) {
             ob_start();
+            $agents_class = new curtain_agents();
             $vendor_id = get_post_meta($production_order_id, 'production_order_vendor', true);
             $vendor_name = get_post_meta($vendor_id, 'curtain_agent_name', true);
 
             $customer_order_remark = get_post_meta($production_order_id, 'customer_order_remark', true);
             $customer_order_category = get_post_meta($production_order_id, 'customer_order_category', true);
             $taobao_order_number = get_post_meta($production_order_id, 'taobao_order_number', true);
+            $shipping_agent = get_post_meta($production_order_id, 'shipping_agent', true);
             $taobao_ship_number = get_post_meta($production_order_id, 'taobao_ship_number', true);
             $curtain_ship_number = get_post_meta($production_order_id, 'curtain_ship_number', true);
             $curtain_ship_date = get_post_meta($production_order_id, 'curtain_ship_date', true);
@@ -938,6 +942,8 @@ if (!class_exists('curtain_orders')) {
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'your-text-domain' );?></label>
+                    <select id="shipping-agent" class="select ui-widget-content ui-corner-all"><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
                 <?php } elseif ($status_code=="order02") { //填寫快遞單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
