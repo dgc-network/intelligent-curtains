@@ -12,13 +12,13 @@ if (!class_exists('curtain_orders')) {
 
             add_action( 'wp_ajax_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_production_order_dialog_data', array( $this, 'get_production_order_dialog_data' ) );
+            add_action( 'wp_ajax_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
+            add_action( 'wp_ajax_nopriv_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
             add_action( 'wp_ajax_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_del_production_order_dialog_data', array( $this, 'del_production_order_dialog_data' ) );
 
             add_action( 'wp_ajax_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
             add_action( 'wp_ajax_nopriv_proceed_customer_order_status', array( $this, 'proceed_customer_order_status' ) );
-            add_action( 'wp_ajax_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
-            add_action( 'wp_ajax_nopriv_set_production_order_dialog_data', array( $this, 'set_production_order_dialog_data' ) );
 
             add_action( 'wp_ajax_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_customer_order_dialog_data', array( $this, 'get_customer_order_dialog_data' ) );
@@ -950,14 +950,18 @@ if (!class_exists('curtain_orders')) {
                     <select id="shipping-agent" class="select ui-widget-content ui-corner-all"><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
                 <?php } elseif ($status_code=="order02") { //填寫快遞單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" disabled />
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'your-text-domain' );?></label>
+                    <select id="shipping-agent" class="select ui-widget-content ui-corner-all" disabled><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } elseif ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
                     <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" disabled />
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'your-text-domain' );?></label>
+                    <select id="shipping-agent" class="select ui-widget-content ui-corner-all" disabled><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
                     <label for="taobao-ship-number"><?php echo __( '快遞單號', 'your-text-domain' );?></label>
-                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
+                    <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" disabled />
                     <label for="curtain-ship-number"><?php echo __( '送貨單號', 'your-text-domain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                     <label for="curtain-ship-date"><?php echo __( '送貨日期', 'your-text-domain' );?></label>
