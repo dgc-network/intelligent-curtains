@@ -757,7 +757,7 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
-        function retrieve_shipping_list_data($paged = 1, $curtain_agent_id=false) {
+        function retrieve_shipping_list_data($paged = 1) {
             // Define the custom pagination parameters
             //$posts_per_page = get_option('operation_row_counts');
             $current_user_id = get_current_user_id();
@@ -786,8 +786,8 @@ if (!class_exists('curtain_orders')) {
                                 'key'     => 'shipping_agent',
                                 'value'   => $curtain_agent_id,
                                 'compare' => '=',
-                            ),        
-                        )
+                            ),
+                        ),
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_04,
@@ -797,7 +797,7 @@ if (!class_exists('curtain_orders')) {
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_05,
                             'compare' => '=',
-                        ),        
+                        ),
                     )
                 ),
                 'orderby'        => 'modified', // Sort by post modified time
