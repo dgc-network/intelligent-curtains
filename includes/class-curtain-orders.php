@@ -258,6 +258,7 @@ if (!class_exists('curtain_orders')) {
                     if ($taobao_order_number_in_customer_order) $taobao_order_number_in_customer_order.=', '.$taobao_order_number;
                     else $taobao_order_number_in_customer_order=$taobao_order_number;
                     update_post_meta( $customer_order_id, 'taobao_order_number', $taobao_order_number_in_customer_order);
+                    update_post_meta( $customer_order_id, 'shipping_agent', $shipping_agent);
                 }
 
                 if ($current_status_code=="order02") {
@@ -758,7 +759,9 @@ if (!class_exists('curtain_orders')) {
 
         function retrieve_shipping_list_data($paged = 1, $curtain_agent_id=false) {
             // Define the custom pagination parameters
-            $posts_per_page = get_option('operation_row_counts');
+            //$posts_per_page = get_option('operation_row_counts');
+            $current_user_id = get_current_user_id();
+            $curtain_agent_id = get_user_meta($current_user_id, 'curtain_agent_id', true);
 
             $status_id_03 = $this->get_status_id_by_status_code('order03');
             $status_id_04 = $this->get_status_id_by_status_code('order04');
@@ -766,18 +769,25 @@ if (!class_exists('curtain_orders')) {
 
             $args = array(
                 'post_type'      => 'customer-order',
-                //'post_type'      => 'production-order',
-                'posts_per_page' => $posts_per_page,
+                'posts_per_page' => get_option('operation_row_counts'),
                 'paged'          => $paged,
                 'meta_query'     => array(
                     'relation' => 'AND',
                     array(
                         'relation' => 'OR',
                         array(
-                            'key'     => 'customer_order_status',
-                            'value'   => $status_id_03,
-                            'compare' => '=',
-                        ),
+                            'relation' => 'AND',
+                            array(
+                                'key'     => 'customer_order_status',
+                                'value'   => $status_id_03,
+                                'compare' => '=',
+                            ),
+                            array(
+                                'key'     => 'shipping_agent',
+                                'value'   => $curtain_agent_id,
+                                'compare' => '=',
+                            ),        
+                        )
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_04,
