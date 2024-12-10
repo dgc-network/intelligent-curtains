@@ -27,7 +27,7 @@ function is_rest_request() {
 
 function register_session() {
     if ( ! session_id() && ! is_rest_request() ) {
-        session_start();
+        //session_start();
     }
 }
 add_action( 'init', 'register_session', 1 );
