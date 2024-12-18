@@ -253,7 +253,7 @@ if (!class_exists('product_items')) {
             }
             $query = new WP_Query($args);
         
-            $options = '<option value="">Select model</option>';
+            $options = '<option value="">Select product</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $option = get_the_content().'('.get_the_title().')';
