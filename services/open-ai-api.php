@@ -79,14 +79,14 @@ if (!class_exists('open_ai_api')) {
          * @param array<string, mixed> $param
          * @return void
          */
-        public function createChatCompletion($userMessage) {
+        public function createChatCompletion($prompt) {
             $param = array(
                 'model' => 'gpt-3.5-turbo',
                 'messages' => array(
                     // Fixed system role for maintaining the subject
                     array('role' => 'system', 'content' => 'intelligent-curtains'),
                     // User's message
-                    array('role' => 'user', 'content' => $userMessage),
+                    array('role' => 'user', 'content' => $prompt),
                 ),
                 'temperature' => 1.0,
                 'max_tokens' => 4000,
