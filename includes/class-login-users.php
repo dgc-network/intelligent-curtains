@@ -23,7 +23,7 @@ if (!class_exists('login_users')) {
             } else {
                 ?>
                 <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'your-text-domain' );?></h4>
+                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
                 </div>
                 <?php
             }
@@ -56,7 +56,7 @@ if (!class_exists('login_users')) {
             $users = get_users($args);
             ?>
             <div class="ui-widget" id="result-container">
-                <h2 style="display:inline;"><?php echo __( '使用者列表', 'your-text-domain' );?></h2>
+                <h2 style="display:inline;"><?php echo __( '使用者列表', 'text-domain' );?></h2>
                 <fieldset>
                     <div style="display:flex; justify-content:space-between; margin:5px;">
                         <div>
@@ -69,11 +69,11 @@ if (!class_exists('login_users')) {
                     <table class="ui-widget" style="width:100%;">
                         <thead>
                             <tr>
-                                <th><?php echo __( 'Name', 'your-text-domain' );?></th>
-                                <th><?php echo __( 'Email', 'your-text-domain' );?></th>
+                                <th><?php echo __( 'Name', 'text-domain' );?></th>
+                                <th><?php echo __( 'Email', 'text-domain' );?></th>
 <?php /*                                
-                                <th><?php echo __( '倉管人員', 'your-text-domain' );?></th>
-                                <th><?php echo __( '工廠人員', 'your-text-domain' );?></th>
+                                <th><?php echo __( '倉管人員', 'text-domain' );?></th>
+                                <th><?php echo __( '工廠人員', 'text-domain' );?></th>
 */?>                                
                             </tr>
                         </thead>
@@ -105,7 +105,7 @@ if (!class_exists('login_users')) {
                         if ($paged > 1) {
                             echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $paged - 1)) . '"> < </a></span>';
                         }
-                        echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'your-text-domain'), $paged, $total_pages) . '</span>';
+                        echo '<span class="page-numbers">' . sprintf(__('Page %d of %d', 'text-domain'), $paged, $total_pages) . '</span>';
                         if ($paged < $total_pages) {
                             echo '<span class="custom-button"><a href="' . esc_url(add_query_arg('paged', $paged + 1)) . '"> > </a></span>';
                         }
@@ -130,18 +130,18 @@ if (!class_exists('login_users')) {
             ?>
             <fieldset>
                 <input type="hidden" id="login-user-id" value="<?php echo esc_attr($login_user_id);?>" />
-                <label for="display-name"><?php echo __( '姓名', 'your-text-domain' );?></label>
+                <label for="display-name"><?php echo __( '姓名', 'text-domain' );?></label>
                 <input type="text" id="display-name" value="<?php echo esc_attr($display_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="user-email"><?php echo __( 'Email', 'your-text-domain' );?></label>
+                <label for="user-email"><?php echo __( 'Email', 'text-domain' );?></label>
                 <input type="text" id="user-email" value="<?php echo esc_attr($user_email);?>" class="text ui-widget-content ui-corner-all" />
 <?php /*                
                 <div style="display:flex;">
                 <input type="checkbox" id="is-warehouse-personnel" <?php echo $is_warehouse_personnel_checked;?> />
-                <label for="is-warehouse-personnel"><?php echo __( ' 倉管人員', 'your-text-domain' );?></label>
+                <label for="is-warehouse-personnel"><?php echo __( ' 倉管人員', 'text-domain' );?></label>
                 </div>
                 <div style="display:flex;">
                 <input type="checkbox" id="is-factory-personnel" <?php echo $is_factory_personnel_checked;?> />
-                <label for="is-factory-personnel"><?php echo __( ' 工廠人員', 'your-text-domain' );?></label>
+                <label for="is-factory-personnel"><?php echo __( ' 工廠人員', 'text-domain' );?></label>
                 </div>
 */?>                
             </fieldset>

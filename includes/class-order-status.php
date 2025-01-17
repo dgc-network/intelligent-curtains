@@ -35,7 +35,7 @@ if (!class_exists('order_status')) {
             } else {
                 ?>
                 <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'your-text-domain' );?></h4>
+                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
                 </div>
                 <?php
             }
@@ -44,7 +44,7 @@ if (!class_exists('order_status')) {
         function display_order_status_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( '訂單狀態', 'your-text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( '訂單狀態', 'text-domain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -57,12 +57,12 @@ if (!class_exists('order_status')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Code', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Title', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Description', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Action', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Color', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Next', 'your-text-domain' );?></th>
+                            <th><?php echo __( 'Code', 'text-domain' );?></th>
+                            <th><?php echo __( 'Title', 'text-domain' );?></th>
+                            <th><?php echo __( 'Description', 'text-domain' );?></th>
+                            <th><?php echo __( 'Action', 'text-domain' );?></th>
+                            <th><?php echo __( 'Color', 'text-domain' );?></th>
+                            <th><?php echo __( 'Next', 'text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,17 +141,17 @@ if (!class_exists('order_status')) {
             ?>
             <fieldset>
                 <input type="hidden" id="order-status-id" value="<?php echo esc_attr($order_status_id);?>" />
-                <label for="status-code"><?php echo __( '代碼', 'your-text-domain' );?></label>
+                <label for="status-code"><?php echo __( '代碼', 'text-domain' );?></label>
                 <input type="text" id="status-code" value="<?php echo esc_html($status_code);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="status-title"><?php echo __( '標題', 'your-text-domain' );?></label>
+                <label for="status-title"><?php echo __( '標題', 'text-domain' );?></label>
                 <input type="text" id="status-title" value="<?php echo esc_html($status_title);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="status-description"><?php echo __( '說明', 'your-text-domain' );?></label>
+                <label for="status-description"><?php echo __( '說明', 'text-domain' );?></label>
                 <textarea id="status-description" rows="3" style="width:100%;"><?php echo $status_description;?></textarea>
-                <label for="status-action"><?php echo __( '執行', 'your-text-domain' );?></label>
+                <label for="status-action"><?php echo __( '執行', 'text-domain' );?></label>
                 <input type="text" id="status-action" value="<?php echo esc_html($status_action);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="status-color"><?php echo __( '顏色', 'your-text-domain' );?></label>
+                <label for="status-color"><?php echo __( '顏色', 'text-domain' );?></label>
                 <input type="text" id="status-color" value="<?php echo esc_html($status_color);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="next-status"><?php echo __( 'Next代碼', 'your-text-domain' );?></label>
+                <label for="next-status"><?php echo __( 'Next代碼', 'text-domain' );?></label>
                 <input type="text" id="next-status" value="<?php echo esc_html($next_status);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php

@@ -35,7 +35,7 @@ if (!class_exists('curtain_faq')) {
             } else {
                 ?>
                 <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'your-text-domain' );?></h4>
+                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
                 </div>
                 <?php
             }
@@ -44,7 +44,7 @@ if (!class_exists('curtain_faq')) {
         function display_curtain_faq_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( 'Q&A', 'your-text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( 'Q&A', 'text-domain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -57,8 +57,8 @@ if (!class_exists('curtain_faq')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '#', 'your-text-domain' );?></th>
-                            <th><?php echo __( 'Question', 'your-text-domain' );?></th>
+                            <th><?php echo __( '#', 'text-domain' );?></th>
+                            <th><?php echo __( 'Question', 'text-domain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,13 +132,13 @@ if (!class_exists('curtain_faq')) {
             ?>
             <fieldset>
                 <input type="hidden" id="curtain-faq-id" value="<?php echo esc_attr($curtain_faq_id);?>" />
-                <label for="faq-code"><?php echo __( '代碼', 'your-text-domain' );?></label>
+                <label for="faq-code"><?php echo __( '代碼', 'text-domain' );?></label>
                 <input type="text" id="faq-code" value="<?php echo esc_html($faq_code);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="faq-question"><?php echo __( '問題', 'your-text-domain' );?></label>
+                <label for="faq-question"><?php echo __( '問題', 'text-domain' );?></label>
                 <textarea id="faq-question" rows="3" style="width:100%;"><?php echo $faq_question;?></textarea>
-                <label for="faq-answer"><?php echo __( '回答', 'your-text-domain' );?></label>
+                <label for="faq-answer"><?php echo __( '回答', 'text-domain' );?></label>
                 <textarea id="faq-answer" rows="3" style="width:100%;"><?php echo $faq_answer;?></textarea>
-                <label for="toolbox-uri"><?php echo __( '連結', 'your-text-domain' );?></label>
+                <label for="toolbox-uri"><?php echo __( '連結', 'text-domain' );?></label>
                 <input type="text" id="toolbox-uri" value="<?php echo esc_html($toolbox_uri);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php
