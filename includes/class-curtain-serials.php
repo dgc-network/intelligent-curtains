@@ -27,7 +27,7 @@ if (!class_exists('serial_number')) {
                 } else {
                     ?>
                     <div style="text-align:center;">
-                        <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
+                        <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'textdomain' );?></h4>
                     </div>
                     <?php
                 }    
@@ -127,8 +127,8 @@ if (!class_exists('serial_number')) {
                 update_post_meta( $serial_number_post->ID, 'curtain_user_id', get_current_user_id());
                 ?>
                 <div class="ui-widget" id="result-container">
-                    <h4><?php echo __( 'Hi, ', 'text-domain' );?><?php echo $user->display_name;?></h4>
-                    <h4><?php echo __( '感謝您選購我們的電動窗簾.', 'text-domain' );?></h4>
+                    <h4><?php echo __( 'Hi, ', 'textdomain' );?><?php echo $user->display_name;?></h4>
+                    <h4><?php echo __( '感謝您選購我們的電動窗簾.', 'textdomain' );?></h4>
                     <label style="text-align:left;" for="chat-message">Question:</label>
                     <textarea id="chat-message" rows="10" cols="50"></textarea>
                     <input type="hidden" id="curtain-user-id" value="<?php echo $user->ID;?>" />
@@ -199,7 +199,7 @@ if (!class_exists('serial_number')) {
         function display_serial_number_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( '序號列表', 'text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( '序號列表', 'textdomain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -212,11 +212,11 @@ if (!class_exists('serial_number')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'serial_no', 'text-domain' );?></th>
-                            <th><?php echo __( 'product', 'text-domain' );?></th>
-                            <th><?php echo __( 'vendor', 'text-domain' );?></th>
-                            <th><?php echo __( 'agent', 'text-domain' );?></th>
-                            <th><?php echo __( 'user', 'text-domain' );?></th>
+                            <th><?php echo __( 'serial_no', 'textdomain' );?></th>
+                            <th><?php echo __( 'product', 'textdomain' );?></th>
+                            <th><?php echo __( 'vendor', 'textdomain' );?></th>
+                            <th><?php echo __( 'agent', 'textdomain' );?></th>
+                            <th><?php echo __( 'user', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -302,13 +302,13 @@ if (!class_exists('serial_number')) {
             ?>
             <fieldset>
                 <input type="hidden" id="serial-number-id" value="<?php echo esc_attr($serial_number_id);?>" />
-                <label for="qrcode-serial-no"><?php echo __( 'Serial', 'text-domain' );?></label>
+                <label for="qrcode-serial-no"><?php echo __( 'Serial', 'textdomain' );?></label>
                 <input type="text" id="qrcode-serial-no" value="<?php echo esc_html($qr_code_serial_no);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-modle-id"><?php echo __( 'Model', 'text-domain' );?></label>
+                <label for="curtain-modle-id"><?php echo __( 'Model', 'textdomain' );?></label>
                 <input type="text" id="curtain-modle-id" value="<?php echo esc_html($curtain_model_id);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-specification"><?php echo __( 'Specification', 'text-domain' );?></label>
+                <label for="curtain-specification"><?php echo __( 'Specification', 'textdomain' );?></label>
                 <textarea id="curtain-specification" rows="3" style="width:100%;"><?php echo $curtain_specification;?></textarea>
-                <label for="customer-order-number"><?php echo __( 'Order', 'text-domain' );?></label>
+                <label for="customer-order-number"><?php echo __( 'Order', 'textdomain' );?></label>
                 <input type="text" id="customer-order-number" value="<?php echo esc_html($customer_order_number);?>" class="text ui-widget-content ui-corner-all" />
             </fieldset>
             <?php

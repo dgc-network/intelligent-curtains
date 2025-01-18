@@ -34,7 +34,7 @@ if (!class_exists('curtain_agents')) {
             } else {
                 ?>
                 <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
+                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'textdomain' );?></h4>
                 </div>
                 <?php
             }
@@ -43,7 +43,7 @@ if (!class_exists('curtain_agents')) {
         function display_curtain_agent_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( 'Curtain agents', 'text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( 'Curtain agents', 'textdomain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -56,11 +56,11 @@ if (!class_exists('curtain_agents')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Agent', 'text-domain' );?></th>
-                            <th><?php echo __( 'Name', 'text-domain' );?></th>
-                            <th><?php echo __( 'Contact', 'text-domain' );?></th>
-                            <th><?php echo __( 'Phone', 'text-domain' );?></th>
-                            <th><?php echo __( 'Address', 'text-domain' );?></th>
+                            <th><?php echo __( 'Agent', 'textdomain' );?></th>
+                            <th><?php echo __( 'Name', 'textdomain' );?></th>
+                            <th><?php echo __( 'Contact', 'textdomain' );?></th>
+                            <th><?php echo __( 'Phone', 'textdomain' );?></th>
+                            <th><?php echo __( 'Address', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,17 +151,17 @@ if (!class_exists('curtain_agents')) {
             ?>
             <fieldset>
                 <input type="hidden" id="curtain-agent-id" value="<?php echo esc_attr($curtain_agent_id);?>" />
-                <label for="curtain-agent-number"><?php echo __( 'Number', 'text-domain' );?></label>
+                <label for="curtain-agent-number"><?php echo __( 'Number', 'textdomain' );?></label>
                 <input type="text" id="curtain-agent-number" value="<?php echo esc_html($curtain_agent_number);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-name"><?php echo __( 'Name', 'text-domain' );?></label>
+                <label for="curtain-agent-name"><?php echo __( 'Name', 'textdomain' );?></label>
                 <input type="text" id="curtain-agent-name" value="<?php echo esc_html($curtain_agent_name);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-contact"><?php echo __( 'Contact', 'text-domain' );?></label>
+                <label for="curtain-agent-contact"><?php echo __( 'Contact', 'textdomain' );?></label>
                 <input type="text" id="curtain-agent-contact" value="<?php echo esc_html($curtain_agent_contact);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-phone"><?php echo __( 'Phone', 'text-domain' );?></label>
+                <label for="curtain-agent-phone"><?php echo __( 'Phone', 'textdomain' );?></label>
                 <input type="text" id="curtain-agent-phone" value="<?php echo esc_html($curtain_agent_phone);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-address"><?php echo __( 'Address', 'text-domain' );?></label>
+                <label for="curtain-agent-address"><?php echo __( 'Address', 'textdomain' );?></label>
                 <input type="text" id="curtain-agent-address" value="<?php echo esc_html($curtain_agent_address);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-agent-status"><?php echo __( 'Status', 'text-domain' );?></label>
+                <label for="curtain-agent-status"><?php echo __( 'Status', 'textdomain' );?></label>
                 <select id="curtain-agent-status" class="select ui-widget-content ui-corner-all"><?php echo $order_status->select_order_status_options($curtain_agent_status);?></select>
             </fieldset>
             <?php

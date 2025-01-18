@@ -34,7 +34,7 @@ if (!class_exists('product_items')) {
             } else {
                 ?>
                 <div style="text-align:center;">
-                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'text-domain' );?></h4>
+                    <h4><?php echo __( '你沒有讀取目前網頁的權限!', 'textdomain' );?></h4>
                 </div>
                 <?php
             }
@@ -44,7 +44,7 @@ if (!class_exists('product_items')) {
             $curtain_categories = new curtain_categories();
             ?>
             <div class="ui-widget" id="result-container">
-            <h2 style="display:inline;"><?php echo __( 'Product items', 'text-domain' );?></h2>
+            <h2 style="display:inline;"><?php echo __( 'Product items', 'textdomain' );?></h2>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
@@ -58,10 +58,10 @@ if (!class_exists('product_items')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Product', 'text-domain' );?></th>
-                            <th><?php echo __( 'Description', 'text-domain' );?></th>
-                            <th><?php echo __( 'Price', 'text-domain' );?></th>
-                            <th><?php echo __( 'Vendor', 'text-domain' );?></th>
+                            <th><?php echo __( 'Product', 'textdomain' );?></th>
+                            <th><?php echo __( 'Description', 'textdomain' );?></th>
+                            <th><?php echo __( 'Price', 'textdomain' );?></th>
+                            <th><?php echo __( 'Vendor', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -152,15 +152,15 @@ if (!class_exists('product_items')) {
             ?>
             <fieldset>
                 <input type="hidden" id="product-item-id" value="<?php echo esc_attr($product_item_id);?>" />
-                <label for="product-item-title"><?php echo __( 'Title', 'text-domain' );?></label>
+                <label for="product-item-title"><?php echo __( 'Title', 'textdomain' );?></label>
                 <input type="text" id="product-item-title" value="<?php echo esc_html($product_item_title);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="product-item-content"><?php echo __( 'Content', 'text-domain' );?></label>
+                <label for="product-item-content"><?php echo __( 'Content', 'textdomain' );?></label>
                 <input type="text" id="product-item-content" value="<?php echo esc_html($product_item_content);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="product-item-price"><?php echo __( 'Price', 'text-domain' );?></label>
+                <label for="product-item-price"><?php echo __( 'Price', 'textdomain' );?></label>
                 <input type="text" id="product-item-price" value="<?php echo esc_html($product_item_price);?>" class="text ui-widget-content ui-corner-all" />
-                <label for="curtain-category-id"><?php echo __( 'Category', 'text-domain' );?></label>
+                <label for="curtain-category-id"><?php echo __( 'Category', 'textdomain' );?></label>
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
-                <label for="product-item-vendor"><?php echo __( 'Vendor', 'text-domain' );?></label>
+                <label for="product-item-vendor"><?php echo __( 'Vendor', 'textdomain' );?></label>
                 <select id="product-item-vendor" class="select ui-widget-content ui-corner-all"><?php echo $curtain_agents->select_curtain_agent_options($product_item_vendor);?></select><br>
                 <input type="checkbox" id="is-specification" class="checkbox ui-widget-content ui-corner-all" style="display:inline-block; width:5%;" <?php echo $is_specification_checked;?> /> Is specification.<br>
             </fieldset>

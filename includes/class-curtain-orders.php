@@ -292,9 +292,9 @@ if (!class_exists('curtain_orders')) {
             ?>
             <div class="ui-widget" id="result-container">
             <div style="display:flex; justify-content:space-between; margin:5px;">
-                <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'text-domain' );?></h2></div>
+                <div id="quotation-title"><h2 style="display:inline;"><?php echo __( '報價單', 'textdomain' );?></h2></div>
                 <div style="text-align:right; display:flex;">
-                    <input type="button" id="display-toolbox" value="<?php echo __( '工具箱', 'text-domain' );?>" style="margin:3px; display:inline;" />
+                    <input type="button" id="display-toolbox" value="<?php echo __( '工具箱', 'textdomain' );?>" style="margin:3px; display:inline;" />
                 </div>
             </div>
 
@@ -302,11 +302,11 @@ if (!class_exists('curtain_orders')) {
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="quotation-select">
                         <select id="select-order-category">
-                            <option value="1" selected><?php echo __( '報價單', 'text-domain' );?></option>
-                            <option value="2"><?php echo __( '訂單總覽', 'text-domain' );?></option>
+                            <option value="1" selected><?php echo __( '報價單', 'textdomain' );?></option>
+                            <option value="2"><?php echo __( '訂單總覽', 'textdomain' );?></option>
                             <?php if (current_user_can('administrator')) {?>
-                                <option value="3"><?php echo __( '生產單', 'text-domain' );?></option>
-                                <option value="4"><?php echo __( '出貨單', 'text-domain' );?></option>                             
+                                <option value="3"><?php echo __( '生產單', 'textdomain' );?></option>
+                                <option value="4"><?php echo __( '出貨單', 'textdomain' );?></option>                             
                             <?php }?>
                             
                         </select>
@@ -319,10 +319,10 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '日期', 'text-domain' );?></th>
-                            <th><?php echo __( '客戶', 'text-domain' );?></th>
-                            <th><?php echo __( '金額', 'text-domain' );?></th>
-                            <th><?php echo __( '備註', 'text-domain' );?></th>
+                            <th><?php echo __( '日期', 'textdomain' );?></th>
+                            <th><?php echo __( '客戶', 'textdomain' );?></th>
+                            <th><?php echo __( '金額', 'textdomain' );?></th>
+                            <th><?php echo __( '備註', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -400,13 +400,13 @@ if (!class_exists('curtain_orders')) {
             }
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( '訂單總覽', 'text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( '訂單總覽', 'textdomain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
                         <select id="select-order-category">
-                            <option value="1"><?php echo __( '報價單列表', 'text-domain' );?></option>
-                            <option value="2" selected><?php echo __( '訂單總覽', 'text-domain' );?></option>
+                            <option value="1"><?php echo __( '報價單列表', 'textdomain' );?></option>
+                            <option value="2" selected><?php echo __( '訂單總覽', 'textdomain' );?></option>
                         </select>
                     </div>
                     <div style="text-align:right; display:flex;">
@@ -417,10 +417,10 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '訂單', 'text-domain' );?></th>
-                            <th><?php echo __( '日期', 'text-domain' );?></th>
-                            <th><?php echo __( '金額', 'text-domain' );?></th>
-                            <th><?php echo __( '狀態', 'text-domain' );?></th>
+                            <th><?php echo __( '訂單', 'textdomain' );?></th>
+                            <th><?php echo __( '日期', 'textdomain' );?></th>
+                            <th><?php echo __( '金額', 'textdomain' );?></th>
+                            <th><?php echo __( '狀態', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -556,38 +556,38 @@ if (!class_exists('curtain_orders')) {
             $status_code = get_post_meta($customer_order_status, 'status_code', true);
             $next_status_code = get_post_meta($customer_order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'text-domain' ).'</h2>';
-            else echo '<h2 style="display:inline;">'.__( '報價單', 'text-domain' ).'</h2>';
+            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($customer_order_status), 'textdomain' ).'</h2>';
+            else echo '<h2 style="display:inline;">'.__( '報價單', 'textdomain' ).'</h2>';
             ?>
             <fieldset>
                 <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                 <input type="hidden" id="status-code" value="<?php echo esc_attr($status_code);?>" />
-                <label for="customer-name"><?php echo __( '客戶名稱', 'text-domain' );?></label>
+                <label for="customer-name"><?php echo __( '客戶名稱', 'textdomain' );?></label>
                 <input type="text" id="customer-name" value="<?php echo esc_attr($customer_name);?>" class="text ui-widget-content ui-corner-all" />
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'text-domain' );?></label>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order02") { //填寫快遞單號?>
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'text-domain' );?></label>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'text-domain' );?></label>
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } else {?>
                 <?php if ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
-                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'text-domain' );?></label>
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="curtain-ship-number"><?php echo __( '送貨單號', 'text-domain' );?></label>
+                    <label for="curtain-ship-number"><?php echo __( '送貨單號', 'textdomain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'text-domain' );?></label>
+                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'textdomain' );?></label>
                     <input type="text" id="curtain-ship-date" value="<?php echo esc_attr(wp_date(get_option('date_format'), $curtain_ship_date));?>" class="text ui-widget-content ui-corner-all" disabled />
                 <?php } else {?>
-                    <label for="customer-order-remark"><?php echo __( '備註', 'text-domain' );?></label>
+                    <label for="customer-order-remark"><?php echo __( '備註', 'textdomain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php }}}?>
 
                 <?php if ($customer_order_category>1) {?>
-                    <label for="customer-order-status"><?php echo __( '狀態', 'text-domain' );?></label>
+                    <label for="customer-order-status"><?php echo __( '狀態', 'textdomain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
@@ -597,14 +597,14 @@ if (!class_exists('curtain_orders')) {
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <input type="button" id="save-customer-order" value="<?php echo __( 'Save', 'text-domain' );?>" style="margin:3px; display:inline;" />
-                        <input type="button" id="del-customer-order" value="<?php echo __( 'Delete', 'text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="save-customer-order" value="<?php echo __( 'Save', 'textdomain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="del-customer-order" value="<?php echo __( 'Delete', 'textdomain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
                         <?php $quotation_status_id = $this->get_status_id_by_status_code('order00');?>
                         <?php $quotation_status_action = get_post_meta($quotation_status_id, 'status_action', true);?>
                         <?php $quotation_next_status = $this->get_status_id_by_status_code('order01');?>
-                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_next_status);?>" value="<?php echo __( $quotation_status_action, 'text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-customer-order-status-<?php echo esc_attr($quotation_next_status);?>" value="<?php echo __( $quotation_status_action, 'textdomain' );?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
                 <?php 
@@ -614,12 +614,12 @@ if (!class_exists('curtain_orders')) {
                         $is_factory_personnel = get_user_meta($current_user_id, 'is_factory_personnel', true);
                         if (current_user_can('administrator')||$is_warehouse_personnel||$is_factory_personnel) {
                             echo '<hr>';
-                            if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'text-domain' ).'" style="margin:3px; display:inline;" />';
-                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'text-domain' ).'" style="margin:3px; display:inline;" />';
+                            if ($status_code!="order05") echo '<input type="button" id="proceed-customer-order-status-'.$next_status_id.'" value="'.__( $status_action, 'textdomain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="print-customer-order-'.$customer_order_id.'" value="'.__( '印出貨單', 'textdomain' ).'" style="margin:3px; display:inline;" />';
                             $curtain_agent_id = get_post_meta($customer_order_id, 'curtain_agent_id', true);
-                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'text-domain' ).'" style="margin:3px; display:inline;" />';
-                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'text-domain' ).'" style="margin:3px; display:inline;" />';
-                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'text-domain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="display-account-receivable-'.$curtain_agent_id.'" value="'.__( '請款列表', 'textdomain' ).'" style="margin:3px; display:inline;" />';
+                            if (current_user_can('administrator')) echo '<input type="button" id="cancel-customer-order-'.$customer_order_id.'" value="'.__( '取消本單', 'textdomain' ).'" style="margin:3px; display:inline;" />';
+                            echo '<input type="button" id="exit-customer-order-dialog" value="'.__( 'Exit', 'textdomain' ).'" style="margin:3px; display:inline;" />';
                         }
                     }
                 ?>
@@ -692,7 +692,7 @@ if (!class_exists('curtain_orders')) {
         function display_shipping_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( 'Shipping list', 'text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( 'Shipping list', 'textdomain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
@@ -705,11 +705,11 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '訂單號碼', 'text-domain' );?></th>
-                            <th><?php echo __( '訂單日期', 'text-domain' );?></th>
-                            <th><?php echo __( '快遞單號', 'text-domain' );?></th>
-                            <th><?php echo __( '送貨單號', 'text-domain' );?></th>
-                            <th><?php echo __( '送貨日期', 'text-domain' );?></th>
+                            <th><?php echo __( '訂單號碼', 'textdomain' );?></th>
+                            <th><?php echo __( '訂單日期', 'textdomain' );?></th>
+                            <th><?php echo __( '快遞單號', 'textdomain' );?></th>
+                            <th><?php echo __( '送貨單號', 'textdomain' );?></th>
+                            <th><?php echo __( '送貨日期', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -824,7 +824,7 @@ if (!class_exists('curtain_orders')) {
         function display_production_list() {
             ?>
             <div class="ui-widget" id="result-container">
-            <div id="customer-order-title"><h2><?php echo __( 'Production list', 'text-domain' );?></h2></div>
+            <div id="customer-order-title"><h2><?php echo __( 'Production list', 'textdomain' );?></h2></div>
             <fieldset>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div id="customer-order-select">
@@ -837,11 +837,11 @@ if (!class_exists('curtain_orders')) {
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( '訂單日期', 'text-domain' );?></th>
-                            <th><?php echo __( '廠商', 'text-domain' );?></th>
-                            <th><?php echo __( '淘寶訂單號', 'text-domain' );?></th>
-                            <th><?php echo __( '快遞單號', 'text-domain' );?></th>
-                            <th><?php echo __( '狀態', 'text-domain' );?></th>
+                            <th><?php echo __( '訂單日期', 'textdomain' );?></th>
+                            <th><?php echo __( '廠商', 'textdomain' );?></th>
+                            <th><?php echo __( '淘寶訂單號', 'textdomain' );?></th>
+                            <th><?php echo __( '快遞單號', 'textdomain' );?></th>
+                            <th><?php echo __( '狀態', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -946,42 +946,42 @@ if (!class_exists('curtain_orders')) {
             $status_code = get_post_meta($order_status, 'status_code', true);
             $next_status_code = get_post_meta($order_status, 'next_status', true);
             $next_status_id = $this->get_status_id_by_status_code($next_status_code);
-            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($order_status), 'text-domain' ).'</h2>';
+            if ($status_code) echo '<h2 style="display:inline;">'.__( get_the_title($order_status), 'textdomain' ).'</h2>';
             ?>
             <fieldset>
                 <input type="hidden" id="production-order-id" value="<?php echo esc_attr($production_order_id);?>" />
                 <input type="hidden" id="status-code" value="<?php echo esc_attr($status_code);?>" />
-                <label for="vendor-name"><?php echo __( '廠商名稱', 'text-domain' );?></label>
+                <label for="vendor-name"><?php echo __( '廠商名稱', 'textdomain' );?></label>
                 <input type="text" id="vendor-name" value="<?php echo esc_attr($vendor_name);?>" class="text ui-widget-content ui-corner-all" />
                 <?php if ($status_code=="order01") { //填寫淘寶訂單號?>
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'text-domain' );?></label>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'text-domain' );?></label>
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'textdomain' );?></label>
                     <select id="shipping-agent" class="select ui-widget-content ui-corner-all"><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
                 <?php } elseif ($status_code=="order02") { //填寫快遞單號?>
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'text-domain' );?></label>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" disabled />
-                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'text-domain' );?></label>
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'textdomain' );?></label>
                     <select id="shipping-agent" class="select ui-widget-content ui-corner-all" disabled><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
-                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'text-domain' );?></label>
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" />
                 <?php } elseif ($status_code=="order03"||$status_code=="order04") { //填寫送貨單號?>
-                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'text-domain' );?></label>
+                    <label for="taobao-order-number"><?php echo __( '淘寶訂單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-order-number" value="<?php echo esc_attr($taobao_order_number);?>" class="text ui-widget-content ui-corner-all" disabled />
-                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'text-domain' );?></label>
+                    <label for="shipping-agent"><?php echo __( '倉儲物流', 'textdomain' );?></label>
                     <select id="shipping-agent" class="select ui-widget-content ui-corner-all" disabled><?php echo $agents_class->select_shipping_agent_options($shipping_agent);?></select>
-                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'text-domain' );?></label>
+                    <label for="taobao-ship-number"><?php echo __( '快遞單號', 'textdomain' );?></label>
                     <input type="text" id="taobao-ship-number" value="<?php echo esc_attr($taobao_ship_number);?>" class="text ui-widget-content ui-corner-all" disabled />
-                    <label for="curtain-ship-number"><?php echo __( '送貨單號', 'text-domain' );?></label>
+                    <label for="curtain-ship-number"><?php echo __( '送貨單號', 'textdomain' );?></label>
                     <input type="text" id="curtain-ship-number" value="<?php echo esc_attr($curtain_ship_number);?>" class="text ui-widget-content ui-corner-all" />
-                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'text-domain' );?></label>
+                    <label for="curtain-ship-date"><?php echo __( '送貨日期', 'textdomain' );?></label>
                     <input type="text" id="curtain-ship-date" value="<?php echo esc_attr(wp_date(get_option('date_format'), $curtain_ship_date));?>" class="text ui-widget-content ui-corner-all" disabled />
                 <?php } else {?>
-                    <label for="customer-order-remark"><?php echo __( '備註', 'text-domain' );?></label>
+                    <label for="customer-order-remark"><?php echo __( '備註', 'textdomain' );?></label>
                     <textarea id="customer-order-remark" rows="2" style="width:100%;"><?php echo $customer_order_remark;?></textarea>
                 <?php }?>
 
-                <label for="order-status"><?php echo __( '狀態', 'text-domain' );?></label>
+                <label for="order-status"><?php echo __( '狀態', 'textdomain' );?></label>
                 <input type="text" id="order-status" value="<?php echo esc_attr(get_post_field('post_content', $order_status));?>" class="text ui-widget-content ui-corner-all" disabled />
 
                 <?php echo $this->display_order_item_list($production_order_id, $is_admin, true);?>
@@ -989,13 +989,13 @@ if (!class_exists('curtain_orders')) {
                 <hr>
                 <div style="display:flex; justify-content:space-between; margin:5px;">
                     <div>
-                        <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="proceed-production-order-status-<?php echo esc_attr($next_status_id);?>" value="<?php echo __( $status_action, 'textdomain' );?>" style="margin:3px; display:inline;" />
                     </div>
                     <div style="text-align:right; display:flex;">
                         <?php if (current_user_can('administrator')) {?>
-                        <input type="button" id="del-production-order-<?php echo $production_order_id;?>" value="<?php echo __( 'Delete', 'text-domain' );?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="del-production-order-<?php echo $production_order_id;?>" value="<?php echo __( 'Delete', 'textdomain' );?>" style="margin:3px; display:inline;" />
                         <?php }?>
-                        <input type="button" id="exit-production-order-dialog" value="<?php echo __( 'Exit', 'text-domain' )?>" style="margin:3px; display:inline;" />
+                        <input type="button" id="exit-production-order-dialog" value="<?php echo __( 'Exit', 'textdomain' )?>" style="margin:3px; display:inline;" />
                     </div>
                 </div>
             </fieldset>
@@ -1058,29 +1058,29 @@ if (!class_exists('curtain_orders')) {
                 $customer_order_status = get_post_meta($customer_order_id, 'customer_order_status', true);
                 ob_start();            
                 ?>
-                <h2 style="text-align:center;"><?php echo __( '出貨單', 'text-domain' );?></h2>
+                <h2 style="text-align:center;"><?php echo __( '出貨單', 'textdomain' );?></h2>
                 <fieldset>
                     <input type="hidden" id="customer-order-id" value="<?php echo esc_attr($customer_order_id);?>" />
                     <table>
                         <thead>
                         <tr>
-                            <th><?php echo __( '訂單號碼：', 'text-domain' );?></th>
+                            <th><?php echo __( '訂單號碼：', 'textdomain' );?></th>
                             <td><?php echo esc_html($customer_order_number);?></td>
-                            <th><?php echo __( '訂單日期：', 'text-domain' );?></th>
+                            <th><?php echo __( '訂單日期：', 'textdomain' );?></th>
                             <td><?php echo esc_html($customer_order_time);?></td>
                         </tr>
                         <tr>
-                            <th><?php echo __( '客戶名稱：', 'text-domain' );?></th>
+                            <th><?php echo __( '客戶名稱：', 'textdomain' );?></th>
                             <td colspan=3><?php echo esc_html($curtain_agent_name.'('.$curtain_agent_number.')');?></td>
                         </tr>
                         <tr>
-                            <th><?php echo __( '收件人：', 'text-domain' );?></th>
+                            <th><?php echo __( '收件人：', 'textdomain' );?></th>
                             <td><?php echo esc_html($curtain_agent_contact);?></td>
-                            <th><?php echo __( '聯絡電話：', 'text-domain' );?></th>
+                            <th><?php echo __( '聯絡電話：', 'textdomain' );?></th>
                             <td><?php echo esc_html($curtain_agent_phone);?></td>
                         </tr>
                         <tr>
-                            <th><?php echo __( '收件地址：', 'text-domain' );?></th>
+                            <th><?php echo __( '收件地址：', 'textdomain' );?></th>
                             <td colspan=3><?php echo esc_html($curtain_agent_address);?></td>
                         </tr>
                         </thead>
@@ -1090,10 +1090,10 @@ if (!class_exists('curtain_orders')) {
                     <table style="width:100%;">
                         <thead>
                             <tr>
-                                <th><?php echo __( '產品', 'text-domain' );?></th>
-                                <th><?php echo __( '規格', 'text-domain' );?></th>
-                                <th><?php echo __( '尺寸', 'text-domain' );?></th>
-                                <th><?php echo __( '數量', 'text-domain' );?></th>
+                                <th><?php echo __( '產品', 'textdomain' );?></th>
+                                <th><?php echo __( '規格', 'textdomain' );?></th>
+                                <th><?php echo __( '尺寸', 'textdomain' );?></th>
+                                <th><?php echo __( '數量', 'textdomain' );?></th>
                             </tr>
                         </thead>
                         </tfoot>
@@ -1143,13 +1143,13 @@ if (!class_exists('curtain_orders')) {
                             ?>
                         </tfoot>
                     </table>
-                    <div><?php echo __( '備註:', 'text-domain' );?><?php echo esc_html($customer_order_remark);?></div>
+                    <div><?php echo __( '備註:', 'textdomain' );?><?php echo esc_html($customer_order_remark);?></div>
                     </fieldset>
     
                     <hr>
                     <div style="display:flex; justify-content:space-between; margin:5px;">
                         <div>
-                            <input type="button" id="exit-customer-order-printing" value="<?php echo __( 'Exit', 'text-domain' );?>" style="margin:3px; display:inline;" />
+                            <input type="button" id="exit-customer-order-printing" value="<?php echo __( 'Exit', 'textdomain' );?>" style="margin:3px; display:inline;" />
                         </div>
                         <div style="text-align:right; display:flex;">
                         </div>
@@ -1172,9 +1172,9 @@ if (!class_exists('curtain_orders')) {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th><?php echo __( '訂單號碼', 'text-domain' );?></th>
-                        <th><?php echo __( '訂單日期', 'text-domain' );?></th>
-                        <th><?php echo __( '金額', 'text-domain' );?></th>
+                        <th><?php echo __( '訂單號碼', 'textdomain' );?></th>
+                        <th><?php echo __( '訂單日期', 'textdomain' );?></th>
+                        <th><?php echo __( '金額', 'textdomain' );?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1255,15 +1255,15 @@ if (!class_exists('curtain_orders')) {
                 }
                 $x=1;
                 ?>
-                <h3 style="display:inline;"><?php echo __( '訂單號碼：', 'text-domain' ).$customer_order_number;?></h2>
-                <h3 style="display:inline;"><?php echo __( '/訂單日期：', 'text-domain' ).$customer_order_date;?></h2>
+                <h3 style="display:inline;"><?php echo __( '訂單號碼：', 'textdomain' ).$customer_order_number;?></h2>
+                <h3 style="display:inline;"><?php echo __( '/訂單日期：', 'textdomain' ).$customer_order_date;?></h2>
                 <table class="ui-widget" style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Item', 'text-domain' );?></th>
-                            <th><?php echo __( 'Description', 'text-domain' );?></th>
-                            <th><?php echo __( 'QTY', 'text-domain' );?></th>
-                            <th><?php echo __( 'Amount', 'text-domain' );?></th>
+                            <th><?php echo __( 'Item', 'textdomain' );?></th>
+                            <th><?php echo __( 'Description', 'textdomain' );?></th>
+                            <th><?php echo __( 'QTY', 'textdomain' );?></th>
+                            <th><?php echo __( 'Amount', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1338,10 +1338,10 @@ if (!class_exists('curtain_orders')) {
             ?>
             <div style="display:flex; justify-content:space-between; margin:5px;">
             <div>
-                <input type="button" id="exit-account-receivable-printing" value="<?php echo __( 'Exit', 'text-domain' );?>" style="margin:3px; display:inline;" />
+                <input type="button" id="exit-account-receivable-printing" value="<?php echo __( 'Exit', 'textdomain' );?>" style="margin:3px; display:inline;" />
             </div>
             <div style="text-align:right;">
-                <h3><?php echo __( '總金額：', 'text-domain' );?><?php echo number_format_i18n($sum);?></h3>
+                <h3><?php echo __( '總金額：', 'textdomain' );?><?php echo number_format_i18n($sum);?></h3>
             </div>
             <?php
             return ob_get_clean();
@@ -1362,8 +1362,8 @@ if (!class_exists('curtain_orders')) {
             $customer_name = get_post_meta($customer_order_id, 'customer_name', true);
             ?>
             <div style="text-align:center;">
-                <h3><?php echo __( 'Hi, ', 'text-domain' ).$customer_name;?></h3>
-                <div><?php echo __( '感謝您選購我們的電動窗簾', 'text-domain' );?></div>
+                <h3><?php echo __( 'Hi, ', 'textdomain' ).$customer_name;?></h3>
+                <div><?php echo __( '感謝您選購我們的電動窗簾', 'textdomain' );?></div>
             </div>
             <?php
         }
@@ -1371,11 +1371,11 @@ if (!class_exists('curtain_orders')) {
         function user_login_agent_dialog() {
             ?>
             <div style="text-align:center;">
-                <h4><?php echo __( '系統登入/註冊', 'text-domain' );?></h4>
+                <h4><?php echo __( '系統登入/註冊', 'textdomain' );?></h4>
                 <fieldset>
-                    <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'text-domain' );?></label>
+                    <label style="text-align:left;" for="agent-number"><?php echo __( '經銷商代碼:', 'textdomain' );?></label>
                     <input type="text" id="agent-number" class="text ui-widget-content ui-corner-all" />
-                    <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'text-domain' );?></label>
+                    <label style="text-align:left;" for="agent-password"><?php echo __( '經銷商密碼:', 'textdomain' );?></label>
                     <input type="password" id="agent-password" class="text ui-widget-content ui-corner-all" />
                     <input type="button" id="agent-submit" style="margin:3px;" value="Submit" />
                 </fieldset>
@@ -1448,10 +1448,10 @@ if (!class_exists('curtain_orders')) {
                 <table style="width:100%;">
                     <thead>
                         <tr>
-                            <th><?php echo __( 'Item', 'text-domain' );?></th>
-                            <th><?php echo __( 'Description', 'text-domain' );?></th>
-                            <th><?php echo __( 'QTY', 'text-domain' );?></th>
-                            <th><?php echo __( 'Amount', 'text-domain' );?></th>
+                            <th><?php echo __( 'Item', 'textdomain' );?></th>
+                            <th><?php echo __( 'Description', 'textdomain' );?></th>
+                            <th><?php echo __( 'QTY', 'textdomain' );?></th>
+                            <th><?php echo __( 'Amount', 'textdomain' );?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1526,7 +1526,7 @@ if (!class_exists('curtain_orders')) {
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align:center;"><?php echo __( 'Sum', 'text-domain' );?></td>
+                            <td style="text-align:center;"><?php echo __( 'Sum', 'textdomain' );?></td>
                             <td style="text-align:center;"><?php echo number_format_i18n($customer_order_amount);?></td>
                             <input type="hidden" id="customer-order-amount" value="<?php echo esc_attr($customer_order_amount);?>" />
                         </tr>
@@ -1598,29 +1598,29 @@ if (!class_exists('curtain_orders')) {
             ?>
             <fieldset>
                 <input type="hidden" id="order-item-id" value="<?php echo $order_item_id;?>" />
-                <label for="curtain-category-id"><?php echo __( '類別', 'text-domain' );?></label>
+                <label for="curtain-category-id"><?php echo __( '類別', 'textdomain' );?></label>
                 <select id="curtain-category-id" class="select ui-widget-content ui-corner-all"><?php echo $curtain_categories->select_curtain_category_options($curtain_category_id);?></select>
-                <label for="curtain-model-id"><?php echo __( '型號', 'text-domain' );?></label>
+                <label for="curtain-model-id"><?php echo __( '型號', 'textdomain' );?></label>
                 <select id="curtain-model-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_model_id, $curtain_category_id);?></select>
                 <div id="spec-div" style="<?php echo $is_specification_hided;?>">
-                    <label for="curtain-specification-id"><?php echo __( '規格', 'text-domain' );?></label>
+                    <label for="curtain-specification-id"><?php echo __( '規格', 'textdomain' );?></label>
                     <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_specification_id, $curtain_category_id, true);?></select>
-                    <label for="curtain-width"><?php echo __( '寬', 'text-domain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
+                    <label for="curtain-width"><?php echo __( '寬', 'textdomain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
                     <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" class="text ui-widget-content ui-corner-all" />
                     <div id="height-div" style="<?php echo $is_height_hided;?>">
-                        <label for="curtain-height"><?php echo __( '高', 'text-domain' );?>(min:<?php echo $curtain_min_height;?>/max:<?php echo $curtain_max_height;?>)</label>
+                        <label for="curtain-height"><?php echo __( '高', 'textdomain' );?>(min:<?php echo $curtain_min_height;?>/max:<?php echo $curtain_max_height;?>)</label>
                         <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" class="text ui-widget-content ui-corner-all" />
                     </div>
                 </div>
-                <label for="order-item-qty"><?php echo __( '數量', 'text-domain' );?></label>
+                <label for="order-item-qty"><?php echo __( '數量', 'textdomain' );?></label>
                 <input type="text" id="order-item-qty" value="<?php echo $order_item_qty;?>" class="text ui-widget-content ui-corner-all" />
 
                 <?php if (current_user_can('administrator')) {?>
-                    <label for="order-item-amount"><?php echo __( '金額', 'text-domain' );?></label>
+                    <label for="order-item-amount"><?php echo __( '金額', 'textdomain' );?></label>
                     <input type="text" id="order-item-amount" value="<?php echo $order_item_amount;?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
 
-                <label for="order-item-note"><?php echo __( '備註', 'text-domain' );?></label>
+                <label for="order-item-note"><?php echo __( '備註', 'textdomain' );?></label>
                 <textarea id="order-item-note" rows="2" class="text ui-widget-content ui-corner-all"><?php echo $order_item_note;?></textarea>
 
             </fieldset>
