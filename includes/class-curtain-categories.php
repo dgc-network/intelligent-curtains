@@ -242,7 +242,7 @@ if (!class_exists('curtain_categories')) {
             );
             $query = new WP_Query($args);
 
-            $options = '<option value="">Select category</option>';
+            $options = '<option value="">'.__( 'Select option', 'textdomain' ).'</option>';
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html(get_the_title()) . '</option>';
