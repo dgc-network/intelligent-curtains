@@ -246,7 +246,7 @@ if (!class_exists('curtain_agents')) {
                     array(
                         'key'   => 'curtain_agent_status',
                         'value' => $order_status_id,
-                        'compare' => '=',
+                        //'compare' => '=',
                     ),
                 ),
                 'meta_key'       => 'curtain_agent_number', // Meta key for sorting

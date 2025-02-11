@@ -235,8 +235,8 @@ if (!class_exists('curtain_categories')) {
                     array(
                         'key'   => 'category_disabled',
                         'value' => 0,
-                        'compare' => '=',
-                        'type'    => 'NUMERIC',
+                        //'compare' => '=',
+                        //'type'    => 'NUMERIC',
                     ),
                 ),
             );

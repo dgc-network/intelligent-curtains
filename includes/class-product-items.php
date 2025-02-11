@@ -118,7 +118,7 @@ if (!class_exists('product_items')) {
             $category_filter = array(
                 'key'     => 'curtain_category_id',
                 'value'   => $select_category,
-                'compare' => '=',
+                //'compare' => '=',
             );
 
             $args = array(

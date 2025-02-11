@@ -241,7 +241,7 @@ if (!class_exists('order_status')) {
                     array(
                         'key'     => 'status_code',
                         'value'   => $status_code,
-                        'compare' => '=', // Exact match
+                        //'compare' => '=', // Exact match
                     ),
                 ),
             );

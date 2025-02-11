@@ -496,7 +496,7 @@ if (!class_exists('curtain_orders')) {
             $curtain_agent_filter = array(
                 'key'     => 'curtain_agent_id',
                 'value'   => $curtain_agent_id,
-                'compare' => '=',
+                //'compare' => '=',
             );
 
             if (isset($_GET['_category'])) {
@@ -508,7 +508,7 @@ if (!class_exists('curtain_orders')) {
             $order_category_filter = array(
                 'key'     => 'customer_order_category',
                 'value'   => $customer_order_category,
-                'compare' => '=',
+                //'compare' => '=',
             );
         
             $args = array(
@@ -780,23 +780,23 @@ if (!class_exists('curtain_orders')) {
                             array(
                                 'key'     => 'customer_order_status',
                                 'value'   => $status_id_03,
-                                'compare' => '=',
+                                //'compare' => '=',
                             ),
                             array(
                                 'key'     => 'shipping_agent',
                                 'value'   => $curtain_agent_id,
-                                'compare' => '=',
+                                //'compare' => '=',
                             ),
                         ),
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_04,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_05,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                     )
                 ),
@@ -1026,7 +1026,7 @@ if (!class_exists('curtain_orders')) {
                     array(
                         'key'   => 'status_code',
                         'value' => $status_code,
-                        'compare' => '='
+                        //'compare' => '='
                     )
                 ),
                 'fields' => 'ids',
@@ -1190,12 +1190,12 @@ if (!class_exists('curtain_orders')) {
                         array(
                             'key'     => 'curtain_agent_id',
                             'value'   => $curtain_agent_id,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_04,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                     ),
                 );
@@ -1276,7 +1276,7 @@ if (!class_exists('curtain_orders')) {
                             array(
                                 'key'     => 'customer_order_id',
                                 'value'   => $customer_order_id,
-                                'compare' => '=',
+                                //'compare' => '=',
                             ),
                         ),
                     );
@@ -1401,13 +1401,13 @@ if (!class_exists('curtain_orders')) {
                         array(
                             'key'     => 'curtain_agent_number',
                             'value'   => $agent_number,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                         array(
                             //'key'     => 'curtain_agent_password',
                             'key'     => 'curtain_agent_phone',
                             'value'   => $agent_password,
-                            'compare' => '=',
+                            //'compare' => '=',
                         ),
                     ),
                 );
