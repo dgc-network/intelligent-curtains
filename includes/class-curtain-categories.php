@@ -129,6 +129,8 @@ if (!class_exists('curtain_categories')) {
             $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
             $is_height = get_post_meta($curtain_category_id, 'is_height', true);
             $is_height_checked = ($is_height == 1) ? 'checked' : '';
+            $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
+            $is_height_excluded = ($height_excluded == 1) ? 'checked' : '';
             $category_disabled = get_post_meta($curtain_category_id, 'category_disabled', true);
             $is_disabled = ($category_disabled == 1) ? 'checked' : '';
             ?>
@@ -157,6 +159,7 @@ if (!class_exists('curtain_categories')) {
                         <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
+                <input type="checkbox" id="height-excluded" style="display:inline-block; width:5%; " <?php echo $is_height_excluded;?> /> Height excluded.
             </fieldset>
             <?php
             return ob_get_clean();
@@ -185,6 +188,7 @@ if (!class_exists('curtain_categories')) {
                 $curtain_max_height = (isset($_POST['_curtain_max_height'])) ? sanitize_text_field($_POST['_curtain_max_height']) : 0;
                 $is_specification = (isset($_POST['_is_specification'])) ? sanitize_text_field($_POST['_is_specification']) : 0;
                 $is_height = (isset($_POST['_is_height'])) ? sanitize_text_field($_POST['_is_height']) : 0;
+                $height_excluded = (isset($_POST['_height_excluded'])) ? sanitize_text_field($_POST['_height_excluded']) : 0;
                 $category_disabled = (isset($_POST['_category_disabled'])) ? sanitize_text_field($_POST['_category_disabled']) : 0;
                 update_post_meta($curtain_category_id, 'curtain_min_width', $curtain_min_width);
                 update_post_meta($curtain_category_id, 'curtain_max_width', $curtain_max_width);
@@ -235,8 +239,6 @@ if (!class_exists('curtain_categories')) {
                     array(
                         'key'   => 'category_disabled',
                         'value' => 0,
-                        //'compare' => '=',
-                        //'type'    => 'NUMERIC',
                     ),
                 ),
             );

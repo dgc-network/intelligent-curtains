@@ -1105,6 +1105,7 @@ if (!class_exists('curtain_orders')) {
                                     $curtain_category_title = get_the_title($curtain_category_id);
                                     $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
                                     $is_height = get_post_meta($curtain_category_id, 'is_height', true);
+                                    $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
                                     $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                     $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                     $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
@@ -1465,6 +1466,7 @@ if (!class_exists('curtain_orders')) {
                                 $curtain_category_title = get_the_title($curtain_category_id);
                                 $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
                                 $is_height = get_post_meta($curtain_category_id, 'is_height', true);
+                                $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                 $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
@@ -1491,6 +1493,7 @@ if (!class_exists('curtain_orders')) {
                                 if (empty($order_item_amount)) {
                                     $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
                                     if ($is_height==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    if ($height_excluded==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
                                     if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
                                 }
                                 $customer_order_amount += $order_item_amount;
