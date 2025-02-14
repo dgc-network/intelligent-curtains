@@ -378,7 +378,7 @@ jQuery(document).ready(function($) {
                         '_curtain_min_height': $("#curtain-min-height").val(),
                         '_curtain_max_height': $("#curtain-max-height").val(),
                         '_is_specification': $('#is-specification').is(":checked") ? 1 : 0,
-                        '_is_height': $('#is-height').is(":checked") ? 1 : 0,
+                        '_height_hided': $('#height-hided').is(":checked") ? 1 : 0,
                         '_height_excluded': $('#height-excluded').is(":checked") ? 1 : 0,
                         '_category_disabled': $('#category-disabled').is(":checked") ? 1 : 0,
                     },
