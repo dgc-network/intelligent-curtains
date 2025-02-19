@@ -116,9 +116,9 @@ if (!class_exists('curtain_categories')) {
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $paged,
                 's'              => $search_query,  
-                //'meta_key'       => 'sorting_key',
-                //'orderby'        => 'meta_value_num', // Specify meta value as numeric
-                //'order'          => 'ASC', // Sorting order (ascending)
+                'meta_key'       => 'sorting_key',
+                'orderby'        => 'meta_value_num', // Specify meta value as numeric
+                'order'          => 'ASC', // Sorting order (ascending)
             );
             $query = new WP_Query($args);
             return $query;
@@ -261,10 +261,9 @@ if (!class_exists('curtain_categories')) {
                         'value' => 0,
                     ),
                 ),
-                //'meta_key'       => 'sorting_key',
-                //'orderby'        => 'meta_value_num', // Specify meta value as numeric
-                //'order'          => 'ASC', // Sorting order (ascending)
-
+                'meta_key'       => 'sorting_key',
+                'orderby'        => 'meta_value_num', // Specify meta value as numeric
+                'order'          => 'ASC', // Sorting order (ascending)
             );
             $query = new WP_Query($args);
 
