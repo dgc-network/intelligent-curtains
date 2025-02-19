@@ -321,6 +321,27 @@ jQuery(document).ready(function($) {
         $(this).val('');
     });
 
+    $('#sortable-curtain-category-list').sortable({
+        update: function(event, ui) {
+            const curtain_category_id_array = $(this).sortable('toArray', { attribute: 'data-curtain-category-id' });                
+            $.ajax({
+                type: 'POST',
+                url: ajax_object.ajax_url,
+                dataType: 'json',
+                data: {
+                    action: 'sort_curtain_category_list_data',
+                    _curtain_category_id_array: curtain_category_id_array,
+                },
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
+
     $('[id^="edit-curtain-category-"]').on("click", function () {
         const curtain_category_id = this.id.substring(22);
         $.ajax({

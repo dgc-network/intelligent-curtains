@@ -9,6 +9,8 @@ if (!class_exists('curtain_categories')) {
         public function __construct() {
             add_shortcode( 'curtain-category-list', array( $this, 'display_shortcode' ) );
             //add_action( 'init', array( $this, 'register_curtain_category_post_type' ) );
+            add_action( 'wp_ajax_sort_curtain_category_list_data', array( $this, 'sort_curtain_category_list_data' ) );
+            add_action( 'wp_ajax_nopriv_sort_curtain_category_list_data', array( $this, 'sort_curtain_category_list_data' ) );
             add_action( 'wp_ajax_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
             add_action( 'wp_ajax_nopriv_get_curtain_category_dialog_data', array( $this, 'get_curtain_category_dialog_data' ) );
             add_action( 'wp_ajax_set_curtain_category_dialog_data', array( $this, 'set_curtain_category_dialog_data' ) );
@@ -61,7 +63,7 @@ if (!class_exists('curtain_categories')) {
                             <th><?php echo __( '高度設定', 'textdomain' );?></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sortable-curtain-category-list">
                     <?php
                     // Define the custom pagination parameters
                     $posts_per_page = get_option('operation_row_counts');
@@ -76,8 +78,9 @@ if (!class_exists('curtain_categories')) {
                             $curtain_max_width = get_post_meta(get_the_ID(), 'curtain_max_width', true);
                             $curtain_min_height = get_post_meta(get_the_ID(), 'curtain_min_height', true);
                             $curtain_max_height = get_post_meta(get_the_ID(), 'curtain_max_height', true);
+                            $curtain_category_id = get_the_ID();
                             ?>
-                            <tr id="edit-curtain-category-<?php the_ID();?>">
+                            <tr id="edit-curtain-category-<?php echo $curtain_category_id;?>" data-curtain-category-id="<?php echo esc_attr($curtain_category_id);?>">
                                 <td style="text-align:center;"><?php echo esc_html(get_the_title());?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_min_width.'~'.$curtain_max_width);?></td>
                                 <td style="text-align:center;"><?php echo esc_html($curtain_min_height.'~'.$curtain_max_height);?></td>
@@ -113,7 +116,10 @@ if (!class_exists('curtain_categories')) {
                 'posts_per_page' => $posts_per_page,
                 'paged'          => $paged,
                 's'              => $search_query,  
-            );        
+                //'meta_key'       => 'sorting_key',
+                //'orderby'        => 'meta_value_num', // Specify meta value as numeric
+                //'order'          => 'ASC', // Sorting order (ascending)
+            );
             $query = new WP_Query($args);
             return $query;
         }
@@ -214,6 +220,7 @@ if (!class_exists('curtain_categories')) {
                     'post_type'     => 'curtain-category',
                 );    
                 $post_id = wp_insert_post($new_post);
+                update_post_meta($post_id, 'sorting_key', 999);
             }
             wp_send_json($response);
         }
@@ -223,6 +230,18 @@ if (!class_exists('curtain_categories')) {
             if( isset($_POST['_curtain_category_id']) ) {
                 $curtain_category_id = sanitize_text_field($_POST['_curtain_category_id']);
                 wp_delete_post($curtain_category_id, true);
+            }
+            wp_send_json($response);
+        }
+
+        function sort_curtain_category_list_data() {
+            $response = array('success' => false, 'error' => 'Invalid data format');
+            if (isset($_POST['_curtain_category_id_array']) && is_array($_POST['_curtain_category_id_array'])) {
+                $curtain_category_id_array = array_map('absint', $_POST['_curtain_category_id_array']);        
+                foreach ($curtain_category_id_array as $index => $curtain_category_id) {
+                    update_post_meta($curtain_category_id, 'sorting_key', $index);
+                }
+                $response = array('success' => true);
             }
             wp_send_json($response);
         }
@@ -242,6 +261,10 @@ if (!class_exists('curtain_categories')) {
                         'value' => 0,
                     ),
                 ),
+                //'meta_key'       => 'sorting_key',
+                //'orderby'        => 'meta_value_num', // Specify meta value as numeric
+                //'order'          => 'ASC', // Sorting order (ascending)
+
             );
             $query = new WP_Query($args);
 
