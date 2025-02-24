@@ -482,7 +482,7 @@ if (!class_exists('curtain_orders')) {
             <?php
         }
 
-        function retrieve_customer_order_data($paged = 1, $curtain_agent_id=false) {
+        function retrieve_customer_order_data($paged=1, $curtain_agent_id=false) {
             // Define the custom pagination parameters
             $posts_per_page = get_option('operation_row_counts');
         
@@ -496,7 +496,6 @@ if (!class_exists('curtain_orders')) {
             $curtain_agent_filter = array(
                 'key'     => 'curtain_agent_id',
                 'value'   => $curtain_agent_id,
-                //'compare' => '=',
             );
 
             if (isset($_GET['_category'])) {
@@ -508,7 +507,6 @@ if (!class_exists('curtain_orders')) {
             $order_category_filter = array(
                 'key'     => 'customer_order_category',
                 'value'   => $customer_order_category,
-                //'compare' => '=',
             );
         
             $args = array(
@@ -590,6 +588,7 @@ if (!class_exists('curtain_orders')) {
                     <label for="customer-order-status"><?php echo __( '狀態', 'textdomain' );?></label>
                     <input type="text" id="customer-order-status" value="<?php echo esc_attr(get_post_field('post_content', $customer_order_status));?>" class="text ui-widget-content ui-corner-all" />
                 <?php }?>
+
                 <?php echo $this->display_order_item_list($customer_order_id, $is_admin);?>
                 <div id="account-receivable-dialog" title="Account Receivable"></div>
 
@@ -1104,8 +1103,8 @@ if (!class_exists('curtain_orders')) {
                                     $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                                     $curtain_category_title = get_the_title($curtain_category_id);
                                     $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
-                                    $height_hided = get_post_meta($curtain_category_id, 'height_hided', true);
-                                    $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
+                                    $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
+                                    $is_height_excluded = get_post_meta($curtain_category_id, 'is_height_excluded', true);
                                     $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                     $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                     $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
@@ -1125,7 +1124,7 @@ if (!class_exists('curtain_orders')) {
                                     $curtain_specification_description .= ' W:'.$curtain_width;
                                     $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
                                     $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
-                                    if ($height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    if ($is_height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
                                     else $curtain_specification_description .= ' H:'.$curtain_height;
                                     if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
                                     else $order_item_description .= '<br>'.$curtain_specification_description;
@@ -1277,7 +1276,6 @@ if (!class_exists('curtain_orders')) {
                             array(
                                 'key'     => 'customer_order_id',
                                 'value'   => $customer_order_id,
-                                //'compare' => '=',
                             ),
                         ),
                     );
@@ -1287,7 +1285,7 @@ if (!class_exists('curtain_orders')) {
                         while ($query->have_posts()) : $query->the_post();
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
-                            $height_hided = get_post_meta($curtain_category_id, 'height_hided', true);
+                            $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
 
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                             $curtain_model_description = get_post_field('post_content', $curtain_model_id);
@@ -1312,11 +1310,11 @@ if (!class_exists('curtain_orders')) {
                             $order_item_qty = ($order_item_qty) ? $order_item_qty : 0;
 
                             $curtain_specification_description = $curtain_specification_description . ' W:' . $curtain_width;
-                            if (!$height_hided) $curtain_specification_description = $curtain_specification_description . '/H:' . $curtain_height;
+                            if (!$is_height_hided) $curtain_specification_description = $curtain_specification_description . '/H:' . $curtain_height;
                             if (!$is_specification) $curtain_model_description = $curtain_model_description . '<br>' . $curtain_specification_description;
 
                             $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
-                            if ($height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                            if ($is_height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
                             if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
 
                             $sum += $order_item_amount;
@@ -1465,8 +1463,8 @@ if (!class_exists('curtain_orders')) {
                                 else $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                                 $curtain_category_title = get_the_title($curtain_category_id);
                                 $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
-                                $height_hided = get_post_meta($curtain_category_id, 'height_hided', true);
-                                $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
+                                $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
+                                $is_height_excluded = get_post_meta($curtain_category_id, 'is_height_excluded', true);
                                 $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
                                 $curtain_model_description = get_post_field('post_content', $curtain_model_id);
                                 $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
@@ -1487,13 +1485,13 @@ if (!class_exists('curtain_orders')) {
 
                                 $curtain_specification_description .= ' W:'.$curtain_width;
                                 $order_item_description = $curtain_model_description.'('.get_the_title($curtain_model_id).')';                                
-                                if (!$height_hided) $curtain_specification_description .= ' H:'.$curtain_height;
+                                if (!$is_height_hided) $curtain_specification_description .= ' H:'.$curtain_height;
                                 if (!$is_specification) $order_item_description .= '<br>'.$curtain_specification_description;
 
                                 if (empty($order_item_amount)) {
                                     $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100) * ($curtain_height/100));
-                                    if ($height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
-                                    if ($height_excluded==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    if ($is_height_hided==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
+                                    if ($is_height_excluded==1) $order_item_amount = $order_item_qty * ($curtain_model_price + $curtain_specification_price * ($curtain_width/100));
                                     if ($is_specification==1) $order_item_amount = $order_item_qty * $curtain_model_price;
                                 }
                                 $customer_order_amount += $order_item_amount;
@@ -1504,7 +1502,7 @@ if (!class_exists('curtain_orders')) {
                                     $is_specification = get_post_meta($product_item_id, 'is_specification', true);
                                     if ($is_specification) {
                                         $order_item_description .= '<br> W:'.$curtain_width;
-                                        if (!$height_hided) {
+                                        if (!$is_height_hided) {
                                             $order_item_description .= ' H:'.$curtain_height;
                                         }
                                     }
@@ -1592,8 +1590,8 @@ if (!class_exists('curtain_orders')) {
             $order_item_note = get_post_meta($order_item_id, 'order_item_note', true);
             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
             $is_specification_hided = ($is_specification == 1) ? 'display:none;' : '';
-            $height_hided = get_post_meta($curtain_category_id, 'height_hided', true);
-            $is_height_hided = ($height_hided == 1) ? 'display:none;' : '';
+            $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
+            $is_is_height_hided = ($is_height_hided == 1) ? 'display:none;' : '';
             $curtain_min_width = get_post_meta($curtain_category_id, 'curtain_min_width', true);
             $curtain_max_width = get_post_meta($curtain_category_id, 'curtain_max_width', true);
             $curtain_min_height = get_post_meta($curtain_category_id, 'curtain_min_height', true);
@@ -1610,7 +1608,7 @@ if (!class_exists('curtain_orders')) {
                     <select id="curtain-specification-id" class="text ui-widget-content ui-corner-all"><?php echo $product_items->select_product_item_options($curtain_specification_id, $curtain_category_id, true);?></select>
                     <label for="curtain-width"><?php echo __( '寬', 'textdomain' );?>(min:<?php echo $curtain_min_width;?>/max:<?php echo $curtain_max_width;?>)</label>
                     <input type="number" id="curtain-width" min="<?php echo $curtain_min_width;?>" max="<?php echo $curtain_max_width;?>" value="<?php echo $curtain_width;?>" class="text ui-widget-content ui-corner-all" />
-                    <div id="height-div" style="<?php echo $is_height_hided;?>">
+                    <div id="height-div" style="<?php echo $is_is_height_hided;?>">
                         <label for="curtain-height"><?php echo __( '高', 'textdomain' );?>(min:<?php echo $curtain_min_height;?>/max:<?php echo $curtain_max_height;?>)</label>
                         <input type="number" id="curtain-height" min="<?php echo $curtain_min_height;?>" max="<?php echo $curtain_max_height;?>" value="<?php echo $curtain_height;?>" class="text ui-widget-content ui-corner-all" />
                     </div>

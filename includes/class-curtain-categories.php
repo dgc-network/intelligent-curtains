@@ -133,10 +133,10 @@ if (!class_exists('curtain_categories')) {
             $curtain_max_height = get_post_meta($curtain_category_id, 'curtain_max_height', true);
             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
             $is_specification_checked = ($is_specification == 1) ? 'checked' : '';
-            $height_hided = get_post_meta($curtain_category_id, 'height_hided', true);
-            $is_height_checked = ($height_hided == 1) ? 'checked' : '';
-            $height_excluded = get_post_meta($curtain_category_id, 'height_excluded', true);
-            $is_height_excluded = ($height_excluded == 1) ? 'checked' : '';
+            $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
+            $is_height_checked = ($is_height_hided == 1) ? 'checked' : '';
+            $is_height_excluded = get_post_meta($curtain_category_id, 'is_height_excluded', true);
+            $is_is_height_excluded = ($is_height_excluded == 1) ? 'checked' : '';
             $category_disabled = get_post_meta($curtain_category_id, 'category_disabled', true);
             $is_disabled = ($category_disabled == 1) ? 'checked' : '';
             ?>
@@ -165,7 +165,7 @@ if (!class_exists('curtain_categories')) {
                         <input type="text" id="curtain-max-height" value="<?php echo esc_html($curtain_max_height);?>" style="display:inline-block; width:25%;" /> cm
                     </div>
                 </div>
-                <input type="checkbox" id="height-excluded" style="display:inline-block; width:5%; " <?php echo $is_height_excluded;?> /> Height excluded.
+                <input type="checkbox" id="height-excluded" style="display:inline-block; width:5%; " <?php echo $is_is_height_excluded;?> /> Height excluded.
             </fieldset>
             <?php
             return ob_get_clean();
@@ -193,16 +193,16 @@ if (!class_exists('curtain_categories')) {
                 $curtain_min_height = (isset($_POST['_curtain_min_height'])) ? sanitize_text_field($_POST['_curtain_min_height']) : 0;
                 $curtain_max_height = (isset($_POST['_curtain_max_height'])) ? sanitize_text_field($_POST['_curtain_max_height']) : 0;
                 $is_specification = (isset($_POST['_is_specification'])) ? sanitize_text_field($_POST['_is_specification']) : 0;
-                $height_hided = (isset($_POST['_height_hided'])) ? sanitize_text_field($_POST['_height_hided']) : 0;
-                $height_excluded = (isset($_POST['_height_excluded'])) ? sanitize_text_field($_POST['_height_excluded']) : 0;
+                $is_height_hided = (isset($_POST['_is_height_hided'])) ? sanitize_text_field($_POST['_is_height_hided']) : 0;
+                $is_height_excluded = (isset($_POST['_is_height_excluded'])) ? sanitize_text_field($_POST['_is_height_excluded']) : 0;
                 $category_disabled = (isset($_POST['_category_disabled'])) ? sanitize_text_field($_POST['_category_disabled']) : 0;
                 update_post_meta($curtain_category_id, 'curtain_min_width', $curtain_min_width);
                 update_post_meta($curtain_category_id, 'curtain_max_width', $curtain_max_width);
                 update_post_meta($curtain_category_id, 'curtain_min_height', $curtain_min_height);
                 update_post_meta($curtain_category_id, 'curtain_max_height', $curtain_max_height);
                 update_post_meta($curtain_category_id, 'is_specification', $is_specification);
-                update_post_meta($curtain_category_id, 'height_hided', $height_hided);
-                update_post_meta($curtain_category_id, 'height_excluded', $height_excluded);
+                update_post_meta($curtain_category_id, 'is_height_hided', $is_height_hided);
+                update_post_meta($curtain_category_id, 'is_height_excluded', $is_height_excluded);
                 update_post_meta($curtain_category_id, 'category_disabled', $category_disabled);
                 // Update the post title
                 $updated_post = array(
