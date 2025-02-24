@@ -229,6 +229,8 @@ if (!class_exists('product_items')) {
                         'value' => $curtain_category_id,
                     ),
                 ),
+                'orderby'        => 'title', // Sort by title
+                'order'          => 'ASC',
             );
             if ($is_specification) {
                 $args['meta_query'][]=array(
