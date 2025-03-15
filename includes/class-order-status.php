@@ -222,7 +222,7 @@ if (!class_exists('order_status')) {
                 $status_title = get_the_title();
                 $status_content = get_the_content();
                 $status_content = $status_content.'('.$status_code.')';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($status_content) . '</option>';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' >' . esc_html($status_content) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;

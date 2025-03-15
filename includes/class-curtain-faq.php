@@ -207,7 +207,7 @@ if (!class_exists('curtain_faq')) {
                 $faq_question = get_the_title();
                 $faq_answer = get_the_content();
                 $faq_question .= '('.$faq_code.')';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($faq_question) . '</option>';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' >' . esc_html($faq_question) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;

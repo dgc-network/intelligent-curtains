@@ -259,7 +259,7 @@ if (!class_exists('product_items')) {
             while ($query->have_posts()) : $query->the_post();
                 $selected = ($selected_option == get_the_ID()) ? 'selected' : '';
                 $option = get_the_content().'('.get_the_title().')';
-                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' />' . esc_html($option) . '</option>';
+                $options .= '<option value="' . esc_attr(get_the_ID()) . '" '.$selected.' >' . esc_html($option) . '</option>';
             endwhile;
             wp_reset_postdata();
             return $options;
