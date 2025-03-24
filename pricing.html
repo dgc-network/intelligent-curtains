@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>窗簾價格計算器</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        label { display: block; margin-top: 10px; }
+        input, select { margin-top: 5px; }
+        button { margin-top: 20px; }
+        .result { font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>窗簾價格計算器</h1>
+    <label for="productType">選擇產品類型：</label>
+    <select id="productType" onchange="updateFields()">
+        <option value="">--請選擇--</option>
+        <option value="軌道開合簾">軌道開合簾</option>
+        <option value="捲簾/調光簾">捲簾/調光簾</option>
+        <option value="蜂巢簾">蜂巢簾</option>
+        <option value="窗簾布">窗簾布</option>
+    </select>
+ 
+    <div id="specFields"></div>
+ 
+    <button onclick="calculatePrice()">計算價格</button>
+ 
+    <div class="result" id="result"></div>
+ 
+    <script>
+        const products = {
+            "軌道開合簾": {
+                formula: (spec) => {
+                    // 將長度轉換為公尺
+                    const lengthInMeters = spec.長度單位 === "台尺" ? spec.長度 / 3.3 : spec.長度;
+                    const A = spec.軌道類型 === "三折簾軌道" ? lengthInMeters * 330 :
+                              spec.軌道類型 === "蛇行簾軌道" ? lengthInMeters * 660 :
+                              spec.軌道類型 === "穿透簾軌道" ? lengthInMeters * 660 : 0;
+                    const B = spec.電機類型 === "插電式電機" ? 3000 :
+                              spec.電機類型 === "充電式電機" ? 4300 :
+                              spec.電機類型 === "matter電機" ? 3500 :
+                              spec.電機類型 === "穿透簾電機(插電)" ? 4000 :
+                              spec.電機類型 === "穿透簾電機(充電)" ? 5000 : 0;
+                    const C = spec.遙控器類型 === "一對一遙控器" ? 550 :
+                              spec.遙控器類型 === "一對二遙控器" ? 680 :
+                              spec.遙控器類型 === "一對15遙控器" ? 700 : 0;
+                    return Math.round(A + B + C); // 四捨五入取整數
+                },
+                fields: [
+                    { id: "軌道類型", label: "軌道類型", type: "select", options: ["三折簾軌道", "蛇行簾軌道", "穿透簾軌道"] },
+                    { id: "長度", label: "長度", type: "number" },
+                    { id: "長度單位", label: "長度單位", type: "select", options: ["公尺", "台尺"] },
+                    { id: "電機類型", label: "電機類型", type: "select", options: ["插電式電機", "充電式電機", "matter電機", "穿透簾電機(插電)", "穿透簾電機(充電)"] },
+                    { id: "遙控器類型", label: "遙控器類型", type: "select", options: ["一對一遙控器", "一對二遙控器", "一對15遙控器"] }
+                ]
+            },
+            "捲簾/調光簾": {
+                formula: (spec) => {
+                    // 將長度轉換為公尺
+                    const lengthInMeters = spec.長度單位 === "台尺" ? spec.長度 / 3.3 : spec.長度;
+                    const D = spec.電機類型 === "插電式電機" ? (spec.電機尺寸 === "25電機" ? 3000 : 3500) :
+                              spec.電機類型 === "充電式電機" ? 3500 : 0;
+                    const F = lengthInMeters * 350;
+                    const G = spec.智能模組 === "WiFi智能模組" ? 800 :
+                              spec.智能模組 === "Zigbee智能模組" ? 800 : 0;
+                    const H = spec.智能模組 === "Zigbee智能模組" ? 850 : 0;
+                    const C = spec.遙控器類型 === "一對一遙控器" ? 550 :
+                              spec.遙控器類型 === "一對二遙控器" ? 680 :
+                              spec.遙控器類型 === "一對15遙控器" ? 700 : 0;
+                    return Math.round(D + F + G + H + C); // 四捨五入取整數
+                },
+                fields: [
+                    { id: "電機類型", label: "電機類型", type: "select", options: ["插電式電機", "充電式電機"] },
+                    { id: "電機尺寸", label: "電機尺寸", type: "select", options: ["25電機", "35電機"] },
+                    { id: "長度", label: "長度", type: "number" },
+                    { id: "長度單位", label: "長度單位", type: "select", options: ["公尺", "台尺"] },
+                    { id: "智能模組", label: "智能模組", type: "select", options: ["無", "WiFi智能模組", "Zigbee智能模組"] },
+                    { id: "遙控器類型", label: "遙控器類型", type: "select", options: ["一對一遙控器", "一對二遙控器", "一對15遙控器"] }
+                ]
+            },
+            "蜂巢簾": {
+                formula: (spec) => {
+                    // 將面積轉換為平方公尺
+                    const areaInSquareMeters = spec.面積單位 === "才" ? spec.面積 / 10.89 : spec.面積;
+                    const I = spec.簾類型 === "全遮光標準簾" ? areaInSquareMeters * 800 + 700 :
+                              spec.簾類型 === "上下合懸浮簾" ? areaInSquareMeters * 800 + 1200 :
+                              spec.簾類型 === "日夜簾" ? areaInSquareMeters * 800 + 2500 : 0;
+                    const J = spec.操作方式 === "手動" ? 0 : // 手動模式不計入電機價格
+                              spec.電機類型 === "插電式電機" ? 2500 :
+                              spec.電機類型 === "插電式雙電機" ? 3000 :
+                              spec.電機類型 === "充電式電機" ? 3500 :
+                              spec.電機類型 === "充電式雙電機" ? 4000 : 0;
+                    const K = spec.遙控器類型 === "無" ? 0 :
+                              spec.遙控器類型 === "一對一遙控器" ? 550 :
+                              spec.遙控器類型 === "一對二遙控器" ? 680 :
+                              spec.遙控器類型 === "一對15遙控器" ? 700 : 0;
+                    return Math.round(I + J + K); // 四捨五入取整數
+                },
+                fields: [
+                    { id: "操作方式", label: "操作方式", type: "select", options: ["手動", "電動"], onChange: "updateMotorAndRemoteFields()" },
+                    { id: "簾類型", label: "簾類型", type: "select", options: ["全遮光標準簾", "上下合懸浮簾", "日夜簾"] },
+                    { id: "面積", label: "面積", type: "number" },
+                    { id: "面積單位", label: "面積單位", type: "select", options: ["公尺平方", "才"] },
+                    { id: "電機類型", label: "電機類型", type: "select", options: ["無電機", "插電式電機", "插電式雙電機", "充電式電機", "充電式雙電機"] },
+                    { id: "遙控器類型", label: "遙控器類型", type: "select", options: ["無", "一對一遙控器", "一對二遙控器", "一對15遙控器"] }
+                ]
+            },
+            "窗簾布": {
+                formula: (spec) => {
+                    // 將寬度轉換為公尺
+                    const widthInMeters = spec.寬度單位 === "台尺" ? spec.寬度 / 3.3 : spec.寬度;
+                    const price = spec.窗簾布類型 === "全遮光橄欖樹" ? widthInMeters * 1020 :
+                                 spec.窗簾布類型 === "黑金絨" ? widthInMeters * 990 :
+                                 spec.窗簾布類型 === "黑金寶格麗" ? widthInMeters * 1100 :
+                                 spec.窗簾布類型 === "黑金威絲綿" ? widthInMeters * 1010 :
+                                 spec.窗簾布類型 === "遮光大師" ? widthInMeters * 1070 :
+                                 spec.窗簾布類型 === "雙面迪卡棉" ? widthInMeters * 1010 :
+                                 spec.窗簾布類型 === "807系列" ? widthInMeters * 960 :
+                                 spec.窗簾布類型 === "好時光" ? widthInMeters * 960 :
+                                 spec.窗簾布類型 === "太古里" ? widthInMeters * 940 : 0;
+                    return Math.round(price); // 四捨五入取整數
+                },
+                fields: [
+                    { id: "窗簾布類型", label: "窗簾布類型", type: "select", options: ["全遮光橄欖樹", "黑金絨", "黑金寶格麗", "黑金威絲綿", "遮光大師", "雙面迪卡棉", "807系列", "好時光", "太古里"] },
+                    { id: "寬度", label: "寬度", type: "number" },
+                    { id: "寬度單位", label: "寬度單位", type: "select", options: ["公尺", "台尺"] }
+                ]
+            }
+        };
+ 
+        function updateFields() {
+            const productType = document.getElementById("productType").value;
+            const specFields = document.getElementById("specFields");
+            specFields.innerHTML = "";
+ 
+            if (productType && products[productType]) {
+                products[productType].fields.forEach(field => {
+                    if (field.type === "select") {
+                        specFields.innerHTML += `
+                            <label for="${field.id}">${field.label}：</label>
+                            <select id="${field.id}" ${field.onChange ? `onchange="${field.onChange}"` : ""}>
+                                ${field.options.map(option => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        `;
+                    } else {
+                        specFields.innerHTML += `
+                            <label for="${field.id}">${field.label}：</label>
+                            <input type="${field.type}" id="${field.id}" />
+                        `;
+                    }
+                });
+            }
+            // 初始化蜂巢簾的電機和遙控器選項
+            if (productType === "蜂巢簾") {
+                updateMotorAndRemoteFields();
+            }
+        }
+ 
+        function updateMotorAndRemoteFields() {
+            const operationType = document.getElementById("操作方式").value;
+            const motorField = document.getElementById("電機類型");
+            const remoteField = document.getElementById("遙控器類型");
+ 
+            if (operationType === "手動") {
+                // 手動模式：電機選項只有「無電機」，遙控器選項只有「無」
+                motorField.innerHTML = `<option value="無電機" selected>無電機</option>`;
+                motorField.disabled = true; // 禁用電機選項
+                remoteField.innerHTML = `<option value="無" selected>無</option>`;
+                remoteField.disabled = true; // 禁用遙控器選項
+            } else {
+                // 電動模式：電機選項不包含「無電機」，遙控器選項不包含「無」
+                motorField.innerHTML = `
+                    <option value="插電式電機">插電式電機</option>
+                    <option value="插電式雙電機">插電式雙電機</option>
+                    <option value="充電式電機">充電式電機</option>
+                    <option value="充電式雙電機">充電式雙電機</option>
+                `;
+                motorField.disabled = false; // 啟用電機選項
+                remoteField.innerHTML = `
+                    <option value="一對一遙控器">一對一遙控器</option>
+                    <option value="一對二遙控器">一對二遙控器</option>
+                    <option value="一對15遙控器">一對15遙控器</option>
+                `;
+                remoteField.disabled = false; // 啟用遙控器選項
+            }
+        }
+ 
+        function calculatePrice() {
+            const productType = document.getElementById("productType").value;
+            if (!productType || !products[productType]) {
+                alert("請選擇產品類型");
+                return;
+            }
+ 
+            const spec = {};
+            let isValid = true;
+            products[productType].fields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (field.type === "number") {
+                    spec[field.id] = parseFloat(element.value);
+                    if (isNaN(spec[field.id])) {
+                        alert(`請輸入有效的${field.label}`);
+                        isValid = false;
+                    }
+                } else {
+                    spec[field.id] = element.value;
+                    if (field.id === "電機類型" && productType === "蜂巢簾" && spec.操作方式 === "電動" && spec[field.id] === "無電機") {
+                        alert("請選擇電機類型");
+                        isValid = false;
+                    }
+                    if (field.id === "遙控器類型" && productType === "蜂巢簾" && spec.操作方式 === "電動" && spec[field.id] === "無") {
+                        alert("請選擇遙控器類型");
+                        isValid = false;
+                    }
+                }
+            });
+ 
+            if (!isValid) return;
+ 
+            const price = products[productType].formula(spec);
+            document.getElementById("result").innerText = `計算結果：${price} 元`; // 顯示整數價格
+        }
+    </script>
+</body>
+</html>
