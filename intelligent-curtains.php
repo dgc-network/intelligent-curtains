@@ -141,6 +141,10 @@ function init_webhook_events() {
                                 'messages' => array($flexMessage),
                             ));
                         } else {
+                            // handle_iot_command
+                            $command = $message['text'];
+                            // 對應表：指令 -> IoT 控制 URL & 動作
+
                             // Open-AI auto reply
                             $response = $open_ai_api->createChatCompletion($message['text']);
                             $line_bot_api->replyMessage([
@@ -204,7 +208,6 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-orders.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-serials.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-order-status.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-product-items.php';
-//require_once plugin_dir_path( __FILE__ ) . 'includes/fields-user-custom.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-curtain-faq.php';
 
 function set_flex_message($display_name, $link_uri, $text_message) {
@@ -296,3 +299,52 @@ function wp_login_submit() {
 add_action('wp_ajax_wp_login_submit', 'wp_login_submit');
 add_action('wp_ajax_nopriv_wp_login_submit', 'wp_login_submit');
 
+// handle_iot_command
+add_action('rest_api_init', function () {
+    register_rest_route('iot/v1', '/control', array(
+        'methods' => 'POST',
+        'callback' => 'handle_iot_command',
+        'permission_callback' => '__return_true',
+    ));
+});
+
+function handle_iot_command(WP_REST_Request $request) {
+    $command = sanitize_text_field($request->get_param('command'));
+
+    // 對應表：指令 -> IoT 控制 URL & 動作
+    $device_mappings = array(
+        '開燈'   => array('url' => 'http://192.168.1.100/light',   'data' => array('action' => 'on')),
+        '關燈'   => array('url' => 'http://192.168.1.100/light',   'data' => array('action' => 'off')),
+        '開窗簾' => array('url' => 'http://192.168.1.101/curtain', 'data' => array('action' => 'open')),
+        '關窗簾' => array('url' => 'http://192.168.1.101/curtain', 'data' => array('action' => 'close')),
+    );
+
+    if (!array_key_exists($command, $device_mappings)) {
+        return new WP_REST_Response(array(
+            'status' => 'error',
+            'message' => '未知的指令：' . $command
+        ), 400);
+    }
+
+    $device_url = $device_mappings[$command]['url'];
+    $post_data  = $device_mappings[$command]['data'];
+
+    $response = wp_remote_post($device_url, array(
+        'body' => $post_data,
+        'timeout' => 5
+    ));
+
+    if (is_wp_error($response)) {
+        return new WP_REST_Response(array(
+            'status' => 'fail',
+            'message' => $response->get_error_message()
+        ), 500);
+    }
+
+    return new WP_REST_Response(array(
+        'status' => 'ok',
+        'sent_command' => $command,
+        'device_url' => $device_url,
+        'device_response' => wp_remote_retrieve_body($response),
+    ), 200);
+}
