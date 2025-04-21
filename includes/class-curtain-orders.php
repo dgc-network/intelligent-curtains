@@ -1281,6 +1281,7 @@ if (!class_exists('curtain_orders')) {
                         while ($query->have_posts()) : $query->the_post();
                             $curtain_category_id = get_post_meta(get_the_ID(), 'curtain_category_id', true);
                             $is_specification = get_post_meta($curtain_category_id, 'is_specification', true);
+                            $is_height_excluded = get_post_meta($curtain_category_id, 'is_height_excluded', true);
                             $is_height_hided = get_post_meta($curtain_category_id, 'is_height_hided', true);
 
                             $curtain_model_id = get_post_meta(get_the_ID(), 'curtain_model_id', true);
@@ -1289,14 +1290,14 @@ if (!class_exists('curtain_orders')) {
 
                             $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
                             //if (!$curtain_model_price) $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
-                            //$curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
+                            $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
 
                             $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                             $curtain_specification_description = get_post_field('post_content', $curtain_specification_id);
 
                             $curtain_specification_price = get_post_meta($curtain_specification_id, 'product_item_price', true);
                             //if (!$curtain_specification_price) $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
-                            //$curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
+                            $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
 
                             $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
                             $curtain_width = ($curtain_width) ? $curtain_width : 1;
