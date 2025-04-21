@@ -1156,7 +1156,6 @@ if (!class_exists('curtain_orders')) {
                     </div>
                 </fieldset>
                 <?php
-                //$html = ob_get_clean();
                 $response['html_contain'] = ob_get_clean();
             }
             wp_send_json($response);
@@ -1190,12 +1189,10 @@ if (!class_exists('curtain_orders')) {
                         array(
                             'key'     => 'curtain_agent_id',
                             'value'   => $curtain_agent_id,
-                            //'compare' => '=',
                         ),
                         array(
                             'key'     => 'customer_order_status',
                             'value'   => $status_id_04,
-                            //'compare' => '=',
                         ),
                     ),
                 );
@@ -1235,7 +1232,6 @@ if (!class_exists('curtain_orders')) {
 
         function get_account_receivable_detail_data() {
             $response = array();
-            //$customer_order_ids = sanitize_text_field($_POST['_customer_order_ids']);
             $response['html_contain'] = $this->print_account_receivable_detail_data($_POST['_customer_order_ids']);
             wp_send_json($response);
         }
@@ -1292,14 +1288,14 @@ if (!class_exists('curtain_orders')) {
                             $curtain_model_description = $curtain_model_description . '(' . get_the_title($curtain_model_id) . ')';
 
                             $curtain_model_price = get_post_meta($curtain_model_id, 'product_item_price', true);
-                            if (!$curtain_model_price) $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
+                            //if (!$curtain_model_price) $curtain_model_price = get_post_meta($curtain_model_id, 'curtain_model_price', true);
                             $curtain_model_price = ($curtain_model_price) ? $curtain_model_price : 0;
 
                             $curtain_specification_id = get_post_meta(get_the_ID(), 'curtain_specification_id', true);
                             $curtain_specification_description = get_post_field('post_content', $curtain_specification_id);
 
                             $curtain_specification_price = get_post_meta($curtain_specification_id, 'product_item_price', true);
-                            if (!$curtain_specification_price) $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
+                            //if (!$curtain_specification_price) $curtain_specification_price = get_post_meta($curtain_specification_id, 'curtain_specification_price', true);
                             $curtain_specification_price = ($curtain_specification_price) ? $curtain_specification_price : 0;
 
                             $curtain_width = get_post_meta(get_the_ID(), 'curtain_width', true);
@@ -1400,13 +1396,11 @@ if (!class_exists('curtain_orders')) {
                         array(
                             'key'     => 'curtain_agent_number',
                             'value'   => $agent_number,
-                            //'compare' => '=',
                         ),
                         array(
                             //'key'     => 'curtain_agent_password',
                             'key'     => 'curtain_agent_phone',
                             'value'   => $agent_password,
-                            //'compare' => '=',
                         ),
                     ),
                 );
