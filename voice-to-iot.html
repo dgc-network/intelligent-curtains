@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice IoT Control</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    #status { margin-top: 10px; font-weight: bold; }
+    #result { margin-top: 1em; padding: 1em; border: 1px solid #ccc; }
+    button { font-size: 18px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>🎙️ Voice to IoT Control</h2>
+  <button id="startBtn">🎤 Start Listening</button>
+  <div id="status">Status: Idle</div>
+  <div id="result"><strong>Recognized:</strong> <span id="text"></span></div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const statusEl = document.getElementById("status");
+    const textEl = document.getElementById("text");
+
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-TW'; // Change to 'en-US' if needed
+    recognition.interimResults = false;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+      statusEl.textContent = "Status: 🎧 Listening...";
+    };
+
+    recognition.onerror = (event) => {
+      statusEl.textContent = `Status: ❌ Error - ${event.error}`;
+    };
+
+    recognition.onresult = (event) => {
+      const spokenText = event.results[0][0].transcript;
+      textEl.textContent = spokenText;
+      statusEl.textContent = "Status: ✅ Received";
+
+      // 🔧 Step 2: Send to GPT to parse intent (optional)
+      parseCommand(spokenText);
+    };
+
+    startBtn.onclick = () => {
+      recognition.start();
+    };
+
+    // 🧠 Optional: use local NLP or hardcoded rules
+    async function parseCommand(text) {
+      // 🔄 Simulate parsing logic
+      let action = "";
+      let location = "";
+
+      if (text.includes("開燈")) action = "turn_on_light";
+      if (text.includes("關燈")) action = "turn_off_light";
+      if (text.includes("廚房")) location = "kitchen";
+      if (text.includes("客廳")) location = "living_room";
+
+      const payload = {
+        action,
+        location,
+        original_text: text,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log("🚀 Sending command:", payload);
+
+      // 🔌 Step 3: Send to your IoT webhook or WordPress endpoint
+      try {
+        const res = await fetch("https://aihome.tw/wp-json/iot-control/v1/command", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        console.log("🔁 Response from IoT:", data);
+        statusEl.textContent = "Status: ✅ IoT command sent!";
+      } catch (err) {
+        console.error("❌ Failed to send command:", err);
+        statusEl.textContent = "Status: ❌ Error sending command";
+      }
+    }
+  </script>
+</body>
+</html>

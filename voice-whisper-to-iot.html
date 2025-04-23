@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice → IoT Control</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    button { padding: 1em 2em; font-size: 1.1rem; }
+    #status { margin-top: 1em; font-weight: bold; }
+    #result { margin-top: 1em; padding: 1em; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>🎙️ 語音控制 IoT</h1>
+  <button id="startBtn">▶️ 開始錄音</button>
+  <div id="status">狀態：等待中……</div>
+  <div id="result"><strong>辨識/指令：</strong><span id="text"></span></div>
+
+  <script>
+  (async()=>{
+
+    const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY';
+    const WEBHOOK_URL     = 'https://aihome.tw/wp-json/iot/v1/command';
+
+    const startBtn = document.getElementById('startBtn');
+    const statusEl = document.getElementById('status');
+    const textEl   = document.getElementById('text');
+
+    // 1️⃣ 尝试浏览器原生识别
+    let recognition, useNative = true;
+    try {
+      const R = window.SpeechRecognition||window.webkitSpeechRecognition;
+      recognition = new R();
+      recognition.lang = 'zh-TW';
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onstart = ()=> statusEl.textContent = '狀態：🎧 Listening...';
+      recognition.onerror = e=> statusEl.textContent = `狀態：❌ ${e.error}`;
+      recognition.onresult = e=>{
+        const txt = e.results[0][0].transcript;
+        textEl.textContent = txt;
+        statusEl.textContent = '狀態：✅ Received';
+        handleVoice(txt);
+      };
+    } catch(_){
+      useNative = false;
+      startBtn.textContent = '▶️ 錄音（Whisper）';
+    }
+
+    startBtn.onclick = ()=> {
+      if(useNative){
+        recognition.start();
+      } else {
+        recordViaWhisper();
+      }
+    };
+
+    // 2️⃣ Whisper 录音+上传
+    async function recordViaWhisper(){
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mr = new MediaRecorder(stream), chunks=[];
+      mr.ondataavailable = e=> chunks.push(e.data);
+      mr.onstop = async ()=>{
+        statusEl.textContent = '狀態：⏳ 辨識中…';
+        const blob = new Blob(chunks,{type:'audio/webm'});
+        const fd = new FormData();
+        fd.append('file', blob, 'audio.webm');
+        fd.append('model','whisper-1');
+        const res = await fetch('https://api.openai.com/v1/audio/transcriptions',{
+          method:'POST',
+          headers:{ 'Authorization':`Bearer ${OPENAI_API_KEY}` },
+          body: fd
+        });
+        const j = await res.json();
+        const txt = j.text||'';
+        textEl.textContent = txt;
+        statusEl.textContent = '狀態：✅ Whisper 完成';
+        handleVoice(txt);
+      };
+      mr.start();
+      startBtn.textContent = '⏹ 停止錄音';
+      mr.onstop = mr.ondataavailable;
+      setTimeout(()=> mr.stop(), 5000);  // 最多錄 5s
+    }
+
+    // 3️⃣ 用 ChatGPT Function Calling 抽取 intent
+    async function handleVoice(spoken){
+      statusEl.textContent = '狀態：⌛ 解析指令…';
+      const resp = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':`Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4-0613',
+          messages:[
+            { role:'system',
+              content:'你是智慧家庭助理，回傳 function_call JSON {action,device,location}，動作 enum: 開啟/關閉，裝置 enum: 燈/冷氣/窗簾/電視。' },
+            { role:'user', content: spoken }
+          ],
+          functions:[{
+            name:'control_device',
+            description:'控制裝置',
+            parameters:{
+              type:'object',
+              properties:{
+                action:{ type:'string', enum:['開啟','關閉'] },
+                device:{ type:'string', enum:['燈','冷氣','窗簾','電視'] },
+                location:{ type:'string' }
+              },
+              required:['action','device','location']
+            }
+          }],
+          function_call:'auto'
+        })
+      });
+      const js = await resp.json();
+      const args = JSON.parse(js.choices[0].message.function_call.arguments);
+      textEl.textContent = `${args.action} ${args.device} @${args.location}`;
+      statusEl.textContent = '狀態：📡 傳送到 IoT…';
+
+      // 4️⃣ 傳給 WordPress Webhook
+      const out = await fetch(WEBHOOK_URL, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(args)
+      });
+      if(out.ok){
+        statusEl.textContent = '狀態：✅ 指令已送出';
+      } else {
+        statusEl.textContent = '狀態：❌ Webhook 失敗';
+      }
+    }
+
+  })();
+  </script>
+</body>
+</html>

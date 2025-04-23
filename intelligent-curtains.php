@@ -309,42 +309,107 @@ add_action('rest_api_init', function () {
 });
 
 function handle_iot_command(WP_REST_Request $request) {
+    global $wpdb;
+
     $command = sanitize_text_field($request->get_param('command'));
 
-    // 對應表：指令 -> IoT 控制 URL & 動作
     $device_mappings = array(
-        '開燈'   => array('url' => 'http://192.168.1.100/light',   'data' => array('action' => 'on')),
-        '關燈'   => array('url' => 'http://192.168.1.100/light',   'data' => array('action' => 'off')),
-        '開窗簾' => array('url' => 'http://192.168.1.101/curtain', 'data' => array('action' => 'open')),
-        '關窗簾' => array('url' => 'http://192.168.1.101/curtain', 'data' => array('action' => 'close')),
+        '開燈'   => ['device' => 'light',   'location' => 'living_room', 'action' => 'on'],
+        '關燈'   => ['device' => 'light',   'location' => 'living_room', 'action' => 'off'],
+        '開窗簾' => ['device' => 'curtain', 'location' => 'living_room', 'action' => 'open'],
+        '關窗簾' => ['device' => 'curtain', 'location' => 'living_room', 'action' => 'close'],
     );
 
     if (!array_key_exists($command, $device_mappings)) {
-        return new WP_REST_Response(array(
-            'status' => 'error',
-            'message' => '未知的指令：' . $command
-        ), 400);
+        return new WP_REST_Response(['status' => 'error', 'message' => '未知的指令：' . $command], 400);
     }
 
-    $device_url = $device_mappings[$command]['url'];
-    $post_data  = $device_mappings[$command]['data'];
+    $info = $device_mappings[$command];
+    $json_cmd = json_encode([
+        'device' => $info['device'],
+        'location' => $info['location'],
+        'action' => $info['action']
+    ]);
 
-    $response = wp_remote_post($device_url, array(
-        'body' => $post_data,
-        'timeout' => 5
-    ));
+    $device_id = $info['location'] . '-' . $info['device']; // e.g., living_room-light
+    $table = $wpdb->prefix . 'iot_devices';
 
-    if (is_wp_error($response)) {
-        return new WP_REST_Response(array(
-            'status' => 'fail',
-            'message' => $response->get_error_message()
-        ), 500);
-    }
+    $wpdb->replace($table, [
+        'device_id'         => $device_id,
+        'pending_command'   => $json_cmd,
+        'command_set_time'  => current_time('mysql')
+    ]);
 
-    return new WP_REST_Response(array(
+    return new WP_REST_Response([
         'status' => 'ok',
-        'sent_command' => $command,
-        'device_url' => $device_url,
-        'device_response' => wp_remote_retrieve_body($response),
-    ), 200);
+        'device' => $device_id,
+        'command' => $json_cmd
+    ], 200);
+}
+
+// map device IDs to tokens
+const IOT_AUTH_TOKENS = [
+    'kitchen-01'     => 'abc123',
+    'livingroom-02'  => 'xyz789',
+];
+
+add_action('rest_api_init', function () {
+    register_rest_route('iot/v1', '/get-command', [
+        'methods'             => 'GET',
+        'callback'            => 'iot_get_command_handler',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+/**
+ * GET handler: /wp-json/iot/v1/get-command
+ */
+function iot_get_command_handler( WP_REST_Request $req ) {
+    global $wpdb;
+    $device_id  = sanitize_text_field( $req->get_param('device_id') );
+    $auth_token = sanitize_text_field( $req->get_param('auth_token') );
+
+    // 1) validate
+    if ( ! $device_id || ! $auth_token ) {
+        return new WP_Error('missing_params', 'device_id and auth_token are required', ['status'=>400]);
+    }
+    if ( ! array_key_exists($device_id, IOT_AUTH_TOKENS)
+         || IOT_AUTH_TOKENS[$device_id] !== $auth_token ) {
+        return new WP_Error('unauthorized', 'Invalid auth_token', ['status'=>403]);
+    }
+
+    // 2) fetch pending command
+    $table = $wpdb->prefix . 'iot_devices'; 
+    $row = $wpdb->get_row( $wpdb->prepare(
+        "SELECT pending_command, command_set_time 
+           FROM {$table} 
+          WHERE device_id = %s",
+        $device_id
+    ) );
+
+    if ( ! $row || empty($row->pending_command) ) {
+        // no command
+        return rest_ensure_response( (object)['action'=>null,'device'=>null,'location'=>null] );
+    }
+
+    // 3) auto-expire after 120 s
+    $now     = time();
+    $set_ts  = strtotime( $row->command_set_time );
+    if ( ($now - $set_ts) > 120 ) {
+        // clear expired command
+        $wpdb->update( $table,
+            ['pending_command' => null, 'command_set_time'=>null],
+            ['device_id' => $device_id]
+        );
+        return rest_ensure_response( (object)['action'=>null,'device'=>null,'location'=>null] );
+    }
+
+    // 4) return the JSON command
+    //    pending_command is stored as JSON string {"action":"...","device":"...","location":"..."}
+    $cmd = json_decode( $row->pending_command );
+    if ( json_last_error() !== JSON_ERROR_NONE ) {
+        return new WP_Error('bad_json','Stored command is not valid JSON',['status'=>500]);
+    }
+
+    return rest_ensure_response( $cmd );
 }

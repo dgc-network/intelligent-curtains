@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice to Text</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; }
+    #output { margin-top: 1em; padding: 1em; border: 1px solid #ccc; }
+    button { padding: 0.5em 1em; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <h2>🎙️ Voice to Text Demo</h2>
+  <button id="start">🎤 Start Listening</button>
+  <button id="stop" disabled>🛑 Stop</button>
+
+  <div id="output">📝 <strong>Transcript:</strong> <span id="transcript"></span></div>
+
+  <script>
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    const transcriptEl = document.getElementById('transcript');
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = 'zh-TW'; // Set to Chinese, or 'en-US' for English
+    recognition.interimResults = false; // Only get final results
+    recognition.continuous = false;
+
+    let finalTranscript = '';
+
+    recognition.onstart = () => {
+      console.log('🎤 Listening...');
+    };
+
+    recognition.onresult = (event) => {
+      finalTranscript = event.results[0][0].transcript;
+      transcriptEl.textContent = finalTranscript;
+      console.log('📄 Final transcript:', finalTranscript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error('❌ Error:', event.error);
+    };
+
+    recognition.onend = () => {
+      console.log('🛑 Stopped listening');
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    };
+
+    startBtn.onclick = () => {
+      finalTranscript = '';
+      transcriptEl.textContent = '';
+      recognition.start();
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    };
+
+    stopBtn.onclick = () => {
+      recognition.stop();
+    };
+  </script>
+
+</body>
+</html>
